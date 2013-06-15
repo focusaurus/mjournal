@@ -1,0 +1,35 @@
+#!/bin/sh
+DIR=$(dirname "${0}")/..
+help() {
+  echo "mjournal command line interface usage:"
+  echo "\tBasic syntax is ${0} <resource-or-subcommand> [options]"
+  for FILE in $(ls "${DIR}/app/cli/"*.coffee);
+  do
+    if [ ! -x "${FILE}" ]; then
+      continue
+    fi
+    local SUB=$(basename "${FILE}" | cut -d . -f 1)
+    echo "----- ${SUB} -----"
+    "${FILE}"
+  done
+}
+
+unknown() {
+  echo "Unknown subcommand ${1}. Run ${0} --help for usage information." 1>&2
+  exit 1
+}
+
+case "${1}" in
+  help|"--help"|"-h"|"")
+    help
+  ;;
+  *)
+    SUBSCRIPT="${DIR}/app/cli/${1}.coffee"
+    if [ -x "${SUBSCRIPT}" ]; then
+      shift
+      exec "${SUBSCRIPT}" "${@}"
+    fi
+    #If we get here, an unknown subcommand was used
+    unknown "${1}"
+  ;;
+esac
