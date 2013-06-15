@@ -1,0 +1,20 @@
+{
+  "name": "mjournal",
+  "description": "Minimalist journaling web application",
+  "version": "0.0.0",
+  "homepage": "http://peterlyons.com",
+  "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
+  "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
+  "engines": {
+    "node": "~0.10.10"
+  },
+  "dependencies": {
+    "coffee-script": "~1.6.3",
+    "express": "~3.2.6",
+    "stylus": "~0.32.1",
+    "jade": "~0.31.2",
+    "winston": "~0.7.2"
+  },
+  "devDependencies": {
+  }
+}
