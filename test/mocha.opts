@@ -1,0 +1,5 @@
+--reporter spec
+--colors
+--compilers coffee:coffee-script
+--recursive
+--slow 200
