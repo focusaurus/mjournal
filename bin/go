@@ -1,6 +1,16 @@
 #!/bin/sh
+cd $(dirname "${0}")/..
 case "${1}" in
   start)
    exec ./app/server.coffee
-	;;
+  ;;
+  inspector)
+    exec node-inspector --web-port=9092
+  ;;
+  test)
+    exec ./bin/test.sh
+  ;;
+  testdebug)
+    exec ./bin/test.sh --debug
+  ;;
 esac
