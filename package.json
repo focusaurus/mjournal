@@ -18,7 +18,8 @@
     "any-db": "~0.6.0",
     "bcrypt": "~0.7.6",
     "gesundheit": "~0.8.5",
-    "pg": "~1.3.0"
+    "pg": "~1.3.0",
+    "lodash": "~1.3.1"
   },
   "devDependencies": {
     "sqlite3": "~2.1.9",

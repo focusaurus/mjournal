@@ -13,4 +13,7 @@ case "${1}" in
   testdebug)
     exec ./bin/test.sh --debug
   ;;
+  postgres)
+    pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+  ;;
 esac
