@@ -8,12 +8,23 @@ case "${1}" in
     exec node-inspector --web-port=9092
   ;;
   test)
-    exec ./bin/test.sh
+    exec ./dev/bin/test.sh "${@}"
   ;;
   testdebug)
     exec ./bin/test.sh --debug
   ;;
   postgres)
     pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+  ;;
+  *)
+    for EXT in sh js
+    do
+      SUB="./dev/bin/${1}.${EXT}"
+      if [ -x "${SUB}" ]; then
+        exec "${SUB}" "${@}"
+      fi
+    done
+    echo "Unknown command ${1}" 1>&2
+    exit 1
   ;;
 esac
