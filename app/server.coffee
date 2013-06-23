@@ -6,6 +6,10 @@ app = express()
 
 app.use express.cookieParser()
 app.use express.session {secret: 'HkpYsNTjVpXz6BthO8hN'}
+app.use (req, res, next) ->
+  res.locals.user = req.user = req.session.user
+  next()
+
 #Load the controllers
 require("app/controllers") app
 port = process.env.MJ_EXPRESS_PORT || 9090

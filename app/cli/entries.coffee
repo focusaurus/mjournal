@@ -6,7 +6,7 @@ viewEntriesOp = require "app/operations/entries/view-entries"
 createEntryOp = require "app/operations/entries/create"
 
 viewEntries = (id) ->
-  viewEntriesOp {user: {id}}, (error, entries) ->
+  viewEntriesOp {id}, (error, entries) ->
     cli.exit error if error
     for entry in entries
       console.log entry.created, entry.body

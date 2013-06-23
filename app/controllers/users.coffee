@@ -6,8 +6,8 @@ signIn = (req, res) ->
   options = _.pick req.body, "email", "password"
   signInOp options, (error, user) ->
     if error
-      return res.render "home", {error: error}
-    req.session.user = user
+      return res.render "home", {error}
+    req.session.user = req.user = user
     res.redirect "/"
 
 signOut = (req, res) ->
