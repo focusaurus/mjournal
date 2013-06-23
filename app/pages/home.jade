@@ -1,7 +1,11 @@
-doctype 5
-html
-  title mjournal - minimalist journaling
-  link(rel="stylesheet", href="/app.css")
-  body
+extends layout
+block body
   h1 mjournal
   h2 minimalist journaling
+  if user
+    p You are logged in as&nbsp;
+      = user.email
+    a(href="/users/sign-out") Sign Out
+    include ../views/entries/main
+  else
+    include ../views/users/sign-in

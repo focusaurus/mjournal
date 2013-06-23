@@ -1,6 +1,6 @@
 anydb = require "any-db"
 gesundheit = require "gesundheit"
-dbURL = process.env.MJ_DB_URL || "sqlite3://var/mjournal.sqlite3"
+dbURL = process.env.MJ_DB_URL || "postgres://mjournal@localhost/mjournal"
 console.log "Creating DB engine", dbURL
 gesundheit.defaultEngine = gesundheit.engine dbURL
 

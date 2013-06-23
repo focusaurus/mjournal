@@ -2,7 +2,7 @@
 cd $(dirname "${0}")/..
 case "${1}" in
   start)
-   exec ./app/server.coffee
+   exec coffee --nodejs --debug=9091 ./app/server.coffee
   ;;
   inspector)
     exec node-inspector --web-port=9092

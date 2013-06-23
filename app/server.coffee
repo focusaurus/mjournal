@@ -4,6 +4,8 @@ express = require "express"
 jade = require "jade"
 app = express()
 
+app.use express.cookieParser()
+app.use express.session {secret: 'HkpYsNTjVpXz6BthO8hN'}
 #Load the controllers
 require("app/controllers") app
 port = process.env.MJ_EXPRESS_PORT || 9090
