@@ -5,30 +5,27 @@ program = require "commander"
 viewEntriesOp = require "app/operations/entries/view-entries"
 createEntryOp = require "app/operations/entries/create"
 
-viewEntries = (id) ->
-  viewEntriesOp {id}, (error, entries) ->
+viewEntries = (options) ->
+  viewEntriesOp options.user, (error, entries) ->
     cli.exit error if error
     for entry in entries
       console.log entry.created, entry.body
     process.exit()
 
-createEntry = (id, options) ->
-  options =
-    user:
-      id: id
-    body: options.body
+createEntry = (options) ->
   createEntryOp options, (error, entry) ->
     cli.exit(error) if error
     console.log entry
     process.exit()
 
 program.description "operate on entry records"
-program.command("view <userId>")
+viewCommand = program.command("view")
   .description("view entries for user with specified id")
-  .action viewEntries
+cli.signIn viewCommand, viewEntries
 
-program.command("create <userId>")
+create = program.command("create")
   .option("-b, --body <body>", "Content for the journal entry")
   .description("create a new journal entry")
-  .action createEntry
+cli.signIn create, createEntry
+
 program.parse process.argv
