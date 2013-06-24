@@ -16,9 +16,10 @@ signIn = (command, realAction) ->
   command.action ->
     realArguments = arguments
     options = _.last arguments
-    if options.user
-      command.password "password: ", (password) ->
-        signInOp {email: options.user, password}, (error, user) ->
+    email = options.user || process.env.MJ_USER
+    if email
+      command.password "password for #{email}: ", (password) ->
+        signInOp {email, password}, (error, user) ->
           exit error if error
           options.user = user
           realAction.apply this, realArguments
