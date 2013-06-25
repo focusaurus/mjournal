@@ -1,2 +1,4 @@
 each entry in entries
-  p= entry.body
+  .entry
+    p.body(contenteditable="true")= entry.body
+    .info(title=entry.created) i

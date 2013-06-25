@@ -1,5 +1,6 @@
 #!/usr/bin/env coffee
 fs = require "fs"
+log = require("winston").loggers.get("app:controllers:styles")
 stylus = require "stylus"
 
 render = (callback) ->
@@ -15,7 +16,9 @@ main = ->
 
 appCSS = (req, res, next) ->
   render (error, cssText) ->
-    return next "Error rendering CSS" if error
+    if error
+      log.error "Error rendering CSS #{error}"
+      return next "Error rendering CSS"
     res.type "css"
     res.send cssText
 
