@@ -4,4 +4,3 @@ var
 build
 /components
 app/components/*/*.js
-app/components/*/*.css
