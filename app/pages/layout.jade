@@ -5,13 +5,5 @@ html
   body
     block body
     script(src="/build.js")
-    :coffeescript
-      events = require "events"
-      keyname = require "keyname"
-      entryBodyEvents =
-        onkeydown: (event) ->
-          console.log "eventBody onkeydown", event
-          if keyname(event.keyCode) == "enter" and event.shiftKey
-            event.preventDefault()
-            console.log('@bug saving!');
-      events((document.querySelector ".entryBody"), entryBodyEvents).bind "keydown"
+    script
+      require("boot")

@@ -1,7 +1,12 @@
 #!/bin/sh
 cd $(dirname "${0}")/..
 case "${1}" in
+  build)
+    find app/components -type f -name \*.coffee | xargs coffee -c
+    find app/components -type f -name \*.styl | xargs stylus
+  ;;
   start)
+   [ ! -d node_modules ] && npm install
    exec coffee --nodejs --debug=9091 ./app/server.coffee
   ;;
   inspector)

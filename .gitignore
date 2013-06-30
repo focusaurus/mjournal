@@ -2,4 +2,6 @@ node
 node_modules
 var
 build
-components
+/components
+app/components/*/*.js
+app/components/*/*.css

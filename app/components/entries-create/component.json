@@ -1,0 +1,9 @@
+{
+  "name": "entries-create",
+  "dependencies": {
+    "component/keyname": "",
+    "visionmedia/superagent": "*"
+  },
+  "scripts": ["index.js"],
+  "styles": ["index.css"]
+}
