@@ -1,0 +1,7 @@
+{
+  "name": "mjournal",
+  "dependencies": {
+  	"component/events": "1.0.3",
+  	"component/keyname": ""
+  }
+}

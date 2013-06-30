@@ -4,6 +4,7 @@ express = require "express"
 jade = require "jade"
 app = express()
 
+app.use express.static("#{__dirname}/../build")
 app.use express.cookieParser()
 app.use express.session {secret: 'HkpYsNTjVpXz6BthO8hN'}
 app.use (req, res, next) ->
