@@ -1,4 +1,4 @@
-viewEntries = require "app/operations/entries/view-entries"
+viewEntries = require "app/operations/entries/view"
 
 home = (req, res) ->
   if req.user
