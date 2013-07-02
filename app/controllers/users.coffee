@@ -15,6 +15,11 @@ signOut = (req, res) ->
   res.redirect "/"
 
 setup = (app) ->
+  app.use express.cookieParser()
+  app.use express.session {secret: 'HkpYsNTjVpXz6BthO8hN'}
+  app.use (req, res, next) ->
+    res.locals.user = req.user = req.session.user
+    next()
   app.post "/users/sign-in", express.bodyParser(), signIn
   # app.post "/users/sign-up", express.bodyParser(), signUp
   app.get "/users/sign-out", signOut

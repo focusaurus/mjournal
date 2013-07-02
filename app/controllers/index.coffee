@@ -1,6 +1,13 @@
 setup = (app) ->
   app.set "view engine", "jade"
   app.set "views", "#{__dirname}/../pages"
-  require("./#{controller}")(app) for controller in ["info", "styles", "users"]
+  #Note order of controllers below matters
+  controllers = [
+    "users"
+    "info"
+    "styles"
+    "entries"
+  ]
+  require("./#{controller}")(app) for controller in controllers
 
 module.exports = setup
