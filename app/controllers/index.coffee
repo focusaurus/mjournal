@@ -8,6 +8,8 @@ setup = (app) ->
     "styles"
     "entries"
   ]
+  if app.get('config.development')
+    controllers.push "development"
   require("./#{controller}")(app) for controller in controllers
 
 module.exports = setup

@@ -6,5 +6,9 @@ block body
     p You are logged in as #{user.email}
     a(href="/users/sign-out") Sign Out
     include ../views/entries/main
+    script(src="/build.js")
+    script
+      require("boot")
   else
     include ../views/users/sign-in
+

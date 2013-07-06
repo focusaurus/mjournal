@@ -1,2 +1,2 @@
-console.log('@bug boot is running');
 require "entries-create"
+require "entries-edit"

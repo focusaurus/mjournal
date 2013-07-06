@@ -1,8 +1,7 @@
 {
-  "name": "entries-create",
+  "name": "entries-edit",
+  "local": ["editable"],
   "dependencies": {
-    "component/keyname": "*",
-    "component/value": "1.1.0",
     "visionmedia/superagent": "0.15.1"
   },
   "scripts": ["index.js"]
