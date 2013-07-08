@@ -1,2 +1,2 @@
-require "entries-create"
+#require "entries-create"
 require "entries-edit"

@@ -19,6 +19,9 @@ case "${1}" in
   testdebug)
     exec ./bin/test.sh --debug
   ;;
+  clean)
+   rm -rf ./build
+  ;;
   postgres)
     pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
   ;;

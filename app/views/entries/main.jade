@@ -2,4 +2,6 @@ each entry in entries
   .entry
     p.body(data-id="#{entry.id}")= entry.body
     .info(title=entry.created) i
-textarea(class="entryBody", rows="20")
+p New entry...
+.entry
+  p.body.new(contenteditable="true")
