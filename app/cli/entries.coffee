@@ -8,74 +8,27 @@ createOp = require "app/operations/entries/create"
 updateOp = require "app/operations/entries/update"
 
 ##### helper functions #####
-bodyOption = (command, stack) ->
-  command.option("-b, --body [body]",
+bodyOption = (stack) ->
+  stack.command.option("-b, --body [body]",
     "Content for the journal entry. Pass '-' to provide on stdin")
   stack.use (next, entryId, options) ->
-    console.log "@bug bodyOption middleware running", this, entryId
     next()
-    #if options.body is "-"
-    #  stream = concat (body) ->
-    #else
-    #  realAction.apply this, arguments
-
-class Stack
-  constructor: (@command) ->
-    console.log "@bug Stack constructor"
-    @stack = []
-    @first = true
-    @command.action @action
-  use: (mw) =>
-    console.log "@bug stack.use", mw, @stack.length
-    @stack.push mw
-    return @
-  action: =>
-    mw = @stack.shift()
-    if not mw
-      return console.log "@bug commandware stack empty"
-    console.log "@bug commandware action called #{this.stack.length}"
-    if @first
-      @first = false
-      @mwArgs = [@action]
-      args = [].slice.apply arguments, [0]
-      @mwArgs.push.apply @mwArgs, args
-    #middlware functions get the command as `this`
-    #`next` as the first positional argument
-    #and then whatever other arguments were initially passed
-    mw.apply @command, @mwArgs
-    return @
-
-middleware = (command) ->
-  commandware =
-    stack: []
-    first: true
-    use: (fn) =>
-      this.stack.push fn
-      return this
-    action: =>
-      fn = this.stack.shift()
-      if not fn
-        return console.log "@bug commandware stack empty"
-      console.log "@bug commandware action called #{this.stack.length}"
-      if this.first
-        this.first = false
-        this.mwArgs = [this.action]
-        args = [].slice.apply arguments, [0]
-        this.mwArgs.push.apply this.mwArgs, args
-      #middlware functions get the command as `this`
-      #`next` as the first positional argument
-      #and then whatever other arguments were initially passed
-      fn.apply command, this.mwArgs
-      return this
-  command.action commandware.action.bind(commandware)
-  return commandware
+    # if options.body is "stdin"
+    #   stream = concat (body) ->
+    #     console.log "@bug stdin stream concat #{body}"
+    #     options.body = body
+    #     next()
+    #   console.log "Type body then ctrl-d when done"
+    #   process.stdin.pipe stream
+    # else
+    #   next()
 
 ##### view #####
 viewAction = (options) ->
   viewOp options.user, (error, entries) ->
     cli.exit error if error
     for entry in entries
-      console.log entry.created, entry.body
+      console.log entry.created, entry.body, entry.id
     process.exit()
 
 viewCommand = program.command("view")
@@ -94,26 +47,19 @@ createCommand = program.command("create")
 cli.signIn createCommand, createAction
 
 ##### create #####
-updateAction = (options) ->
-  stream = concat (body) ->
-    console.log('@bug stdin is', body);
-  process.stdin.pipe stream
-  # updateOp options, (error, entry) ->
-  #   cli.exit(error) if error
-  #   console.log entry
-  #   process.exit()
+updateAction = (next, entryId, options) ->
+  options.id = entryId
+  updateOp options, (error) ->
+    cli.exit(error) if error
+    console.log "Entry updated"
+    process.exit()
 
 updateCommand = program.command("update <entryId>")
   .description("update an existing entry. Provide new entry body via stdin")
-updateStack = new Stack updateCommand
-updateStack.use (next, entryId, options) ->
-  console.log "@bug update MW 1 running", entryId
-  next()
-updateStack.use (next, entryId, options) ->
-  console.log "@bug update MW 2 running", entryId
-  next()
-bodyOption updateCommand, updateStack
-#cli.signIn updateCommand, createAction
+updateStack = new cli.Stack updateCommand
+bodyOption updateStack
+cli.signInMW updateStack
+updateStack.use updateAction
 
 program.description "operate on entry records"
 program.parse process.argv
