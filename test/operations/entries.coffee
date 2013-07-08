@@ -1,5 +1,6 @@
 signUp = require "app/operations/users/sign-up"
 create = require "app/operations/entries/create"
+update = require "app/operations/entries/update"
 view = require "app/operations/entries/view"
 assert = require("chai").assert
 
@@ -26,8 +27,14 @@ describe "operations/entries/create", ->
       entry = outEntry
       done()
 
-  #This test depends on data created above, which is a bit dirty
+  #These tests depend on data created above, which is a bit dirty
   #but I can live with it
+  it "should update an entry", (done) ->
+    options = {id: entry.id, user, body: "test body 2"}
+    update options, (error) ->
+      assert.isUndefined error, error
+      done()
+
   it "should view the newly created entry", (done) ->
     view user, (error, entries) ->
       assert.isNull error, error
