@@ -1,5 +1,9 @@
 {
   "name": "mjournal",
-  "paths": ["app/components", "app/components"],
-  "local": ["boot"]
+  "paths": [
+    "app/components"
+  ],
+  "local": [
+    "boot"
+  ]
 }

@@ -4,3 +4,4 @@ var
 build
 /components
 app/components/*/*.js
+/dev/component_lab

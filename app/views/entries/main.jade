@@ -1,7 +1,8 @@
-each entry in entries
-  .entry
-    p.body(data-id="#{entry.id}")= entry.body
-    .info(title=entry.created) i
+.entries
+  each entry in entries
+    .entry
+      p.body(data-id="#{entry.id}")= entry.body
+      .info(title=entry.created) i
 p New entry...
 .entry
   p.body.new(contenteditable="true")

@@ -2,7 +2,9 @@
   "name": "entries-edit",
   "local": ["editable"],
   "dependencies": {
-    "visionmedia/superagent": "0.15.1"
+    "visionmedia/superagent": "0.15.1",
+    "component/domify": "1.0.0"
   },
+  "templates": ["entry.jade"],
   "scripts": ["index.js"]
 }

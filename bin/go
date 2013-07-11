@@ -4,7 +4,8 @@ case "${1}" in
   build)
     find app/components -type f -name \*.coffee | xargs coffee -c
     find app/components -type f -name \*.styl | xargs stylus
-    component build
+    #component build
+    coffee dev/bin/build.coffee
   ;;
   start)
    [ ! -d node_modules ] && npm install
