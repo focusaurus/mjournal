@@ -23,7 +23,7 @@
     "concat-stream": "~1.0.0"
   },
   "devDependencies": {
-    "node-inspector": "~0.2.0beta4",
+    "node-inspector": "~0.2.0-beta4",
     "mocha": "~1.11.0",
     "chai": "~1.6.1",
     "component": "~0.16.5",

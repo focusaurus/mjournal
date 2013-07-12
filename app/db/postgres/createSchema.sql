@@ -7,7 +7,7 @@ create table if not exists "users" (
 create table if not exists "entries" (
   "id" serial primary key,
   "userId" integer references users,
-  "created" timestamp with time zone not null default 'now',
-  "updated" timestamp with time zone not null default 'now',
+  "created" timestamp with time zone not null default current_timestamp,
+  "updated" timestamp with time zone not null default current_timestamp,
   "body" text not null
 );
