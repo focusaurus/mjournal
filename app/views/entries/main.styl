@@ -1,10 +1,16 @@
+@import '../../colorPalette'
+
 .entry
-  border-top 1px dashed #ccc
+  border-top 1px dashed $border1
   position relative
   p
     white-space pre-wrap
+  .body
+    margin 0
+    padding 20px 0
+    outline 0
   .info
-    background-color #aaa
+    background-color $background2
     border-radius 50%
     display none
     min-width 1em
@@ -14,7 +20,10 @@
     top 0
   &:hover .info
     display block
+  &:nth-child(even)
+    background-color $background2
 p.body.new
-  background-color #ccc
+  background-color $backgroundAccent1
   height 4em
-  border 1px solid #aaa
+  border 1px solid $border1
+  outline 0
