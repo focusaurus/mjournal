@@ -1,7 +1,8 @@
-node
-node_modules
-var
-build
+/node
+/node_modules
+/var
+/build
+^/app/components/editable/*.js
+/app/components/*/*.js
 /components
-app/components/*/*.js
 /dev/component_lab
