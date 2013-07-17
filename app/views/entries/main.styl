@@ -27,3 +27,9 @@ p.body.new
   height 4em
   border 1px solid $border1
   outline 0
+  &:not(:focus):after
+    color white
+    content "Type here\2026"
+    font-size 40px
+    font-style italic
+    padding .5em
