@@ -4,11 +4,10 @@ setup = (app) ->
   #Note order of controllers below matters
   controllers = [
     "users"
-    "info"
     "styles"
     "entries"
   ]
-  if app.get('config.development')
+  if app.get "config.development"
     controllers.push "development"
   require("./#{controller}")(app) for controller in controllers
 

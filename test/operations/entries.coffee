@@ -43,7 +43,7 @@ describe "operations/entries/create+update", ->
       done()
 
   it "should view the newly created entry", (done) ->
-    view user, (error, entries) ->
+    view {user}, (error, entries) ->
       assert.isNull error, error
       assert.isArray entries
       assert.ok (entries.length > 0)

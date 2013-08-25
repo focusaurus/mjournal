@@ -14,7 +14,6 @@ run = (options, callback) ->
   dbOp = db.select("users", ["id", "bcryptedPassword", "email"])
     .where(user).limit(1)
   dbOp.execute (error, result) ->
-    log.debug "signIn select #{error} #{result}"
     return callback error if error
     return denied() if not result.rowCount
     row = result.rows[0]
