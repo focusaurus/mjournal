@@ -21,6 +21,6 @@ runStack = ->
   stack.use opMW.whereUser
   stack.use opMW.paginated
   stack.use execute
-  stack.action arguments...
+  stack.run arguments...
 
 module.exports = runStack

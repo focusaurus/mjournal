@@ -5,13 +5,13 @@ class Stack
   use: (mw) =>
     @stack.push mw
     return @
-  action: =>
+  run: =>
     mw = @stack.shift()
     if not mw
       return
     if @first
       @first = false
-      @mwArgs = [@action]
+      @mwArgs = [@run]
       args = [].slice.apply arguments, [0]
       @mwArgs.push.apply @mwArgs, args
     #middlware functions get the stack as `this`,
