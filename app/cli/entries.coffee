@@ -1,8 +1,8 @@
-#!/usr/bin/env coffee --nodejs --debug-brk=9093
 #!/usr/bin/env coffee
+#!/usr/bin/env coffee --nodejs --debug-brk=9093
 _ = require "lodash"
 cli = require "app/cli"
-concat = require "concat-stream"
+readline = require "readline"
 createOp = require "app/operations/entries/create"
 program = require "commander"
 updateOp = require "app/operations/entries/update"
@@ -12,17 +12,19 @@ viewOp = require "app/operations/entries/view"
 bodyOption = (stack) ->
   stack.command.option("-b, --body [body]",
     "Content for the journal entry. Pass 'stdin' to provide on stdin")
-  stack.use (next, entryId, options) ->
-    next()
-    # if options.body is "stdin"
-    #   stream = concat (body) ->
-    #     console.log "@bug stdin stream concat #{body}"
-    #     options.body = body
-    #     next()
-    #   console.log "Type body then ctrl-d when done"
-    #   process.stdin.pipe stream
-    # else
-    #   next()
+  stack.use (next, options) ->
+    if options.body is "stdin"
+      input = readline.createInterface
+        input: process.stdin
+        output: process.stdout
+      lines = []
+      input.on "line", (line) -> lines.push line
+      input.on "close", ->
+        options.body = lines.join("\n")
+        next()
+      console.log "Type body then ctrl-d when done"
+    else
+      next()
 
 ##### view #####
 viewAction = (next, options) ->
@@ -48,23 +50,24 @@ createAction = (next, options) ->
 createCommand = program.command("create")
   .description("create a new journal entry")
 createStack = new cli.Stack createCommand
-bodyOption createStack
 cli.signInMW createStack
+bodyOption createStack
 createStack.use createAction
 
-##### create #####
-updateAction = (next, entryId, options) ->
-  options.id = entryId
+##### update #####
+updateAction = (next, options) ->
+  options.id = options.entryId
   updateOp options, (error) ->
     cli.exit(error) if error
     console.log "Entry updated"
     process.exit()
 
-updateCommand = program.command("update <entryId>")
+updateCommand = program.command("update")
+  .option("-i,--entryId <entryId>")
   .description("update an existing entry. Provide new entry body via stdin")
 updateStack = new cli.Stack updateCommand
-bodyOption updateStack
 cli.signInMW updateStack
+bodyOption updateStack
 updateStack.use updateAction
 
 program.description "operate on entry records"

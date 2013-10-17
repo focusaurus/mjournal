@@ -8,4 +8,4 @@ describe "app/cli", ->
       command:
         option: sinon.spy()
     cli.paginate mockStack
-    assert mockStack.command.option.calledWith "--page,-p <page>"
+    assert mockStack.command.option.calledWith "-p, --page <page>"
