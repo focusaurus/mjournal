@@ -29,6 +29,7 @@
     "component": "~0.16.5",
     "component-builder": "~0.8.3",
     "component-jade": "~0.3.1",
-    "sinon": "~1.7.3"
+    "sinon": "~1.7.3",
+    "node-dev": "~2.0.2"
   }
 }

@@ -9,7 +9,7 @@ case "${1}" in
   ;;
   start)
    [ ! -d node_modules ] && npm install
-   exec coffee --nodejs --debug=9091 ./app/server.coffee
+   exec node-dev --debug=9091 ./app/server.coffee
   ;;
   inspector)
     exec node-inspector --web-port=9092
