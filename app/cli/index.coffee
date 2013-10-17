@@ -65,7 +65,7 @@ signInMW = (stack) ->
       exit {code: 403, message: "Please specify a user with --user <email>"}
 
 paginate = (stack) ->
-  stack.command.option("-p,--page <page>")
+  stack.command.option("--page,-p <page>")
 
 module.exports = {
   exit

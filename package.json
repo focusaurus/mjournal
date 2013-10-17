@@ -29,6 +29,7 @@
     "chai": "~1.6.1",
     "component": "~0.16.5",
     "component-builder": "~0.8.3",
-    "component-jade": "~0.3.1"
+    "component-jade": "~0.3.1",
+    "sinon": "~1.7.3"
   }
 }
