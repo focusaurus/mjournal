@@ -1,5 +1,6 @@
 _  = require "lodash"
 signInOp = require "app/operations/users/sign-in"
+promptly = require "promptly"
 
 class Stack
   constructor: (@command) ->
@@ -41,7 +42,7 @@ signIn = (command, realAction) ->
     options = _.last arguments
     email = options.user || process.env.MJ_USER
     if email
-      command.password "password for #{email}: ", (password) ->
+      promptly.password "password for #{email}: ", (error, password) ->
         signInOp {email, password}, (error, user) ->
           exit error if error
           options.user = user
@@ -55,7 +56,7 @@ signInMW = (stack) ->
     options = _.last arguments
     email = options.user || process.env.MJ_USER
     if email
-      stack.command.password "password for #{email}: ", (password) ->
+      promptly.password "password for #{email}: ", (error, password) ->
         signInOp {email, password}, (error, user) ->
           exit error if error
           options.user = user
@@ -63,8 +64,12 @@ signInMW = (stack) ->
     else
       exit {code: 403, message: "Please specify a user with --user <email>"}
 
+paginate = (stack) ->
+  stack.command.option("-p,--page <page>")
+
 module.exports = {
   exit
+  paginate
   signIn
   signInMW
   Stack

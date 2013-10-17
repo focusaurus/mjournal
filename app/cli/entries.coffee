@@ -1,11 +1,12 @@
 #!/usr/bin/env coffee
-#!/usr/bin/env coffee --nodejs --debug-brk=9091
+#!/usr/bin/env coffee --nodejs --debug-brk=9093
+_ = require "lodash"
 cli = require "app/cli"
-program = require "commander"
 concat = require "concat-stream"
-viewOp = require "app/operations/entries/view"
 createOp = require "app/operations/entries/create"
+program = require "commander"
 updateOp = require "app/operations/entries/update"
+viewOp = require "app/operations/entries/view"
 
 ##### helper functions #####
 bodyOption = (stack) ->
@@ -24,16 +25,18 @@ bodyOption = (stack) ->
     #   next()
 
 ##### view #####
-viewAction = (options) ->
-  viewOp options.user, (error, entries) ->
+viewAction = (next, options) ->
+  viewOp _.pick(options, "user", "page"), (error, entries) ->
     cli.exit error if error
     for entry in entries
-      console.log entry.created, entry.body, entry.id
+      console.log "id:", entry.id, entry.created, entry.body
     process.exit()
-
 viewCommand = program.command("view")
-  .description("view entries for user with specified id")
-cli.signIn viewCommand, viewAction
+  .description("view entries for a user")
+viewStack = new cli.Stack viewCommand
+cli.signInMW viewStack
+cli.paginate viewStack
+viewStack.use viewAction
 
 ##### create #####
 createAction = (options) ->
