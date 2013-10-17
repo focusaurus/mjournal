@@ -10,7 +10,7 @@ help() {
     fi
     local SUB=$(basename "${FILE}" | cut -d . -f 1)
     echo "----- ${SUB} -----"
-    "${FILE}"
+    "${FILE}" --help
   done
 }
 

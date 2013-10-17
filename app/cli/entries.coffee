@@ -1,5 +1,5 @@
-#!/usr/bin/env coffee
 #!/usr/bin/env coffee --nodejs --debug-brk=9093
+#!/usr/bin/env coffee
 _ = require "lodash"
 cli = require "app/cli"
 concat = require "concat-stream"
@@ -11,7 +11,7 @@ viewOp = require "app/operations/entries/view"
 ##### helper functions #####
 bodyOption = (stack) ->
   stack.command.option("-b, --body [body]",
-    "Content for the journal entry. Pass '-' to provide on stdin")
+    "Content for the journal entry. Pass 'stdin' to provide on stdin")
   stack.use (next, entryId, options) ->
     next()
     # if options.body is "stdin"
@@ -39,15 +39,18 @@ cli.paginate viewStack
 viewStack.use viewAction
 
 ##### create #####
-createAction = (options) ->
-  createOp options, (error, entry) ->
+createAction = (next, options) ->
+  createOp _.pick(options, "user", "body"), (error, entry) ->
     cli.exit(error) if error
     console.log entry
     process.exit()
 
 createCommand = program.command("create")
   .description("create a new journal entry")
-cli.signIn createCommand, createAction
+createStack = new cli.Stack createCommand
+bodyOption createStack
+cli.signInMW createStack
+createStack.use createAction
 
 ##### create #####
 updateAction = (next, entryId, options) ->

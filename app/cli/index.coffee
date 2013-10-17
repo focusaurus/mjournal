@@ -36,7 +36,7 @@ exit = (error) ->
   process.exit()
 
 signIn = (command, realAction) ->
-  command.option("-u,--user <email>")
+  command.option("-u, --user <email>")
   command.action ->
     realArguments = arguments
     options = _.last arguments
@@ -51,7 +51,7 @@ signIn = (command, realAction) ->
       exit {code: 403, message: "Please specify a user with --user <email>"}
 
 signInMW = (stack) ->
-  stack.command.option("-u,--user <email>")
+  stack.command.option("-u, --user <email>")
   stack.use (next) ->
     options = _.last arguments
     email = options.user || process.env.MJ_USER
@@ -65,7 +65,7 @@ signInMW = (stack) ->
       exit {code: 403, message: "Please specify a user with --user <email>"}
 
 paginate = (stack) ->
-  stack.command.option("--page,-p <page>")
+  stack.command.option("-p, --page <page>")
 
 module.exports = {
   exit
