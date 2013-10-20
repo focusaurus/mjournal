@@ -1,15 +1,10 @@
-# editable = ($scope) ->
-#   $scope.onFocus = () ->
-#     console.log "@bug onFocus", arguments
-
-#   $scope.onBlur = ($event, entry) ->
-#     entry.body = $event.srcElement.innerText
 
 EntriesController = ($scope, $http) ->
   $http.get("/entries").success (entries) ->
     $scope.entries = entries
   $scope.onBlur = (entry) ->
-    console.log "@bug onBlur", entry.body
+    # $http.put("/entries/#{entry.id}", {body: entry.body}).success (result) ->
+    #   entry.updated = result.updated
 
-mjournal = angular.module("mjournal", ["contenteditable"])
+mjournal = angular.module("mjournal", ["editText"])
 mjournal.controller "EntriesController", EntriesController

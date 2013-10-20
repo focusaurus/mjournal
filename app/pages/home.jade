@@ -6,11 +6,8 @@ block body
         .info(title="{{entry.created}}") i
         p.body(
           ng-model="entry.body",
-          strip-br="true",
-          select-non-editable="true",
           contenteditable="true",
           ng-blur="onBlur(entry)")
   script(src="/angular.js")
-  script(src="/angular-contenteditable.js")
   script(src="/editText.js")
   script(src="/main.js")
