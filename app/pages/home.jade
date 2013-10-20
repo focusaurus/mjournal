@@ -7,7 +7,7 @@ block body
         p.body(
           ng-model="entry.body",
           contenteditable="true",
-          ng-blur="onBlur(entry)")
+          ng-change="update(entry)")
   script(src="/angular.js")
   script(src="/editText.js")
   script(src="/main.js")

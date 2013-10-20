@@ -1,6 +1,5 @@
-_ = require "lodash"
 db = require "app/db"
-log = require("winston").loggers.get "app:operations:entries:create"
+log = require("winston").loggers.get "app:operations:entries:update"
 
 select = (where, callback) ->
   db.select("entries").where(where).execute (error, result) ->
@@ -8,7 +7,7 @@ select = (where, callback) ->
 
 run = (options, callback) ->
   if not options.user
-    return callback {code: 401, "Please sign in to view your journal"}
+    return callback {code: 401, "Please sign in to access your journal"}
 
   set =
     body: options.body
@@ -17,7 +16,7 @@ run = (options, callback) ->
     id: options.id
     userId: options.user.id
   db.update("entries").set(set).where(where).execute (error, result) ->
-    log.debug "entries/update #{error} #{result}"
+    log.debug "entries/update #{error}", result
     return callback error if error
     select where, callback
 

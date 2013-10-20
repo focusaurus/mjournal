@@ -12,26 +12,20 @@ viewEntries = (req, res) ->
     options =
       user: req.user
       page: req.query.page
-    viewEntriesOp options, api.sendResult.bind(null, res)
+    viewEntriesOp options, api.sendResult(res)
   else
     res.render "home"
 
 createEntry = (req, res) ->
   options = _.pick req.body, "body"
   options.user = req.user
-  createEntryOp options, (error, entry) ->
-    if error
-      return res.status(500).send error
-    res.status(201).send entry
+  createEntryOp options, api.sendResult(res)
 
 updateEntry = (req, res) ->
   options = _.pick req.body, "body"
   options.id = req.params.id
   options.user = req.user
-  updateEntryOp options, (error) ->
-    if error
-      return res.status(500).send error
-    res.status(204).send()
+  updateEntryOp options, api.sendResult(res)
 
 setup = (app) ->
   app.get "/entries", needUser, viewEntries
