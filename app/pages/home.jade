@@ -3,12 +3,11 @@ block body
   h1 mjournal
   h2 minimalist journaling
   if user
-    p You are logged in as #{user.email}
-    a(href="/users/sign-out") Sign Out
-    include ../views/entries/main
-    script(src="/build.js")
-    script.
-      require("boot")
+    div(ng-app="mjournal")
+      p
+        | {{ "mike" | greet }}
+    script(src="/angular.js")
+    script(src="/main.js")
   else
     include ../views/users/sign-in
 

@@ -5,6 +5,7 @@ setup = (app) ->
   controllers = [
     "users"
     "styles"
+    "scripts"
     "entries"
   ]
   if app.get "config.development"

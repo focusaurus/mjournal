@@ -1,12 +1,14 @@
 #!/usr/bin/env coffee
-log = require("winston").loggers.get("app:server")
 express = require "express"
+log = require("winston").loggers.get("app:server")
+paths = require "app/paths"
 app = express()
 
 if (process.env.NODE_ENV or "development") is "development"
   app.set "config.development", true
 
-app.use express.static("#{__dirname}/../build")
+app.use express.static("#{paths.wwwroot}")
+app.use express.static("#{paths.build}")
 
 #Load the controllers
 require("app/controllers") app

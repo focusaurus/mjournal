@@ -1,10 +1,11 @@
 #!/usr/bin/env coffee
 fs = require "fs"
 log = require("winston").loggers.get("app:controllers:styles")
+paths = require "app/paths"
 stylus = require "stylus"
 
 render = (callback) ->
-  fs.readFile "#{__dirname}/../app.styl", "utf8", (error, stylusText) ->
+  fs.readFile "#{paths.app}/app.styl", "utf8", (error, stylusText) ->
     return callback error if error
     stylus.render stylusText, callback
 
