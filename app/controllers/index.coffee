@@ -3,9 +3,10 @@ setup = (app) ->
   app.set "views", "#{__dirname}/../pages"
   #Note order of controllers below matters
   controllers = [
+    "scripts" #needs to be before static
+    "static"
     "users"
     "styles"
-    "scripts"
     "entries"
   ]
   if app.get "config.development"

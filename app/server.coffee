@@ -7,9 +7,6 @@ app = express()
 if (process.env.NODE_ENV or "development") is "development"
   app.set "config.development", true
 
-app.use express.static("#{paths.wwwroot}")
-app.use express.static("#{paths.build}")
-
 #Load the controllers
 require("app/controllers") app
 

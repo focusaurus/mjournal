@@ -4,6 +4,13 @@ block body
     div.entries(ng-controller="EntriesController")
       div.entry(ng-repeat="entry in entries")
         .info(title="{{entry.created}}") i
-        p.body(data-id="{{entry.id}}") {{entry.body}}
+        p.body(
+          ng-model="entry.body",
+          strip-br="true",
+          select-non-editable="true",
+          contenteditable="true",
+          ng-blur="onBlur(entry)")
   script(src="/angular.js")
+  script(src="/angular-contenteditable.js")
+  script(src="/editText.js")
   script(src="/main.js")
