@@ -1,4 +1,8 @@
-  mjournal = angular.module("mjournal", [])
+EntriesController = ($scope, $http) ->
+  $http.get("/entries").success (entries) ->
+    $scope.entries = entries
 
-  mjournal.filter "greet", ->
-    (name) -> "Hello, #{name}!"
+mjournal = angular.module("mjournal", [])
+mjournal.controller "EntriesController", EntriesController
+mjournal.filter "greet", ->
+  (name) -> "Hello, #{name}!"

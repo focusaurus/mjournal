@@ -5,5 +5,6 @@ setup = (app) ->
   app.use coffeescript
     src: "#{paths.app}/browser"
     dest: "#{paths.build}"
+    force: true
 
 module.exports = setup

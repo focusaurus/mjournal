@@ -4,7 +4,7 @@ createEntryOp = require "app/operations/entries/create"
 updateEntryOp = require "app/operations/entries/update"
 needUser = require "app/middleware/need-user"
 viewEntriesOp = require "app/operations/entries/view"
-
+api = require "app/api"
 bodyParser = express.bodyParser()
 
 viewEntries = (req, res) ->
@@ -12,11 +12,7 @@ viewEntries = (req, res) ->
     options =
       user: req.user
       page: req.query.page
-    viewEntriesOp options, (error, entries) ->
-      if error
-        return res.status(500).render "error", {error}
-      res.locals.entries = entries
-      return res.render "home"
+    viewEntriesOp options, api.sendResult.bind(null, res)
   else
     res.render "home"
 
@@ -38,7 +34,6 @@ updateEntry = (req, res) ->
     res.status(204).send()
 
 setup = (app) ->
-  app.get "/", viewEntries
   app.get "/entries", needUser, viewEntries
   app.post "/entries", needUser, bodyParser, createEntry
   app.put "/entries/:id", needUser, bodyParser, updateEntry

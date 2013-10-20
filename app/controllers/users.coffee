@@ -20,6 +20,7 @@ setup = (app) ->
   app.use (req, res, next) ->
     res.locals.user = req.user = req.session.user
     next()
+  app.get "/", (req, res) -> res.render "home"
   app.post "/users/sign-in", express.bodyParser(), signIn
   # app.post "/users/sign-up", express.bodyParser(), signUp
   app.get "/users/sign-out", signOut

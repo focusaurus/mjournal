@@ -4,8 +4,10 @@ block body
   h2 minimalist journaling
   if user
     div(ng-app="mjournal")
-      p
-        | {{ "mike" | greet }}
+      div.entries(ng-controller="EntriesController")
+        div.entry(ng-repeat="entry in entries")
+          .info(title="{{entry.created}}") i
+          p.body(data-id="{{entry.id}}") {{entry.body}}
     script(src="/angular.js")
     script(src="/main.js")
   else
