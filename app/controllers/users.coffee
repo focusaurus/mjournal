@@ -2,6 +2,12 @@ _ = require "lodash"
 express = require "express"
 signInOp = require "app/operations/users/sign-in"
 
+home = (req, res) ->
+  if req.user
+    res.render "home"
+  else
+    res.render "sign-in"
+
 signIn = (req, res) ->
   options = _.pick req.body, "email", "password"
   signInOp options, (error, user) ->
@@ -20,7 +26,7 @@ setup = (app) ->
   app.use (req, res, next) ->
     res.locals.user = req.user = req.session.user
     next()
-  app.get "/", (req, res) -> res.render "home"
+  app.get "/", home
   app.post "/users/sign-in", express.bodyParser(), signIn
   # app.post "/users/sign-up", express.bodyParser(), signUp
   app.get "/users/sign-out", signOut

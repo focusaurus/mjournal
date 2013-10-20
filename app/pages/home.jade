@@ -1,15 +1,9 @@
 extends layout
 block body
-  h1 mjournal
-  h2 minimalist journaling
-  if user
-    div(ng-app="mjournal")
-      div.entries(ng-controller="EntriesController")
-        div.entry(ng-repeat="entry in entries")
-          .info(title="{{entry.created}}") i
-          p.body(data-id="{{entry.id}}") {{entry.body}}
-    script(src="/angular.js")
-    script(src="/main.js")
-  else
-    include ../views/users/sign-in
-
+  div(ng-app="mjournal")
+    div.entries(ng-controller="EntriesController")
+      div.entry(ng-repeat="entry in entries")
+        .info(title="{{entry.created}}") i
+        p.body(data-id="{{entry.id}}") {{entry.body}}
+  script(src="/angular.js")
+  script(src="/main.js")
