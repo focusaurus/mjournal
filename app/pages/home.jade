@@ -6,8 +6,10 @@ block body
         .info(title="{{entry.created}}") i
         p.body(
           ng-model="entry.body",
-          contenteditable="true",
+          edittext,
           ng-change="update(entry)")
+      hr
+      p.body.new(ng-keydown="create($event)", contenteditable="true")
   script(src="/angular.js")
   script(src="/editText.js")
   script(src="/main.js")
