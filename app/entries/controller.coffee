@@ -2,7 +2,7 @@ _ = require "lodash"
 api = require "app/api"
 ops = require "app/entries/operations"
 express = require "express"
-needUser = require "app/middleware/need-user"
+needUser = require "app/middleware/needUser"
 bodyParser = express.bodyParser()
 
 viewEntries = (req, res) ->

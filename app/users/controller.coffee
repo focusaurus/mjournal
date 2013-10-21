@@ -24,7 +24,6 @@ setup = (app) ->
   app.use express.cookieParser()
   app.use express.session {secret: 'HkpYsNTjVpXz6BthO8hN'}
   app.use (req, res, next) ->
-    console.log "@bug req.user middleware running"
     res.locals.user = req.user = req.session.user
     next()
   app.get "/", home
