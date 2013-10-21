@@ -1,16 +1,15 @@
 setup = (app) ->
   app.set "view engine", "jade"
   app.set "views", "#{__dirname}/../pages"
+  app.router #access router to bypass magic insertion
   #Note order of controllers below matters
   controllers = [
     "scripts" #needs to be before static
-    "static"
-    "users"
     "styles"
-    "entries"
+    "static"
+    "../users/controller"
+    "../entries/controller"
   ]
-  if app.get "config.development"
-    controllers.push "development"
   require("./#{controller}")(app) for controller in controllers
-
+  app.use app.router
 module.exports = setup

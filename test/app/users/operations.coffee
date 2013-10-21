@@ -1,11 +1,11 @@
-signUp = require "app/operations/users/sign-up"
-signIn = require "app/operations/users/sign-in"
+signIn = require "app/users/operations/sign-in"
+signUp = require "app/users/operations/sign-up"
 assert = require("chai").assert
 
-describe "operations/users/sign-up", ->
+describe "users/operations/sign-up", ->
   it "should create a user.id and not return the password", (done) ->
     newUser =
-      email: "test/operations/users/sign-up@example.com"
+      email: "test/users/operations/sign-up@example.com"
       password: "password"
     signUp newUser, (error, user) ->
       assert.isNull error, error
@@ -25,9 +25,9 @@ describe "operations/users/sign-up", ->
         assert.propertyVal error, "code", 409
         done()
 
-describe "operations/users/sign-in", ->
+describe "users/operations/sign-in", ->
   newUser =
-    email: "test/operations/users/sign-in@example.com"
+    email: "test/users/operations/sign-in@example.com"
     password: "password"
 
   before (done) -> signUp newUser, done

@@ -3,7 +3,7 @@ DIR=$(dirname "${0}")/..
 help() {
   echo "mjournal command line interface usage:"
   echo "\tBasic syntax is ${0} <resource-or-subcommand> [options]"
-  for FILE in $(ls "${DIR}/app/cli/"*.coffee);
+  for FILE in $(find "${DIR}/app/" -name cli.coffee);
   do
     if [ ! -x "${FILE}" ]; then
       continue

@@ -3,10 +3,8 @@
 _ = require "lodash"
 cli = require "app/cli"
 readline = require "readline"
-createOp = require "app/operations/entries/create"
+entryOps = require "app/entries/operations"
 program = require "commander"
-updateOp = require "app/operations/entries/update"
-viewOp = require "app/operations/entries/view"
 
 ##### helper functions #####
 bodyOption = (stack) ->
@@ -28,7 +26,7 @@ bodyOption = (stack) ->
 
 ##### view #####
 viewAction = (next, options) ->
-  viewOp _.pick(options, "user", "page"), (error, entries) ->
+  entryOps.view _.pick(options, "user", "page"), (error, entries) ->
     cli.exit error if error
     for entry in entries
       console.log "id:", entry.id, entry.created, entry.body
@@ -42,7 +40,7 @@ viewStack.use viewAction
 
 ##### create #####
 createAction = (next, options) ->
-  createOp _.pick(options, "user", "body"), (error, entry) ->
+  entryOps.create _.pick(options, "user", "body"), (error, entry) ->
     cli.exit(error) if error
     console.log entry
     process.exit()
@@ -57,7 +55,7 @@ createStack.use createAction
 ##### update #####
 updateAction = (next, options) ->
   options.id = options.entryId
-  updateOp options, (error) ->
+  entryOps.update options, (error) ->
     cli.exit(error) if error
     console.log "Entry updated"
     process.exit()

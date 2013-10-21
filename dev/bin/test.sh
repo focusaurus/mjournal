@@ -7,6 +7,6 @@ runTestsPostgres() {
 cd $(dirname "${0}")/../..
 ARGS=""
 if [ "${1}" == "--debug" ]; then
-  ARGS="--timeout 0 --debug-brk=9093"
+  ARGS="--timeout 0 --debug-brk=9093 ${@}"
 fi
-runTestsPostgres
+runTestsPostgres "${ARGS}"

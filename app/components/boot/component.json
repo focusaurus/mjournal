@@ -1,7 +1,0 @@
-{
-  "name": "boot",
-  "local": [
-    "entries-edit"
-  ],
-  "scripts": ["index.js"]
-}

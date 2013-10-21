@@ -1,7 +1,7 @@
 _ = require "lodash"
 bcrypt = require "bcrypt"
 db = require "app/db"
-log = require("winston").loggers.get "app:operations:users:sign-in"
+log = require("winston").loggers.get "app:users:operations:sign-in"
 
 run = (options, callback) ->
   denied = ->
@@ -10,7 +10,7 @@ run = (options, callback) ->
       message: "Please check your email/password and try again"
 
   user = _.pick options, "email"
-  user.email = user.email.toLowerCase()
+  user.email = user.email.toLowerCase().trim()
   dbOp = db.select("users", ["id", "bcryptedPassword", "email"])
     .where(user).limit(1)
   dbOp.execute (error, result) ->

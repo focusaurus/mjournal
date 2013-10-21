@@ -1,6 +1,6 @@
 _ = require "lodash"
 db = require "app/db"
-log = require("winston").loggers.get "app:operations:entries:create"
+log = require("winston").loggers.get "app:entries:operations:create"
 
 run = (options, callback) ->
   if not options.user

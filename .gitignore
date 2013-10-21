@@ -2,7 +2,3 @@
 /node_modules
 /var
 /build
-^/app/components/editable/*.js
-/app/components/*/*.js
-/components
-/dev/component_lab

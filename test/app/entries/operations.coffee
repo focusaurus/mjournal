@@ -1,16 +1,14 @@
-signUp = require "app/operations/users/sign-up"
-create = require "app/operations/entries/create"
-update = require "app/operations/entries/update"
-view = require "app/operations/entries/view"
+signUp = require "app/users/operations/sign-up"
+ops = require "app/entries/operations"
 assert = require("chai").assert
 
-describe "operations/entries/create+update", ->
+describe "entries/operations/create+update", ->
   user = null
   entry = null
 
   before (done) ->
     inUser =
-      email: "test/operations/entries/create@example.com"
+      email: "test/entries/operations/create@example.com"
       password: "password"
     signUp inUser, (error, outUser) ->
       assert.isNull error, error
@@ -20,7 +18,7 @@ describe "operations/entries/create+update", ->
 
   it "should create an entry", (done) ->
     options = {user, body: "test body"}
-    create options, (error, outEntry) ->
+    ops.create options, (error, outEntry) ->
       assert.isNull error, error
       assert.property outEntry, "id"
       assert.property outEntry, "created"
@@ -34,7 +32,7 @@ describe "operations/entries/create+update", ->
   it "should update an entry", (done) ->
     options = {id: entry.id, user, body: "test body 2"}
     oldUpdated = entry.updated
-    update options, (error, outEntry) ->
+    ops.update options, (error, outEntry) ->
       assert.isNull error, error
       assert.propertyVal outEntry, "body", options.body
       assert.property outEntry, "updated"
@@ -43,7 +41,7 @@ describe "operations/entries/create+update", ->
       done()
 
   it "should view the newly created entry", (done) ->
-    view {user}, (error, entries) ->
+    ops.view {user}, (error, entries) ->
       assert.isNull error, error
       assert.isArray entries
       assert.ok (entries.length > 0)

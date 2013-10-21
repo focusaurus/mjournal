@@ -1,5 +1,5 @@
 _  = require "lodash"
-signInOp = require "app/operations/users/sign-in"
+signInOp = require "app/users/operations/sign-in"
 promptly = require "promptly"
 
 class Stack

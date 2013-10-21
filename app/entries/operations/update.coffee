@@ -1,5 +1,5 @@
 db = require "app/db"
-log = require("winston").loggers.get "app:operations:entries:update"
+log = require("winston").loggers.get "app:entries:operations:update"
 
 select = (where, callback) ->
   db.select("entries").where(where).execute (error, result) ->
