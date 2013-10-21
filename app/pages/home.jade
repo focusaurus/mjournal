@@ -1,7 +1,9 @@
 extends layout
 block body
-  div(ng-app="mjournal")
-    div.entries(ng-controller="EntriesController")
+  div(ng-app="mjournal", ng-controller="EntriesController")
+    button(ng-click="previous()") Previous Entries
+    button(ng-click="next()", ng-show="page > 1") Next Entries
+    div.entries
       div.entry(ng-repeat="entry in entries")
         .info(title="{{entry.created}}") i
         p.body(
@@ -10,6 +12,8 @@ block body
           ng-change="update(entry)")
       hr
       p.body.new(ng-keydown="create($event)", contenteditable="true")
+  script(src="/lodash.js")
   script(src="/angular.js")
+  script(src="/angular-resource.js")
   script(src="/editText.js")
   script(src="/main.js")

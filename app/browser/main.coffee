@@ -1,15 +1,34 @@
-
-EntriesController = ($scope, $http) ->
-  $http.get("/entries").success (entries) ->
-    $scope.entries = entries
+entriesFactory = ($resource) ->
+  $resource "/entries/:id", {id: "@id"},
+      get:
+        method: "GET"
+        isArray: true
+      update:
+        method: "PUT"
+      create:
+        method: "POST"
+EntriesService = angular.module("EntriesService", ["ngResource"])
+EntriesService.factory "Entries", ["$resource", entriesFactory]
+EntriesController = ($scope, Entries) ->
+  $scope.page = 1
+  $scope.get = ->
+    Entries.get {page: $scope.page}, (entries) ->
+      $scope.entries = entries
   $scope.update = (entry) ->
-    $http.put("/entries/#{entry.id}", {body: entry.body}).success (result) ->
+    Entries.update _.pick(entry, "id", "body"), (result) ->
       entry.updated = result.updated
   $scope.create = (event) ->
     if event.which is 13 and event.shiftKey and event.target.innerText
-     $http.post("/entries", {body: event.target.innerText}).success (entry) ->
+     Entries.create {body: event.target.innerText}, (entry) ->
         $scope.entries.push(entry)
       event.target.innerText = ""
+  $scope.previous = ->
+    $scope.page++
+    $scope.get()
+  $scope.next = ->
+    $scope.page--
+    $scope.get()
+  $scope.get()
 
-mjournal = angular.module("mjournal", ["editText"])
+mjournal = angular.module("mjournal", ["editText", "EntriesService"])
 mjournal.controller "EntriesController", EntriesController
