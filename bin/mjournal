@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 DIR=$(dirname "${0}")/..
 help() {
   echo "mjournal command line interface usage:"
