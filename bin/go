@@ -1,40 +1,96 @@
-#!/bin/sh
-cd $(dirname "${0}")/..
-case "${1}" in
-  build)
-    find app/components -type f -name \*.coffee | xargs coffee -c
-    find app/components -type f -name \*.styl | xargs stylus
-    #component build
-    coffee dev/bin/build.coffee
-  ;;
-  start)
-   [ ! -d node_modules ] && npm install
-   exec node-dev --debug=9091 ./app/server.coffee
-  ;;
-  inspector)
-    exec node-inspector --web-port=9092
-  ;;
-  test)
-    exec ./dev/bin/test.sh "${@}"
-  ;;
-  testdebug)
-    exec ./bin/test.sh --debug
-  ;;
-  clean)
-   rm -rf ./build
-  ;;
-  postgres)
-    pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
-  ;;
-  *)
-    for EXT in sh js
-    do
-      SUB="./dev/bin/${1}.${EXT}"
-      if [ -x "${SUB}" ]; then
-        exec "${SUB}" "${@}"
-      fi
-    done
-    echo "Unknown command ${1}" 1>&2
-    exit 1
-  ;;
-esac
+#!/bin/bash
+##### helper functions #####
+autoinstall_wallah() {
+  [[ -f wallah/bin/install_node ]] && return
+  git submodule update --init
+}
+
+autoinstall_npm_dependencies() {
+  autoinstall_wallah
+  ./wallah/bin/install_node
+  [[ -d node_modules/express ]] && return
+  npm install
+}
+
+usage() {
+  echo "Usage: $(basename $0) <subcommand> [args...]"
+  cat <<EOF
+
+Purpose of $(basename $0) script
+--------------------
+
+* entrypoint script for common commands
+* Automatically installs development prerequisites
+* Ensures the correct PATH environment variable
+* commands are grouped by purpose/lifecycle and described in more detail below
+
+
+Development Commands
+--------------------
+
+* express: start the express server
+* test: run all the tests (mocha)
+* inspector: run node-inspector with the proper web port
+
+Deployment Commands
+-------------------
+
+* clean: delete the build directory
+* build: build a distribution archive for deployment
+EOF
+  exit 1
+}
+
+##### development task functions #####
+task::express() {
+  autoinstall_npm_dependencies
+  node-dev --debug=9091 app/server.coffee
+}
+
+task::test() {
+  args="--slow 200 --reporter spec --compilers coffee:coffee-script --colors \
+    --recursive"
+  # if [ "${1}" == "--debug" ]; then
+  #   args="${args} --timeout 0 --debug-brk=9093"
+  # fi
+  test_dirs=$(find app -type d -name tests | xargs)
+  psql --username=mjournal --dbname=mjournal-test --file=app/db/postgres/destroyData.sql
+  NODE_ENV=test MJ_DB_URL="postgres://mjournal@localhost/mjournal-test" mocha ${args} ${test_dirs}
+}
+
+task::inspector() {
+  exec node-inspector --web-port=9092
+}
+
+##### deployment command functions #####
+task::build() {
+  autoinstall_npm_dependencies
+  find app/components -type f -name \*.coffee | xargs coffee -c
+  find app/components -type f -name \*.styl | xargs stylus
+  #component build
+  coffee dev/bin/build.coffee
+}
+
+task::clean() {
+  rm -rf ./build
+}
+
+##### main code #####
+main() {
+  cd $(dirname "$0")/..
+  PATH="${PATH}:${PWD}/bin"
+  PATH="${PATH}:${PWD}/node_modules/.bin"
+  PATH="${PATH}:${PWD}/node/bin"
+  #Need the basics like dirname et al
+  PATH="${PATH}:/usr/bin:/bin"
+  export PATH
+  task_name="$1"
+  if type "task::${task_name}" &>/dev/null; then
+    shift
+    eval "task::${task_name}" "$@"
+  else
+    usage "$@"
+  fi
+}
+
+main "$@"
