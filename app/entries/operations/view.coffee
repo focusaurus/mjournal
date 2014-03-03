@@ -5,7 +5,7 @@ opMW = require "app/operations/middleware"
 
 initDbOp = (next) ->
   @dbOp = db.select(
-    "entries", ["id", "created", "updated", "body"]).order("created")
+    "entries", ["id", "created", "updated", "body", "tags"]).order("created")
   next()
 
 execute = (next, options, callback) ->

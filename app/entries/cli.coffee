@@ -34,7 +34,12 @@ viewAction = (next, options) ->
   entryOps.view _.pick(options, "user", "page", "textSearch"), (error, entries) ->
     cli.exit error if error
     for entry in entries
-      console.log "id:", entry.id, entry.created, entry.body
+      console.log """
+----- ID: #{entry.id} Created: #{entry.created} -----
+tags: #{entry.tags or ""}
+
+#{entry.body}
+"""
     process.exit()
 viewCommand = program.command("view")
   .description("view entries for a user")
@@ -61,8 +66,9 @@ tagsOption createStack
 createStack.use createAction
 
 ##### update #####
-updateAction = (next, options) ->
-  options.id = options.entryId
+updateAction = (next, commandOptions) ->
+  options = _.pick(commandOptions, "user", "body", "tags")
+  options.id = commandOptions.entryId
   entryOps.update options, (error) ->
     cli.exit(error) if error
     console.log "Entry updated"
@@ -74,7 +80,12 @@ updateCommand = program.command("update")
 updateStack = new cli.Stack updateCommand
 cli.signInMW updateStack
 bodyOption updateStack
+tagsOption updateStack
 updateStack.use updateAction
 
 program.description "operate on entry records"
-program.parse process.argv
+
+if require.main is module
+  program.parse process.argv
+
+module.exports = {updateAction}

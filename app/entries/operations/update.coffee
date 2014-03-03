@@ -8,10 +8,11 @@ select = (where, callback) ->
 run = (options, callback) ->
   if not options.user
     return callback {code: 401, "Please sign in to access your journal"}
-
   set =
-    body: options.body
     updated: new Date()
+  for property in ["body", "tags"]
+    if options[property]?
+      set[property] = options[property]
   where =
     id: options.id
     userId: options.user.id
