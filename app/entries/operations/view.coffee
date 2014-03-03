@@ -14,11 +14,17 @@ execute = (next, options, callback) ->
     return callback error if error
     callback null, result.rows
 
+whereText = (next, options) ->
+  if options.q?
+    @dbOp.where(db.text("body @@ $0", [options.q]))
+  next()
+
 runStack = ->
   stack = new Stack
   stack.use initDbOp
   stack.use opMW.requireUser
   stack.use opMW.whereUser
+  stack.use whereText
   stack.use opMW.paginated
   stack.use execute
   stack.run arguments...

@@ -58,4 +58,26 @@ describe("entries/operations/create+update", function() {
       done();
     });
   });
+  it("should find the entry with text search", function(done) {
+    ops.view({
+      user: user,
+      q: "body"
+    }, function(error, entries) {
+      assert.isNull(error, error);
+      assert.isArray(entries);
+      assert.ok(entries.length > 0);
+      done();
+    });
+  });
+  it("should not find the entry with non-matching text search", function(done) {
+    ops.view({
+      user: user,
+      q: "notpresent"
+    }, function(error, entries) {
+      assert.isNull(error, error);
+      assert.isArray(entries);
+      assert.ok(entries.length === 0);
+      done();
+    });
+  });
 });
