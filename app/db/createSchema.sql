@@ -12,3 +12,10 @@ create table if not exists "entries" (
   "body" text not null,
   "textSearch" tsvector
 );
+
+create index "textSearchGin"
+  on entries using gin("textSearch");
+
+create trigger textSearchUpdate before insert or update on entries
+  for each row execute procedure
+  tsvector_update_trigger("textSearch", "pg_catalog.english", body);

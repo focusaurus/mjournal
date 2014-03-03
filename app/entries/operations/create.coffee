@@ -12,8 +12,10 @@ run = (options, callback) ->
     .addRow(row)
     .returning(["id", "body", "created", "updated"])
   dbOp.execute (error, result) ->
-    log.debug "createEntry insert #{error} #{result}"
-    return callback error if error
+    if error
+      log.error "createEntry insert #{error} #{result}"
+      callback error
+      return
     callback null, result.rows[0]
 
 module.exports = run
