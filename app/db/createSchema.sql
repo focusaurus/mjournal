@@ -1,21 +1,57 @@
-create table if not exists "users" (
-  "id" serial primary key,
-  "email" varchar(256) not null unique,
-  "bcryptedPassword" char(60) not null
+DROP TABLE entries;
+DROP TABLE users;
+
+-- Table: users
+CREATE TABLE users
+(
+  id serial NOT NULL,
+  email character varying(256) NOT NULL,
+  "bcryptedPassword" character(60) NOT NULL,
+  CONSTRAINT users_pkey PRIMARY KEY (id),
+  CONSTRAINT users_email_key UNIQUE (email)
+)
+WITH (
+  OIDS=FALSE
 );
 
-create table if not exists "entries" (
-  "id" serial primary key,
-  "userId" integer references users,
-  "created" timestamp with time zone not null default current_timestamp,
-  "updated" timestamp with time zone not null default current_timestamp,
-  "body" text not null,
-  "textSearch" tsvector
+-- Table: entries
+CREATE TABLE entries
+(
+  id serial NOT NULL,
+  "userId" integer,
+  created timestamp with time zone NOT NULL DEFAULT now(),
+  updated timestamp with time zone NOT NULL DEFAULT now(),
+  body text NOT NULL,
+  tags character varying(256),
+  "textSearch" tsvector,
+  CONSTRAINT entries_pkey PRIMARY KEY (id),
+  CONSTRAINT "entries_userId_fkey" FOREIGN KEY ("userId")
+      REFERENCES users (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
 );
+ALTER TABLE entries
+  OWNER TO mjournal;
 
-create index "textSearchGin"
-  on entries using gin("textSearch");
+-- Index: "textSearchGin"
 
-create trigger textSearchUpdate before insert or update on entries
-  for each row execute procedure
-  tsvector_update_trigger("textSearch", "pg_catalog.english", body);
+DROP INDEX "textSearchGin";
+
+CREATE INDEX "textSearchGin"
+  ON entries
+  USING gin
+  ("textSearch");
+
+
+-- Trigger: textsearchupdate on entries
+
+DROP TRIGGER textsearchupdate ON entries;
+
+CREATE TRIGGER textsearchupdate
+  BEFORE INSERT OR UPDATE
+  ON entries
+  FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger('textSearch', 'pg_catalog.english', 'body', 'tags');
+

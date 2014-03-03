@@ -8,9 +8,9 @@ run = (options, callback) ->
   row =
     userId: options.user.id
     body: options.body
-  dbOp = db.insert("entries", ["userId", "body"])
-    .addRow(row)
-    .returning(["id", "body", "created", "updated"])
+    tags: options.tags
+  returning = ["id"].concat(_.keys(row))
+  dbOp = db.insert("entries", row).returning(returning)
   dbOp.execute (error, result) ->
     if error
       log.error "createEntry insert #{error} #{result}"

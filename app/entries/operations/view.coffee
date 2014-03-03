@@ -9,15 +9,18 @@ initDbOp = (next) ->
   next()
 
 execute = (next, options, callback) ->
+  log.debug(@dbOp.toString())
   @dbOp.execute (error, result) ->
-    log.debug "select #{error} #{result.rowCount}"
-    return callback error if error
+    if error
+      log.error error
+      callback error
+      return
     callback null, result.rows
 
 whereText = (next, options) ->
   textSearch = options.textSearch?.trim()
   if textSearch
-    @dbOp.where(db.text("body @@ $0", [textSearch]))
+    @dbOp.where(db.text('"entries"."textSearch" @@ to_tsquery($0)', [textSearch]))
   next()
 
 runStack = ->

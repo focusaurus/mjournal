@@ -8,7 +8,7 @@ program = require "commander"
 
 ##### helper functions #####
 bodyOption = (stack) ->
-  stack.command.option("-b, --body [body]",
+  stack.command.option("-b, --body <body>",
     "Content for the journal entry. Pass 'stdin' to provide on stdin")
   stack.use (next, options) ->
     if options.body is "stdin"
@@ -24,15 +24,22 @@ bodyOption = (stack) ->
     else
       next()
 
+tagsOption = (stack) ->
+  stack.command.option("-t, --tags <tags>",
+    "Tags for the entry. Space-delimited words.")
+
 ##### view #####
 viewAction = (next, options) ->
-  entryOps.view _.pick(options, "user", "page"), (error, entries) ->
+  options.textSearch = options.search
+  entryOps.view _.pick(options, "user", "page", "textSearch"), (error, entries) ->
     cli.exit error if error
     for entry in entries
       console.log "id:", entry.id, entry.created, entry.body
     process.exit()
 viewCommand = program.command("view")
   .description("view entries for a user")
+viewCommand.option("-s, --search <query>",
+  "search for entries mentioning or tagged with a keyword")
 viewStack = new cli.Stack viewCommand
 cli.signInMW viewStack
 cli.paginate viewStack
@@ -40,7 +47,7 @@ viewStack.use viewAction
 
 ##### create #####
 createAction = (next, options) ->
-  entryOps.create _.pick(options, "user", "body"), (error, entry) ->
+  entryOps.create _.pick(options, "user", "body", "tags"), (error, entry) ->
     cli.exit(error) if error
     console.log entry
     process.exit()
@@ -50,6 +57,7 @@ createCommand = program.command("create")
 createStack = new cli.Stack createCommand
 cli.signInMW createStack
 bodyOption createStack
+tagsOption createStack
 createStack.use createAction
 
 ##### update #####
