@@ -2,10 +2,11 @@
 #!/usr/bin/env coffee --nodejs --debug-brk=9091
 cli = require "app/cli"
 program = require "commander"
-signUpOp = require "app/operations/users/sign-up"
+signUpOp = require "app/users/operations/sign-up"
+promptly = require "promptly"
 
 signUp = (email) ->
-  program.password "password for #{email}: ", (password) ->
+  promptly.password "password for #{email}: ", (error, password) ->
     console.log "registering #{email}"
     signUpOp {email, password}, (error, user) ->
       cli.exit error if error

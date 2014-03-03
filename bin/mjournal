@@ -24,7 +24,7 @@ case "${1}" in
     help
   ;;
   *)
-    SUBSCRIPT="${DIR}/app/cli/${1}.coffee"
+    SUBSCRIPT="${DIR}/app/${1}/cli.coffee"
     if [ -x "${SUBSCRIPT}" ]; then
       shift
       exec "${SUBSCRIPT}" "${@}"

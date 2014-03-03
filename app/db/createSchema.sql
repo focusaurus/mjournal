@@ -9,5 +9,6 @@ create table if not exists "entries" (
   "userId" integer references users,
   "created" timestamp with time zone not null default current_timestamp,
   "updated" timestamp with time zone not null default current_timestamp,
-  "body" text not null
+  "body" text not null,
+  "textSearch" tsvector
 );

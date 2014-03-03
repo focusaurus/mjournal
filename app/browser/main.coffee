@@ -12,7 +12,7 @@ EntriesService.factory "Entries", ["$resource", entriesFactory]
 EntriesController = ($scope, Entries) ->
   $scope.page = 1
   $scope.get = ->
-    Entries.get {page: $scope.page}, (entries) ->
+    Entries.get {page: $scope.page, textSearch: $scope.textSearch}, (entries) ->
       $scope.entries = entries
   $scope.update = (entry) ->
     Entries.update _.pick(entry, "id", "body"), (result) ->
@@ -29,6 +29,9 @@ EntriesController = ($scope, Entries) ->
     $scope.page--
     $scope.get()
   $scope.get()
+  $scope.searchKeypress = (event) ->
+    if event.which is 13
+      $scope.get()
 
 mjournal = angular.module("mjournal", ["editText", "EntriesService"])
 mjournal.controller "EntriesController", EntriesController

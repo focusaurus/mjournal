@@ -15,8 +15,9 @@ execute = (next, options, callback) ->
     callback null, result.rows
 
 whereText = (next, options) ->
-  if options.q?
-    @dbOp.where(db.text("body @@ $0", [options.q]))
+  textSearch = options.textSearch?.trim()
+  if textSearch
+    @dbOp.where(db.text("body @@ $0", [textSearch]))
   next()
 
 runStack = ->

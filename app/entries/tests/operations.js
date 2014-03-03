@@ -61,7 +61,7 @@ describe("entries/operations/create+update", function() {
   it("should find the entry with text search", function(done) {
     ops.view({
       user: user,
-      q: "body"
+      textSearch: "body"
     }, function(error, entries) {
       assert.isNull(error, error);
       assert.isArray(entries);
@@ -72,7 +72,7 @@ describe("entries/operations/create+update", function() {
   it("should not find the entry with non-matching text search", function(done) {
     ops.view({
       user: user,
-      q: "notpresent"
+      textSearch: "notpresent"
     }, function(error, entries) {
       assert.isNull(error, error);
       assert.isArray(entries);

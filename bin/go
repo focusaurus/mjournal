@@ -54,7 +54,7 @@ task::test() {
   #   args="${args} --timeout 0 --debug-brk=9093"
   # fi
   test_dirs=$(find app -type d -name tests | xargs)
-  psql --username=mjournal --dbname=mjournal-test --file=app/db/postgres/destroyData.sql
+  psql --username=mjournal --dbname=mjournal-test --file=app/db/destroyData.sql
   NODE_ENV=test MJ_DB_URL="postgres://mjournal@localhost/mjournal-test" mocha ${args} ${test_dirs}
 }
 

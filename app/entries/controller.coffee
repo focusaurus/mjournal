@@ -10,6 +10,7 @@ viewEntries = (req, res) ->
     options =
       user: req.user
       page: req.query.page
+      textSearch: req.query.textSearch
     ops.view options, api.sendResult(res)
   else
     res.render "home"

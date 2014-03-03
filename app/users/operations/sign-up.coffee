@@ -6,13 +6,12 @@ log = require("winston").loggers.get "app:operations:users:sign-up"
 hashPassword = (cleartext, callback) ->
   bcrypt.genSalt 10, (error, salt) ->
     return callback error if error
-    bcrypt.hash cleartext, salt, (error, hash)->
-      return callback error if error
-      return callback null, hash
+    bcrypt.hash cleartext, salt, callback
 
 run = (options, callback) ->
   user = _.pick options, "email"
   hashPassword options.password, (error, bcryptedPassword) ->
+    return callback error if error
     user.bcryptedPassword = bcryptedPassword
     dbOp = db.insert("users", user).returning "id"
     log.debug dbOp.toString()

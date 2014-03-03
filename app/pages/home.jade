@@ -1,6 +1,7 @@
 extends layout
 block body
   div(ng-app="mjournal", ng-controller="EntriesController")
+    input(type="text", placeholder="search entries...", ng-model="textSearch", ng-keypress="searchKeypress($event)")
     button(ng-click="previous()") Previous Entries
     button(ng-click="next()", ng-show="page > 1") Next Entries
     div.entries
