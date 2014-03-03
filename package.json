@@ -6,7 +6,7 @@
   "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
   "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
   "engines": {
-    "node": "~0.10.21"
+    "node": "~0.10.26"
   },
   "dependencies": {
     "coffee-script": "~1.6.3",
