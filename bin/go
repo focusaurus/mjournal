@@ -53,9 +53,12 @@ task::test() {
   # if [ "${1}" == "--debug" ]; then
   #   args="${args} --timeout 0 --debug-brk=9093"
   # fi
-  test_dirs=$(find app -type d -name tests | xargs)
+  tests="${1}"
+  if [[ -z "${tests}" ]]; then
+    tests=$(find app -type d -name tests | xargs)
+  fi
   psql --username=mjournal --dbname=mjournal-test --file=app/db/createSchema.sql
-  NODE_ENV=test MJ_DB_URL="postgres://mjournal@localhost/mjournal-test" mocha ${args} ${test_dirs}
+  NODE_ENV=test MJ_DB_URL="postgres://mjournal@localhost/mjournal-test" mocha ${args} ${tests}
 }
 
 task::inspector() {
