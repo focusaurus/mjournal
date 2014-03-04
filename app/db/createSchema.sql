@@ -37,7 +37,7 @@ ALTER TABLE entries
 
 -- Index: "textSearchGin"
 
-DROP INDEX "textSearchGin";
+DROP INDEX IF EXISTS "textSearchGin";
 
 CREATE INDEX "textSearchGin"
   ON entries
@@ -45,13 +45,12 @@ CREATE INDEX "textSearchGin"
   ("textSearch");
 
 
--- Trigger: textsearchupdate on entries
+-- Trigger: "textSearchUpdate" on entries
 
-DROP TRIGGER textsearchupdate ON entries;
+DROP TRIGGER IF EXISTS "textSearchUpdate" ON entries;
 
-CREATE TRIGGER textsearchupdate
+CREATE TRIGGER "textSearchUpdate"
   BEFORE INSERT OR UPDATE
   ON entries
   FOR EACH ROW
   EXECUTE PROCEDURE tsvector_update_trigger('textSearch', 'pg_catalog.english', 'body', 'tags');
-

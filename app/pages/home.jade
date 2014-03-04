@@ -11,6 +11,12 @@ block body
           ng-model="entry.body",
           edittext,
           ng-change="update(entry)")
+        span.tagLabel Tags:&nbsp;
+        span(ng-if="entry.editTags")
+          input.tags(type="text", ng-if="entry.editTags", ng-model="entry.tags", ng-keypress="tagsKeypress($event, entry)")
+        span(ng-if="!entry.editTags")
+          span.tags(ng-bind="entry.tags", ng-if="!entry.editTags")
+          button(ng-click="editTags(entry)") Edit Tags
       hr
       p.body.new(ng-keydown="create($event)", contenteditable="true")
   script(src="/lodash.js")

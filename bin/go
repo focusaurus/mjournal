@@ -50,9 +50,10 @@ task::express() {
 task::test() {
   args="--slow 200 --reporter spec --compilers coffee:coffee-script --colors \
     --recursive"
-  # if [ "${1}" == "--debug" ]; then
-  #   args="${args} --timeout 0 --debug-brk=9093"
-  # fi
+  if [[ "${1}" == "--debug" ]]; then
+    args="${args} --timeout 0 --debug-brk=9093"
+    shift
+  fi
   tests="${1}"
   if [[ -z "${tests}" ]]; then
     tests=$(find app -type d -name tests | xargs)

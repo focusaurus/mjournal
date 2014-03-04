@@ -9,7 +9,7 @@ run = (options, callback) ->
     userId: options.user.id
     body: options.body
     tags: options.tags
-  returning = ["id"].concat(_.keys(row))
+  returning = ["id", "created", "updated"].concat(_.keys(row))
   dbOp = db.insert("entries", row).returning(returning)
   dbOp.execute (error, result) ->
     if error

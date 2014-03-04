@@ -21,7 +21,7 @@ createEntry = (req, res) ->
   ops.create options, api.sendResult(res)
 
 updateEntry = (req, res) ->
-  options = _.pick req.body, "body"
+  options = _.pick req.body, "body", "tags"
   options.id = req.params.id
   options.user = req.user
   ops.update options, api.sendResult(res)
