@@ -1,3 +1,4 @@
+ENTER = 13
 entriesFactory = ($resource) ->
   $resource "/entries/:id", {id: "@id"},
       get:
@@ -18,7 +19,7 @@ EntriesController = ($scope, Entries) ->
     Entries.update _.pick(entry, "id", "body"), (result) ->
       entry.updated = result.updated
   $scope.create = (event) ->
-    if event.which is 13 and event.shiftKey and event.target.innerText
+    if event.which is ENTER and event.shiftKey and event.target.innerText
      Entries.create {body: event.target.innerText}, (entry) ->
         $scope.entries.push(entry)
       event.target.innerText = ""
@@ -30,8 +31,14 @@ EntriesController = ($scope, Entries) ->
     $scope.get()
   $scope.get()
   $scope.searchKeypress = (event) ->
-    if event.which is 13
+    if event.which is ENTER
       $scope.get()
+  $scope.editTags = (entry) ->
+    entry.editTags = true
+  $scope.tagsKeypress = (event, entry) ->
+    if event.which is ENTER
+      entry.editTags = false
+      Entries.update entry
 
 mjournal = angular.module("mjournal", ["editText", "EntriesService"])
 mjournal.controller "EntriesController", EntriesController
