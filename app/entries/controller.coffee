@@ -16,7 +16,7 @@ viewEntries = (req, res) ->
     res.render "home"
 
 createEntry = (req, res) ->
-  options = _.pick req.body, "body"
+  options = _.pick req.body, "body", "tags"
   options.user = req.user
   ops.create options, api.sendResult(res)
 

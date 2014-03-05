@@ -19,6 +19,7 @@ block body
           button(ng-click="editTags(entry)") Edit Tags
       hr
       p.body.new(ng-keydown="create($event)", contenteditable="true")
+      input.tags.new(ng-model="newEntryTags", placeholder="tags...")
   script(src="/lodash.js")
   script(src="/angular.js")
   script(src="/angular-resource.js")

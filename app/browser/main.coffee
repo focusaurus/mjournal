@@ -20,7 +20,10 @@ EntriesController = ($scope, Entries) ->
       entry.updated = result.updated
   $scope.create = (event) ->
     if event.which is ENTER and event.shiftKey and event.target.innerText
-     Entries.create {body: event.target.innerText}, (entry) ->
+      entryData =
+        body: event.target.innerText
+        tags: $scope.newEntryTags
+      Entries.create entryData, (entry) ->
         $scope.entries.push(entry)
       event.target.innerText = ""
   $scope.previous = ->

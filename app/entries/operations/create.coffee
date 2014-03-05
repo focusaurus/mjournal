@@ -10,6 +10,7 @@ run = (options, callback) ->
     body: options.body
     tags: options.tags
   returning = ["id", "created", "updated"].concat(_.keys(row))
+  log.debug("creating new entry", row)
   dbOp = db.insert("entries", row).returning(returning)
   dbOp.execute (error, result) ->
     if error
