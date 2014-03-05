@@ -1,5 +1,5 @@
 db = require "app/db"
-log = require("winston").loggers.get "app:entries:operations:view"
+log = require "app/log"
 {Stack} = require "app/operations"
 opMW = require "app/operations/middleware"
 
@@ -9,10 +9,10 @@ initDbOp = (next) ->
   next()
 
 execute = (next, options, callback) ->
-  log.debug(@dbOp.toString())
+  log.debug {sql: @dbOp.toString()}, "view entries"
   @dbOp.execute (error, result) ->
     if error
-      log.error error
+      log.error {err: error}, "error loading entries"
       callback error
       return
     callback null, result.rows

@@ -1,6 +1,6 @@
 _ = require "lodash"
 db = require "app/db"
-log = require("winston").loggers.get "app:entries:operations:create"
+log = require "app/log"
 
 run = (options, callback) ->
   if not options.user
@@ -10,11 +10,11 @@ run = (options, callback) ->
     body: options.body
     tags: options.tags
   returning = ["id", "created", "updated"].concat(_.keys(row))
-  log.debug("creating new entry", row)
+  log.debug row, "creating new entry"
   dbOp = db.insert("entries", row).returning(returning)
   dbOp.execute (error, result) ->
     if error
-      log.error "createEntry insert #{error} #{result}"
+      log.error {err: error},"createEntry error"
       callback error
       return
     callback null, result.rows[0]

@@ -1,10 +1,11 @@
 _ = require "lodash"
 bcrypt = require "bcrypt"
 db = require "app/db"
-log = require("winston").loggers.get "app:users:operations:sign-in"
+log = require "app/log"
 
 run = (options, callback) ->
   denied = ->
+    log.debug {email: options.email}, "user sign-in denied"
     callback
       code: 403
       message: "Please check your email/password and try again"

@@ -44,7 +44,7 @@ EOF
 ##### development task functions #####
 task::express() {
   autoinstall_npm_dependencies
-  node-dev --debug=9091 app/server.coffee
+  node-dev --debug=9091 app/server.coffee | bunyan -o short
 }
 
 task::test() {

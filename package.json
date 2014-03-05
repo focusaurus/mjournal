@@ -13,7 +13,6 @@
     "express": "~3.2.6",
     "stylus": "~0.32.1",
     "jade": "~0.31.2",
-    "winston": "~0.7.2",
     "any-db": "~0.6.0",
     "bcrypt": "~0.7.6",
     "gesundheit": "~0.8.5",
@@ -22,7 +21,8 @@
     "promptly": "~0.2.0",
     "commander": "~2.0.0",
     "connect-coffee-script": "~0.1.6",
-    "connect-pg-simple": "~1.0.0"
+    "connect-pg-simple": "~1.0.0",
+    "bunyan": "~0.22.1"
   },
   "devDependencies": {
     "node-inspector": "~0.2.0-beta4",

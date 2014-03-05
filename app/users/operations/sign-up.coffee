@@ -1,7 +1,7 @@
 _ = require "lodash"
 bcrypt = require "bcrypt"
 db = require "app/db"
-log = require("winston").loggers.get "app:operations:users:sign-up"
+log = require "app/log"
 
 hashPassword = (cleartext, callback) ->
   bcrypt.genSalt 10, (error, salt) ->
@@ -14,7 +14,7 @@ run = (options, callback) ->
     return callback error if error
     user.bcryptedPassword = bcryptedPassword
     dbOp = db.insert("users", user).returning "id"
-    log.debug dbOp.toString()
+    log.debug {user}, "creating user"
     dbOp.execute (error, result) ->
       if /unique/i.test error?.message
         return callback {code: 409, message: "That email is already registered"}

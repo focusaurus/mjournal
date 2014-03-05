@@ -1,5 +1,5 @@
 db = require "app/db"
-log = require("winston").loggers.get "app:entries:operations:update"
+log = require "app/log"
 
 select = (where, callback) ->
   db.select("entries").where(where).execute (error, result) ->
@@ -17,8 +17,11 @@ run = (options, callback) ->
     id: options.id
     userId: options.user.id
   db.update("entries").set(set).where(where).execute (error, result) ->
-    log.debug "entries/update #{error}", result
-    return callback error if error
+    if error
+      log.info {err: error}, "error updating an entry"
+      callback error
+      return
+    log.debug result, "entries/update"
     select where, callback
 
 module.exports = run
