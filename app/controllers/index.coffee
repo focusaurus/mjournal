@@ -7,6 +7,7 @@ setup = (app) ->
     "scripts" #needs to be before static
     "styles"
     "static"
+    "session"
     "../users/controller"
     "../entries/controller"
   ]

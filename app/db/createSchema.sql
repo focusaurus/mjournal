@@ -1,5 +1,6 @@
 DROP TABLE entries;
 DROP TABLE users;
+DROP TABLE session;
 
 -- Table: users
 CREATE TABLE users
@@ -54,3 +55,14 @@ CREATE TRIGGER "textSearchUpdate"
   ON entries
   FOR EACH ROW
   EXECUTE PROCEDURE tsvector_update_trigger('textSearch', 'pg_catalog.english', 'body', 'tags');
+
+-- See https://raw.github.com/voxpelli/node-connect-pg-simple/master/table.sql
+CREATE TABLE "public"."session" (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+ALTER TABLE "public"."session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE "session"
+  OWNER TO mjournal;
