@@ -58,8 +58,11 @@ task::test() {
   if [[ -z "${tests}" ]]; then
     tests=$(find app -type d -name tests | xargs)
   fi
-  psql --username=mjournal --dbname=mjournal-test --file=app/db/createSchema.sql
-  NODE_ENV=test MJ_DB_URL="postgres://mjournal@localhost/mjournal-test" mocha ${args} ${tests}
+  psql --username=mjournal --dbname=mjournal-test \
+    --file=app/db/createSchema.sql 2>&1 \
+    | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)'
+  NODE_ENV=test MJ_DB_URL="postgres://mjournal@localhost/mjournal-test" \
+    exec mocha ${args} ${tests}
 }
 
 task::inspector() {
