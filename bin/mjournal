@@ -3,7 +3,7 @@ DIR=$(dirname "${0}")/..
 help() {
   echo "mjournal command line interface usage:"
   echo "\tBasic syntax is ${0} <resource-or-subcommand> [options]"
-  for FILE in $(find "${DIR}/app/" -name cli.coffee);
+  for FILE in $(find "${DIR}/app/" -name cli.js);
   do
     if [ ! -x "${FILE}" ]; then
       continue
@@ -24,7 +24,7 @@ case "${1}" in
     help
   ;;
   *)
-    SUBSCRIPT="${DIR}/app/${1}/cli.coffee"
+    SUBSCRIPT="${DIR}/app/${1}/cli.js"
     if [ -x "${SUBSCRIPT}" ]; then
       shift
       exec "${SUBSCRIPT}" "${@}"

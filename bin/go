@@ -44,12 +44,11 @@ EOF
 ##### development task functions #####
 task::express() {
   autoinstall_npm_dependencies
-  node-dev --debug=9091 app/server.coffee | bunyan -o short
+  node-dev --debug=9091 app/server | bunyan -o short
 }
 
 task::test() {
-  args="--slow 200 --reporter spec --compilers coffee:coffee-script --colors \
-    --recursive"
+  args="--slow 200 --reporter spec --colors --recursive"
   if [[ "${1}" == "--debug" ]]; then
     args="${args} --timeout 0 --debug-brk=9093"
     shift
@@ -72,10 +71,7 @@ task::inspector() {
 ##### deployment command functions #####
 task::build() {
   autoinstall_npm_dependencies
-  find app/components -type f -name \*.coffee | xargs coffee -c
   find app/components -type f -name \*.styl | xargs stylus
-  #component build
-  coffee dev/bin/build.coffee
 }
 
 task::clean() {

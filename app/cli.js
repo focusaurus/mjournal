@@ -4,8 +4,8 @@ var promptly = require("promptly");
 
 function Stack(command) {
   this.command = command;
-  this.action = __bind(this.action, this);
-  this.use = __bind(this.use, this);
+  this.action = this.action.bind(this);
+  this.use = this.use.bind(this);
   this.stack = [];
   this.first = true;
   this.command.action(this.action);
