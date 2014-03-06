@@ -5,3 +5,4 @@ module.exports =
   build: path.normalize "#{__dirname}/../build"
   project: path.normalize "#{__dirname}/.."
   wwwroot: path.normalize "#{__dirname}/../wwwroot"
+  browser: path.normalize "#{__dirname}/browser"
