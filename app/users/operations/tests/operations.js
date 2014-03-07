@@ -1,6 +1,8 @@
 var signIn = require("app/users/operations/sign-in");
 var signUp = require("app/users/operations/sign-up");
 var assert = require("chai").assert;
+var expect = require("chai").expect;
+
 
 describe("users/operations/sign-up", function() {
   it("should create a user.id and not return the password", function(done) {
@@ -30,6 +32,17 @@ describe("users/operations/sign-up", function() {
       });
     });
   });
+  it("should require a valid-ish email address", function(done) {
+    var newUser = {
+      email: "no_at_sign_at_example.com",
+      password: "password"
+    };
+    signUp(newUser, function(error) {
+      expect(error, "callback should get an error").to.exist;
+      expect(error).to.have.property("code", 412);
+      done();
+    });
+  });
 });
 
 describe("users/operations/sign-in", function() {
@@ -40,7 +53,7 @@ describe("users/operations/sign-in", function() {
   before(function(done) {
     signUp(newUser, done);
   });
-  it("should the user if password is correct", function(done) {
+  it("should return the user if password is correct", function(done) {
     signIn(newUser, function(error, user) {
       assert.isNull(error, error);
       assert.notProperty(user, "bcryptedPassword");

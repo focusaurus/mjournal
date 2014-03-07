@@ -2,6 +2,7 @@ var _ = require("lodash");
 var bcrypt = require("bcrypt");
 var db = require("app/db");
 var log = require("app/log");
+var errors = require("app/errors");
 
 function hashPassword(cleartext, callback) {
   bcrypt.genSalt(10, function(error, salt) {
@@ -10,10 +11,18 @@ function hashPassword(cleartext, callback) {
     }
     bcrypt.hash(cleartext, salt, callback);
   });
-};
+}
+
+function isValidEmail(value) {
+  return typeof value === "string" && value.indexOf("@") > 0;
+}
 
 function run(options, callback) {
   var user = _.pick(options, "email");
+  if (!isValidEmail(user.email)) {
+    callback(errors.ClientError("invalid email"));
+    return;
+  }
   hashPassword(options.password, function(error, bcryptedPassword) {
     if (error) {
       return callback(error);
@@ -24,7 +33,7 @@ function run(options, callback) {
       user: user
     }, "creating user");
     dbOp.execute(function(error, result) {
-      if (/unique/i.test(error != null ? error.message : void 0)) {
+      if (error && /unique/i.test(error.message)) {
         return callback({
           code: 409,
           message: "That email is already registered"
