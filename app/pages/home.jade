@@ -7,7 +7,7 @@ block body
     button(ng-click="next()", ng-show="page > 1") Next Entries
     div.entries
       div.entry(ng-repeat="entry in entries")
-        .info(title="{{entry.created}}") i
+        .info(title="{{entry.created | date:'short'}}") i
         p.body(
           ng-model="entry.body",
           edittext,
