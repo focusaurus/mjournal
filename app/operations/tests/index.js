@@ -1,13 +1,13 @@
 var Stack = require("app/operations").Stack;
-var assert = require("assert");
+var expect = require("chai").expect;
 
 describe("operations middleware Stack", function() {
   it("should call a function in the stack with the args from run", function(done) {
     var stack = new Stack;
     stack.use(function(next, one, two) {
-      assert.equal(typeof next, "function");
-      assert.equal(one, 1);
-      assert.equal(two, 2);
+      expect(next).to.be.a("function");
+      expect(one).to.equal(1);
+      expect(two).to.equal(2);
       next();
       done();
     });
@@ -16,11 +16,11 @@ describe("operations middleware Stack", function() {
   it("should not proceed if next() is not called", function(done) {
     var stack = new Stack;
     stack.use(function(next) {
-      assert.equal(typeof next, "function");
+      expect(next).to.be.a("function");
       done();
     });
     stack.use(function(next) {
-      assert.fail("stack should never have invoked this middleware");
+      assert(false, "stack should never have invoked this middleware");
     });
     stack.run();
   });
@@ -31,7 +31,7 @@ describe("operations middleware Stack", function() {
       next();
     });
     stack.use(function(next) {
-      assert.equal(this.foo, "FOO");
+      expect(this).to.have.property("foo", "FOO");
       next();
       done();
     });
