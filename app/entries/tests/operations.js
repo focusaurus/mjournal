@@ -1,6 +1,6 @@
 var signUp = require("app/users/operations/sign-up");
 var ops = require("app/entries/operations");
-var assert = require("chai").assert;
+var expect = require("chai").expect;
 
 describe("entries/operations/create+update", function() {
   var user = null;
@@ -11,8 +11,8 @@ describe("entries/operations/create+update", function() {
       password: "password"
     };
     signUp(inUser, function(error, outUser) {
-      assert.isNull(error, error);
-      assert.property(outUser, "id");
+      expect(error).not.to.exist;
+      expect(outUser).to.have.property("id");
       user = outUser;
       done();
     });
@@ -23,11 +23,11 @@ describe("entries/operations/create+update", function() {
       body: "test body"
     };
     ops.create(options, function(error, outEntry) {
-      assert.isNull(error, error);
-      assert.property(outEntry, "id");
-      assert.property(outEntry, "created");
-      assert.property(outEntry, "updated");
-      assert.propertyVal(outEntry, "body", options.body);
+      expect(error).not.to.exist;
+      expect(outEntry).to.have.property("id");
+      expect(outEntry).to.have.property("created");
+      expect(outEntry).to.have.property("updated");
+      expect(outEntry).to.have.property("body", options.body);
       entry = outEntry;
       done();
     });
@@ -40,11 +40,11 @@ describe("entries/operations/create+update", function() {
     };
     var oldUpdated = entry.updated;
     ops.update(options, function(error, outEntry) {
-      assert.isNull(error, error);
-      assert.propertyVal(outEntry, "body", options.body);
-      assert.property(outEntry, "updated");
-      assert.property(outEntry, "created");
-      assert.notEqual(oldUpdated, outEntry.updated);
+      expect(error).not.to.exist;
+      expect(outEntry).to.have.property("body", options.body);
+      expect(outEntry).to.have.property("updated");
+      expect(outEntry).to.have.property("created");
+      expect(oldUpdated).not.to.eql(outEntry.updated);
       done();
     });
   });
@@ -52,9 +52,8 @@ describe("entries/operations/create+update", function() {
     ops.view({
       user: user
     }, function(error, entries) {
-      assert.isNull(error, error);
-      assert.isArray(entries);
-      assert.ok(entries.length > 0);
+      expect(error).not.to.exist;
+      expect(entries).to.have.length.above(0);
       done();
     });
   });
@@ -63,9 +62,8 @@ describe("entries/operations/create+update", function() {
       user: user,
       textSearch: "body"
     }, function(error, entries) {
-      assert.isNull(error, error);
-      assert.isArray(entries);
-      assert.ok(entries.length > 0);
+      expect(error).not.to.exist;
+      expect(entries).to.have.length.above(0);
       done();
     });
   });
@@ -74,9 +72,9 @@ describe("entries/operations/create+update", function() {
       user: user,
       textSearch: "notpresent"
     }, function(error, entries) {
-      assert.isNull(error, error);
-      assert.isArray(entries);
-      assert.ok(entries.length === 0);
+      expect(error).not.to.exist;
+      expect(entries).to.be.instanceof(Array);
+      expect(entries).to.be.empty;
       done();
     });
   });
