@@ -1,17 +1,16 @@
 var paginated = require("app/operations/middleware").paginated;
 var db = require("app/db");
-var assert = require("assert");
+var expect = require("chai").expect;
 
-describe("paginated middleware", function() {
+describe("app/operations/middleware.paginated", function() {
   it("should set page 1 by default and a default limit", function(done) {
     var context = {
       dbOp: db.select("example", ["id"])
     };
     var next = function() {
-      var sql;
-      sql = context.dbOp.compile()[0].toLowerCase();
-      assert(sql.indexOf('limit ') >= 0);
-      assert(sql.indexOf('offset ') < 0);
+      var sql = context.dbOp.compile()[0].toLowerCase();
+      expect(sql).to.contain('limit ');
+      expect(sql).not.to.contain('offset ');
       done();
     };
     paginated.call(context, next, {});
@@ -21,10 +20,9 @@ describe("paginated middleware", function() {
       dbOp: db.select("example", ["id"])
     };
     var next = function() {
-      var sql;
-      sql = context.dbOp.compile()[0].toLowerCase();
-      assert(sql.indexOf('limit ') >= 0);
-      assert(sql.indexOf('offset ') >= 0);
+      var sql = context.dbOp.compile()[0].toLowerCase();
+      expect(sql).to.contain('limit ');
+      expect(sql).to.contain('offset ');
       done();
     };
     paginated.call(context, next, {
