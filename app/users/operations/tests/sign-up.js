@@ -1,6 +1,5 @@
 var signIn = require("app/users/operations/sign-in");
 var signUp = require("app/users/operations/sign-up");
-var assert = require("chai").assert;
 var expect = require("chai").expect;
 
 describe("users/operations/sign-up", function() {
@@ -10,10 +9,10 @@ describe("users/operations/sign-up", function() {
       password: "password"
     };
     signUp(newUser, function(error, user) {
-      assert.isNull(error, error);
-      assert.notProperty(user, "bcryptedPassword");
-      assert.property(user, "id");
-      assert.propertyVal(user, "email", newUser.email);
+      expect(error).not.to.exist;
+      expect(user).not.to.have.property("bcryptedPassword");
+      expect(user).to.have.property("id");
+      expect(user).to.have.property("email", newUser.email);
       done();
     });
   });
@@ -23,10 +22,10 @@ describe("users/operations/sign-up", function() {
       password: "password"
     };
     signUp(newUser, function(error) {
-      assert.isNull(error, error);
+      expect(error).not.to.exist;
       signUp(newUser, function(error, user) {
-        assert.isObject(error);
-        assert.propertyVal(error, "code", 409);
+        expect(error).to.exist;
+        expect(error).to.have.property("code", 409);
         done();
       });
     });
