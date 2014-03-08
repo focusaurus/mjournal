@@ -78,3 +78,12 @@ describe("errors.ServerError", function () {
     expect(error).to.have.property("code", 442);
   });
 });
+
+describe("errors module", function () {
+  it("should have expected constructors", function() {
+    ["Unauthorized"].forEach(function (constructor) {
+      expect(errors).to.have.property(constructor);
+      expect(errors[constructor]).to.be.a("function");
+    });
+  });
+});

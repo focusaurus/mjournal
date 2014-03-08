@@ -1,5 +1,7 @@
 var db = require("app/db");
 var log = require("app/log");
+var opMW = require("app/operations/middleware");
+var Stack = require("app/operations").Stack;
 
 function select(where, callback) {
   db.select("entries").where(where).execute(function(error, result) {
@@ -7,14 +9,12 @@ function select(where, callback) {
   });
 }
 
-function run(options, callback) {
-  if (!options.user) {
-    callback({
-      code: 401,
-      "Please sign in to access your journal": "Please sign in to access your journal"
-    });
-    return;
-  }
+function initDbOp(next, options) {
+  this.dbOp = db.update("entries");
+  return next();
+}
+
+function execute(next, options, callback) {
   var set = {
     updated: new Date()
   };
@@ -25,9 +25,8 @@ function run(options, callback) {
   });
   var where = {
     id: options.id,
-    userId: options.user.id
   };
-  db.update("entries").set(set).where(where).execute(function(error, result) {
+  this.dbOp.set(set).where(where).execute(function(error, result) {
     if (error) {
       log.info({
         err: error
@@ -40,4 +39,13 @@ function run(options, callback) {
   });
 }
 
-module.exports = run;
+function runStack() {
+  var stack = new Stack();
+  stack.use(opMW.requireUser);
+  stack.use(initDbOp);
+  stack.use(opMW.whereUser);
+  stack.use(execute);
+  return stack.run.apply(stack, arguments);
+}
+
+module.exports = runStack;

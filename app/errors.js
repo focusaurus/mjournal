@@ -19,5 +19,6 @@ function makeError(name, message, code) {
 module.exports = {
   ServerError: makeError("ServerError", "internal server error", 503),
   ClientError: makeError("ClientError", "precondition failed", 412),
+  Unauthorized: makeError("Unauthorized", "unauthorized", 401),
   Conflict: makeError("Conflict", "conflict", 409)
 }

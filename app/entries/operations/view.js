@@ -1,4 +1,3 @@
-var Stack, db, execute, initDbOp, log, opMW, runStack, whereText;
 var db = require("app/db");
 var log = require("app/log");
 var Stack = require("app/operations").Stack;

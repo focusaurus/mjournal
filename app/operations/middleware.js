@@ -1,3 +1,4 @@
+var errors = require("app/errors");
 var PAGE_SIZE = 50;
 
 function paginated(next, options) {
@@ -13,11 +14,8 @@ function paginated(next, options) {
 }
 
 function requireUser(next, options) {
-  if (!(options != null ? options.user : void 0)) {
-    return next({
-      code: 401,
-      "Please sign in": "Please sign in"
-    });
+  if (!(options && options.user)) {
+    return next(errors.Unauthorized("Please sign in"));
   }
   next();
 }
