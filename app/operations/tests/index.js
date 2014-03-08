@@ -3,7 +3,7 @@ var expect = require("chai").expect;
 
 describe("operations middleware Stack", function() {
   it("should call a function in the stack with the args from run", function(done) {
-    var stack = new Stack;
+    var stack = new Stack();
     stack.use(function(next, one, two) {
       expect(next).to.be.a("function");
       expect(one).to.equal(1);
@@ -14,7 +14,7 @@ describe("operations middleware Stack", function() {
     stack.run(1, 2);
   });
   it("should not proceed if next() is not called", function(done) {
-    var stack = new Stack;
+    var stack = new Stack();
     stack.use(function(next) {
       expect(next).to.be.a("function");
       done();
@@ -25,7 +25,7 @@ describe("operations middleware Stack", function() {
     stack.run();
   });
   it("should invoke middleware with itself as this", function(done) {
-    var stack = new Stack;
+    var stack = new Stack();
     stack.use(function(next) {
       this.foo = "FOO";
       next();
@@ -36,5 +36,17 @@ describe("operations middleware Stack", function() {
       done();
     });
     stack.run();
+  });
+  it("should support multiple invocations", function() {
+    var stack = new Stack();
+    stack.use(function(next) {
+      this.runCount = (this.runCount || 0) + 1;
+      next();
+    });
+    expect(stack).not.to.have.property("runCount");
+    stack.run();
+    expect(stack).to.have.property("runCount", 1);
+    stack.run();
+    expect(stack).to.have.property("runCount", 2);
   });
 });

@@ -1,8 +1,5 @@
 function Stack() {
-  this.run = this.run.bind(this);
-  this.use = this.use.bind(this);
   this.stack = [];
-  this.first = true;
 }
 
 Stack.prototype.use = function(mw) {
@@ -11,17 +8,19 @@ Stack.prototype.use = function(mw) {
 };
 
 Stack.prototype.run = function() {
-  var mw = this.stack.shift();
-  if (!mw) {
-    return;
+  var self = this;
+  var runState = {
+    mwArgs: [runClosure].concat([].slice.call(arguments)),
+    stack: this.stack.slice()
+  };
+  function runClosure() {
+    var mw = runState.stack.shift();
+    if (!mw) {
+      return;
+    }
+    mw.apply(self, runState.mwArgs);
   }
-  if (this.first) {
-    this.first = false;
-    this.mwArgs = [this.run];
-    var args = [].slice.apply(arguments, [0]);
-    this.mwArgs.push.apply(this.mwArgs, args);
-  }
-  mw.apply(this, this.mwArgs);
+  runClosure();
   return this;
 };
 

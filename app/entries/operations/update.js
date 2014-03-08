@@ -3,6 +3,12 @@ var log = require("app/log");
 var opMW = require("app/operations/middleware");
 var Stack = require("app/operations").Stack;
 
+var stack = new Stack();
+stack.use(opMW.requireUser);
+stack.use(initDbOp);
+stack.use(opMW.whereUser);
+stack.use(execute);
+
 function select(where, callback) {
   db.select("entries").where(where).execute(function(error, result) {
     callback(error, result.rows && result.rows[0]);
@@ -40,11 +46,6 @@ function execute(next, options, callback) {
 }
 
 function runStack() {
-  var stack = new Stack();
-  stack.use(opMW.requireUser);
-  stack.use(initDbOp);
-  stack.use(opMW.whereUser);
-  stack.use(execute);
   return stack.run.apply(stack, arguments);
 }
 

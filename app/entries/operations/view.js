@@ -2,6 +2,13 @@ var db = require("app/db");
 var log = require("app/log");
 var Stack = require("app/operations").Stack;
 var opMW = require("app/operations/middleware");
+var stack = new Stack();
+stack.use(initDbOp);
+stack.use(opMW.requireUser);
+stack.use(opMW.whereUser);
+stack.use(whereText);
+stack.use(opMW.paginated);
+stack.use(execute);
 
 function initDbOp(next) {
   this.dbOp = db.select("entries", ["id", "created", "updated", "body", "tags"]).order("created");
@@ -35,13 +42,6 @@ function whereText(next, options) {
 }
 
 function runStack() {
-  var stack = new Stack();
-  stack.use(initDbOp);
-  stack.use(opMW.requireUser);
-  stack.use(opMW.whereUser);
-  stack.use(whereText);
-  stack.use(opMW.paginated);
-  stack.use(execute);
   return stack.run.apply(stack, arguments);
 }
 
