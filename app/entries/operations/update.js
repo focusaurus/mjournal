@@ -2,6 +2,7 @@ var db = require("app/db");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
 var Stack = require("app/operations").Stack;
+var errors = require("app/errors");
 
 var stack = new Stack();
 stack.use(opMW.requireUser);
@@ -38,6 +39,11 @@ function execute(next, options, callback) {
         err: error
       }, "error updating an entry");
       callback(error);
+      return;
+    }
+    if (result.rowCount < 1) {
+      log.info({options: options}, "zero rowCount on entry update (HAX0RZ?)");
+      callback(errors.NotFound("No entry with id " + options.id));
       return;
     }
     log.debug(result, "entries/update");

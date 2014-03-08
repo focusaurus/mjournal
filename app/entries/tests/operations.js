@@ -1,10 +1,13 @@
 var signUp = require("app/users/operations/sign-up");
 var ops = require("app/entries/operations");
 var expect = require("chai").expect;
+var errors = require("app/errors");
 
 describe("entries/operations/create+update", function() {
   var user = null;
+  var user2 = null;
   var entry = null;
+  var entry2 = null;
   before(function(done) {
     var inUser = {
       email: "test/entries/operations/create@example.com",
@@ -14,6 +17,18 @@ describe("entries/operations/create+update", function() {
       expect(error).not.to.exist;
       expect(outUser).to.have.property("id");
       user = outUser;
+      done();
+    });
+  });
+  before(function(done) {
+    var inUser = {
+      email: "test/entries/operations/create2@example.com",
+      password: "password"
+    };
+    signUp(inUser, function(error, outUser) {
+      expect(error).not.to.exist;
+      expect(outUser).to.have.property("id");
+      user2 = outUser;
       done();
     });
   });
@@ -29,6 +44,21 @@ describe("entries/operations/create+update", function() {
       expect(outEntry).to.have.property("updated");
       expect(outEntry).to.have.property("body", options.body);
       entry = outEntry;
+      done();
+    });
+  });
+  it("should create a second entry with different user", function(done) {
+    var options = {
+      user: user2,
+      body: "test body2"
+    };
+    ops.create(options, function(error, outEntry) {
+      expect(error).not.to.exist;
+      expect(outEntry).to.have.property("id");
+      expect(outEntry).to.have.property("created");
+      expect(outEntry).to.have.property("updated");
+      expect(outEntry).to.have.property("body", options.body);
+      entry2 = outEntry;
       done();
     });
   });
@@ -78,4 +108,17 @@ describe("entries/operations/create+update", function() {
       done();
     });
   });
-});
+  it("should not update someone else's entry", function(done) {
+    var options = {
+      id: entry.id,
+      user: user2,
+      body: "test body 3 hax0rz"
+    };
+    var oldUpdated = entry.updated;
+    ops.update(options, function(error, outEntry) {
+      expect(error).to.exist;
+      expect(error).to.have.property("code", 404);
+      expect(outEntry).not.to.exist;
+      done();
+    });
+  });});
