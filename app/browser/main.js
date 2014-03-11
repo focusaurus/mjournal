@@ -15,7 +15,22 @@ function entriesFactory($resource) {
       method: "POST"
     }
   });
-};
+}
+
+function tagStringToArray(tagString) {
+  tagString = tagString || "";
+  tagString = tagString.trim();
+  if (!tagString) {
+    return [];
+  }
+  return tagString.trim().split(" ").map(function (tag) {
+    return {
+      Name: tag,
+      Description: "",
+      ID: tag
+    };
+  });
+}
 
 var EntriesService = angular.module("EntriesService", ["ngResource"]);
 
@@ -28,6 +43,9 @@ function EntriesController($scope, Entries) {
       page: $scope.page,
       textSearch: $scope.textSearch
     }, function(entries) {
+      entries.forEach(function (entry) {
+        entry.tags = tagStringToArray(entry.tags);
+      });
       $scope.entries = entries;
     });
   };
@@ -74,6 +92,6 @@ function EntriesController($scope, Entries) {
   };
 };
 
-var mjournal = angular.module("mjournal", ["editText", "EntriesService"]);
+var mjournal = angular.module("mjournal", ["editText", "EntriesService", "lvl.services", "lvl.directives.tageditor"]);
 
 mjournal.controller("EntriesController", EntriesController);
