@@ -23,13 +23,7 @@ function tagStringToArray(tagString) {
   if (!tagString) {
     return [];
   }
-  return tagString.trim().split(" ").map(function (tag) {
-    return {
-      Name: tag,
-      Description: "",
-      ID: tag
-    };
-  });
+  return tagString.trim().split(" ");
 }
 
 var EntriesService = angular.module("EntriesService", ["ngResource"]);
@@ -92,6 +86,6 @@ function EntriesController($scope, Entries) {
   };
 };
 
-var mjournal = angular.module("mjournal", ["editText", "EntriesService", "lvl.services", "lvl.directives.tageditor"]);
+var mjournal = angular.module("mjournal", ["editText", "EntriesService"]);
 
 mjournal.controller("EntriesController", EntriesController);
