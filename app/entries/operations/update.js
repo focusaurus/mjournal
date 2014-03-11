@@ -3,6 +3,7 @@ var log = require("app/log");
 var opMW = require("app/operations/middleware");
 var Stack = require("app/operations").Stack;
 var errors = require("app/errors");
+var presentEntry = require("../presentEntry");
 
 var stack = new Stack();
 stack.use(opMW.requireUser);
@@ -12,7 +13,7 @@ stack.use(execute);
 
 function select(where, callback) {
   db.select("entries").where(where).execute(function(error, result) {
-    callback(error, result.rows && result.rows[0]);
+    callback(error, presentEntry(result.rows && result.rows[0]));
   });
 }
 

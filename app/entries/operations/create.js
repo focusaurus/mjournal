@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var db = require("app/db");
 var log = require("app/log");
+var presentEntry = require("../presentEntry");
 
 function run(options, callback) {
   if (!options.user) {
@@ -9,10 +10,14 @@ function run(options, callback) {
       "Please sign in to view your journal": "Please sign in to view your journal"
     });
   }
+  var tags = options.tags || [];
+  if (!Array.isArray(tags)) {
+    tags = [];
+  }
   var row = {
     userId: options.user.id,
     body: options.body,
-    tags: options.tags
+    tags: tags.join(" ")
   };
   var returning = ["id", "created", "updated"].concat(_.keys(row));
   log.debug(row, "creating new entry");
@@ -25,7 +30,7 @@ function run(options, callback) {
       callback(error);
       return;
     }
-    callback(null, result.rows[0]);
+    callback(null, presentEntry(result.rows[0]));
   });
 }
 

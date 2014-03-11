@@ -1,6 +1,5 @@
 angular.module("mjournal").directive("mjTags", function () {
   return {
-        restrict: "A",
         templateUrl: "mjTags.html",
         replace: true,
         scope: {
@@ -8,7 +7,14 @@ angular.module("mjournal").directive("mjTags", function () {
         },
         compile: function compile(tElement, tAttrs, transclude) {
             return function postLink(scope, el, attrs, ctl) {
-              console.log("@bug postLink called");
+              scope.remove = function(tag) {
+                if (!Array.isArray(scope.mjTags)) {
+                  return;
+                }
+                scope.mjTags = scope.mjTags.filter(function (_tag) {
+                  return _tag !== tag;
+                });
+              };
             };
         }
     };

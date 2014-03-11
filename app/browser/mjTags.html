@@ -1,6 +1,6 @@
-<ul class="mj-tags">
+<ul class="mjTags">
   <li ng-repeat="tag in mjTags">
     <span class="mj-tag-name" ng-bind="tag"></span>
-    <span class="mj-tag-remove">×</span>
+    <span class="mj-tag-remove" ng-click="remove(tag)">×</span>
   </li>
 </ul>

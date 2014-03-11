@@ -2,6 +2,8 @@ var db = require("app/db");
 var log = require("app/log");
 var Stack = require("app/operations").Stack;
 var opMW = require("app/operations/middleware");
+var presentEntry = require("../presentEntry");
+
 var stack = new Stack();
 stack.use(initDbOp);
 stack.use(opMW.requireUser);
@@ -27,7 +29,7 @@ function execute(next, options, callback) {
       callback(error);
       return;
     }
-    return callback(null, result.rows);
+    return callback(null, result.rows.map(presentEntry));
   });
 }
 
