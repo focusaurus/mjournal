@@ -5,6 +5,7 @@ to not care about HTML
 @see http://docs.angularjs.org/api/ng.directive:ngModel.NgModelController
 @see https://github.com/angular/angular.js/issues/528#issuecomment-7573166
 */
+require("angular");
 
 function editText() {
   return {

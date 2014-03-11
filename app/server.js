@@ -1,10 +1,6 @@
 var app = require("express")();
 var log = require("app/log");
 
-if ((process.env.NODE_ENV || "development") === "development") {
-  app.set("config.development", true);
-}
-
 require("app/controllers")(app);
 
 var port = process.env.MJ_EXPRESS_PORT || 9090;
@@ -20,3 +16,4 @@ app.listen(port, function(error) {
     port: port
   }, "mjournal express app listening");
 });
+module.exports = app;

@@ -1,10 +1,12 @@
+var paths = require("app/paths");
+
 function setup(app) {
-  var controller, controllers, _i, _len;
   app.set("view engine", "jade");
-  app.set("views", "" + __dirname + "/../pages");
+  app.set("views", paths.views);
   app.router;
   [
     "styles",
+    "scripts",
     "static",
     "session",
     "../users/controller",
