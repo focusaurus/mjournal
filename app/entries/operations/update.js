@@ -31,6 +31,9 @@ function execute(next, options, callback) {
       set[property] = options[property];
     }
   });
+  if (Array.isArray(set.tags)) {
+    set.tags = set.tags.join(" ");
+  }
   var where = {
     id: options.id,
   };

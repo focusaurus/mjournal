@@ -45,8 +45,12 @@ function EntriesController($scope, Entries) {
     if (event.which === ENTER) {
       entry.tags.push(entry.newTag);
       entry.newTag = "";
+      entry.addTag = false;
       Entries.update(entry);
     }
+  };
+  $scope.addTag = function(entry) {
+    entry.addTag = true;
   };
   $scope.get();
 }
