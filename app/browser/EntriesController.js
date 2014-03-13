@@ -49,9 +49,6 @@ function EntriesController($scope, Entries) {
       Entries.update(entry);
     }
   };
-  $scope.addTag = function(entry) {
-    entry.addTag = true;
-  };
   $scope.$on("mjTags:remove", function (event, entry, removedTag) {
     Entries.update(_.pick(entry, "id", "tags"));
   });
