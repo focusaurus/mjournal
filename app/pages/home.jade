@@ -18,7 +18,8 @@ block body
           type="text",
           ng-model="entry.newTag",
           ng-keypress="newTagKeypress($event, entry)",
-          ng-if="entry.addTag"
+          ng-if="entry.addTag",
+          focus-me="true"
         )
         ul(mj-tags="entry")
       hr
