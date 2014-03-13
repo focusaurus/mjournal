@@ -1,5 +1,6 @@
 var _ = require("lodash");
 var ENTER = 13;
+var ESCAPE = 27;
 
 function EntriesController($scope, Entries) {
   $scope.page = 1;
@@ -41,12 +42,20 @@ function EntriesController($scope, Entries) {
       $scope.get();
     }
   };
-  $scope.newTagKeypress = function(event, entry) {
-    if (event.which === ENTER) {
-      entry.tags.push(entry.newTag);
+  $scope.newTagKeydown = function(event, entry) {
+    function close() {
       entry.newTag = "";
       entry.addTag = false;
+    }
+    if (event.which === ESCAPE) {
+      close();
+      return;
+    }
+    if (event.which === ENTER) {
+      entry.tags.push(entry.newTag);
       Entries.update(entry);
+      close();
+      return;
     }
   };
   $scope.$on("mjTags:remove", function (event, entry, removedTag) {

@@ -17,7 +17,7 @@ block body
         input.tags(
           type="text",
           ng-model="entry.newTag",
-          ng-keypress="newTagKeypress($event, entry)",
+          ng-keydown="newTagKeydown($event, entry)",
           ng-if="entry.addTag",
           focus-me="true"
         )
