@@ -14,14 +14,14 @@ block body
           ng-change="update(entry)")
         div.tags(ng-if="entry.tags.length")
           span.tagLabel Tags:&nbsp;
-          ul(mj-tags="entry.tags")
-          button.addTag(ng-click="addTag(entry)") +
-          input.tags(
-            type="text",
-            ng-model="entry.newTag",
-            ng-keypress="tagsKeypress($event, entry)",
-            ng-if="entry.addTag"
-          )
+          ul(mj-tags="entry")
+        input.tags(
+          type="text",
+          ng-model="entry.newTag",
+          ng-keypress="newTagKeypress($event, entry)",
+          ng-if="entry.addTag"
+        )
+        button.addTag(ng-click="addTag(entry)") +
       hr
       p.body.new(ng-keydown="create($event)", contenteditable="true")
       input.tags.new(ng-model="newEntryTags", placeholder="tags...")

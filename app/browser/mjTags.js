@@ -11,12 +11,13 @@ angular.module("mjournal").directive("mjTags", function () {
         compile: function compile(tElement, tAttrs, transclude) {
             return function postLink(scope, el, attrs, ctl) {
               scope.remove = function(tag) {
-                if (!Array.isArray(scope.mjTags)) {
+                if (!Array.isArray(scope.mjTags.tags)) {
                   return;
                 }
-                scope.mjTags = scope.mjTags.filter(function (_tag) {
+                scope.mjTags.tags = scope.mjTags.tags.filter(function (_tag) {
                   return _tag !== tag;
                 });
+                scope.$emit("mjTags:remove", scope.mjTags, tag);
               };
             };
         }

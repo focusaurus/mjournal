@@ -41,7 +41,7 @@ function EntriesController($scope, Entries) {
       $scope.get();
     }
   };
-  $scope.tagsKeypress = function(event, entry) {
+  $scope.newTagKeypress = function(event, entry) {
     if (event.which === ENTER) {
       entry.tags.push(entry.newTag);
       entry.newTag = "";
@@ -52,6 +52,9 @@ function EntriesController($scope, Entries) {
   $scope.addTag = function(entry) {
     entry.addTag = true;
   };
+  $scope.$on("mjTags:remove", function (event, entry, removedTag) {
+    Entries.update(_.pick(entry, "id", "tags"));
+  });
   $scope.get();
 }
 

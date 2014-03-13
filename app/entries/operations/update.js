@@ -1,8 +1,9 @@
+var _ = require("lodash");
 var db = require("app/db");
+var errors = require("app/errors");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
 var Stack = require("app/operations").Stack;
-var errors = require("app/errors");
 var presentEntry = require("../presentEntry");
 
 var stack = new Stack();
@@ -27,7 +28,7 @@ function execute(next, options, callback) {
     updated: new Date()
   };
   ["body", "tags"].forEach(function (property) {
-    if (options[property] !== null) {
+    if (_.has(options, property)) {
       set[property] = options[property];
     }
   });
