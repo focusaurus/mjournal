@@ -25,7 +25,8 @@
     "commander": "~2.0.0",
     "connect-pg-simple": "~1.0.1",
     "bunyan": "~0.22.1",
-    "browserify": "~3.32.1"
+    "browserify": "~3.32.1",
+    "config3": "0.0.0"
   },
   "devDependencies": {
     "node-inspector": "~0.2.0-beta4",

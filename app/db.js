@@ -1,7 +1,8 @@
 var anydb = require("any-db");
 var gesundheit = require("gesundheit");
-var dbURL = process.env.MJ_DB_URL || "postgres://mjournal@localhost/mjournal";
-gesundheit.defaultEngine = gesundheit.engine(dbURL);
+var config = require("config3");
+
+gesundheit.defaultEngine = gesundheit.engine(config.dbUrl);
 
 module.exports = gesundheit;
-module.exports.dbURL = dbURL;
+module.exports.dbUrl = config.dbUrl;

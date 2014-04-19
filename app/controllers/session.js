@@ -1,10 +1,10 @@
-var db        = require("app/db");
-var express   = require("express");
-var pg        = require("pg");
-var PGStore   = require("connect-pg-simple")(express);
+var config = require("config3");
+var express = require("express");
+var pg = require("pg");
+var PGStore = require("connect-pg-simple")(express);
 
 var store = new PGStore({
-  conString: db.dbURL,
+  conString: config.dbUrl,
   pg: pg
 });
 
