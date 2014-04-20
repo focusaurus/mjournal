@@ -1,4 +1,4 @@
-var expect = require("chai").expect;
+var expect = require("expectacle");
 var signIn = require("app/users/operations/sign-in");
 var signUp = require("app/users/operations/sign-up");
 
@@ -12,10 +12,11 @@ describe("users/operations/sign-in", function() {
   });
   it("should return the user if password is correct", function(done) {
     signIn(newUser, function(error, user) {
-      expect(error).not.to.exist;
-      expect(user).not.to.have.property("bcryptedPassword");
-      expect(user).to.have.property("id");
-      expect(user).to.have.property("email", newUser.email);
+      expect(error).toBeNull();
+      expect(user).not.toHaveProperty("bcryptedPassword");
+      expect(user).toHaveProperty("id");
+      expect(user).toHaveProperty("email");
+      expect(user.email).toBe(newUser.email);
       done();
     });
   });
@@ -24,8 +25,9 @@ describe("users/operations/sign-in", function() {
       email: newUser.email,
       password: "incorrect"
     }, function(error, user) {
-      expect(error).to.exist;
-      expect(error).to.have.property("code", 403);
+      expect(error).toBeTruthy();
+      expect(error).toHaveProperty("code");
+      expect(error.code).toBe(403);
       done();
     });
   });

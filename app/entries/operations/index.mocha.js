@@ -1,6 +1,6 @@
 var signUp = require("app/users/operations/sign-up");
 var ops = require("app/entries/operations");
-var expect = require("chai").expect;
+var expect = require("expectacle");
 var errors = require("app/errors");
 
 describe("entries/operations/create+update", function() {
@@ -14,8 +14,8 @@ describe("entries/operations/create+update", function() {
       password: "password"
     };
     signUp(inUser, function(error, outUser) {
-      expect(error).not.to.exist;
-      expect(outUser).to.have.property("id");
+      expect(error).toBeNull();
+      expect(outUser).toHaveProperty("id");
       user = outUser;
       done();
     });
@@ -26,8 +26,8 @@ describe("entries/operations/create+update", function() {
       password: "password"
     };
     signUp(inUser, function(error, outUser) {
-      expect(error).not.to.exist;
-      expect(outUser).to.have.property("id");
+      expect(error).toBeNull();
+      expect(outUser).toHaveProperty("id");
       user2 = outUser;
       done();
     });
@@ -38,11 +38,12 @@ describe("entries/operations/create+update", function() {
       body: "test body"
     };
     ops.create(options, function(error, outEntry) {
-      expect(error).not.to.exist;
-      expect(outEntry).to.have.property("id");
-      expect(outEntry).to.have.property("created");
-      expect(outEntry).to.have.property("updated");
-      expect(outEntry).to.have.property("body", options.body);
+      expect(error).toBeNull();
+      expect(outEntry).toHaveProperty("id");
+      expect(outEntry).toHaveProperty("created");
+      expect(outEntry).toHaveProperty("updated");
+      expect(outEntry).toHaveProperty("body");
+      expect(outEntry.body).toBe(options.body);
       entry = outEntry;
       done();
     });
@@ -53,11 +54,12 @@ describe("entries/operations/create+update", function() {
       body: "test body2"
     };
     ops.create(options, function(error, outEntry) {
-      expect(error).not.to.exist;
-      expect(outEntry).to.have.property("id");
-      expect(outEntry).to.have.property("created");
-      expect(outEntry).to.have.property("updated");
-      expect(outEntry).to.have.property("body", options.body);
+      expect(error).toBeNull();
+      expect(outEntry).toHaveProperty("id");
+      expect(outEntry).toHaveProperty("created");
+      expect(outEntry).toHaveProperty("updated");
+      expect(outEntry).toHaveProperty("body");
+      expect(outEntry.body).toBe(options.body);
       entry2 = outEntry;
       done();
     });
@@ -70,11 +72,12 @@ describe("entries/operations/create+update", function() {
     };
     var oldUpdated = entry.updated;
     ops.update(options, function(error, outEntry) {
-      expect(error).not.to.exist;
-      expect(outEntry).to.have.property("body", options.body);
-      expect(outEntry).to.have.property("updated");
-      expect(outEntry).to.have.property("created");
-      expect(oldUpdated).not.to.eql(outEntry.updated);
+      expect(error).toBeNull();
+      expect(outEntry).toHaveProperty("body");
+      expect(outEntry.body).toBe(options.body);
+      expect(outEntry).toHaveProperty("updated");
+      expect(outEntry).toHaveProperty("created");
+      expect(oldUpdated).not.toEqual(outEntry.updated);
       done();
     });
   });
@@ -82,8 +85,8 @@ describe("entries/operations/create+update", function() {
     ops.view({
       user: user
     }, function(error, entries) {
-      expect(error).not.to.exist;
-      expect(entries).to.have.length.above(0);
+      expect(error).toBeNull();
+      expect(entries).not.toBeEmpty();
       done();
     });
   });
@@ -92,8 +95,8 @@ describe("entries/operations/create+update", function() {
       user: user,
       textSearch: "body"
     }, function(error, entries) {
-      expect(error).not.to.exist;
-      expect(entries).to.have.length.above(0);
+      expect(error).toBeNull();
+      expect(entries).not.toBeEmpty(0);
       done();
     });
   });
@@ -102,9 +105,9 @@ describe("entries/operations/create+update", function() {
       user: user,
       textSearch: "notpresent"
     }, function(error, entries) {
-      expect(error).not.to.exist;
-      expect(entries).to.be.instanceof(Array);
-      expect(entries).to.be.empty;
+      expect(error).toBeNull();
+      expect(entries).toBeArray();
+      expect(entries).toBeEmpty();
       done();
     });
   });
@@ -116,9 +119,10 @@ describe("entries/operations/create+update", function() {
     };
     var oldUpdated = entry.updated;
     ops.update(options, function(error, outEntry) {
-      expect(error).to.exist;
-      expect(error).to.have.property("code", 404);
-      expect(outEntry).not.to.exist;
+      expect(error).not.toBeNull();
+      expect(error).toHaveProperty("code");
+      expect(error.code).toBe(404);
+      expect(outEntry).toBeUndefined();
       done();
     });
   });

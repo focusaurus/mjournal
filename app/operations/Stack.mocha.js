@@ -1,13 +1,13 @@
 var Stack = require("app/operations/Stack");
-var expect = require("chai").expect;
+var expect = require("expectacle");
 
 describe("operations middleware Stack", function() {
   it("should call a function in the stack with the args from run", function(done) {
     var stack = new Stack();
     stack.use(function(next, one, two) {
-      expect(next).to.be.a("function");
-      expect(one).to.equal(1);
-      expect(two).to.equal(2);
+      expect(next).toBeFunction();
+      expect(one).toBe(1);
+      expect(two).toBe(2);
       next();
       done();
     });
@@ -16,7 +16,7 @@ describe("operations middleware Stack", function() {
   it("should not proceed if next() is not called", function(done) {
     var stack = new Stack();
     stack.use(function(next) {
-      expect(next).to.be.a("function");
+      expect(next).toBeFunction();
       done();
     });
     stack.use(function(next) {
@@ -31,7 +31,8 @@ describe("operations middleware Stack", function() {
       next();
     });
     stack.use(function(next) {
-      expect(this).to.have.property("foo", "FOO");
+      expect(this).toHaveProperty("foo", "FOO");
+      expect(this.foo).toBe("FOO");
       next();
       done();
     });
@@ -43,10 +44,12 @@ describe("operations middleware Stack", function() {
       this.runCount = (this.runCount || 0) + 1;
       next();
     });
-    expect(stack).not.to.have.property("runCount");
+    expect(stack).not.toHaveProperty("runCount");
     stack.run();
-    expect(stack).to.have.property("runCount", 1);
+    expect(stack).toHaveProperty("runCount", 1);
+    expect(stack.runCount).toBe(1);
     stack.run();
-    expect(stack).to.have.property("runCount", 2);
+    expect(stack).toHaveProperty("runCount", 2);
+    expect(stack.runCount).toBe(2);
   });
 });

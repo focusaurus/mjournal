@@ -1,13 +1,13 @@
 var paths = require("app/paths");
-var expect = require("chai").expect;
+var expect = require("expectacle");
 
 describe("app/paths", function() {
   it("should have the expected exported strings", function() {
-    expect(paths.app).to.be.a("string");
-    expect(paths.browser).to.be.a("string");
-    expect(paths.build).to.be.a("string");
-    expect(paths.thirdParty).to.be.a("string");
-    expect(paths.views).to.be.a("string");
-    expect(paths.wwwroot).to.be.a("string");
+    expect(paths.app).toBeString();
+    expect(paths.browser).toBeString();
+    expect(paths.build).toBeString();
+    expect(paths.thirdParty).toBeString();
+    expect(paths.views).toBeString();
+    expect(paths.wwwroot).toBeString();
   });
 });

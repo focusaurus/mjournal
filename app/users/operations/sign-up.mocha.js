@@ -1,6 +1,6 @@
+var expect = require("expectacle");
 var signIn = require("app/users/operations/sign-in");
 var signUp = require("app/users/operations/sign-up");
-var expect = require("chai").expect;
 
 describe("users/operations/sign-up", function() {
   it("should create a user.id and not return the password", function(done) {
@@ -9,10 +9,11 @@ describe("users/operations/sign-up", function() {
       password: "password"
     };
     signUp(newUser, function(error, user) {
-      expect(error).not.to.exist;
-      expect(user).not.to.have.property("bcryptedPassword");
-      expect(user).to.have.property("id");
-      expect(user).to.have.property("email", newUser.email);
+      expect(error).toBeNull();
+      expect(user).not.toHaveProperty("bcryptedPassword");
+      expect(user).toHaveProperty("id");
+      expect(user).toHaveProperty("email", newUser.email);
+      expect(user.email).toBe(newUser.email);
       done();
     });
   });
@@ -22,10 +23,11 @@ describe("users/operations/sign-up", function() {
       password: "password"
     };
     signUp(newUser, function(error) {
-      expect(error).not.to.exist;
+      expect(error).toBeNull();
       signUp(newUser, function(error, user) {
-        expect(error).to.exist;
-        expect(error).to.have.property("code", 409);
+        expect(error).toBeTruthy();
+        expect(error).toHaveProperty("code", 409);
+        expect(error.code).toBe(409);
         done();
       });
     });
@@ -36,8 +38,9 @@ describe("users/operations/sign-up", function() {
       password: "password"
     };
     signUp(newUser, function(error) {
-      expect(error, "callback should get an error").to.exist;
-      expect(error).to.have.property("code", 412);
+      expect(error).toBeTruthy();
+      expect(error).toHaveProperty("code", 412);
+      expect(error.code).toBe(412);
       done();
     });
   });
