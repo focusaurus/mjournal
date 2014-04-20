@@ -4,7 +4,7 @@ var log = require("app/log");
 var paths = require("app/paths");
 var stylus = require("stylus");
 
-var APPSTYL = paths.app + "/site/app.styl";
+var APPSTYL = paths.app + "/site/mjournal.styl";
 
 function render(callback) {
   fs.readFile(APPSTYL, "utf8", function(error, stylusText) {
