@@ -2,7 +2,7 @@ var fs = require('fs');
 //Inspiration:
 //https://jasonturim.wordpress.com/2013/09/22/angularjs-native-tag-editor/
 require("angular");
-angular.module("mjournal").directive("mjTags", function () {
+function mjTags() {
   return {
         template: fs.readFileSync(__dirname + "/mjTags.html", "utf8"),
         replace: true,
@@ -23,4 +23,5 @@ angular.module("mjournal").directive("mjTags", function () {
             };
         }
     };
-});
+}
+angular.module("mjournal").directive("mjTags", mjTags);
