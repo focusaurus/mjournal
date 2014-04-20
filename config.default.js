@@ -1,5 +1,6 @@
 exports.dbUrl = "postgres://mjournal@localhost/mjournal";
 exports.port = 9090;
+exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";
 
 var PRODUCTION = false;
 var TEST = false;

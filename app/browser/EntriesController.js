@@ -4,6 +4,7 @@ var ESCAPE = 27;
 
 function EntriesController($scope, Entries) {
   $scope.page = 1;
+  $scope.newEntryTags = "";
   $scope.get = function() {
     Entries.get({
       page: $scope.page,

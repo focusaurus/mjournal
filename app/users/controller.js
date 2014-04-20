@@ -1,14 +1,14 @@
 var _ = require("lodash");
+var config = require("config3");
 var express = require("express");
+var pg = require("pg");
+var PGStore = require("connect-pg-simple")(express);
 var signInOp = require("app/users/operations/sign-in");
 
-function home(req, res) {
-  if (req.user) {
-    res.render("home");
-  } else {
-    res.render("sign-in");
-  }
-}
+var store = new PGStore({
+  conString: config.dbUrl,
+  pg: pg
+});
 
 function signIn(req, res) {
   var options = _.pick(req.body, "email", "password");
@@ -32,13 +32,13 @@ function signOut(req, res) {
 function setup(app) {
   app.use(express.cookieParser());
   app.use(express.session({
-    secret: 'HkpYsNTjVpXz6BthO8hN'
+    store: store,
+    secret: config.sessionSecret
   }));
   app.use(function(req, res, next) {
     res.locals.user = req.user = req.session.user;
     next();
   });
-  app.get("/", home);
   app.post("/users/sign-in", express.bodyParser(), signIn);
   app.get("/users/sign-out", signOut);
 }

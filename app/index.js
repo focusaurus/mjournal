@@ -3,15 +3,18 @@ var config = require("config3");
 var express = require("express");
 var log = require("app/log");
 var paths = require("app/paths");
-var pg = require("pg");
-var PGStore = require("connect-pg-simple")(express);
+
 var stylusBundle = require("app/site/stylusBundle");
 
 var app = express();
-var store = new PGStore({
-  conString: config.dbUrl,
-  pg: pg
-});
+
+function home(req, res) {
+  if (req.user) {
+    res.render("home");
+  } else {
+    res.render("sign-in");
+  }
+}
 
 function appCSS(req, res, next) {
   stylusBundle(function(error, cssText) {
@@ -29,15 +32,8 @@ function appCSS(req, res, next) {
 
 app.set("view engine", "jade");
 app.set("views", paths.views);
-app.use(express.cookieParser());
-app.use(express.session({
-  store: store,
-  secret: "izd7eT6WHsPD"
-}));
-app.get("/sign-out", function(req, res) {
-  req.session.destroy();
-  res.redirect("/");
-});
+app.router;
+app.get("/", home);
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", function (req, res) {
   res.type("js");
@@ -51,5 +47,6 @@ app.use(express.static(paths.browser));
 ].forEach(function(controller) {
   require(controller)(app);
 });
+app.use(app.router);
 
 module.exports = app;
