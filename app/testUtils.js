@@ -1,5 +1,5 @@
 var cheerio = require("cheerio");
-var request = require("supertest")(require("app/server"));
+var request = require("supertest")(require("app"));
 
 function loadPage(URL, callback) {
   request.get(URL).expect(200).end(function(error, res) {

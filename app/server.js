@@ -1,8 +1,7 @@
-var app = require("express")();
+#!/usr/bin/env node
+var app = require("app");
 var log = require("app/log");
 var config = require("config3");
-
-require("app/controllers")(app);
 
 app.listen(config.port, function(error) {
   if (error) {
@@ -15,4 +14,3 @@ app.listen(config.port, function(error) {
     port: config.port
   }, "mjournal express app listening");
 });
-module.exports = app;

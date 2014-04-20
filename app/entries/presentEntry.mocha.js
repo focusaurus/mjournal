@@ -1,5 +1,5 @@
 var expect = require("chai").expect;
-var presentEntry = require("../presentEntry");
+var presentEntry = require("./presentEntry");
 
 describe("app/entries/presentEntry", function () {
   it("should handle null", function() {

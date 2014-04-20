@@ -3,7 +3,7 @@ var db = require("app/db");
 var errors = require("app/errors");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
-var Stack = require("app/operations").Stack;
+var Stack = require("app/operations/Stack");
 var presentEntry = require("../presentEntry");
 
 var stack = new Stack();

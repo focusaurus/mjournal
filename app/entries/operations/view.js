@@ -1,6 +1,6 @@
 var db = require("app/db");
 var log = require("app/log");
-var Stack = require("app/operations").Stack;
+var Stack = require("app/operations/Stack");
 var opMW = require("app/operations/middleware");
 var presentEntry = require("../presentEntry");
 

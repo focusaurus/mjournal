@@ -24,6 +24,4 @@ Stack.prototype.run = function() {
   return this;
 };
 
-module.exports = {
-  Stack: Stack
-};
+module.exports = Stack;

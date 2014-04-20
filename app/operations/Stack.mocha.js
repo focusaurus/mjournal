@@ -1,4 +1,4 @@
-var Stack = require("app/operations").Stack;
+var Stack = require("app/operations/Stack");
 var expect = require("chai").expect;
 
 describe("operations middleware Stack", function() {

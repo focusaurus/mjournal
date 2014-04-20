@@ -121,4 +121,5 @@ describe("entries/operations/create+update", function() {
       expect(outEntry).not.to.exist;
       done();
     });
-  });});
+  });
+});
