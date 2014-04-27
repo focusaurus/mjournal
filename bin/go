@@ -29,6 +29,7 @@ Development Commands
 --------------------
 
 * express: start the express server
+  * aliased as "start" command as well
 * test: run all the tests (mocha)
 * inspector: run node-inspector with the proper web port
 
@@ -45,6 +46,10 @@ EOF
 task::express() {
   autoinstall_npm_dependencies
   node-dev --debug=9091 app/server | bunyan -o short
+}
+
+task::start() {
+  task::express
 }
 
 task::test() {

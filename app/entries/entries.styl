@@ -1,8 +1,30 @@
 @import "site/colorPalette"
 
+.notebook
+  margin-top 1em;
+  border-radius 1em
+  border 1.5em solid $border2
+  border-top-width 1em
+  border-bottom-width 1em
+  background-color $border2
+
+.page
+  background-color $bagels
+  border 1.5em solid $bagels
+  border-radius 1em
+  border-right-width 0.6em
+  border-left-width @border-right-width
+  box-shadow -8px 8px $tunnel
+
 .entry
-  border-top 1px dashed $border1
+  border 0.1em solid $butterCream
+  border-radius 0.5em
   position relative
+  padding 1em
+  padding-bottom 0.2em
+  margin-top 1em
+  &:first-child
+    margin-top -@margin-top
   p
     white-space pre-wrap
   .body
@@ -20,25 +42,27 @@
     top 0
   &:hover .info
     display block
-  &:nth-child(even)
-    background-color $background2
-  ul.mjTags
-    display inline-block
-  .mjTags li
-    list-item-type none
-    display inline-block
-    border-radius 5%
-    background-color $background2
-    margin 0 0.2em
-    padding 0 0.2em
+  button.add-tag
+    border none
+    border-radius 0.5em
+    background-color $tunnel
+    color $butterCream
+    text-transform uppercase
+
 p.body.new
-  background-color $backgroundAccent1
+  background-color $background1
   height 4em
-  border 1px solid $border1
+  border-radius 0.5em
+  padding-left 1em
   outline 0
+  overflow-y auto
   &:not(:focus):after
-    color white
-    content "Type here\2026"
-    font-size 40px
+    color $text1
+    content "Type a new entry here\2026"
     font-style italic
     padding .5em
+
+input.tags.new
+  background-color $background1
+  font-size 24px
+  min-width: 15em

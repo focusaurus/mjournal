@@ -5,23 +5,23 @@ block body
     input(type="text", placeholder="search entries...", ng-model="textSearch", ng-keypress="searchKeypress($event)")
     button(ng-click="previous()") Previous Entries
     button(ng-click="next()", ng-show="page > 1") Next Entries
-    div.entries
-      div.entry(ng-repeat="entry in entries")
-        .info(title="{{entry.created | date:'short'}}") i
-        p.body(
-          ng-model="entry.body",
-          edittext,
-          ng-change="update(entry)")
-        span.tagLabel Tags:&nbsp;
-        button.addTag(ng-click="entry.addTag = true") +
-        input.tags(
-          type="text",
-          ng-model="entry.newTag",
-          ng-keydown="newTagKeydown($event, entry)",
-          ng-if="entry.addTag",
-          focus-me="true"
-        )
-        ul(mj-tags="entry")
-      hr
+    div.notebook
+      div.page
+        div.entries
+          div.entry(ng-repeat="entry in entries")
+            .info(title="{{entry.created | date:'short'}}") i
+            p.body(
+              ng-model="entry.body",
+              edittext,
+              ng-change="update(entry)")
+            button.add-tag(ng-click="entry.addTag = true") +Tag
+            input.tags(
+              type="text",
+              ng-model="entry.newTag",
+              ng-keydown="newTagKeydown($event, entry)",
+              ng-if="entry.addTag",
+              focus-me="true"
+            )
+            ul(mj-tags="entry")
       p.body.new(ng-keydown="create($event)", contenteditable="true")
       input.tags.new(ng-model="newEntryTags", placeholder="tags...")

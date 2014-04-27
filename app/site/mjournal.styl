@@ -1,10 +1,17 @@
-@import "site/colorPalette"
+@require "site/colorPalette"
 body
- background-color $background1
  color $text1
  margin 0 auto
  width 35em
  font-size 24px
+ padding-bottom 1em
+
+.app-name
+  display inline-block
+  margin-right 1em
+
+.app-tag
+  display inline-block
 label
   display block
 input[type=submit]
@@ -13,4 +20,6 @@ a.signOut
   position fixed
   top 0
   right 0
-@import "entries/entries"
+
+@require "entries/tags.component"
+@require "entries/entries"
