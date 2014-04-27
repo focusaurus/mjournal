@@ -10,19 +10,19 @@ block body
       div.page
         div.entries
           div.entry(ng-repeat="entry in entries")
-            .info(title="{{entry.created | date:'short'}}") i
+            div.created.meta(ng-bind="entry.created | date:'medium'")
             p.body(
               ng-model="entry.body",
               edittext,
               ng-change="update(entry)")
-            button.add-tag(ng-click="entry.addTag = true") +Tag
-            input.tags(
+            button.add-tag.meta(ng-click="entry.addTag = true") +Tag
+            input.tags.meta(
               type="text",
               ng-model="entry.newTag",
               ng-keydown="newTagKeydown($event, entry)",
               ng-if="entry.addTag",
               focus-me="true"
             )
-            ul(mj-tags="entry")
+            ul.meta(mj-tags="entry")
       p.body.new(ng-keydown="create($event)", contenteditable="true")
       input.tags.new(ng-model="newEntryTags", placeholder=" tags...")

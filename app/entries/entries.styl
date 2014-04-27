@@ -9,27 +9,30 @@
   background-color $border2
 
 .page
-  background-color $bagels
-  border 1.5em solid $bagels
+  // background-color $bagels
+  margin-top 0.5em
+  background url(grid.gif)
   border-radius 1em
-  border-right-width 0.6em
-  border-left-width @border-right-width
   box-shadow -8px 8px $tunnel
 
 .entry
-  border 0.1em solid $butterCream
-  border-radius 0.5em
   position relative
-  padding 1em
+  padding 0.5em
   padding-bottom 0.2em
-  margin-top 1em
+  border-bottom 0.05em dashed $tunnel
   &:first-child
-    margin-top -@margin-top
+    // margin-top -@margin-top
+  &:last-child
+    border none
   p
     white-space pre-wrap
+  .created
+    text-align right
+    font-size 16px
+    font-style italic
   .body
     margin 0
-    padding 20px 0
+    padding 0.2em 0
     outline 0
   .info
     background-color $background2
@@ -42,12 +45,13 @@
     top 0
   &:hover .info
     display block
-  button.add-tag
-    border none
-    border-radius 0.5em
-    background-color $tunnel
-    color $butterCream
-    text-transform uppercase
+  .meta
+    visibility hidden
+  &:hover .meta
+    visibility visible
+
+button.add-tag
+  text-transform uppercase
 
 p.body.new
   background-color $background1
