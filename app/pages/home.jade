@@ -1,10 +1,11 @@
 extends layout
 block body
   div(ng-app="mjournal", ng-controller="EntriesController")
-    a.signOut(href="/sign-out") Sign Out
-    input(type="text", placeholder="search entries...", ng-model="textSearch", ng-keypress="searchKeypress($event)")
-    button(ng-click="previous()") Previous Entries
-    button(ng-click="next()", ng-show="page > 1") Next Entries
+    a.sign-out(href="/sign-out") Sign Out
+    div.toolbar
+      button.previous(ng-click="previous()") Previous Entries
+      input(type="text", placeholder=" search entries...", ng-model="textSearch", ng-keypress="searchKeypress($event)")
+      button.next(ng-click="next()", ng-show="page > 1") Next Entries
     div.notebook
       div.page
         div.entries
@@ -24,4 +25,4 @@ block body
             )
             ul(mj-tags="entry")
       p.body.new(ng-keydown="create($event)", contenteditable="true")
-      input.tags.new(ng-model="newEntryTags", placeholder="tags...")
+      input.tags.new(ng-model="newEntryTags", placeholder=" tags...")

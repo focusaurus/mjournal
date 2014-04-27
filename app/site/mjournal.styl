@@ -9,6 +9,9 @@ body
 .app-name
   display inline-block
   margin-right 1em
+  a
+    text-decoration none
+    color $tunnel
 
 .app-tag
   display inline-block
@@ -16,10 +19,26 @@ label
   display block
 input[type=submit]
   display block
-a.signOut
-  position fixed
-  top 0
-  right 0
 
+button()
+  background-color $bagels
+  border none
+  border-radius 0.5em
+  color $tunnel
+  outline none
+  padding 0.5em 0.8em
+  text-decoration none
+
+button
+  button()
+
+a.sign-out
+  button()
+  position absolute
+  top 0.5em
+  right 0.5em
+  font-size 16px
+
+@require "site/toolbar.component"
 @require "entries/tags.component"
 @require "entries/entries"
