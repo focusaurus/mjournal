@@ -15,7 +15,9 @@ block body
               ng-model="entry.body",
               edittext,
               ng-change="update(entry)")
-            button.add-tag.meta(ng-click="entry.addTag = true") +Tag
+            img.add-tag.meta(
+              ng-click="entry.addTag = !entry.addTag", src="/tag.png", alt="Add tag",
+              width="24px")
             input.tags.meta(
               type="text",
               ng-model="entry.newTag",

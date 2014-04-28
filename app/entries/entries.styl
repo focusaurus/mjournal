@@ -1,25 +1,29 @@
 @import "site/colorPalette"
 
+moleskine-grid()
+  background url(grid.gif)
+
 .notebook
-  margin-top 1em;
-  border-radius 1em
-  border 1.5em solid $border2
-  border-top-width 1em
-  border-bottom-width 1em
   background-color $border2
+  border 1.5em solid $border2
+  border-bottom-width 1em
+  border-radius 1em
+  border-top-width 1em
+  margin-top 1em;
 
 .page
-  // background-color $bagels
-  margin-top 0.5em
   background url(grid.gif)
   border-radius 1em
   box-shadow -8px 8px $tunnel
+  margin-top 0.5em
+  moleskine-grid()
 
 .entry
-  position relative
+  border-bottom 0.05em dashed $charcoal
+  fancy-font()
   padding 0.5em
   padding-bottom 0.2em
-  border-bottom 0.05em dashed $tunnel
+  position relative
   &:first-child
     // margin-top -@margin-top
   &:last-child
@@ -27,6 +31,8 @@
   p
     white-space pre-wrap
   .created
+    font-family georgia, serif
+    color $smoke
     text-align right
     font-size 16px
     font-style italic
@@ -50,16 +56,19 @@
   &:hover .meta
     visibility visible
 
-button.add-tag
-  text-transform uppercase
+.add-tag
+  width 1em
+  cursor pointer
+  margin-bottom -0.2em
 
 p.body.new
-  background-color $background1
-  height 4em
   border-radius 0.5em
-  padding-left 1em
+  fancy-font()
+  height 4em
+  moleskine-grid()
   outline 0
   overflow-y auto
+  padding-left 1em
   &:not(:focus):after
     color $text1
     content "Type a new entry here\2026"

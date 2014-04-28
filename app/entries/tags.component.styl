@@ -3,16 +3,21 @@
 ul.mj-tags
   display inline-block
   margin 0
+  padding-left 0.2em
   li
-    list-style-type none
-    display inline-block
+    background-color $smoke
     border-radius 0.5em
-    border 0.1em solid $tunnel
+    color $charcoal
+    display inline-block
+    font-size 18px
+    list-style-type none
     margin 0 0.2em
     padding 0 0.4em
     padding-bottom 5px
-    font-size 18px
+    &:hover .mj-tag-remove
+        visibility visible
 
 .mj-tag-remove
+  visibility hidden
   color $past
-
+  cursor pointer
