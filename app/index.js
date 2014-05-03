@@ -5,7 +5,6 @@ var log = require("app/log");
 var paths = require("app/paths");
 
 var stylusBundle = require("app/site/stylusBundle");
-
 var app = express();
 
 function home(req, res) {
