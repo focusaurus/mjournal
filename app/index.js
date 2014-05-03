@@ -1,4 +1,4 @@
-var browserifyBundle = require("app/site/browserifyBundle");
+var bmw = require("browserify-middleware");
 var config = require("config3");
 var express = require("express");
 var log = require("app/log");
@@ -35,10 +35,7 @@ app.set("views", paths.views);
 app.router;
 app.get("/", home);
 app.get("/mjournal.css", appCSS);
-app.get("/mjournal.js", function (req, res) {
-  res.type("js");
-  browserifyBundle().pipe(res);
-});
+app.get("/mjournal.js", bmw([{"app/browser/main": {"add": true}}]));
 app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
 [

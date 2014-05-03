@@ -23,7 +23,7 @@ describe("app/index site-wide routes", function() {
     testUtils
       .get("/mjournal.js")
       .expect(200)
-      .expect("Content-Type", 'application/javascript')
+      .expect("Content-Type", "text/javascript")
       .end(done);
   });
 });
