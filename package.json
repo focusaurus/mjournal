@@ -6,7 +6,7 @@
   "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
   "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
   "engines": {
-    "node": "~0.10.26"
+    "node": "~0.10.28"
   },
   "scripts": {
     "start": "./bin/go express",
@@ -27,38 +27,43 @@
       "exports": "angular"
     },
     "angular-resource": {
-      "depends": ["./bower_components/angular/angular.js:angular"]
+      "depends": [
+        "./bower_components/angular/angular.js:angular"
+      ]
     }
   },
   "dependencies": {
-    "express": "~3.2.6",
-    "jade": "~0.31.2",
     "any-db": "~0.6.0",
     "bcrypt": "~0.7.6",
-    "gesundheit": "~0.8.5",
-    "pg": "~1.3.0",
-    "lodash": "~1.3.1",
-    "promptly": "~0.2.0",
-    "commander": "~2.0.0",
-    "connect-pg-simple": "~1.0.1",
-    "bunyan": "~0.22.1",
-    "config3": "0.0.0",
+    "body-parser": "^1.3.1",
+    "bower": "^1.3.3",
     "brfs": "~1.0.2",
-    "concat-stream": "~1.4.5",
-    "stylus": "~0.44.0",
-    "browserify-shim": "^3.4.1",
     "browserify-middleware": "^2.6.0",
-    "bower": "^1.3.3"
+    "browserify-shim": "^3.4.1",
+    "bunyan": "~0.22.1",
+    "commander": "^2.2.0",
+    "concat-stream": "~1.4.5",
+    "config3": "0.0.0",
+    "connect-pg-simple": "^2.0.0",
+    "cookie-parser": "^1.1.0",
+    "express": "^4.4.3",
+    "express-session": "^1.3.1",
+    "gesundheit": "~0.8.5",
+    "jade": "~0.31.2",
+    "lodash": "~1.3.1",
+    "pg": "~1.3.0",
+    "promptly": "~0.2.0",
+    "stylus": "~0.44.0"
   },
   "devDependencies": {
-    "mocha": "~1.11.0",
-    "sinon": "~1.7.3",
-    "node-dev": "~2.0.2",
-    "supertest": "~0.9.0",
     "cheerio": "~0.13.1",
-    "node-inspector": "~0.7.3",
-    "watchify": "~0.7.2",
     "expectacle": "~1.3.0",
-    "npm-check-updates": "~1.2.0"
+    "mocha": "~1.11.0",
+    "node-dev": "~2.0.2",
+    "node-inspector": "^0.7.4",
+    "npm-check-updates": "~1.2.0",
+    "sinon": "~1.7.3",
+    "supertest": "~0.9.0",
+    "watchify": "~0.7.2"
   }
 }

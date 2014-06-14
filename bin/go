@@ -12,6 +12,11 @@ autoinstall_npm_dependencies() {
   npm install
 }
 
+autoinstall_bower_dependencies() {
+  [[ -d bower_components/angular ]] && return
+  ./node_modules/.bin/bower install
+}
+
 usage() {
   echo "Usage: $(basename $0) <subcommand> [args...]"
   cat <<EOF
@@ -45,6 +50,7 @@ EOF
 ##### development task functions #####
 task::express() {
   autoinstall_npm_dependencies
+  autoinstall_bower_dependencies
   node-dev --debug=9091 app/server | bunyan -o short
 }
 

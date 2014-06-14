@@ -1,17 +1,18 @@
 var bmw = require("browserify-middleware");
 var config = require("config3");
+var cookieParser = require("cookie-parser");
 var express = require("express");
 var log = require("app/log");
 var paths = require("app/paths");
-
+var pg = require("pg");
+var session = require("express-session");
 var stylusBundle = require("app/site/stylusBundle");
-var app = express();
 
 function home(req, res) {
   if (req.user) {
-    res.render("home");
+    res.render("entries/home");
   } else {
-    res.render("sign-in");
+    res.render("users/sign-in");
   }
 }
 
@@ -29,20 +30,30 @@ function appCSS(req, res, next) {
   });
 }
 
+var PGStore = require("connect-pg-simple")(session);
+var store = new PGStore({
+  conString: config.dbUrl,
+  pg: pg,
+  secret: config.sessionSecret
+});
+var app = express();
 app.set("view engine", "jade");
-app.set("views", paths.views);
-app.router;
+app.set("views", __dirname);
+app.use(express.static(paths.wwwroot));
+app.use(express.static(paths.browser));
+app.use(cookieParser());
+app.use(session({
+  store: store,
+  secret: config.sessionSecret
+}));
+app.use(function(req, res, next) {
+  res.locals.user = req.user = req.session.user;
+  next();
+});
 app.get("/", home);
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser/main": {"add": true}}]));
-app.use(express.static(paths.wwwroot));
-app.use(express.static(paths.browser));
-[
-  "app/users/controller",
-  "app/entries/controller"
-].forEach(function(controller) {
-  require(controller)(app);
-});
-app.use(app.router);
+app.use("/users", require("app/users"));
+app.use("/entries", require("app/entries"));
 
 module.exports = app;

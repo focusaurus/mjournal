@@ -1,16 +1,18 @@
 #!/bin/bash
-DIR=$(dirname "${0}")/..
+repo_root=$(dirname "${0}")/..
+command_name=$(basename "$0")
 help() {
   echo "mjournal command line interface usage:"
-  echo "\tBasic syntax is ${0} <resource-or-subcommand> [options]"
-  for FILE in $(find "${DIR}/app/" -name cli.js);
+  printf "Basic syntax is ${command_name} <resource-or-subcommand> [options]\n"
+  for sub_cli in $(find "${repo_root}/app/" -name cli.js -type f);
   do
-    if [ ! -x "${FILE}" ]; then
+    if [ ! -x "${sub_cli}" ]; then
       continue
     fi
-    local SUB=$(basename "${FILE}" | cut -d . -f 1)
-    echo "----- ${SUB} -----"
-    "${FILE}" --help
+    local sub_dir=$(dirname "${sub_cli}")
+    local sub_dir=$(basename "${sub_dir}")
+    echo "----- ${sub_dir} -----"
+    "${sub_cli}" --help
   done
 }
 
@@ -24,7 +26,7 @@ case "${1}" in
     help
   ;;
   *)
-    SUBSCRIPT="${DIR}/app/${1}/cli.js"
+    SUBSCRIPT="${repo_root}/app/${1}/cli.js"
     if [ -x "${SUBSCRIPT}" ]; then
       shift
       exec "${SUBSCRIPT}" "${@}"

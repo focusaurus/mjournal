@@ -7,7 +7,6 @@ describe("app/paths", function() {
     expect(paths.browser).toBeString();
     expect(paths.build).toBeString();
     expect(paths.thirdParty).toBeString();
-    expect(paths.views).toBeString();
     expect(paths.wwwroot).toBeString();
   });
 });

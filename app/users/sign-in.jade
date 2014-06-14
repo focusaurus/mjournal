@@ -1,7 +1,7 @@
-extends layout
+extends ../layout
 block body
   if error
-    span.error= error.message
+    div.error= error.message
   form(method="post", action="/users/sign-in")
     label email
     input(type="text", placeholder="email", name="email")

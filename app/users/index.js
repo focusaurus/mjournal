@@ -1,14 +1,8 @@
 var _ = require("lodash");
+var bodyParser = require("body-parser");
 var config = require("config3");
 var express = require("express");
-var pg = require("pg");
-var PGStore = require("connect-pg-simple")(express);
 var signInOp = require("app/users/operations/sign-in");
-
-var store = new PGStore({
-  conString: config.dbUrl,
-  pg: pg
-});
 
 function signIn(req, res) {
   var options = _.pick(req.body, "email", "password");
@@ -29,18 +23,10 @@ function signOut(req, res) {
   return res.redirect("/");
 }
 
-function setup(app) {
-  app.use(express.cookieParser());
-  app.use(express.session({
-    store: store,
-    secret: config.sessionSecret
-  }));
-  app.use(function(req, res, next) {
-    res.locals.user = req.user = req.session.user;
-    next();
-  });
-  app.post("/users/sign-in", express.bodyParser(), signIn);
-  app.get("/users/sign-out", signOut);
-}
+var app = express();
+app.set("view engine", "jade");
+app.set("views", __dirname);
+app.post("/sign-in", bodyParser(), signIn);
+app.get("/sign-out", signOut);
 
-module.exports = setup;
+module.exports = app;

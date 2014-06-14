@@ -14,7 +14,7 @@ describe("app/index site-wide routes", function() {
     testUtils
       .get("/mjournal.css")
       .expect(200)
-      .expect("Content-Type", "text/css")
+      .expect("Content-Type", "text/css; charset=utf-8")
       .end(done);
   });
 

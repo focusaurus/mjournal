@@ -1,10 +1,9 @@
-var api, bodyParser, createEntry, express, needUser, ops, setup, updateEntry, viewEntries, _;
 var _ = require("lodash");
 var api = require("app/api");
 var ops = require("app/entries/operations");
 var express = require("express");
 var needUser = require("app/middleware/needUser");
-var bodyParser = express.bodyParser();
+var bodyParser = require("body-parser");
 
 function viewEntries(req, res) {
   if (req.user) {
@@ -17,25 +16,26 @@ function viewEntries(req, res) {
   } else {
     res.render("home");
   }
-};
+}
 
 function createEntry(req, res) {
   var options = _.pick(req.body, "body", "tags");
   options.user = req.user;
   return ops.create(options, api.sendResult(res));
-};
+}
 
 function updateEntry(req, res) {
   var options = _.pick(req.body, "body", "tags");
   options.id = req.params.id;
   options.user = req.user;
   return ops.update(options, api.sendResult(res));
-};
+}
 
-function setup(app) {
-  app.get("/entries", needUser, viewEntries);
-  app.post("/entries", needUser, bodyParser, createEntry);
-  app.put("/entries/:id", needUser, bodyParser, updateEntry);
-};
+var app = express();
+app.set("view engine", "jade");
+app.set("views", __dirname);
+app.get("/", needUser, viewEntries);
+app.post("/", needUser, bodyParser, createEntry);
+app.put("/:id", needUser, bodyParser, updateEntry);
 
-module.exports = setup;
+module.exports = app;
