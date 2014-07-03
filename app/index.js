@@ -53,7 +53,7 @@ app.use(function(req, res, next) {
 app.get("/", home);
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser/main": {"add": true}}]));
-app.use("/users", require("app/users"));
+app.use(require("app/users"));
 app.use("/entries", require("app/entries"));
 
 module.exports = app;

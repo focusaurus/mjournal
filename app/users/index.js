@@ -26,7 +26,7 @@ function signOut(req, res) {
 var app = express();
 app.set("view engine", "jade");
 app.set("views", __dirname);
-app.post("/sign-in", bodyParser(), signIn);
-app.get("/sign-out", signOut);
+app.post("/users/sign-in", bodyParser(), signIn);
+app.get("/users/sign-out", signOut);
 
 module.exports = app;
