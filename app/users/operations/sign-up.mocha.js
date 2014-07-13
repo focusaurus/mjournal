@@ -1,5 +1,4 @@
 var expect = require("expectacle");
-var signIn = require("app/users/operations/sign-in");
 var signUp = require("app/users/operations/sign-up");
 
 describe("users/operations/sign-up", function() {
@@ -24,7 +23,7 @@ describe("users/operations/sign-up", function() {
     };
     signUp(newUser, function(error) {
       expect(error).toBeNull();
-      signUp(newUser, function(error, user) {
+      signUp(newUser, function(error) {
         expect(error).toBeTruthy();
         expect(error).toHaveProperty("code", 409);
         expect(error.code).toBe(409);

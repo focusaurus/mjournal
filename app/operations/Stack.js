@@ -9,10 +9,7 @@ Stack.prototype.use = function(mw) {
 
 Stack.prototype.run = function() {
   var self = this;
-  var runState = {
-    mwArgs: [runClosure].concat([].slice.call(arguments)),
-    stack: this.stack.slice()
-  };
+  var runState;
   function runClosure() {
     var mw = runState.stack.shift();
     if (!mw) {
@@ -20,6 +17,10 @@ Stack.prototype.run = function() {
     }
     mw.apply(self, runState.mwArgs);
   }
+  runState = {
+    mwArgs: [runClosure].concat([].slice.call(arguments)),
+    stack: this.stack.slice()
+  };
   runClosure();
   return this;
 };

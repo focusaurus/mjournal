@@ -1,6 +1,5 @@
 var _ = require("lodash");
 var bodyParser = require("body-parser");
-var config = require("config3");
 var express = require("express");
 var signInOp = require("app/users/operations/sign-in");
 

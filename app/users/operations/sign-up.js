@@ -20,7 +20,7 @@ function isValidEmail(value) {
 function run(options, callback) {
   var user = _.pick(options, "email");
   if (!isValidEmail(user.email)) {
-    callback(errors.ClientError("invalid email"));
+    callback(new errors.ClientError("invalid email"));
     return;
   }
   hashPassword(options.password, function(error, bcryptedPassword) {
@@ -47,6 +47,6 @@ function run(options, callback) {
       callback(error, user);
     });
   });
-};
+}
 
 module.exports = run;

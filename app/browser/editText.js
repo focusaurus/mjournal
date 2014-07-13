@@ -33,13 +33,13 @@ function editText() {
       });
       var oldRender = ngModel.$render;
       ngModel.$render = function() {
-        if (!!oldRender) {
+        if (oldRender) {
           oldRender();
         }
         $element.text(ngModel.$viewValue || "");
       };
     }
   };
-};
+}
 
 angular.module("editText", []).directive("edittext", [editText]);

@@ -8,24 +8,24 @@ describe("errors.ClientError", function () {
     expect(error).toBeAnInstanceOf(errors.ClientError);
   });
   it("should be callable as a function without new", function() {
-    var error = errors.ClientError();
+    var error = new errors.ClientError();
     expect(error).toBeAnInstanceOf(Error);
     expect(error).toBeAnInstanceOf(errors.ClientError);
   });
   it("should be have default code and message", function() {
-    var error = errors.ClientError();
+    var error = new errors.ClientError();
     expect(error).toHaveProperty("code");
     expect(error.code).toBe(412);
     expect(error).toHaveProperty("message");
     expect(error.message).toBe("Precondition Failed");
   });
   it("should be allow specifying a particular message", function() {
-    var error = errors.ClientError("foo");
+    var error = new errors.ClientError("foo");
     expect(error).toHaveProperty("message");
     expect(error.message).toBe("foo");
   });
   it("should be allow specifying a particular code", function() {
-    var error = errors.ClientError("foo", 442);
+    var error = new errors.ClientError("foo", 442);
     expect(error).toHaveProperty("code");
     expect(error.code).toBe(442);
   });
@@ -38,24 +38,24 @@ describe("errors.Conflict", function () {
     expect(error).toBeAnInstanceOf(errors.Conflict);
   });
   it("should be callable as a function without new", function() {
-    var error = errors.Conflict();
+    var error = new errors.Conflict();
     expect(error).toBeAnInstanceOf(Error);
     expect(error).toBeAnInstanceOf(errors.Conflict);
   });
   it("should be have default code and message", function() {
-    var error = errors.Conflict();
+    var error = new errors.Conflict();
     expect(error).toHaveProperty("code");
     expect(error.code).toBe(409);
     expect(error).toHaveProperty("message");
     expect(error.message).toBe("Conflict");
   });
   it("should be allow specifying a particular message", function() {
-    var error = errors.Conflict("foo");
+    var error = new errors.Conflict("foo");
     expect(error).toHaveProperty("message");
     expect(error.message).toBe("foo");
   });
   it("should be allow specifying a particular code", function() {
-    var error = errors.Conflict("foo", 442);
+    var error = new errors.Conflict("foo", 442);
     expect(error).toHaveProperty("code");
     expect(error.code).toBe(442);
   });
@@ -68,24 +68,24 @@ describe("errors.InternalServerError", function () {
     expect(error).toBeAnInstanceOf(errors.InternalServerError);
   });
   it("should be callable as a function without new", function() {
-    var error = errors.InternalServerError();
+    var error = new errors.InternalServerError();
     expect(error).toBeAnInstanceOf(Error);
     expect(error).toBeAnInstanceOf(errors.InternalServerError);
   });
   it("should be have default code and message", function() {
-    var error = errors.InternalServerError();
+    var error = new errors.InternalServerError();
     expect(error).toHaveProperty("code");
     expect(error.code).toBe(500);
     expect(error).toHaveProperty("message");
     expect(error.message).toBe("Internal Server Error");
   });
   it("should be allow specifying a particular message", function() {
-    var error = errors.InternalServerError("foo");
+    var error = new errors.InternalServerError("foo");
     expect(error).toHaveProperty("message");
     expect(error.message).toBe("foo");
   });
   it("should be allow specifying a particular code", function() {
-    var error = errors.InternalServerError("foo", 442);
+    var error = new errors.InternalServerError("foo", 442);
     expect(error).toHaveProperty("code");
     expect(error.code).toBe(442);
   });

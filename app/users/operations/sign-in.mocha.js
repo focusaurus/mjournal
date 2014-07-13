@@ -24,7 +24,7 @@ describe("users/operations/sign-in", function() {
     signIn({
       email: newUser.email,
       password: "incorrect"
-    }, function(error, user) {
+    }, function(error) {
       expect(error).toBeTruthy();
       expect(error).toHaveProperty("code");
       expect(error.code).toBe(403);

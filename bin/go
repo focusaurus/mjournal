@@ -37,6 +37,7 @@ Development Commands
   * aliased as "start" command as well
 * test: run all the tests (mocha)
 * inspector: run node-inspector with the proper web port
+* lint: run eslint code format checker
 
 Deployment Commands
 -------------------
@@ -76,6 +77,10 @@ task::test() {
 
 task::inspector() {
   exec node-inspector --web-port=9092
+}
+
+task::lint() {
+  eslint app
 }
 
 ##### deployment command functions #####

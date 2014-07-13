@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --use_strict
 var cli = require("app/cli");
 var program = require("commander");
 var signUpOp = require("app/users/operations/sign-up");
@@ -15,6 +15,7 @@ function signUp(email) {
         cli.exit(error);
       }
       console.log(user);
+      /* eslint no-process-exit:0 */
       process.exit();
     });
   });

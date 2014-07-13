@@ -1,5 +1,5 @@
-#!/usr/bin/env node
-var bodyOption, cli, createAction, createCommand, createStack, entryOps, program, readline, tagsOption, updateAction, updateCommand, updateStack, viewAction, viewCommand, viewStack, _;
+#!/usr/bin/env node --use_strict
+/* eslint no-process-exit:0 */
 var _ = require("lodash");
 var cli = require("app/cli");
 var readline = require("readline");
@@ -37,15 +37,22 @@ function tagsOption(stack) {
 function viewAction(next, options) {
   options.textSearch = options.search;
   return entryOps.view(_.pick(options, "user", "page", "textSearch"), function(error, entries) {
-    var entry, _i, _len;
     if (error) {
       cli.exit(error);
     }
-    for (_i = 0, _len = entries.length; _i < _len; _i++) {
-      entry = entries[_i];
-      console.log("----- ID: " + entry.id + " Created: " + entry.created + " -----\ntags: " + (entry.tags || "") + "\n\n" + entry.body);
-    }
-    return process.exit();
+    entries.forEach(function (entry) {
+      console.log(
+        "----- ID: " +
+        entry.id +
+        " Created: " +
+        entry.created +
+        " -----\ntags: " +
+        (entry.tags || "") +
+        "\n\n" +
+        entry.body
+      );
+    });
+    process.exit();
   });
 }
 
@@ -64,7 +71,7 @@ function createAction(next, options) {
     console.log(entry);
     process.exit();
   });
-};
+}
 var createCommand = program.command("create").description("create a new journal entry");
 var createStack = new cli.Stack(createCommand);
 cli.signInMW(createStack);
@@ -82,7 +89,7 @@ function updateAction(next, commandOptions) {
     console.log("Entry updated");
     process.exit();
   });
-};
+}
 
 var updateCommand = program.command("update").option("-i,--entryId <entryId>").description("update an existing entry. Provide new entry body via stdin");
 var updateStack = new cli.Stack(updateCommand);

@@ -1,13 +1,11 @@
 var signUp = require("app/users/operations/sign-up");
 var ops = require("app/entries/operations");
 var expect = require("expectacle");
-var errors = require("app/errors");
 
 describe("entries/operations/create+update", function() {
   var user = null;
   var user2 = null;
   var entry = null;
-  var entry2 = null;
   before(function(done) {
     var inUser = {
       email: "test/entries/operations/create@example.com",
@@ -60,7 +58,6 @@ describe("entries/operations/create+update", function() {
       expect(outEntry).toHaveProperty("updated");
       expect(outEntry).toHaveProperty("body");
       expect(outEntry.body).toBe(options.body);
-      entry2 = outEntry;
       done();
     });
   });
@@ -117,6 +114,7 @@ describe("entries/operations/create+update", function() {
       user: user2,
       body: "test body 3 hax0rz"
     };
+    /* eslint no-unused-vars:0 */
     var oldUpdated = entry.updated;
     ops.update(options, function(error, outEntry) {
       expect(error).not.toBeNull();

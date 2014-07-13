@@ -1,5 +1,6 @@
-var Stack = require("app/operations/Stack");
+var assert = require("assert");
 var expect = require("expectacle");
+var Stack = require("app/operations/Stack");
 
 describe("operations middleware Stack", function() {
   it("should call a function in the stack with the args from run", function(done) {
@@ -19,7 +20,7 @@ describe("operations middleware Stack", function() {
       expect(next).toBeFunction();
       done();
     });
-    stack.use(function(next) {
+    stack.use(function() {
       assert(false, "stack should never have invoked this middleware");
     });
     stack.run();

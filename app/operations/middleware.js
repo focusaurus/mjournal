@@ -15,7 +15,7 @@ function paginated(next, options) {
 
 function requireUser(next, options) {
   if (!(options && options.user)) {
-    return next(errors.Unauthorized("Please sign in"));
+    return next(new errors.Unauthorized("Please sign in"));
   }
   next();
 }

@@ -20,7 +20,7 @@ Stack.prototype.action = function() {
   var args, mw;
   mw = this.stack.shift();
   if (!mw) {
-    return;
+    return this;
   }
   if (this.first) {
     this.first = false;
@@ -32,6 +32,7 @@ Stack.prototype.action = function() {
   return this;
 };
 
+/*eslint no-process-exit:0*/
 function exit(error) {
   var code, message;
   if (error) {

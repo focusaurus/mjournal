@@ -1,6 +1,6 @@
 require("angular");
 //http://stackoverflow.com/questions/14833326/how-to-set-focus-in-angularjs
-function focusMe ($timeout) {
+function focusMe () {
   return {
     link: function(scope, element, attrs) {
       scope.$watch(attrs.focusMe, function(value) {

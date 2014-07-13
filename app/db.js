@@ -1,4 +1,3 @@
-var anydb = require("any-db");
 var gesundheit = require("gesundheit");
 var config = require("config3");
 

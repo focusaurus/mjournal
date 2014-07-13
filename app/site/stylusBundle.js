@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var fs = require("fs");
-var log = require("app/log");
 var paths = require("app/paths");
 var stylus = require("stylus");
 

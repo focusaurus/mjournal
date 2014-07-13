@@ -59,7 +59,7 @@ function EntriesController($scope, Entries) {
       return;
     }
   };
-  $scope.$on("mjTags:remove", function (event, entry, removedTag) {
+  $scope.$on("mjTags:remove", function (event, entry) {
     Entries.update(_.pick(entry, "id", "tags"));
   });
   $scope.get();
