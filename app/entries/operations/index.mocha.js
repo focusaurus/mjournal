@@ -2,7 +2,7 @@ var signUp = require("app/users/operations/sign-up");
 var ops = require("app/entries/operations");
 var expect = require("expectacle");
 
-describe("entries/operations/create+update", function() {
+describe("entries/operations/create+update+view+viewTags", function() {
   var user = null;
   var user2 = null;
   var entry = null;
@@ -33,7 +33,8 @@ describe("entries/operations/create+update", function() {
   it("should create an entry", function(done) {
     var options = {
       user: user,
-      body: "test body"
+      body: "test body",
+      tags: "e1t1 e1t2"
     };
     ops.create(options, function(error, outEntry) {
       expect(error).toBeNull();
@@ -49,7 +50,8 @@ describe("entries/operations/create+update", function() {
   it("should create a second entry with different user", function(done) {
     var options = {
       user: user2,
-      body: "test body2"
+      body: "test body2",
+      tags: "e2t1 e2t2"
     };
     ops.create(options, function(error, outEntry) {
       expect(error).toBeNull();
@@ -84,6 +86,19 @@ describe("entries/operations/create+update", function() {
     }, function(error, entries) {
       expect(error).toBeNull();
       expect(entries).not.toBeEmpty();
+      done();
+    });
+  });
+  it("should view the user's tags", function(done) {
+    ops.viewTags({
+      user: user
+    }, function(error, tags) {
+      expect(error).toBeNull();
+      expect(tags.indexOf("e1t1") >= 0).toBeTrue(tags);
+      expect(tags.indexOf("e1t2") >= 0).toBeTrue(tags);
+      expect(tags.indexOf("e2t1") >= 0).toBeFalse(tags);
+      expect(tags.indexOf("e2t2") >= 0).toBeFalse(tags);
+      expect(tags.length).toBe(2);
       done();
     });
   });

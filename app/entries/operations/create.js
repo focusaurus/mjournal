@@ -12,7 +12,7 @@ function run(options, callback) {
   }
   var tags = options.tags || [];
   if (!Array.isArray(tags)) {
-    tags = [];
+    tags = tags.split(" ");
   }
   var row = {
     userId: options.user.id,

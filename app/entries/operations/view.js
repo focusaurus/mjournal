@@ -6,7 +6,7 @@ var presentEntry = require("../presentEntry");
 
 function initDbOp(next) {
   this.dbOp = db.select("entries", ["id", "created", "updated", "body", "tags"]).order("created");
-  return next();
+  next();
 }
 
 function execute(next, options, callback) {
@@ -46,7 +46,7 @@ var stack = new Stack(
 );
 
 function runStack() {
-  return stack.run.apply(stack, arguments);
+  stack.run.apply(stack, arguments);
 }
 
 module.exports = runStack;
