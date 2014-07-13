@@ -36,7 +36,7 @@ function exit(error) {
   var code, message;
   if (error) {
     message = error.message || error.name;
-    if (error.code != null) {
+    if (error.code !== null) {
       message = "" + message + " (" + error.code + ")";
       code = error.code / 10;
     }
