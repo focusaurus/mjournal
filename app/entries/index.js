@@ -3,7 +3,7 @@ var api = require("app/api");
 var ops = require("app/entries/operations");
 var express = require("express");
 var needUser = require("app/middleware/needUser");
-var bodyParser = require("body-parser");
+var json = require("body-parser").json();
 
 function viewEntries(req, res) {
   if (req.user) {
@@ -35,7 +35,7 @@ var app = express();
 app.set("view engine", "jade");
 app.set("views", __dirname);
 app.get("/", needUser, viewEntries);
-app.post("/", needUser, bodyParser, createEntry);
-app.put("/:id", needUser, bodyParser, updateEntry);
+app.post("/", needUser, json, createEntry);
+app.put("/:id", needUser, json, updateEntry);
 
 module.exports = app;

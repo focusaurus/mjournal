@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var bodyParser = require("body-parser");
+var json = require("body-parser").json();
 var express = require("express");
 var signInOp = require("app/users/operations/sign-in");
 
@@ -25,7 +25,7 @@ function signOut(req, res) {
 var app = express();
 app.set("view engine", "jade");
 app.set("views", __dirname);
-app.post("/users/sign-in", bodyParser(), signIn);
+app.post("/users/sign-in", json, signIn);
 app.get("/users/sign-out", signOut);
 
 module.exports = app;
