@@ -1,9 +1,12 @@
+var _ = require("lodash");
 function Stack() {
-  this.stack = [];
+  this.stack = _.flatten([].slice.call(arguments));
 }
 
-Stack.prototype.use = function(mw) {
-  this.stack.push(mw);
+//@param *varargs* middleware to use in order.
+//  can be a single function or an array of functions, any depth
+Stack.prototype.use = function() {
+  this.stack = this.stack.concat(_.flatten(arguments));
   return this;
 };
 

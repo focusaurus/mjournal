@@ -36,13 +36,14 @@ function whereText(next, options) {
   next();
 }
 
-var stack = new Stack();
-stack.use(initDbOp);
-stack.use(opMW.requireUser);
-stack.use(opMW.whereUser);
-stack.use(whereText);
-stack.use(opMW.paginated);
-stack.use(execute);
+var stack = new Stack(
+  initDbOp,
+  opMW.requireUser,
+  opMW.whereUser,
+  whereText,
+  opMW.paginated,
+  execute
+);
 
 function runStack() {
   return stack.run.apply(stack, arguments);
