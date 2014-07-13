@@ -114,8 +114,6 @@ describe("entries/operations/create+update", function() {
       user: user2,
       body: "test body 3 hax0rz"
     };
-    /* eslint no-unused-vars:0 */
-    var oldUpdated = entry.updated;
     ops.update(options, function(error, outEntry) {
       expect(error).not.toBeNull();
       expect(error).toHaveProperty("code");

@@ -50,11 +50,12 @@ function execute(next, options, callback) {
   });
 }
 
-var stack = new Stack();
-stack.use(opMW.requireUser);
-stack.use(initDbOp);
-stack.use(opMW.whereUser);
-stack.use(execute);
+var stack = new Stack(
+  opMW.requireUser,
+  initDbOp,
+  opMW.whereUser,
+  execute
+);
 
 function runStack() {
   return stack.run.apply(stack, arguments);
