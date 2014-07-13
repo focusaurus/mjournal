@@ -60,6 +60,7 @@ task::start() {
 }
 
 task::test() {
+  set -e
   args="--slow 200 --reporter spec --colors --recursive"
   if [[ "${1}" == "--debug" ]]; then
     args="${args} --timeout 0 --debug-brk=9093"
@@ -71,8 +72,9 @@ task::test() {
   fi
   psql --username=mjournal --dbname=mjournal-test \
     --file=app/db/createSchema.sql 2>&1 \
-    | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)'
-  NODE_ENV=test exec mocha ${args} ${tests}
+    | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)' || true
+  NODE_ENV=test mocha ${args} ${tests}
+  task::lint
 }
 
 task::inspector() {
