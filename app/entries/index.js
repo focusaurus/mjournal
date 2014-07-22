@@ -31,11 +31,16 @@ function updateEntry(req, res) {
   return ops.update(options, api.sendResult(res));
 }
 
+function viewTags(req, res) {
+  return ops.viewTags({user: req.user}, api.sendResult(res));
+}
+
 var app = express();
 app.set("view engine", "jade");
 app.set("views", __dirname);
 app.get("/", needUser, viewEntries);
 app.post("/", needUser, json, createEntry);
 app.put("/:id", needUser, json, updateEntry);
+app.get("/tags", needUser, viewTags);
 
 module.exports = app;
