@@ -24,6 +24,9 @@ function execute(next, options, callback) {
     var set = _.map(result.rows, function (row) {return row.tags.split(" ");});
     set = _.flatten(set);
     set = _.uniq(set);
+    set = set.map(function (tag) {
+      return {text: tag};
+    });
     callback(null, set);
   });
 }

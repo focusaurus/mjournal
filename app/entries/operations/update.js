@@ -1,14 +1,17 @@
 var _ = require("lodash");
+var clientFields = require("../clientFields");
 var db = require("app/db");
 var errors = require("app/errors");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
-var Stack = require("app/operations/Stack");
 var presentEntry = require("../presentEntry");
+var Stack = require("app/operations/Stack");
 
 function select(where, callback) {
-  db.select("entries").where(where).execute(function(error, result) {
-    callback(error, presentEntry(result.rows && result.rows[0]));
+  db.select("entries", clientFields)
+    .where(where)
+    .execute(function(error, result) {
+      callback(error, presentEntry(result.rows && result.rows[0]));
   });
 }
 

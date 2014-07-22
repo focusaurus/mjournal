@@ -12,6 +12,8 @@ function render(callback) {
     }
     stylus(stylusText)
       .include(paths.app)
+      .include(paths.bower)
+      .set("include css", true)
       .set("filename", APPSTYL)
       .render(callback);
   });

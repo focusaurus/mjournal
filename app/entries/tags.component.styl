@@ -1,4 +1,5 @@
 @require "site/colorPalette"
+@require "ng-tags-input/ng-tags-input.css"
 
 ul.mj-tags
   display inline-block
@@ -21,3 +22,26 @@ ul.mj-tags
   visibility hidden
   color $past
   cursor pointer
+
+//ng-tag-input overrides
+tags-input
+  display inline
+  .host
+    display inline-block
+  .tags
+    -webkit-appearance initial
+    border none
+    box-shadow none
+    &.focused
+      box-shadow none
+    .tag-item
+      fancy-font()
+      background initial
+      background-color $smoke
+      color $charcoal
+      .remove-button
+        visibility hidden
+      &:hover .remove-button
+        visibility visible
+    .tag-list
+      display inline

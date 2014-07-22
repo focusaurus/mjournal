@@ -1,11 +1,10 @@
 var _ = require("lodash");
 var ENTER = 13;
-var ESCAPE = 27;
 
-function EntriesController($scope, Entries) {
+function EntriesController($scope, $q, Entries) {
   $scope.page = 1;
   $scope.newEntryTags = "";
-  $scope.get = function() {
+  $scope.get = function get() {
     Entries.get({
       page: $scope.page,
       textSearch: $scope.textSearch
@@ -13,10 +12,18 @@ function EntriesController($scope, Entries) {
       $scope.entries = entries;
     });
   };
-  $scope.update = function(entry) {
+  $scope.update = function update(entry) {
     Entries.update(_.pick(entry, "id", "body"), function(result) {
       entry.updated = result.updated;
     });
+  };
+  $scope.autoCompleteTags = function autoCompleteTags(value) {
+    var matchingTags = $scope.tags.filter(function (tag) {
+      return tag.text.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+    });
+    var deferred = $q.defer();
+    deferred.resolve(matchingTags);
+    return deferred.promise;
   };
   $scope.create = function(event) {
     if (event.which === ENTER && event.shiftKey && event.target.innerText) {
@@ -30,39 +37,36 @@ function EntriesController($scope, Entries) {
       event.target.innerText = "";
     }
   };
-  $scope.previous = function() {
+  $scope.previous = function previous() {
     $scope.page++;
     $scope.get();
   };
-  $scope.next = function() {
+  $scope.next = function next() {
     $scope.page--;
     $scope.get();
   };
-  $scope.searchKeypress = function(event) {
+  $scope.searchKeypress = function searchKeypress(event) {
     if (event.which === ENTER) {
       $scope.get();
     }
   };
-  $scope.newTagKeydown = function(event, entry) {
-    function close() {
-      entry.newTag = "";
-      entry.addTag = false;
-    }
-    if (event.which === ESCAPE) {
-      close();
-      return;
-    }
-    if (event.which === ENTER) {
-      entry.tags.push(entry.newTag);
-      Entries.update(entry);
-      close();
-      return;
+  $scope.updateTags = function updateTags(entry, newTag) {
+    var forUpdate = _.pick(entry, "id");
+    forUpdate.tags = entry.tags.map(function (tag) {
+      return tag.text;
+    });
+    Entries.update(forUpdate);
+    if (newTag) {
+      var haveIt = $scope.tags.some(function (tag) {
+        return tag.text.toLowerCase() === newTag.text.toLowerCase();
+      });
+      if (!haveIt) {
+        $scope.tags.push(newTag);
+      }
     }
   };
-  $scope.$on("mjTags:remove", function (event, entry) {
-    Entries.update(_.pick(entry, "id", "tags"));
-  });
   $scope.get();
+  $scope.tags = Entries.get({id: "tags"});
 }
 
 module.exports = EntriesController;

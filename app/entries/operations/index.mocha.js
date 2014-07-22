@@ -1,3 +1,4 @@
+var _ = require("lodash");
 var signUp = require("app/users/operations/sign-up");
 var ops = require("app/entries/operations");
 var expect = require("expectacle");
@@ -94,6 +95,7 @@ describe("entries/operations/create+update+view+viewTags", function() {
       user: user
     }, function(error, tags) {
       expect(error).toBeNull();
+      tags = _.pluck(tags, "text");
       expect(tags.indexOf("e1t1") >= 0).toBeTrue(tags);
       expect(tags.indexOf("e1t2") >= 0).toBeTrue(tags);
       expect(tags.indexOf("e2t1") >= 0).toBeFalse(tags);

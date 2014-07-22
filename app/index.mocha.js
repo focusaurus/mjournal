@@ -1,4 +1,5 @@
 var testUtils = require("app/testUtils");
+
 describe("app/index site-wide routes", function() {
   ["/grid.gif", "/tag.png"].forEach(function(url) {
     it("GET " + url + " should 200/image", function(done) {
@@ -15,6 +16,8 @@ describe("app/index site-wide routes", function() {
       .get("/mjournal.css")
       .expect(200)
       .expect("Content-Type", "text/css; charset=utf-8")
+      .expect(/tags-input/)
+      .expect(/p\.body\.new/)
       .end(done);
   });
 

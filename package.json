@@ -20,13 +20,19 @@
   },
   "browser": {
     "angular": "./bower_components/angular/angular.js",
-    "angular-resource": "./bower_components/angular-resource/angular-resource.js"
+    "angular-resource": "./bower_components/angular-resource/angular-resource.js",
+    "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js"
   },
   "browserify-shim": {
     "angular": {
       "exports": "angular"
     },
     "angular-resource": {
+      "depends": [
+        "./bower_components/angular/angular.js:angular"
+      ]
+    },
+    "ng-tags-input": {
       "depends": [
         "./bower_components/angular/angular.js:angular"
       ]

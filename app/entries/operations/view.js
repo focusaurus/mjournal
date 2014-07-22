@@ -1,11 +1,12 @@
+var clientFields = require("../clientFields");
 var db = require("app/db");
 var log = require("app/log");
-var Stack = require("app/operations/Stack");
 var opMW = require("app/operations/middleware");
 var presentEntry = require("../presentEntry");
+var Stack = require("app/operations/Stack");
 
 function initDbOp(next) {
-  this.dbOp = db.select("entries", ["id", "created", "updated", "body", "tags"]).order("created");
+  this.dbOp = db.select("entries", clientFields).order("created");
   next();
 }
 
