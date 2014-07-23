@@ -1,7 +1,7 @@
 extends ../layout
 block body
   div(ng-app="mjournal", ng-controller="EntriesController")
-    a.sign-out(href="/sign-out") Sign Out
+    a.sign-out(href="/users/sign-out") Sign Out
     div.toolbar
       button.previous(ng-click="previous()") Previous Entries
       input(type="text", placeholder=" search entries...", ng-model="textSearch", ng-keypress="searchKeypress($event)")
