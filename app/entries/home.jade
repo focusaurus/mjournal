@@ -1,6 +1,6 @@
 extends ../layout
 block body
-  div(ng-app="mjournal", ng-controller="EntriesController")
+  div(ng-app="mjournal", ng-controller="entries-controller")
     a.sign-out(href="/users/sign-out") Sign Out
     div.toolbar
       button.previous(ng-click="previous()") Previous Entries
