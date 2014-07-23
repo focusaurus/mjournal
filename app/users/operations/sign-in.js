@@ -13,7 +13,7 @@ function run(options, callback) {
       message: "Please check your email/password and try again"
     });
   }
-  var user = _.pick(options, "email");
+  var user = _.extend({email: ""}, _.pick(options, "email"));
   user.email = user.email.toLowerCase().trim();
   var dbOp = db.select("users", ["id", "bcryptedPassword", "email"]).where(user).limit(1);
   dbOp.execute(function(error, result) {

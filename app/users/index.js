@@ -7,7 +7,7 @@ function signIn(req, res) {
   var options = _.pick(req.body, "email", "password");
   signInOp(options, function(error, user) {
     if (error) {
-      res.status(403);
+      res.status(error.code || 403);
       res.send({
         error: error.message
       });
