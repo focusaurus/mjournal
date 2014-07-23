@@ -4,6 +4,9 @@
     "mocha": true,
     "node": true
   },
+  "globals": {
+    "angular": true
+  },
   "rules": {
     "strict": 0
   }
