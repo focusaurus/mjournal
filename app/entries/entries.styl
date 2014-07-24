@@ -61,19 +61,25 @@ moleskine-grid()
   cursor pointer
   margin-bottom -0.2em
 
+label.new
+  color $text2
+  margin-top 2em
+  margin-bottom 0.5em
 p.body.new
   border-radius 0.5em
   fancy-font()
   height 4em
+  margin 0
+  margin-bottom 1em
   moleskine-grid()
   outline 0
   overflow-y auto
   padding-left 1em
-  &:not(:focus):after
-    color $text1
-    content "Type a new entry here\2026"
-    font-style italic
-    padding .5em
+  // &:not(:focus):after
+  //   color $text1
+  //   content "Type a new entry here\2026"
+  //   font-style italic
+  //   padding .5em
 
 input.tags.new
   background-color $background1

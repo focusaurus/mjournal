@@ -29,7 +29,7 @@ function EntriesController($scope, $q, Entries) {
     if (event.which === ENTER && event.shiftKey && event.target.innerText) {
       var entryData = {
         body: event.target.innerText,
-        tags: $scope.newEntryTags.split(" ")
+        tags: _.pluck($scope.newEntryTags, "text")
       };
       Entries.create(entryData, function(entry) {
         $scope.entries.push(entry);

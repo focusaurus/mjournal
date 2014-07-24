@@ -1,6 +1,6 @@
 extends ../layout
 block body
-  div(ng-app="mjournal", ng-controller="entries-controller")
+  div(ng-app="mjournal", ng-controller="entries")
     a.sign-out(href="/users/sign-out") Sign Out
     div.toolbar
       button.previous(ng-click="previous()") Previous Entries
@@ -24,5 +24,10 @@ block body
                 source="autoCompleteTags($query)"
                 min-length="2"
               )
+      label.new Type a new entry below. SHIFT-ENTER to save.
       p.body.new(ng-keydown="create($event)", contenteditable="true")
-      input.tags.new(ng-model="newEntryTags", placeholder=" tags...")
+      tags-input(ng-model="newEntryTags")
+        auto-complete(
+          source="autoCompleteTags($query)"
+          min-length="2"
+        )
