@@ -15,9 +15,9 @@ describe("errors.ClientError", function () {
   it("should be have default code and message", function() {
     var error = new errors.ClientError();
     expect(error).toHaveProperty("code");
-    expect(error.code).toBe(412);
+    expect(error.code).toBe(400);
     expect(error).toHaveProperty("message");
-    expect(error.message).toBe("Precondition Failed");
+    expect(error.message).toBe("Bad Request");
   });
   it("should be allow specifying a particular message", function() {
     var error = new errors.ClientError("foo");

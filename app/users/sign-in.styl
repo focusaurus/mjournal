@@ -1,3 +1,24 @@
 .sign-in
   margin 0 auto
-  width 20em
+  width 25em
+
+  input
+    font-size 18px
+    border-radius 0.5em
+    border none
+
+  input[type=email], input[type=password]
+    padding 0.1em
+    outline none
+    width 15em
+  input[type=password]
+    display block
+  .register, .signIn
+    button()
+    display inline-block
+    &:disabled
+      cursor not-allowed
+  .register
+    float left
+    color $text2
+    background-color $tunnel

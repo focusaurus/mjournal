@@ -11,7 +11,7 @@ describe("users/operations/sign-up", function() {
       expect(error).toBeNull();
       expect(user).not.toHaveProperty("bcryptedPassword");
       expect(user).toHaveProperty("id");
-      expect(user).toHaveProperty("email", newUser.email);
+      expect(user).toHaveProperty("email");
       expect(user.email).toBe(newUser.email);
       done();
     });
@@ -25,7 +25,7 @@ describe("users/operations/sign-up", function() {
       expect(error).toBeNull();
       signUp(newUser, function(error) {
         expect(error).toBeTruthy();
-        expect(error).toHaveProperty("code", 409);
+        expect(error).toHaveProperty("code");
         expect(error.code).toBe(409);
         done();
       });
@@ -38,8 +38,8 @@ describe("users/operations/sign-up", function() {
     };
     signUp(newUser, function(error) {
       expect(error).toBeTruthy();
-      expect(error).toHaveProperty("code", 412);
-      expect(error.code).toBe(412);
+      expect(error).toHaveProperty("code");
+      expect(error.code).toBe(400);
       done();
     });
   });

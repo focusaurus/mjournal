@@ -20,12 +20,21 @@ function isValidEmail(value) {
 function run(options, callback) {
   var user = _.pick(options, "email");
   if (!isValidEmail(user.email)) {
-    callback(new errors.ClientError("invalid email"));
+    setImmediate(function() {
+      callback(new errors.BadRequest("invalid email"));
+    });
+    return;
+  }
+  if (!options.password) {
+    setImmediate(function() {
+      callback(new errors.BadRequest("password is required"));
+    });
     return;
   }
   hashPassword(options.password, function(error, bcryptedPassword) {
     if (error) {
-      return callback(error);
+      callback(error);
+      return;
     }
     user.bcryptedPassword = bcryptedPassword;
     var dbOp = db.insert("users", user).returning("id");
@@ -34,13 +43,13 @@ function run(options, callback) {
     }, "creating user");
     dbOp.execute(function(error, result) {
       if (error && /unique/i.test(error.message)) {
-        return callback({
-          code: 409,
-          message: "That email is already registered"
-        });
+        var upError = new errors.Conflict("That email is already registered");
+        callback(upError);
+        return;
       }
       if (error) {
-        return callback(error);
+        callback(error);
+        return;
       }
       user.id = result.rows[0].id;
       delete user.bcryptedPassword;

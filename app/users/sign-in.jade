@@ -2,13 +2,19 @@ extends ../layout
 block body
   div(ng-app="mjournal", ng-controller="sign-in").sign-in
     div.error(ng-bind="error")
-    form(ng-submit="signIn()")
+    form(ng-submit="signIn($event)")
       label email
       input(type="email", placeholder="email", ng-model="email")
       label password
       input(type="password", ng-model="password")
-      input(
+      input.signIn(
         type="submit"
         value="Sign In"
         ng-disabled="!(email && password)"
+      )
+      input.register(
+        type="submit"
+        value="Register"
+        ng-disabled="!(email && password)"
+        ng-click="signIn($event, true)"
       )

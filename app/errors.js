@@ -29,5 +29,5 @@ require("./codes").forEach(function (struct) {
 });
 
 //A handful of convenient aliases
-exports.ClientError = exports.PreconditionFailed;
+exports.ClientError = exports.BadRequest;
 exports.ServerError = exports.InternalServerError;

@@ -32,7 +32,7 @@ describe("operations middleware Stack", function() {
       next();
     });
     stack.use(function(next) {
-      expect(this).toHaveProperty("foo", "FOO");
+      expect(this).toHaveProperty("foo");
       expect(this.foo).toBe("FOO");
       next();
       done();
@@ -47,10 +47,10 @@ describe("operations middleware Stack", function() {
     });
     expect(stack).not.toHaveProperty("runCount");
     stack.run();
-    expect(stack).toHaveProperty("runCount", 1);
+    expect(stack).toHaveProperty("runCount");
     expect(stack.runCount).toBe(1);
     stack.run();
-    expect(stack).toHaveProperty("runCount", 2);
+    expect(stack).toHaveProperty("runCount");
     expect(stack.runCount).toBe(2);
   });
 });
