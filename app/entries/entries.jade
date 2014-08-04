@@ -10,25 +10,18 @@ div.notebook
     div.entries
       div.entry(ng-repeat="entry in entries")
         div.created.meta(ng-bind="entry.created | date:'medium'")
-        p.body(
-          ng-model="entry.body"
-          edit-text
-          ng-change="update(entry)")
+        p.body(ng-model="entry.body" edit-text ng-change="update(entry)")
         tags-input.meta(
           ng-model="entry.tags"
           on-tag-removed="updateTags(entry)"
-          on-tag-added="updateTags(entry) $tag)"
+          on-tag-added="updateTags(entry)"
         )
-          auto-complete(
-            source="autoCompleteTags($query)"
-            min-length="2"
-          )
+          auto-complete(source="autoCompleteTags($query)" min-length="2")
   label.new Type a new entry below. SHIFT-ENTER to save.
-  p.body.new(ng-keydown="create($event)" contenteditable="true")
+  p.body.new(ng-keyup="create($event)" contenteditable="true")
   tags-input(
     ng-model="newEntryTags"
-    ng-keypress="newEntryTagKeypress($event)")
-    auto-complete(
-      source="autoCompleteTags($query)"
-      min-length="2"
-    )
+    replace-spaces-with-dashes="false"
+    ng-keyup="create($event)"
+  )
+    auto-complete(source="autoCompleteTags($query)" min-length="2")

@@ -3,7 +3,6 @@ var ENTER = 13;
 
 function EntriesController($scope, $q, Entries) {
   $scope.page = 1;
-  $scope.newEntryTags = "";
   $scope.get = function get() {
     Entries.get({
       page: $scope.page,
@@ -26,15 +25,18 @@ function EntriesController($scope, $q, Entries) {
     return deferred.promise;
   };
   $scope.create = function(event) {
-    if (event.which === ENTER && event.shiftKey && event.target.innerText) {
+    //Not angular but meh
+    var bodyElement = document.querySelector("p.body.new");
+    if (event.which === ENTER && event.shiftKey && bodyElement.innerText) {
       var entryData = {
-        body: event.target.innerText,
+        body: bodyElement.innerText,
         tags: _.pluck($scope.newEntryTags, "text")
       };
+      bodyElement.focus();
       Entries.create(entryData, function(entry) {
         $scope.entries.push(entry);
+        bodyElement.innerText = "";
       });
-      event.target.innerText = "";
     }
   };
   $scope.previous = function previous() {

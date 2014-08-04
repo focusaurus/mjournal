@@ -68,19 +68,24 @@ label.new
 p.body.new
   border-radius 0.5em
   fancy-font()
-  height 4em
   margin 0
   margin-bottom 1em
   moleskine-grid()
   outline 0
-  overflow-y auto
   padding-left 1em
+  //Design A: new entry expands to fit content
+  min-height 4em
+  //Design B: scroll bar
+  // overflow-y auto
+  // height 4em
   // &:not(:focus):after
   //   color $text1
   //   content "Type a new entry here\2026"
   //   font-style italic
   //   padding .5em
-
+  //This overrides some crap from ng-tags-input
+  *, *:before, *:after
+    box-sizing initial
 input.tags.new
   background-color $background1
   font-size 24px
