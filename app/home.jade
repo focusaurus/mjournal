@@ -1,0 +1,5 @@
+extends layout
+block body
+  div(ng-app="mjournal", ng-controller="entries")
+    a.sign-out(href="/users/sign-out") Sign Out
+    include entries/entries.jade

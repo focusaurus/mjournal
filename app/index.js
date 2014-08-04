@@ -10,7 +10,7 @@ var stylusBundle = require("app/site/stylusBundle");
 
 function home(req, res) {
   if (req.user) {
-    res.render("entries/home");
+    res.render("home");
   } else {
     res.render("users/sign-in");
   }
