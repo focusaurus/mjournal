@@ -1,31 +1,33 @@
 div.toolbar
   button.previous(ng-click="previous()") Previous Entries
   input(
-    type="text",
-    placeholder=" search entries...",
-    ng-model="textSearch", ng-keypress="searchKeypress($event)")
-  button.next(ng-click="next()", ng-show="page > 1") Next Entries
+    type="text"
+    placeholder=" search entries..."
+    ng-model="textSearch" ng-keypress="searchKeypress($event)")
+  button.next(ng-click="next()" ng-show="page > 1") Next Entries
 div.notebook
   div.page
     div.entries
       div.entry(ng-repeat="entry in entries")
         div.created.meta(ng-bind="entry.created | date:'medium'")
         p.body(
-          ng-model="entry.body",
-          edit-text,
+          ng-model="entry.body"
+          edit-text
           ng-change="update(entry)")
         tags-input.meta(
           ng-model="entry.tags"
           on-tag-removed="updateTags(entry)"
-          on-tag-added="updateTags(entry, $tag)"
+          on-tag-added="updateTags(entry) $tag)"
         )
           auto-complete(
             source="autoCompleteTags($query)"
             min-length="2"
           )
   label.new Type a new entry below. SHIFT-ENTER to save.
-  p.body.new(ng-keydown="create($event)", contenteditable="true")
-  tags-input(ng-model="newEntryTags")
+  p.body.new(ng-keydown="create($event)" contenteditable="true")
+  tags-input(
+    ng-model="newEntryTags"
+    ng-keypress="newEntryTagKeypress($event)")
     auto-complete(
       source="autoCompleteTags($query)"
       min-length="2"
