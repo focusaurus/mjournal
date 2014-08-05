@@ -1,16 +1,19 @@
 var _ = require("lodash");
+var paginated = require("app/common/browser/paginated");
 var ENTER = 13;
 
 function EntriesController($scope, $q, Entries) {
-  $scope.page = 1;
+  paginated($scope, "entries");
   $scope.get = function get() {
     Entries.get({
-      page: $scope.page,
+      page: $scope.page.number,
       textSearch: $scope.textSearch
     }, function(entries) {
       $scope.entries = entries;
     });
   };
+  $scope.$watch("page.number", $scope.get);
+
   $scope.update = function update(entry) {
     Entries.update(_.pick(entry, "id", "body"), function(result) {
       entry.updated = result.updated;
@@ -38,14 +41,6 @@ function EntriesController($scope, $q, Entries) {
         bodyElement.innerText = "";
       });
     }
-  };
-  $scope.previous = function previous() {
-    $scope.page++;
-    $scope.get();
-  };
-  $scope.next = function next() {
-    $scope.page--;
-    $scope.get();
   };
   $scope.searchKeypress = function searchKeypress(event) {
     if (event.which === ENTER) {

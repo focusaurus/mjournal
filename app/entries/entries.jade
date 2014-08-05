@@ -1,10 +1,14 @@
 div.toolbar
-  button.previous(ng-click="previous()") Previous Entries
+  button.previous(
+    ng-click="page.previous()"
+    ng-disabled="page.disablePrevious") Previous Entries
   input(
     type="text"
     placeholder=" search entries..."
     ng-model="textSearch" ng-keypress="searchKeypress($event)")
-  button.next(ng-click="next()" ng-show="page > 1") Next Entries
+  button.next(
+    ng-click="page.next()"
+    ng-disabled="page.disableNext") Next Entries
 div.notebook
   div.page
     div.entries
