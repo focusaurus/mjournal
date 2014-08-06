@@ -1,17 +1,15 @@
-#!/usr/bin/env node --use_strict
+#!/usr/bin/env node
 var app = require("app");
 var log = require("app/log");
 var config = require("config3");
 
 app.listen(config.port, function(error) {
   if (error) {
-    log.fatal("Unable to bind network socket. Exiting", {
-      err: error
-    });
+    log.error(error, "Unable to bind network socket. Exiting");
     /*eslint no-process-exit:0*/
-    process.exit(10);
+    setTimeout(process.exit.bind(null, 10), 1000);
   }
   log.info({
     port: config.port
-  }, "mjournal express app listening");
+  }, "%s express app listening", config.pack.name);
 });

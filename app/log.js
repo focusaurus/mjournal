@@ -1,9 +1,8 @@
-var bunyan = require("bunyan");
-var level = process.env.NODE_ENV === "test" ? "fatal" : "debug";
-var log = bunyan.createLogger({
-  name: "mjournal",
-  level: level,
-  serializers: bunyan.stdSerializers
+var config = require("config3");
+var bole = require("bole");
+bole.output({
+  level: "debug",
+  stream: config.logStream
 });
 
-module.exports = log;
+module.exports = bole(config.pack.name);

@@ -1,4 +1,4 @@
-#!/usr/bin/env node --use_strict
+#!/usr/bin/env node
 var cli = require("app/cli");
 var program = require("commander");
 var signUpOp = require("app/users/operations/sign-up");

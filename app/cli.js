@@ -54,8 +54,9 @@ function signInMW(stack) {
     options = _.last(arguments);
     email = options.user || process.env.MJ_USER;
     if (email) {
-      return promptly.password("password for " + email + ": ", function(error, password) {
-        return signInOp({
+      promptly.password(
+          "password for " + email + ": ", function(error, password) {
+        signInOp({
           email: email,
           password: password
         }, function(error, user) {
@@ -63,11 +64,11 @@ function signInMW(stack) {
             exit(error);
           }
           options.user = user;
-          return next();
+          next();
         });
       });
     } else {
-      return exit({
+      exit({
         code: 403,
         message: "Please specify a user with --user <email>"
       });

@@ -1,4 +1,4 @@
-#!/usr/bin/env node --use_strict
+#!/usr/bin/env node
 /* eslint no-process-exit:0 */
 var _ = require("lodash");
 var cli = require("app/cli");

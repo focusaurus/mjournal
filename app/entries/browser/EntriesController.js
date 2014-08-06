@@ -1,18 +1,21 @@
 var _ = require("lodash");
-var paginated = require("app/common/browser/paginated");
 var ENTER = 13;
 
-function EntriesController($scope, $q, Entries) {
-  paginated($scope, "entries");
+function EntriesController($scope, $q, $location, Entries) {
   $scope.get = function get() {
-    Entries.get({
-      page: $scope.page.number,
-      textSearch: $scope.textSearch
-    }, function(entries) {
+    var params = _.pick($scope, "textSearch");
+    var topEntry = $scope.entries[0];
+    params.before = topEntry && topEntry.id;
+    Entries.get(params, function(entries) {
+      // if ($scope.page.number > 1) {
+      //   $location.search("topEntry", entries[0].id);
+      // }
       $scope.entries = entries;
     });
   };
-  $scope.$watch("page.number", $scope.get);
+  $scope.$on("previous", function () {
+    $scope.get();
+  });
 
   $scope.update = function update(entry) {
     Entries.update(_.pick(entry, "id", "body"), function(result) {
@@ -62,6 +65,7 @@ function EntriesController($scope, $q, Entries) {
       }
     }
   };
+  $scope.entries = [];
   $scope.get();
   $scope.tags = Entries.get({id: "tags"});
 }

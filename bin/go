@@ -52,7 +52,7 @@ EOF
 task::express() {
   autoinstall_npm_dependencies
   autoinstall_bower_dependencies
-  node-dev --debug=9091 app/server | bunyan -o short
+  node-dev --debug=9091 app/server | bistre
 }
 
 task::start() {
