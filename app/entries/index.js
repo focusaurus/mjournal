@@ -7,11 +7,8 @@ var json = require("body-parser").json();
 
 function viewEntries(req, res) {
   if (req.user) {
-    var options = {
-      user: req.user,
-      page: req.query.page,
-      textSearch: req.query.textSearch
-    };
+    var options = _.pick(req.query, "page", "before", "textSearch");
+    options.user = req.user;
     ops.view(options, api.sendResult(res));
   } else {
     res.render("home");

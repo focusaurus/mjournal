@@ -7,13 +7,14 @@ var presentEntry = require("../presentEntry");
 var Stack = require("app/operations/Stack");
 
 var OPTIONS_SCHEMA = joi.object().keys({
-  before: joi.date(),
+  before: joi.number().integer().min(1),
   textSearch: joi.string(),
   user: joi.object(),
   page: joi.number().integer().min(1)
 });
 
 function initDbOp(next, options) {
+  var self = this;
   OPTIONS_SCHEMA.validate(options, function (error, result) {
     if (error) {
       next(error);
@@ -27,9 +28,28 @@ function initDbOp(next, options) {
   //reverse that in memory
   this.dbOp = db.select("entries", clientFields).order("created descending");
   if (options.before) {
-    this.dbOp.where("created").lt(before)
+    //userId in this where clause enforces authorization/privacy
+    //you can only query based on your own entries
+    var where = {
+      id: options.before,
+      userId: options.user.id
+    }
+    var findBefore = db.select("entries", ["created"])
+      .where(where).limit(1);
+    findBefore.execute(function (error, result) {
+      if (error) {
+        callback(error);
+        return;
+      }
+      var beforeEntry = result.rows[0];
+      if (beforeEntry) {
+        self.dbOp.where({created: {lt: beforeEntry.created}});
+      }
+      next();
+    });
+  } else {
+    next();
   }
-  next();
 }
 
 function execute(next, options, callback) {
@@ -59,20 +79,11 @@ function whereText(next, options) {
   next();
 }
 
-function whereBefore(next, options) {
-  var before = new Date(options.before);
-  if (options.before) {
-    this.dbOp.where("created").lt(options.before);
-  }
-  next();
-}
-
 var stack = new Stack(
   initDbOp,
   opMW.requireUser,
   opMW.whereUser,
   whereText,
-  whereBefore,
   opMW.paginated,
   execute
 );
