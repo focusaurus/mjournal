@@ -52,7 +52,7 @@ EOF
 task::express() {
   autoinstall_npm_dependencies
   autoinstall_bower_dependencies
-  node-dev --debug=9091 app/server | bistre
+  node-dev --debug=9091 app/server | tee -a logs/mjournal.log | bistre
 }
 
 task::start() {
@@ -84,7 +84,7 @@ task::test() {
 }
 
 task::inspector() {
-  exec node-inspector --web-port=9092
+  exec node-inspector --web-host=127.0.0.1 --web-port=9092
 }
 
 task::lint() {

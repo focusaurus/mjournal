@@ -1,6 +1,7 @@
 var _ = require("lodash");
-var json = require("body-parser").json();
 var express = require("express");
+var json = require("body-parser").json();
+var log = require("app/log");
 var signInOp = require("app/users/operations/sign-in");
 var signUpOp = require("app/users/operations/sign-up");
 
@@ -11,8 +12,15 @@ function respond(res) {
       res.send(error);
       return;
     }
-    res.req.session.user = res.req.user = user;
-    res.send(user);
+    var session = res.req.session;
+    session.user = res.req.user = user;
+    session.save(function (error) {
+      if (error) {
+        log.error(error, "session.save failed");
+        return;
+      }
+      res.send(user);
+    });
   };
 }
 
@@ -28,8 +36,13 @@ function signUp(req, res) {
 }
 
 function signOut(req, res) {
-  req.session.destroy();
-  res.redirect("/");
+  req.session.destroy(function (error) {
+    if (error) {
+      log.error(error, "session.destroy failed");
+      return;
+    }
+    res.redirect("/");
+  });
 }
 
 var app = express();

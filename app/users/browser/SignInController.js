@@ -7,7 +7,7 @@ function signInController($scope, $http, $window) {
     var user = _.pick($scope, "email", "password");
     var url = register ? "/users/sign-up" : "/users/sign-in";
     $http.post(url, user).then(function () {
-      $window.location.href = "/";
+      $window.location.reload();
     }).catch(function(response) {
       $scope.error = "Check your email and password and try again";
       if (response.status  === 409) {
