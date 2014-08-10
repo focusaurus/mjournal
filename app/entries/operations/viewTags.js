@@ -1,4 +1,3 @@
-// var Stack = require("app/operations/Stack");
 var _ = require("lodash");
 var async = require("async");
 var db = require("app/db");
@@ -37,15 +36,7 @@ function whereTags(run, next) {
   next();
 }
 
-// var stack = new Stack(
-//   initDbOp,
-//   opMW.requireUser,
-//   opMW.whereUser,
-//   whereTags,
-//   execute
-// );
-
-function runStack(options, callback) {
+function view(options, callback) {
   var run = {options: options};
   var stack = [
     initDbOp,
@@ -59,4 +50,4 @@ function runStack(options, callback) {
   });
 }
 
-module.exports = runStack;
+module.exports = view;

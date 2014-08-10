@@ -1,4 +1,3 @@
-// var Stack = require("app/operations/Stack");
 var _ = require("lodash");
 var async = require("async");
 var clientFields = require("../clientFields");
@@ -57,15 +56,8 @@ function execute(run, next) {
     select(where, run,  next);
   });
 }
-//
-// var stack = new Stack(
-//   opMW.requireUser,
-//   initDbOp,
-//   opMW.whereUser,
-//   execute
-// );
 
-function runStack(options, callback) {
+function update(options, callback) {
   var run = {options: options};
   async.applyEachSeries(
     [
@@ -79,4 +71,4 @@ function runStack(options, callback) {
   );
 }
 
-module.exports = runStack;
+module.exports = update;

@@ -74,7 +74,6 @@ viewStack.use(viewAction);
 
 function createAction(next, options) {
   var opOptions = _.pick(options, "user", "body", "tags");
-  opOptions.user = {id: 1};//@bug
   entryOps.create(opOptions, function(error, entry) {
     if (error) {
       cli.exit(error);
@@ -86,7 +85,7 @@ function createAction(next, options) {
 var createCommand = program.command("create")
   .description("create a new journal entry");
 var createStack = new cli.Stack(createCommand);
-// cli.signInMW(createStack);
+cli.signInMW(createStack);
 bodyOption(createStack);
 tagsOption(createStack);
 createStack.use(createAction);
