@@ -7,7 +7,10 @@ var entryOps = require("app/entries/operations");
 var program = require("commander");
 
 function bodyOption(stack) {
-  stack.command.option("-b, --body <body>", "Content for the journal entry. Pass 'stdin' to provide on stdin");
+  stack.command.option(
+    "-b, --body <body>",
+    "Content for the journal entry. Pass 'stdin' to provide on stdin"
+  );
   return stack.use(function(next, options) {
     var input, lines;
     if (options.body === "stdin") {
@@ -31,12 +34,14 @@ function bodyOption(stack) {
 }
 
 function tagsOption(stack) {
-  return stack.command.option("-t, --tags <tags>", "Tags for the entry. Space-delimited words.");
+  return stack.command.option(
+    "-t, --tags <tags>", "Tags for the entry. Space-delimited words.");
 }
 
 function viewAction(next, options) {
   options.textSearch = options.search;
-  return entryOps.view(_.pick(options, "user", "page", "textSearch"), function(error, entries) {
+  var opOptions = _.pick(options, "user", "page", "textSearch");
+  entryOps.view(opOptions, function(error, entries) {
     if (error) {
       cli.exit(error);
     }
@@ -56,15 +61,21 @@ function viewAction(next, options) {
   });
 }
 
-var viewCommand = program.command("view").description("view entries for a user");
-viewCommand.option("-s, --search <query>", "search for entries mentioning or tagged with a keyword");
+var viewCommand = program.command("view")
+  .description("view entries for a user");
+viewCommand.option(
+  "-s, --search <query>",
+  "search for entries mentioning or tagged with a keyword"
+);
 var viewStack = new cli.Stack(viewCommand);
 cli.signInMW(viewStack);
 cli.paginate(viewStack);
 viewStack.use(viewAction);
 
 function createAction(next, options) {
-  return entryOps.create(_.pick(options, "user", "body", "tags"), function(error, entry) {
+  var opOptions = _.pick(options, "user", "body", "tags");
+  opOptions.user = {id: 1};//@bug
+  entryOps.create(opOptions, function(error, entry) {
     if (error) {
       cli.exit(error);
     }
@@ -72,9 +83,10 @@ function createAction(next, options) {
     process.exit();
   });
 }
-var createCommand = program.command("create").description("create a new journal entry");
+var createCommand = program.command("create")
+  .description("create a new journal entry");
 var createStack = new cli.Stack(createCommand);
-cli.signInMW(createStack);
+// cli.signInMW(createStack);
 bodyOption(createStack);
 tagsOption(createStack);
 createStack.use(createAction);
@@ -91,7 +103,9 @@ function updateAction(next, commandOptions) {
   });
 }
 
-var updateCommand = program.command("update").option("-i,--entryId <entryId>").description("update an existing entry. Provide new entry body via stdin");
+var updateCommand = program.command("update")
+  .option("-i,--entryId <entryId>")
+  .description("update an existing entry. Provide new entry body via stdin");
 var updateStack = new cli.Stack(updateCommand);
 cli.signInMW(updateStack);
 bodyOption(updateStack);

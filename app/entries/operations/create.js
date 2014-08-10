@@ -7,7 +7,8 @@ function run(options, callback) {
   if (!options.user) {
     return callback({
       code: 401,
-      "Please sign in to view your journal": "Please sign in to view your journal"
+      "Please sign in to view your journal":
+        "Please sign in to view your journal"
     });
   }
   var tags = options.tags || [];

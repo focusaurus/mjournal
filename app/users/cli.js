@@ -22,5 +22,6 @@ function signUp(email) {
 }
 
 program.description("operate on user records");
-program.command("sign-up <email>").description("register a new user account").action(signUp);
+program.command("sign-up <email>")
+  .description("register a new user account").action(signUp);
 program.parse(process.argv);

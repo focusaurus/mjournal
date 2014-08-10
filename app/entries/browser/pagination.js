@@ -1,4 +1,5 @@
 var fs = require("fs");
+/*eslint no-path-concat:0*/
 var paginationTemplate = fs.readFileSync(__dirname + "/pagination.ng.html");
 
 function recompute($scope) {
