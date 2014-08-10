@@ -1,34 +1,31 @@
 var errors = require("app/errors");
+var joi = require("joi");
+
 var PAGE_SIZE = 50;
+var PAGE_SCHEMA = joi.number().integer().min(1).default(1);
 
-function paginated(next, options) {
-  var page = options && parseInt(options.page, 10);
-  if (isNaN(page)) {
-    page = 1;
-  }
-  if (page < 1) {
-    page = 1;
-  }
-  this.dbOp.limit(PAGE_SIZE).offset((page - 1) * PAGE_SIZE);
+function paginated(run, next) {
+  var valid = PAGE_SCHEMA.validate(run.options.page);
+  var page = valid.value || 1;
+  run.dbOp.limit(PAGE_SIZE).offset((page - 1) * PAGE_SIZE);
   next();
 }
 
-function requireUser(next, options) {
-  if (!(options && options.user)) {
-    return next(new errors.Unauthorized("Please sign in"));
+function requireUser(run, next) {
+  if (!(run.options && run.options.user)) {
+    next(new errors.Unauthorized("Please sign in"));
+    return;
   }
   next();
 }
 
-function whereUser(next, options) {
-  this.dbOp.where({
-    userId: options.user.id
+function whereUser(run, next) {
+  run.dbOp.where({
+    userId: run.options.user.id
   });
   next();
 }
 
-module.exports = {
-  paginated: paginated,
-  requireUser: requireUser,
-  whereUser: whereUser
-};
+exports.paginated = paginated;
+exports.requireUser = requireUser;
+exports.whereUser = whereUser;

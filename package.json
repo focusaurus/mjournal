@@ -41,6 +41,7 @@
   "dependencies": {
     "any-db": "^2.1.0",
     "any-db-postgres": "^2.1.3",
+    "async": "^0.9.0",
     "bcrypt": "^0.7.8",
     "body-parser": "^1.4.3",
     "bole": "^0.1.0",
@@ -57,12 +58,14 @@
     "express": "^4.6.1",
     "express-session": "^1.6.5",
     "gesundheit": "^0.10.0",
+    "highland": "^1.26.3",
     "hoek": "^2.4.1",
     "jade": "^1.3.1",
     "joi": "^4.6.2",
     "lodash": "^2.4.1",
     "pg": "^3.4.0",
     "promptly": "~0.2.0",
+    "split": "^0.3.0",
     "stylus": "^0.47.1"
   },
   "devDependencies": {

@@ -93,7 +93,12 @@ describe("errors.InternalServerError", function () {
 
 describe("errors module", function () {
   it("should have expected constructors and handle", function() {
-    ["Unauthorized", "Imateapot", "RequestURITooLong", "PreconditionFailed"].forEach(function (constructor) {
+    [
+      "Unauthorized",
+      "Imateapot",
+      "RequestURITooLong",
+      "PreconditionFailed"
+    ].forEach(function (constructor) {
       expect(errors).toHaveMember(constructor);
       expect(errors[constructor]).toBeFunction("function");
     });

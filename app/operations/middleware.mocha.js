@@ -4,29 +4,31 @@ var assert = require("assert");
 
 describe("app/operations/middleware.paginated", function() {
   it("should set page 1 by default and a default limit", function(done) {
-    var context = {
+    var run = {
+      options: {},
       dbOp: db.select("example", ["id"])
     };
     var next = function() {
-      var sql = context.dbOp.compile()[0].toLowerCase();
+      var sql = run.dbOp.compile()[0].toLowerCase();
       assert(sql.indexOf("limit ") >= 0);
       assert(sql.indexOf("offset ") < 0);
       done();
     };
-    paginated.call(context, next, {});
+    paginated.call(null, run, next);
   });
   it("should set limit and offset when page is > 1", function(done) {
-    var context = {
-      dbOp: db.select("example", ["id"])
+    var run = {
+      dbOp: db.select("example", ["id"]),
+      options: {
+        page: "42"
+      }
     };
     var next = function() {
-      var sql = context.dbOp.compile()[0].toLowerCase();
+      var sql = run.dbOp.compile()[0].toLowerCase();
       assert(sql.indexOf("limit ") >= 0);
       assert(sql.indexOf("offset ") >= 0);
       done();
     };
-    paginated.call(context, next, {
-      page: "42"
-    });
+    paginated.call(null, run, next);
   });
 });

@@ -1,67 +1,82 @@
+// var Stack = require("app/operations/Stack");
 var _ = require("lodash");
+var async = require("async");
 var clientFields = require("../clientFields");
 var db = require("app/db");
 var errors = require("app/errors");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
 var presentEntry = require("../presentEntry");
-var Stack = require("app/operations/Stack");
 
-function select(where, callback) {
+function select(where, run, next) {
   db.select("entries", clientFields)
     .where(where)
     .execute(function(error, result) {
-      callback(error, presentEntry(result.rows && result.rows[0]));
+      run.result = presentEntry(result.rows && result.rows[0]);
+      next(error);
   });
 }
 
-function initDbOp(next, options) {
-  this.dbOp = db.update("entries");
+function initDbOp(run, next) {
+  run.dbOp = db.update("entries");
   return next();
 }
 
-function execute(next, options, callback) {
+function execute(run, next) {
   var set = {
     updated: new Date()
   };
   ["body", "tags"].forEach(function (property) {
-    if (_.has(options, property)) {
-      set[property] = options[property];
+    if (_.has(run.options, property)) {
+      set[property] = run.options[property];
     }
   });
   if (Array.isArray(set.tags)) {
     set.tags = set.tags.join(" ");
   }
   var where = {
-    id: options.id
+    id: run.options.id
   };
-  this.dbOp.set(set).where(where).execute(function(error, result) {
+  run.dbOp.set(set).where(where).execute(function(error, result) {
     if (error) {
       log.info({
         err: error
       }, "error updating an entry");
-      callback(error);
+      next(error);
       return;
     }
     if (result.rowCount < 1) {
-      log.info({options: options}, "zero rowCount on entry update (HAX0RZ?)");
-      callback(new errors.NotFound("No entry with id " + options.id));
+      log.info(
+        {options: run.options},
+        "zero rowCount on entry update (HAX0RZ?)"
+      );
+      next(new errors.NotFound("No entry with id " + run.options.id));
       return;
     }
     log.debug(result, "entries/update");
-    select(where, callback);
+    select(where, run,  next);
   });
 }
+//
+// var stack = new Stack(
+//   opMW.requireUser,
+//   initDbOp,
+//   opMW.whereUser,
+//   execute
+// );
 
-var stack = new Stack(
-  opMW.requireUser,
-  initDbOp,
-  opMW.whereUser,
-  execute
-);
-
-function runStack() {
-  return stack.run.apply(stack, arguments);
+function runStack(options, callback) {
+  var run = {options: options};
+  async.applyEachSeries(
+    [
+      opMW.requireUser,
+      initDbOp,
+      opMW.whereUser,
+      execute
+    ], run, function (error) {
+      callback(error, run.result);
+    }
+  );
 }
 
 module.exports = runStack;

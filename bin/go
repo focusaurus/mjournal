@@ -61,6 +61,7 @@ task::start() {
 
 task::test() {
   set -e
+  export NODE_ENV=test
   args="--slow 200 --reporter spec --colors --recursive"
   if [[ "${1}" == "--debug" ]]; then
     args="${args} --timeout 0 --debug-brk=9093"
@@ -70,11 +71,16 @@ task::test() {
   if [[ -z "${tests}" ]]; then
     tests=$(find app -type f -name '*.mocha.js' | xargs)
   fi
-  psql --username=mjournal --dbname=mjournal-test \
-    --file=app/db/createSchema.sql 2>&1 \
-    | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)' || true
-  NODE_ENV=test mocha ${args} ${tests}
+  # ssh dbs psql --username=mjournal --dbname=mjournal-test \
+  #   < app/db/createSchema.sql 2>&1 \
+  #   | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)' || true
+  printf "wiping test database..."
+  app/db/wipe.js
+  echo "mocha tests..."
+  mocha ${args} ${tests}
+  printf "linting..."
   task::lint
+  echo
 }
 
 task::inspector() {

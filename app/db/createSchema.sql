@@ -1,6 +1,6 @@
-DROP TABLE entries;
-DROP TABLE users;
-DROP TABLE session;
+DROP TABLE IF EXISTS entries;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS session;
 
 -- Table: users
 CREATE TABLE users
@@ -33,8 +33,6 @@ CREATE TABLE entries
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE entries
-  OWNER TO mjournal;
 
 -- Index: "textSearchGin"
 
@@ -64,5 +62,3 @@ CREATE TABLE "public"."session" (
 )
 WITH (OIDS=FALSE);
 ALTER TABLE "public"."session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
-ALTER TABLE "session"
-  OWNER TO mjournal;

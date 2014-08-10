@@ -1,51 +1,62 @@
-var Stack = require("app/operations/Stack");
+// var Stack = require("app/operations/Stack");
 var _ = require("lodash");
+var async = require("async");
 var db = require("app/db");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
 
-function initDbOp(next) {
-  this.dbOp = db.select("entries", ["tags"]).distinct(true);
+function initDbOp(run, next) {
+  run.dbOp = db.select("entries", ["tags"]).distinct(true);
   next();
 }
 
-function execute(next, options, callback) {
+function execute(run, next) {
   log.debug({
-    sql: this.dbOp.toString()
+    sql: run.dbOp.toString()
   }, "viewTags");
-  this.dbOp.execute(function(error, result) {
+  run.dbOp.execute(function(error, result) {
     if (error) {
       log.error({
         err: error
       }, "error in viewTags query");
-      callback(error);
+      run.options.callback(error);
       return;
     }
     var set = _.map(result.rows, function (row) {return row.tags.split(" ");});
     set = _.flatten(set);
     set = _.uniq(set);
-    set = set.map(function (tag) {
+    run.result = set.map(function (tag) {
       return {text: tag};
     });
-    callback(null, set);
+    next();
   });
 }
 
-function whereTags(next) {
-  this.dbOp.where(this.dbOp.c("tags").ne(""));
+function whereTags(run, next) {
+  run.dbOp.where(run.dbOp.c("tags").ne(""));
   next();
 }
 
-var stack = new Stack(
-  initDbOp,
-  opMW.requireUser,
-  opMW.whereUser,
-  whereTags,
-  execute
-);
+// var stack = new Stack(
+//   initDbOp,
+//   opMW.requireUser,
+//   opMW.whereUser,
+//   whereTags,
+//   execute
+// );
 
-function runStack() {
-  stack.run.apply(stack, arguments);
+function runStack(options, callback) {
+  var run = {options: options};
+  var stack = [
+    initDbOp,
+    opMW.requireUser,
+    opMW.whereUser,
+    whereTags,
+    execute
+  ];
+  async.applyEachSeries(stack, run, function (error) {
+    callback(error, run.result);
+  });
 }
 
 module.exports = runStack;

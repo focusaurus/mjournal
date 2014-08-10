@@ -1,5 +1,10 @@
 div.toolbar
-  pagination(array="entries" label="Entries" direction="reverse")
+  button.previous(
+    ng-click="previous()",
+    ng-disabled="disablePrevious") Previous Entries
+  button.next(
+    ng-click="next()",
+    ng-disabled="disableNext") Next Entries
   input(
     type="text"
     placeholder=" search entries..."

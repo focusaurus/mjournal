@@ -1,7 +1,13 @@
+var devNull = require("dev-null");
 var pack = exports.pack = require("./package");
 var PRODUCTION = false;
 var TEST = false;
 var DEVELOPMENT = false;
+
+exports.dbUrl = "postgres://" + pack.name + "@localhost/" + pack.name;
+exports.logStream = process.stdout;
+exports.port = 9090;
+exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";
 
 switch (process.env.NODE_ENV) {
   case "production":
@@ -16,7 +22,3 @@ switch (process.env.NODE_ENV) {
     DEVELOPMENT = true;
 }
 exports.browserifyDebug = DEVELOPMENT;
-exports.dbUrl = "postgres://" + pack.name + "@localhost/" + pack.name;
-exports.logStream = process.stdout;
-exports.port = 9090;
-exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";

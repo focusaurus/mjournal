@@ -1,29 +1,30 @@
 var _ = require("lodash");
+
 function Stack() {
   this.stack = _.flatten([].slice.call(arguments));
 }
 
-//@param *varargs* middleware to use in order.
-//  can be a single function or an array of functions, any depth
+/**
+ * @param {Function[]...} varargs middleware to use in order.
+ *   can be a single function or an arary of functions, any depth.
+ *   varargs syntax supported
+ */
 Stack.prototype.use = function() {
   this.stack = this.stack.concat(_.flatten(arguments));
   return this;
 };
 
-Stack.prototype.run = function() {
+Stack.prototype.run = function(options) {
   var self = this;
-  var runState;
+  var runStack = this.stack.slice();
+  var runState = {options: options};
   function runClosure() {
-    var mw = runState.stack.shift();
-    if (!mw) {
+    var mw = runStack.shift();
+    if (typeof mw !== "function") {
       return;
     }
-    mw.apply(self, runState.mwArgs);
+    mw.call(self, runClosure, runState);
   }
-  runState = {
-    mwArgs: [runClosure].concat([].slice.call(arguments)),
-    stack: this.stack.slice()
-  };
   runClosure();
   return this;
 };

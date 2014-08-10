@@ -1,21 +1,40 @@
 var _ = require("lodash");
 var ENTER = 13;
+var PAGE_SIZE = 50;
 
 function EntriesController($scope, $q, $location, Entries) {
-  $scope.get = function get() {
-    var params = _.pick($scope, "textSearch");
-    var topEntry = $scope.entries[0];
-    params.before = topEntry && topEntry.id;
+  $scope.get = function get(params) {
+    params = params || {};
+    params.textSearch = $scope.textSearch;
+
     Entries.get(params, function(entries) {
       // if ($scope.page.number > 1) {
       //   $location.search("topEntry", entries[0].id);
       // }
+      $scope.disableNext = $scope.disablePrevious = false;
       $scope.entries = entries;
+      if (entries.length < PAGE_SIZE) {
+        if (params.before) {
+          $scope.disablePrevious = true;
+        }
+        if (params.after) {
+          $scope.disableNext = true;
+        }
+      }
     });
   };
-  $scope.$on("previous", function () {
-    $scope.get();
-  });
+
+  $scope.previous = function previous() {
+    var topEntry = $scope.entries[0];
+    var params = {before: topEntry && topEntry.id};
+    $scope.get(params);
+  };
+
+  $scope.next = function next() {
+    var bottomEntry = _.last($scope.entries);
+    var params = {after: bottomEntry && bottomEntry.id};
+    $scope.get(params);
+  };
 
   $scope.update = function update(entry) {
     Entries.update(_.pick(entry, "id", "body"), function(result) {

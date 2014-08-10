@@ -7,7 +7,7 @@ var json = require("body-parser").json();
 
 function viewEntries(req, res) {
   if (req.user) {
-    var options = _.pick(req.query, "page", "before", "textSearch");
+    var options = _.pick(req.query, "page", "after", "before", "textSearch");
     options.user = req.user;
     ops.view(options, api.sendResult(res));
   } else {
@@ -29,7 +29,7 @@ function updateEntry(req, res) {
 }
 
 function viewTags(req, res) {
-  return ops.viewTags({user: req.user}, api.sendResult(res));
+  ops.viewTags({user: req.user}, api.sendResult(res));
 }
 
 var app = express();

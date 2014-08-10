@@ -3,16 +3,24 @@ var expect = require("expectacle");
 var Stack = require("app/operations/Stack");
 
 describe("operations middleware Stack", function() {
-  it("should call a function in the stack with the args from run", function(done) {
+  it("should pass a clean runState instance for each run", function(done) {
     var stack = new Stack();
-    stack.use(function(next, one, two) {
+    stack.use(function(next, run) {
       expect(next).toBeFunction();
-      expect(one).toBe(1);
-      expect(two).toBe(2);
+      expect(run).toBeObject();
+      expect(run.options).toBeObject();
+      expect(run.options.foo).toBe("FOO");
+      run.localState = "Idaho";
+      next();
+    });
+    stack.use(function(next, run) {
+      expect(next).toBeFunction();
+      expect(run).toBeObject();
+      expect(run.localState).toBe("Idaho");
       next();
       done();
     });
-    stack.run(1, 2);
+    stack.run({foo: "FOO"});
   });
   it("should not proceed if next() is not called", function(done) {
     var stack = new Stack();
