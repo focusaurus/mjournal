@@ -22,7 +22,7 @@ describe("app/index site-wide routes", function() {
   });
 
   it("GET /mjournal.js should send JavaScript", function(done) {
-    this.timeout(5000); //Sorry. Browserify has lots of FS IO
+    this.timeout(10000); //Sorry. Browserify has lots of FS IO
     testUtils
       .get("/mjournal.js")
       .expect(200)

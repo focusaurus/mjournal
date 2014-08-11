@@ -62,6 +62,7 @@ function EntriesController($scope, $q, $location, Entries) {
         $scope.entries.push(entry);
         bodyElement.innerText = "";
       });
+      $scope.newEntryTags.forEach($scope.addAutocompleteTag);
     }
   };
   $scope.searchKeypress = function searchKeypress(event) {
@@ -69,19 +70,20 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.get();
     }
   };
-  $scope.updateTags = function updateTags(entry, newTag) {
+  $scope.updateTags = function updateTags(entry) {
     var forUpdate = _.pick(entry, "id");
     forUpdate.tags = entry.tags.map(function (tag) {
       return tag.text;
     });
+    entry.tags.forEach($scope.addAutocompleteTag);
     Entries.update(forUpdate);
-    if (newTag) {
-      var haveIt = $scope.tags.some(function (tag) {
-        return tag.text.toLowerCase() === newTag.text.toLowerCase();
-      });
-      if (!haveIt) {
-        $scope.tags.push(newTag);
-      }
+  };
+  $scope.addAutocompleteTag = function addAutocompleteTag(newTag) {
+    var haveIt = $scope.tags.some(function (tag) {
+      return tag.text.toLowerCase() === newTag.text.toLowerCase();
+    });
+    if (!haveIt) {
+      $scope.tags.push(newTag);
     }
   };
   $scope.entries = [];
