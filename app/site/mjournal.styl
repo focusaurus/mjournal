@@ -1,13 +1,14 @@
 @require "site/colorPalette"
+@require "site/adaptive"
 
 fancy-font()
-  font-family "Short Stack"
+  font-family "Alice"
 
 body
  background-color $bagels
  color $text1
  margin 0 auto
- width 35em
+ max-width 35em
  font-size 24px
  padding-bottom 1em
 
@@ -17,6 +18,9 @@ body
   a
     text-decoration none
     color $tunnel
+
+h1, h2, h3
+  margin 0.2em
 
 label
   display block
