@@ -1,10 +1,14 @@
 div.toolbar
   button.previous(
     ng-click="previous()",
-    ng-disabled="disablePrevious") Previous Entries
+    ng-disabled="disablePrevious")
+    span.fullText Previous Entries
+    span.smallText &larr;
   button.next(
     ng-click="next()",
-    ng-disabled="disableNext") Next Entries
+    ng-disabled="disableNext")
+    span.fullText Next Entries
+    span.smallText &rarr;
   input(
     type="text"
     placeholder=" search entries..."

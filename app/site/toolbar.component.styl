@@ -6,6 +6,13 @@
   input
     min-width 15em
     height 2em
+  .smallText
+    display none
+  @media smallScreen
+    .smallText
+      display inline
+    .fullText
+      display none
   .previous
     position absolute
     top 0
