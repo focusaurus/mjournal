@@ -76,11 +76,12 @@ task::test() {
   #   | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)' || true
   printf "wiping test database..."
   app/db/wipe.js
+  echo ✓
   echo "mocha tests..."
   mocha ${args} ${tests}
   printf "linting..."
   task::lint
-  echo
+  echo ✓
 }
 
 task::inspector() {
