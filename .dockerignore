@@ -1,0 +1,7 @@
+.git
+bower_components
+build
+node
+node_modules
+config.local.js*
+logs/*.log

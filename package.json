@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "./bin/go express",
-    "test": "./bin/go test"
+    "test": "./bin/go test",
+    "postinstall": "./node_modules/.bin/bower --allow-root install"
   },
   "browserify": {
     "transform": [
@@ -39,27 +40,26 @@
     }
   },
   "dependencies": {
-    "any-db": "^2.1.0",
     "any-db-postgres": "^2.1.3",
+    "any-db": "^2.1.0",
     "async": "^0.9.0",
     "bcrypt": "^0.7.8",
     "body-parser": "^1.4.3",
     "bole": "^0.1.0",
+    "bower": "^1.3.8",
     "brfs": "^1.2.0",
     "browserify-middleware": "^3.0.1",
     "browserify-shim": "^3.6.0",
-    "bunyan": "^0.23.1",
     "commander": "^2.2.0",
     "concat-stream": "^1.4.6",
     "config3": "0.0.0",
     "connect-pg-simple": "^2.0.0",
     "cookie-parser": "^1.3.2",
     "dev-null": "^0.1.1",
-    "express": "^4.6.1",
     "express-session": "^1.6.5",
+    "express": "^4.6.1",
     "gesundheit": "^0.10.0",
     "highland": "^1.26.3",
-    "hoek": "^2.4.1",
     "jade": "^1.3.1",
     "joi": "^4.6.2",
     "lodash": "^2.4.1",
@@ -70,7 +70,6 @@
   },
   "devDependencies": {
     "bistre": "^1.0.0",
-    "bower": "^1.3.8",
     "cheerio": "^0.17.0",
     "eslint": "^0.7.4",
     "expectacle": "~1.3.0",
@@ -79,7 +78,6 @@
     "node-inspector": "^0.7.4",
     "npm-check-updates": "~1.2.0",
     "sinon": "^1.10.3",
-    "supertest": "^0.13.0",
-    "watchify": "^0.10.2"
+    "supertest": "^0.13.0"
   }
 }
