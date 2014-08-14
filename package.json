@@ -11,7 +11,7 @@
   "scripts": {
     "start": "./bin/go express",
     "test": "./bin/go test",
-    "postinstall": "./node_modules/.bin/bower --allow-root install"
+    "postinstall": "./node_modules/.bin/bower --config.analytics=false install"
   },
   "browserify": {
     "transform": [
@@ -64,7 +64,7 @@
     "joi": "^4.6.2",
     "lodash": "^2.4.1",
     "mustache": "^0.8.2",
-    "pg": "^3.4.0",
+    "pg.js": "^3.4.2",
     "promptly": "~0.2.0",
     "split": "^0.3.0",
     "stylus": "^0.47.1"

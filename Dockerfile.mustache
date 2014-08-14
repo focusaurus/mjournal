@@ -1,16 +1,18 @@
 FROM nodesource/node
 ENV DEBIAN_FRONTEND noninteractive
-ENV NODE_ENV production
-ENV NODE_PATH /opt/{{appName}}
-EXPOSE {{port}}
-WORKDIR /opt/{{appName}}
-#USER {{appName}}
-
 RUN apt-get update -y
 RUN apt-get install -y git-core
-ADD bower.json /opt/{{appName}}/bower.json
-ADD package.json /opt/{{appName}}/package.json
+
+ENV NODE_ENV production
+ENV NODE_PATH /opt/{{appName}}
+WORKDIR /opt/{{appName}}
+EXPOSE {{port}}
+#USER {{appName}}
+
+ADD package.json  /opt/{{appName}}/package.json
 RUN npm install --production
+ADD bower.json  /opt/{{appName}}/bower.json
+RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 
 ADD . /opt/{{appName}}
 CMD ["./app/server.js"]

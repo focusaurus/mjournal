@@ -4,7 +4,7 @@ var cookieParser = require("cookie-parser");
 var express = require("express");
 var log = require("app/log");
 var paths = require("app/paths");
-var pg = require("pg");
+var pg = require("pg.js");
 var session = require("express-session");
 var stylusBundle = require("app/site/stylusBundle");
 

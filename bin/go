@@ -106,7 +106,12 @@ task::clean() {
 
 task::docker() {
   ./bin/render_template Dockerfile.mustache
-  exec docker "$@"
+  exec docker build --tag=mjournal .
+}
+
+task::fig() {
+  ./bin/render_template fig.yml.mustache
+  exec fig "$@"
 }
 
 ##### main code #####
