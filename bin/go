@@ -44,6 +44,8 @@ Deployment Commands
 
 * clean: delete the build directory
 * build: build a distribution archive for deployment
+* docker: render the Dockerfile then run docker
+* fig: render the fig.yml then run fig
 EOF
   exit 1
 }
@@ -100,6 +102,11 @@ task::build() {
 
 task::clean() {
   rm -rf ./build
+}
+
+task::docker() {
+  ./bin/render_template Dockerfile.mustache
+  exec docker "$@"
 }
 
 ##### main code #####

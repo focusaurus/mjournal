@@ -1,6 +1,8 @@
-/bower_components
-/build
-/node
-/node_modules
-/config.local.js*
-/logs/*.log
+bower_components
+build
+node
+node_modules
+config.local.js*
+logs/*.log
+Dockerfile
+fig.yml
