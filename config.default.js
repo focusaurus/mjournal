@@ -4,7 +4,8 @@ var PRODUCTION = false;
 var TEST = false;
 var DEVELOPMENT = false;
 
-exports.dbUrl = "postgres://" + pack.name + "@localhost/" + pack.name;
+var appName = exports.appName = pack.name;
+exports.dbUrl = "postgres://" + appName + "@localhost/" + appName;
 exports.logStream = process.stdout;
 exports.port = 9090;
 exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";

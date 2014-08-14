@@ -1,0 +1,16 @@
+FROM nodesource/node
+ENV DEBIAN_FRONTEND noninteractive
+ENV NODE_ENV production
+ENV NODE_PATH /opt/{{appName}}
+EXPOSE {{port}}
+WORKDIR /opt/{{appName}}
+#USER {{appName}}
+
+RUN apt-get update -y
+RUN apt-get install -y git-core
+ADD bower.json /opt/{{appName}}/bower.json
+ADD package.json /opt/{{appName}}/package.json
+RUN npm install --production
+
+ADD . /opt/{{appName}}
+CMD ["./app/server.js"]

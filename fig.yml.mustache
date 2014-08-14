@@ -1,0 +1,8 @@
+web:
+  build: .
+  links:
+   - db
+  ports:
+   - "9090:9090"
+db:
+  image: postgres
