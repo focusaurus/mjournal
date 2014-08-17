@@ -6,4 +6,4 @@ config.local.js*
 logs/*.log
 Dockerfile
 fig.yml
-deploy/webapp.conf
+webapp.conf

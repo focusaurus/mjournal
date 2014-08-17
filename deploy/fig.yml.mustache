@@ -1,0 +1,8 @@
+mjournalapp:
+  build: .
+  links:
+   - mjournaldb
+  ports:
+   - "{{port}}:80"
+mjournaldb:
+  image: postgres

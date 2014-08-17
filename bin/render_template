@@ -3,7 +3,6 @@ var async = require("async");
 var config = require("config3");
 var fs = require("fs");
 var mustache = require("mustache");
-var inPath = process.argv[2];
 
 function render(inPath, callback) {
   var outPath = inPath.replace(".mustache", "");
@@ -17,13 +16,14 @@ function render(inPath, callback) {
       return;
     }
     var output = mustache.render(must, config);
-    fs.writeFile(outPath, output, callback);
+    process.stdout.write(output, "utf8", callback);
   });
 }
 
-async.eachLimit(process.argv.slice(2), 10, render, function (error, result) {
-  if (error) {
-    console.error(error);
-    return;
-  }
-});
+render(process.argv[2], process.exit);
+// async.eachLimit(process.argv.slice(2), 10, render, function (error, result) {
+//   if (error) {
+//     console.error(error);
+//     return;
+//   }
+// });

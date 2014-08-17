@@ -17,49 +17,45 @@ autoinstall_bower_dependencies() {
   ./node_modules/.bin/bower install
 }
 
+doc() {
+  help="${help}$1
+"
+}
+
+#The "help" variable gets extended by the "doc" function
+#inline below as needed sort of javadoc/python decorator style
+help=""
 usage() {
-  echo "Usage: $(basename $0) <subcommand> [args...]"
   cat <<EOF
+Usage: $(basename $0) <subcommand> [args…]
 
 Purpose of $(basename $0) script
 --------------------
-
 * entrypoint script for common commands
 * Automatically installs development prerequisites
 * Ensures the correct PATH environment variable
-* commands are grouped by purpose/lifecycle and described in more detail below
-
+* commands are grouped by lifecycle and described in more detail below
 
 Development Commands
 --------------------
-
-* express: start the express server
-  * aliased as "start" command as well
-* test: run all the tests (mocha)
-* lint: run eslint code format checker
-
-Deployment Commands
--------------------
-
-* clean: delete the build directory
-* build: build a distribution archive for deployment
-* docker: render the Dockerfile then run a docker build
-* fig: render the fig.yml then run fig
+${help}
 EOF
-  exit 1
 }
 
 ##### development task functions #####
+doc "* express: start the express server"
 task::express() {
   autoinstall_npm_dependencies
   autoinstall_bower_dependencies
   node-dev --debug=9091 app/server | tee -a logs/mjournal.log | bistre
 }
 
+doc "  * aliased as 'start' command as well"
 task::start() {
   task::express
 }
 
+doc "* test: run all the tests (mocha)"
 task::test() {
   set -e
   export NODE_ENV=test
@@ -75,39 +71,47 @@ task::test() {
   # ssh dbs psql --username=mjournal --dbname=mjournal-test \
   #   < app/db/createSchema.sql 2>&1 \
   #   | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)' || true
-  printf "wiping test database..."
+  echo -n "wiping test database…"
   app/db/wipe.js
   echo ✓
-  echo "mocha tests..."
+  echo "mocha tests…"
   mocha ${args} ${tests}
-  printf "linting..."
+  printf "linting…"
   task::lint
   echo ✓
 }
 
+doc "* lint: run eslint code format checker"
 task::lint() {
-  eslint app
+  eslint app bin/render_template
 }
 
-##### deployment command functions #####
-task::build() {
-  autoinstall_npm_dependencies
-  find app/components -type f -name \*.styl | xargs stylus
+_dockerfile() {
+  ./bin/render_template deploy/Dockerfile.mustache > Dockerfile
+  ./bin/render_template deploy/webapp.conf.mustache > webapp.conf
 }
 
-task::clean() {
-  rm -rf ./build
-}
-
-task::docker() {
-  ./bin/render_template Dockerfile.mustache
-  ./bin/render_template deploy/webapp.conf.mustache
-  exec docker build --tag=mjournal .
-}
-
+doc "* fig: bring up the full system via docker and fig"
 task::fig() {
-  ./bin/render_template fig.yml.mustache
-  exec fig "$@"
+  _dockerfile
+  ./bin/render_template deploy/fig.yml.mustache > fig.yml
+  fig up
+}
+
+doc "* clean: delete the build directory"
+task::clean() {
+  rm Dockerfile fig.yml webapp.conf
+}
+
+doc "
+Deployment Commands
+-------------------
+"
+
+doc "* docker: render the Dockerfile then run a docker build"
+task::docker() {
+  _dockerfile
+  exec docker build --tag=mjournal .
 }
 
 ##### main code #####
