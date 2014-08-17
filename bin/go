@@ -36,7 +36,6 @@ Development Commands
 * express: start the express server
   * aliased as "start" command as well
 * test: run all the tests (mocha)
-* inspector: run node-inspector with the proper web port
 * lint: run eslint code format checker
 
 Deployment Commands
@@ -44,7 +43,7 @@ Deployment Commands
 
 * clean: delete the build directory
 * build: build a distribution archive for deployment
-* docker: render the Dockerfile then run docker
+* docker: render the Dockerfile then run a docker build
 * fig: render the fig.yml then run fig
 EOF
   exit 1
@@ -86,10 +85,6 @@ task::test() {
   echo ✓
 }
 
-task::inspector() {
-  exec node-inspector --web-host=127.0.0.1 --web-port=9092
-}
-
 task::lint() {
   eslint app
 }
@@ -106,6 +101,7 @@ task::clean() {
 
 task::docker() {
   ./bin/render_template Dockerfile.mustache
+  ./bin/render_template deploy/webapp.conf.mustache
   exec docker build --tag=mjournal .
 }
 

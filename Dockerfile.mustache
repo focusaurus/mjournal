@@ -1,18 +1,34 @@
-FROM nodesource/node
+FROM phusion/passenger-customizable:0.9.11
+#get the slow/big stuff done early so the cache is rarely invalidated
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y
-RUN apt-get install -y git-core
+#python is needed for npm installs
+#git-core is needed for bower
+RUN apt-get install -y \
+  python \
+  git-core \
+  nodejs={{nodeVersion}}-1chl1~trusty1
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV NODE_ENV production
-ENV NODE_PATH /opt/{{appName}}
-WORKDIR /opt/{{appName}}
-EXPOSE {{port}}
-#USER {{appName}}
-
-ADD package.json  /opt/{{appName}}/package.json
+#keep npm and bower early for caching goodness
+WORKDIR /home/app
+ADD package.json  /home/app/package.json
 RUN npm install --production
-ADD bower.json  /opt/{{appName}}/bower.json
+ADD bower.json  /home/app/bower.json
 RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 
-ADD . /opt/{{appName}}
-CMD ["./app/server.js"]
+#OK, all the slow stuff has been run and hopefully cached
+
+RUN rm /etc/nginx/sites-enabled/default \
+  /etc/service/nginx/down \
+  /etc/bash.bashrc \
+  /home/app/.bashrc
+RUN cd node_modules && ln -nsf ../app
+ENV HOME /root
+
+ADD deploy/mjournal-env.conf /etc/nginx/main.d/mjournal-env.conf
+ADD deploy/webapp.conf /etc/nginx/sites-enabled/webapp.conf
+
+ADD . /home/app
+CMD ["/sbin/my_init"]

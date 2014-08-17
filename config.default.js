@@ -5,6 +5,8 @@ var TEST = false;
 var DEVELOPMENT = false;
 
 var appName = exports.appName = pack.name;
+exports.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
+exports.nodeVersion = pack.engines.node;
 exports.dbUrl = "postgres://" + appName + "@localhost/" + appName;
 exports.logStream = process.stdout;
 exports.port = 9090;

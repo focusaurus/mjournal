@@ -1,0 +1,9 @@
+# /etc/nginx/sites-enabled/webapp.conf:
+server {
+  listen 80 default_server;
+  root /home/app/wwwroot;
+  passenger_enabled on;
+  passenger_user app;
+  passenger_app_type node;
+  passenger_startup_file app/server.js;
+}
