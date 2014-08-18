@@ -8,6 +8,22 @@ var appName = exports.appName = pack.name;
 exports.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 exports.nodeVersion = pack.engines.node;
 //exports.sshPublicKey = false;
+exports.db = {
+  protocol: "postgres",
+  host: "localhost",
+  port: 5432,
+  user: appName,
+  database: appName,
+  password: ""
+};
+exports.adminDb = {
+  protocol: "postgres",
+  host: "localhost",
+  port: 5432,
+  user: "postgres",
+  database: "postgres",
+  password: ""
+};
 exports.dbUrl = process.env.DB_PORT ||
   "postgres://" + appName + "@localhost/" + appName;
 exports.dbUrl = exports.dbUrl.replace("tcp://", "postgres://postgres@") + "/" + appName;
