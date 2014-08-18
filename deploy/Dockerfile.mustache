@@ -36,7 +36,10 @@ RUN cd node_modules && ln -nsf ../app
 ENV HOME /root
 
 # ADD ./deploy/mjournal-env.conf /etc/nginx/main.d/mjournal-env.conf
-ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
+# ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
+# {{#sshPublicKey}}
+# ADD {{{sshPublicKey}}} /root/.ssh/authorized_keys
+# {{/sshPublicKey}}
 RUN mkdir /etc/service/mjournal
 ADD deploy/mjournal-run.sh /etc/service/mjournal/run
 

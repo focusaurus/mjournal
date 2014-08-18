@@ -95,7 +95,7 @@ doc "* fig: bring up the full system via docker and fig"
 task::fig() {
   _dockerfile
   ./bin/render_template deploy/fig.yml.mustache > fig.yml
-  fig up
+  fig "$@"
 }
 
 doc "* clean: delete the build directory"

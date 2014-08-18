@@ -7,8 +7,10 @@ var DEVELOPMENT = false;
 var appName = exports.appName = pack.name;
 exports.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 exports.nodeVersion = pack.engines.node;
-exports.dbUrl = process.env.MJOURNAL_DB_1_PORT_5432_TCP ||
+//exports.sshPublicKey = false;
+exports.dbUrl = process.env.DB_PORT ||
   "postgres://" + appName + "@localhost/" + appName;
+exports.dbUrl = exports.dbUrl.replace("tcp://", "postgres://postgres@") + "/" + appName;
 exports.logStream = process.stdout;
 exports.port = 9090;
 exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";
