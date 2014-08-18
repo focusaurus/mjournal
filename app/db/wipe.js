@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== "test") {
   process.exit(10);
 }
 
-var db = require("app/db").defaultEngine;
+var db = require("app/db").knex;
 var fs = require("fs");
 var hl = require("highland");
 var log = require("app/log");
