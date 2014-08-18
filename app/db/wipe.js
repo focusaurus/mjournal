@@ -5,32 +5,26 @@ if (process.env.NODE_ENV !== "test") {
   /*eslint no-process-exit:0*/
   process.exit(10);
 }
+var config = require("config3");
+config.logStream = process.stdout;
 
-var db = require("app/db").knex;
-var fs = require("fs");
-var hl = require("highland");
+var async = require("async");
 var log = require("app/log");
 var path = require("path");
-var split = require("split");
+var setup = require("app/db/setup");
 
-var sqlPath = path.join(__dirname, "createSchema.sql");
-var stream = fs.createReadStream(sqlPath).pipe(split(";"));
+var WIPE_DDL = path.join(__dirname, "wipe.ddl");
 
-function run(sql, callback) {
-  sql = sql.trim();
-  // console.log(sql);
-  log.debug(sql);
-  if (!sql) {
-    callback();
-    db.close();
-    return;
+log.info("wiping test database");
+async.series([
+  setup.ensureDatabase,
+  setup.runFile.bind(null, WIPE_DDL),
+  setup.ensureSchema
+], function (error, result) {
+  if (error) {
+    log.error(error, "Error wiping test database");
+    process.exit(20);
   }
-  db.query(sql, callback);
-}
-
-hl(stream)
-  .invoke("toString")
-  .map(hl.wrapCallback(run))
-  .stopOnError(console.error)
-  .series()
-  .resume();
+  log.debug("test database wiped successfully");
+  process.exit();
+});

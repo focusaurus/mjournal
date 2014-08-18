@@ -1,4 +1,6 @@
+var _ = require("lodash");
 var devNull = require("dev-null");
+
 var pack = exports.pack = require("./package");
 var PRODUCTION = false;
 var TEST = false;
@@ -16,14 +18,9 @@ exports.db = {
   database: appName,
   password: ""
 };
-exports.adminDb = {
-  protocol: "postgres",
-  host: "localhost",
-  port: 5432,
-  user: "postgres",
-  database: "postgres",
-  password: ""
-};
+exports.postgres = _.clone(exports.db);
+exports.postgres.user = "postgres";
+exports.postgres.database = "postgres";
 exports.dbUrl = process.env.DB_PORT ||
   "postgres://" + appName + "@localhost/" + appName;
 exports.dbUrl = exports.dbUrl.replace("tcp://", "postgres://postgres@") + "/" + appName;
@@ -37,7 +34,8 @@ switch (process.env.NODE_ENV) {
     break;
   case "test":
     TEST = true;
-    exports.dbUrl = "postgres://mjournal@localhost/mjournal-test";
+    exports.db.database = appName + "test";
+    exports.db.user = appName + "test";
     exports.logStream = devNull();
     break;
   default:

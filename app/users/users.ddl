@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS entries;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS session;
-
 -- Table: users
 CREATE TABLE users
 (

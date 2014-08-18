@@ -59,7 +59,6 @@
     "express": "^4.6.1",
     "express-session": "^1.6.5",
     "gesundheit": "^0.10.0",
-    "glob": "^4.0.5",
     "highland": "^1.26.3",
     "jade": "^1.3.1",
     "joi": "^4.6.2",

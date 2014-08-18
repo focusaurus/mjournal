@@ -3,20 +3,24 @@ var async = require("async");
 var config = require("config3");
 var crypto = require("crypto");
 var fs = require("fs");
-var glob = require("glob");
 var knex = require("knex");
 var log = require("app/log");
 var path = require("path");
 var util = require("util");
 
+var dbConfig = _.clone(config.postgres);
 var db = knex({client: "pg", connection: config.db});
-var adminDb = knex({client: "pg", connection: config.adminDb});
+var postgres = knex({client: "pg", connection: config.postgres});
 
 function alreadyExists(error) {
   return error && ["3D000", "42710", "42P04", "42P07"].indexOf(error.code) >= 0;
 }
 
 function runDdl(onDb, ddl, callback) {
+  if (!ddl.trim()) {
+    setImmediate(callback);
+    return;
+  }
   log.debug({ddl: ddl}, "running db init DDL");
   onDb.raw(ddl).exec(function (error, result) {
     if (alreadyExists(error)) {
@@ -36,7 +40,7 @@ function runFile(ddlPath, callback) {
       return;
     }
     var statements = ddl.split(";");
-    async.eachSeries(statements, runDdl.bind(null, db), callback);
+    async.eachSeries(statements, async.apply(runDdl, db), callback);
   });
 }
 
@@ -52,29 +56,31 @@ function ensureDatabase(callback) {
     'create database "%s" owner %s', config.db.database, config.db.user);
   async.eachSeries(
     [createRole, createDatabase],
-    runDdl.bind(null, adminDb),
+    runDdl.bind(null, postgres),
     callback
   );
 }
 
 function ensureSchema(callback) {
-  var ddlGlob = path.join(__dirname, "..", "**", "*.ddl");
-  glob(ddlGlob, function (error, ddlPaths) {
-    if (error) {
-      callback(error);
-      return;
-    }
-    //Run in lexographical order SysV style
-    ddlPaths = _.sortBy(ddlPaths, path.basename);
-    async.eachSeries(ddlPaths, runFile, callback);
-  });
+  var ddlPaths = [
+    path.join(__dirname, "../users/users.ddl"),
+    path.join(__dirname, "../entries/entries.ddl")
+  ];
+  async.eachSeries(ddlPaths, runFile, callback);
 }
 
 function init(callback) {
   async.series([ensureDatabase, ensureSchema], callback);
 }
 
-module.exports = init;
+module.exports = {
+  init: init,
+  ensureDatabase: ensureDatabase,
+  ensureSchema: ensureSchema,
+  runDdl: runDdl,
+  runFile: runFile,
+  postgres: postgres
+};
 
 if (require.main === module) {
   init(_.noop);
