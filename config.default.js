@@ -9,14 +9,15 @@ var DEVELOPMENT = false;
 var appName = exports.appName = pack.name;
 exports.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 exports.nodeVersion = pack.engines.node;
-//exports.sshPublicKey = false;
+var figHost = process.env.MJOURNAL_DB_1_PORT_5432_TCP_ADDR;
+var figPort = process.env.MJOURNAL_DB_1_PORT_5432_TCP_PORT;
 exports.db = {
   protocol: "postgres",
-  host: "localhost",
-  port: 5432,
+  host: figHost || "localhost",
+  port: figPort || 5432,
   user: appName,
   database: appName,
-  password: ""
+  password: appName
 };
 exports.postgres = _.clone(exports.db);
 exports.postgres.user = "postgres";
