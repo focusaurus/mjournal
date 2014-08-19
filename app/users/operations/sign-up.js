@@ -37,11 +37,11 @@ function run(options, callback) {
       return;
     }
     user.bcryptedPassword = bcryptedPassword;
-    var dbOp = db.insert("users", user).returning("id");
+    var dbOp = db("users").insert(user).returning("id");
     log.debug({
       user: user
     }, "creating user");
-    dbOp.execute(function(error, result) {
+    dbOp.exec(function(error, rows) {
       if (error && /unique/i.test(error.message)) {
         var upError = new errors.Conflict("That email is already registered");
         callback(upError);
@@ -51,7 +51,7 @@ function run(options, callback) {
         callback(error);
         return;
       }
-      user.id = result.rows[0].id;
+      user.id = rows[0];
       delete user.bcryptedPassword;
       callback(error, user);
     });

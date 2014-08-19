@@ -34,14 +34,14 @@ function findAnchor(run, next) {
     id: anchorId,
     userId: run.options.user.id
   };
-  var anchorQuery = db.select("entries", ["created"])
+  var anchorQuery = db("entries").select(["created"])
     .where(where).limit(1);
-  anchorQuery.execute(function (error, result) {
+  anchorQuery.exec(function (error, rows) {
     if (error) {
-      run.options.callback(error);
+      next(error);
       return;
     }
-    run.anchor = result.rows[0];
+    run.anchor = rows[0];
     next();
   });
 }
@@ -51,30 +51,29 @@ function initQuery(run, next) {
   //but we want the page ordered with newest at the end
   //so we sort descending in the database and then
   //reverse that in memory
-  run.dbOp = db.select("entries", clientFields);
+  run.dbOp = db("entries").select(clientFields);
   run.reverseResults = true;
-  var order = "created descending";
+  var direction = "descending";
   if (run.anchor) {
-    var anchorWhere = {created: {}};
     if (run.options.before) {
-      anchorWhere.created.lt = run.anchor.created;
+      run.dbOp.where("created", "<", run.anchor.created);
     } else {
-      anchorWhere.created.gt = run.anchor.created;
-      order = "created ascending";
+      run.dbOp.where("created", ">", run.anchor.created);
+      direction = "ascending";
       run.reverseResults = false;
     }
-    run.dbOp.where(anchorWhere);
   }
-  run.dbOp.order(order);
+  run.dbOp.orderBy("created", direction);
   next();
 }
 
 function whereText(run, next) {
   var textSearch = run.options.textSearch && run.options.textSearch.trim();
   if (textSearch) {
-    run.dbOp.where(
+    run.dbOp.whereRaw(
       /*eslint quotes:0*/
-      db.text('"entries"."textSearch" @@ to_tsquery($0)', [textSearch])
+      '"entries"."textSearch" @@ to_tsquery(?)',
+      [textSearch]
     );
   }
   next();
@@ -84,15 +83,14 @@ function execute(run, next) {
   log.debug({
     sql: run.dbOp.toString()
   }, "view entries");
-  run.dbOp.execute(function(error, result) {
+  run.dbOp.exec(function(error, rows) {
     if (error) {
       log.error({
         err: error
       }, "error loading entries");
-      run.options.callback(error);
+      next(error);
       return;
     }
-    var rows = result.rows;
     if (run.reverseResults) {
       rows = rows.reverse();
     }

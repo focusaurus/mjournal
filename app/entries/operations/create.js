@@ -1,7 +1,18 @@
-var _ = require("lodash");
+var async = require("async");
 var db = require("app/db");
 var log = require("app/log");
 var presentEntry = require("../presentEntry");
+var clientFields = require("../clientFields");
+
+function insert(row, callback) {
+  db("entries").insert(row).returning("id").exec(function (error, ids) {
+    callback(error, ids && ids[0]);
+  });
+}
+
+function select(id, callback) {
+  db("entries").select(clientFields).where("id", id).exec(callback);
+}
 
 function run(options, callback) {
   if (!options.user) {
@@ -20,10 +31,8 @@ function run(options, callback) {
     body: options.body,
     tags: tags.join(" ")
   };
-  var returning = ["id", "created", "updated"].concat(_.keys(row));
   log.debug(row, "creating new entry");
-  var dbOp = db.insert("entries", row).returning(returning);
-  dbOp.execute(function(error, result) {
+  async.waterfall([insert.bind(null, row), select], function (error, rows) {
     if (error) {
       log.error({
         err: error
@@ -31,7 +40,7 @@ function run(options, callback) {
       callback(error);
       return;
     }
-    callback(null, presentEntry(result.rows[0]));
+    callback(null, presentEntry(rows[0]));
   });
 }
 

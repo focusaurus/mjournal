@@ -5,7 +5,8 @@ var log = require("app/log");
 var opMW = require("app/operations/middleware");
 
 function initDbOp(run, next) {
-  run.dbOp = db.select("entries", ["tags"]).distinct(true);
+  run.dbOp = db("entries").distinct("tags").select()
+    .where("tags", "!=", "");
   next();
 }
 
@@ -13,15 +14,15 @@ function execute(run, next) {
   log.debug({
     sql: run.dbOp.toString()
   }, "viewTags");
-  run.dbOp.execute(function(error, result) {
+  run.dbOp.exec(function(error, rows) {
     if (error) {
       log.error({
         err: error
       }, "error in viewTags query");
-      run.options.callback(error);
+      next(error);
       return;
     }
-    var set = _.map(result.rows, function (row) {return row.tags.split(" ");});
+    var set = _.map(rows, function (row) {return row.tags.split(" ");});
     set = _.flatten(set);
     set = _.uniq(set);
     run.result = set.map(function (tag) {
@@ -31,18 +32,12 @@ function execute(run, next) {
   });
 }
 
-function whereTags(run, next) {
-  run.dbOp.where(run.dbOp.c("tags").ne(""));
-  next();
-}
-
 function view(options, callback) {
   var run = {options: options};
   var stack = [
-    initDbOp,
     opMW.requireUser,
+    initDbOp,
     opMW.whereUser,
-    whereTags,
     execute
   ];
   async.applyEachSeries(stack, run, function (error) {

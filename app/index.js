@@ -32,7 +32,7 @@ function appCSS(req, res, next) {
 
 var PGStore = require("connect-pg-simple")(session);
 var store = new PGStore({
-  conString: config.dbUrl,
+  conString: config.db,
   pg: pg,
   secret: config.sessionSecret
 });

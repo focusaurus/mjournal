@@ -1,14 +1,15 @@
 var _ = require("lodash");
 var async = require("async");
 var config = require("config3");
-var crypto = require("crypto");
+//eslint bug thinks "crypto" is a global from the browser
+//https://github.com/eslint/eslint/issues/1059
+var crypt = require("crypto");
 var fs = require("fs");
 var knex = require("knex");
 var log = require("app/log");
 var path = require("path");
 var util = require("util");
 
-var dbConfig = _.clone(config.postgres);
 var db = knex({client: "pg", connection: config.db});
 var postgres = knex({client: "pg", connection: config.postgres});
 
@@ -45,8 +46,8 @@ function runFile(ddlPath, callback) {
 }
 
 function ensureDatabase(callback) {
-  var passwordMd5Hex = crypto.
-    createHash("md5").update(config.db.password).digest("hex");
+  var passwordMd5Hex = crypt.createHash("md5")
+    .update(config.db.password).digest("hex");
   var createRole = util.format(
     "create role %s login encrypted password '%s'",
     config.db.user,

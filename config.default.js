@@ -21,9 +21,6 @@ exports.db = {
 exports.postgres = _.clone(exports.db);
 exports.postgres.user = "postgres";
 exports.postgres.database = "postgres";
-exports.dbUrl = process.env.DB_PORT ||
-  "postgres://" + appName + "@localhost/" + appName;
-exports.dbUrl = exports.dbUrl.replace("tcp://", "postgres://postgres@") + "/" + appName;
 exports.logStream = process.stdout;
 exports.port = 9090;
 exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";

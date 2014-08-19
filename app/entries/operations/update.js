@@ -8,16 +8,16 @@ var opMW = require("app/operations/middleware");
 var presentEntry = require("../presentEntry");
 
 function select(where, run, next) {
-  db.select("entries", clientFields)
+  db("entries").select(clientFields)
     .where(where)
-    .execute(function(error, result) {
-      run.result = presentEntry(result.rows && result.rows[0]);
+    .exec(function(error, rows) {
+      run.result = presentEntry(rows && rows[0]);
       next(error);
   });
 }
 
 function initDbOp(run, next) {
-  run.dbOp = db.update("entries");
+  run.dbOp = db("entries");
   return next();
 }
 
@@ -36,7 +36,7 @@ function execute(run, next) {
   var where = {
     id: run.options.id
   };
-  run.dbOp.set(set).where(where).execute(function(error, result) {
+  run.dbOp.update(set).where(where).exec(function(error, rowCount) {
     if (error) {
       log.info({
         err: error
@@ -44,7 +44,7 @@ function execute(run, next) {
       next(error);
       return;
     }
-    if (result.rowCount < 1) {
+    if (rowCount < 1) {
       log.info(
         {options: run.options},
         "zero rowCount on entry update (HAX0RZ?)"
@@ -52,7 +52,7 @@ function execute(run, next) {
       next(new errors.NotFound("No entry with id " + run.options.id));
       return;
     }
-    log.debug(result, "entries/update");
+    log.debug(set, "entries/update");
     select(where, run,  next);
   });
 }

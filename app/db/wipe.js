@@ -5,22 +5,24 @@ if (process.env.NODE_ENV !== "test") {
   /*eslint no-process-exit:0*/
   process.exit(10);
 }
-var config = require("config3");
-config.logStream = process.stdout;
+// var config = require("config3");
+// config.logStream = process.stdout;
 
 var async = require("async");
 var log = require("app/log");
 var path = require("path");
-var setup = require("app/db/setup");
+//eslint bug thinks "setup" is a global from mocha
+//https://github.com/eslint/eslint/issues/1059
+var setup2 = require("./setup");
 
 var WIPE_DDL = path.join(__dirname, "wipe.ddl");
 
 log.info("wiping test database");
 async.series([
-  setup.ensureDatabase,
-  setup.runFile.bind(null, WIPE_DDL),
-  setup.ensureSchema
-], function (error, result) {
+  setup2.ensureDatabase,
+  setup2.runFile.bind(null, WIPE_DDL),
+  setup2.ensureSchema
+], function (error) {
   if (error) {
     log.error(error, "Error wiping test database");
     process.exit(20);

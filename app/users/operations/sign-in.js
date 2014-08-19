@@ -21,18 +21,18 @@ function run(options, callback) {
     return;
   }
   user.email = user.email.toLowerCase().trim();
-  var dbOp = db.select("users", ["id", "bcryptedPassword", "email"])
+  var dbOp = db("users").select(["id", "bcryptedPassword", "email"])
     .where({email: user.email}).limit(1);
-  dbOp.execute(function(error, result) {
+  dbOp.exec(function(error, rows) {
     if (error) {
       callback(error);
       return;
     }
-    if (!result.rowCount) {
+    var row = rows[0];
+    if (!row) {
       denied();
       return;
     }
-    var row = result.rows[0];
     bcrypt.compare(
         options.password, row.bcryptedPassword, function(error, match) {
       if (error) {

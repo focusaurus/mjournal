@@ -9,9 +9,9 @@ describe("app/operations/middleware.paginated", function() {
       dbOp: db.select("example", ["id"])
     };
     var next = function() {
-      var sql = run.dbOp.compile()[0].toLowerCase();
-      assert(sql.indexOf("limit ") >= 0);
-      assert(sql.indexOf("offset ") < 0);
+      var sql = run.dbOp.toString().toLowerCase();
+      assert(sql.indexOf("limit '50'") >= 0);
+      assert(sql.indexOf("offset '0'") >= 0);
       done();
     };
     paginated.call(null, run, next);
@@ -24,7 +24,7 @@ describe("app/operations/middleware.paginated", function() {
       }
     };
     var next = function() {
-      var sql = run.dbOp.compile()[0].toLowerCase();
+      var sql = run.dbOp.toString().toLowerCase();
       assert(sql.indexOf("limit ") >= 0);
       assert(sql.indexOf("offset ") >= 0);
       done();

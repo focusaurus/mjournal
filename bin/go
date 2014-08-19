@@ -47,7 +47,7 @@ doc "* express: start the express server"
 task::express() {
   autoinstall_npm_dependencies
   autoinstall_bower_dependencies
-  node-dev --debug=9091 app/server | tee -a logs/mjournal.log | bistre
+  node-dev --debug=9091 app/server | tee -a logs/mjournal.log
 }
 
 doc "  * aliased as 'start' command as well"
@@ -59,7 +59,7 @@ doc "* test: run all the tests (mocha)"
 task::test() {
   set -e
   export NODE_ENV=test
-  args="--slow 200 --reporter spec --colors --recursive"
+  args="--slow 200 --reporter spec --colors --recursive --check-leaks"
   if [[ "${1}" == "--debug" ]]; then
     args="${args} --timeout 0 --debug-brk=9093"
     shift
@@ -68,9 +68,6 @@ task::test() {
   if [[ -z "${tests}" ]]; then
     tests=$(find app -type f -name '*.mocha.js' | xargs)
   fi
-  # ssh dbs psql --username=mjournal --dbname=mjournal-test \
-  #   < app/db/createSchema.sql 2>&1 \
-  #   | egrep -v '(NOTICE|^DROP|^ALTER|^CREATE)' || true
   echo -n "wiping test database…"
   app/db/wipe.js
   echo ✓
