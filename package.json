@@ -6,7 +6,7 @@
   "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
   "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
   "engines": {
-    "node": "0.10.30"
+    "node": "0.10.31"
   },
   "scripts": {
     "start": "./bin/go express",

@@ -95,6 +95,21 @@ task::fig() {
   fig "$@"
 }
 
+dcip() {
+  container=$(docker ps | egrep "\b$1\s*\$" | awk '{print $1}')
+  docker inspect -f "{{ .NetworkSettings.IPAddress }}" "${container}"
+}
+
+doc "* figlog: tail the log file of the app in the fig container"
+task::figlog() {
+  ssh \
+    -i deploy/docker_insecure.key \
+    -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no \
+    root@$(dcip mjournal_app_1) \
+    tail -f /var/log/app.log
+}
+
 doc "* clean: delete the build directory"
 task::clean() {
   rm Dockerfile fig.yml webapp.conf
