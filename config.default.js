@@ -12,7 +12,6 @@ exports.nodeVersion = pack.engines.node;
 var figHost = process.env.MJOURNAL_DB_1_PORT_5432_TCP_ADDR;
 var figPort = process.env.MJOURNAL_DB_1_PORT_5432_TCP_PORT;
 exports.db = {
-  protocol: "postgres",
   host: figHost || "localhost",
   port: figPort || 5432,
   user: appName,
@@ -21,6 +20,7 @@ exports.db = {
 };
 exports.postgres = _.clone(exports.db);
 exports.postgres.user = "postgres";
+exports.postgres.password = "postgres";
 exports.postgres.database = "postgres";
 exports.logStream = process.stdout;
 exports.port = 9090;
@@ -34,6 +34,7 @@ switch (process.env.NODE_ENV) {
     TEST = true;
     exports.db.database = appName + "test";
     exports.db.user = appName + "test";
+    exports.db.password = appName + "test";
     exports.logStream = devNull();
     break;
   default:

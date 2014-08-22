@@ -3,11 +3,13 @@ var _ = require("lodash");
 var app = require("app");
 var config = require("config3");
 var log = require("app/log");
-var setup = require("app/db/setup");
+//eslint bug thinks "setup" is a global from mocha
+//https://github.com/eslint/eslint/issues/1059
+var setup2 = require("app/db/setup");
 
 process.on("uncaughtException", function (error) {
   log.error(error, "uncaught exception. Process will exit.");
-  setTimeout(process.exit.bind(null, 66), 2000);
+  setTimeout(process.exit.bind(null, 66), 1000);
 });
 
 log.debug(
@@ -18,10 +20,10 @@ log.debug(
   "%s server process starting", config.pack.name
 );
 
-setup.init(function (error, result) {
+setup2.init(function (error) {
   if (error) {
-    log.error(error, "Error ensuring database is ready");
-    return;
+    log.error(error, "Error ensuring database is ready. Process will exit.");
+    setTimeout(process.exit.bind(null, 20), 1000);
   }
   app.listen(config.port, function(error) {
     if (error) {

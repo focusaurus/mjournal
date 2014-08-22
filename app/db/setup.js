@@ -12,9 +12,16 @@ var util = require("util");
 
 var db = knex({client: "pg", connection: config.db});
 var postgres = knex({client: "pg", connection: config.postgres});
+var ALREADY = [
+  "3D000",
+  "42710", //role already exists
+  "42P04", //database already exists
+  "42P07", //table already exists
+  "42P16" //re-adding an existing primary key constraint
+];
 
 function alreadyExists(error) {
-  return error && ["3D000", "42710", "42P04", "42P07"].indexOf(error.code) >= 0;
+  return error && _.include(ALREADY, error.code);
 }
 
 function runDdl(onDb, ddl, callback) {
@@ -46,8 +53,9 @@ function runFile(ddlPath, callback) {
 }
 
 function ensureDatabase(callback) {
-  var passwordMd5Hex = crypt.createHash("md5")
-    .update(config.db.password).digest("hex");
+  //http://stackoverflow.com/a/17431573/266795
+  var passwordMd5Hex = "md5" + crypt.createHash("md5")
+    .update(config.db.password + config.db.user).digest("hex");
   var createRole = util.format(
     "create role %s login encrypted password '%s'",
     config.db.user,
@@ -58,7 +66,18 @@ function ensureDatabase(callback) {
   async.eachSeries(
     [createRole, createDatabase],
     runDdl.bind(null, postgres),
-    callback
+    function (error, result) {
+      if (error && error.code === "28P01") {
+        log.debug(error, "Admin authentication to DB failed. " +
+          "Continuing with app user assuming DB already exists.");
+        //authentication failed
+        //presume role & database have already been setup
+        //move on to schema
+        callback();
+        return;
+      }
+      callback(error, result);
+    }
   );
 }
 
@@ -71,7 +90,13 @@ function ensureSchema(callback) {
 }
 
 function init(callback) {
-  async.series([ensureDatabase, ensureSchema], callback);
+  async.series([ensureDatabase, ensureSchema], function (error, result) {
+    if (error && error.code === "28P01") {
+      //bad credentials
+      log.error(error, "Database credentials are incorrect!");
+    }
+    callback(error, result);
+  });
 }
 
 module.exports = {
