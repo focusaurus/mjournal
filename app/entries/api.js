@@ -29,8 +29,6 @@ function viewTags(req, res) {
 }
 
 var app = express();
-app.set("view engine", "jade");
-app.set("views", __dirname);
 app.route("/")
   .get(needUser, viewEntries)
   .post(needUser, json, createEntry);
