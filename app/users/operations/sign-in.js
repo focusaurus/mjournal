@@ -2,7 +2,7 @@ var _ = require("lodash");
 var bcrypt = require("bcrypt");
 var db = require("app/db");
 var log = require("app/log");
-var errors = require("app/errors");
+var errors = require("httperrors");
 
 function run(options, callback) {
   var defaultError = new errors.Forbidden(

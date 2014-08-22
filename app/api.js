@@ -1,7 +1,14 @@
+var log = require("app/log");
+
 function sendResult(res) {
   return function(error, result) {
     if (error) {
-      res.status(500);
+      if (error.status >= 500) {
+        log.error(error, "API operation server error");
+      } else {
+        log.debug(error, "API client error");
+      }
+      res.status(error.status || 500);
       res.send();
       return;
     }

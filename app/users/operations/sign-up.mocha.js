@@ -25,8 +25,8 @@ describe("users/operations/sign-up", function() {
       expect(error).toBeNull();
       signUp(newUser, function(error) {
         expect(error).toBeTruthy();
-        expect(error).toHaveProperty("code");
-        expect(error.code).toBe(409);
+        expect(error).toHaveProperty("status");
+        expect(error.status).toBe(409);
         done();
       });
     });
@@ -38,8 +38,8 @@ describe("users/operations/sign-up", function() {
     };
     signUp(newUser, function(error) {
       expect(error).toBeTruthy();
-      expect(error).toHaveProperty("code");
-      expect(error.code).toBe(400);
+      expect(error).toHaveProperty("status");
+      expect(error.status).toBe(400);
       done();
     });
   });

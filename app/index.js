@@ -1,6 +1,7 @@
 var bmw = require("browserify-middleware");
 var config = require("config3");
 var cookieParser = require("cookie-parser");
+var errorHandler = require("app/middleware/errorHandler");
 var express = require("express");
 var log = require("app/log");
 var paths = require("app/paths");
@@ -55,5 +56,5 @@ app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
 app.use(require("app/users"));
 app.use("/entries", require("app/entries"));
-
+app.use(errorHandler);
 module.exports = app;

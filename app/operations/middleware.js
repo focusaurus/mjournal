@@ -1,4 +1,4 @@
-var errors = require("app/errors");
+var errors = require("httperrors");
 var joi = require("joi");
 
 var PAGE_SIZE = 50;

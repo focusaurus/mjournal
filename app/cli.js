@@ -37,9 +37,9 @@ function exit(error) {
   var code, message;
   if (error) {
     message = error.message || error.name;
-    if (error.code !== null) {
-      message = "" + message + " (" + error.code + ")";
-      code = error.code / 10;
+    if (error.status !== null) {
+      message = "" + message + " (" + error.status + ")";
+      code = error.status / 10;
     }
     console.error(message);
     process.exit(code);

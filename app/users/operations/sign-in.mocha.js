@@ -26,8 +26,8 @@ describe("users/operations/sign-in", function() {
       password: "incorrect"
     }, function(error) {
       expect(error).toBeTruthy();
-      expect(error).toHaveProperty("code");
-      expect(error.code).toBe(403);
+      expect(error).toHaveProperty("status");
+      expect(error.status).toBe(403);
       done();
     });
   });

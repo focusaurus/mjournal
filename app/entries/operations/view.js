@@ -1,6 +1,7 @@
 var async = require("async");
 var clientFields = require("../clientFields");
 var db = require("app/db");
+var errors = require("httperrors");
 var joi = require("joi");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
@@ -9,7 +10,7 @@ var presentEntry = require("../presentEntry");
 var OPTIONS_SCHEMA = joi.object().keys({
   after: joi.number().integer().min(1),
   before: joi.number().integer().min(1),
-  textSearch: joi.string(),
+  textSearch: joi.string().allow(""),
   user: joi.object(),
   page: joi.number().integer().min(1)
 });
@@ -17,7 +18,7 @@ var OPTIONS_SCHEMA = joi.object().keys({
 function findAnchor(run, next) {
   var valid = OPTIONS_SCHEMA.validate(run.options);
   if (valid.error) {
-    next(valid.error);
+    next(new errors.BadRequest(valid.error.message));
     return;
   }
   run.options = valid.value;

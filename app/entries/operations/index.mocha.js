@@ -133,8 +133,8 @@ describe("entries/operations/create+update+view+viewTags", function() {
     };
     ops.update(options, function(error, outEntry) {
       expect(error).not.toBeNull();
-      expect(error).toHaveProperty("code");
-      expect(error.code).toBe(404);
+      expect(error).toHaveProperty("status");
+      expect(error.status).toBe(404);
       expect(outEntry).toBeUndefined();
       done();
     });

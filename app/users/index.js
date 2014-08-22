@@ -8,7 +8,7 @@ var signUpOp = require("app/users/operations/sign-up");
 function respond(res) {
   return function _respond(error, user) {
     if (error) {
-      res.status(error.code || 403);
+      res.status(error.status || 403);
       res.send(error);
       return;
     }
