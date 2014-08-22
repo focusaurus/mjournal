@@ -1,4 +1,3 @@
-// var Stack = require("app/operations/Stack");
 var async = require("async");
 var clientFields = require("../clientFields");
 var db = require("app/db");
@@ -53,13 +52,18 @@ function initQuery(run, next) {
   //reverse that in memory
   run.dbOp = db("entries").select(clientFields);
   run.reverseResults = true;
-  var direction = "descending";
+  var direction = "desc";
   if (run.anchor) {
     if (run.options.before) {
       run.dbOp.where("created", "<", run.anchor.created);
     } else {
-      run.dbOp.where("created", ">", run.anchor.created);
-      direction = "ascending";
+      //We need to round up here because our JS dates are millisecond
+      //resolution, but in postgres is nanosecond resolution,
+      //which means pagination can show a entry on 2 pages
+      //because it can be "created after itself"
+      var roundUp = new Date(run.anchor.created.valueOf() + 1);
+      run.dbOp.where("created", ">", roundUp);
+      direction = "asc";
       run.reverseResults = false;
     }
   }
@@ -98,16 +102,6 @@ function execute(run, next) {
     next();
   });
 }
-
-// var stack = new Stack(
-//   opMW.requireUser,
-//   findAnchor,
-//   initQuery,
-//   opMW.whereUser,
-//   whereText,
-//   opMW.paginated,
-//   execute
-// );
 
 function runStack(options, callback) {
   var run = {options: options};
