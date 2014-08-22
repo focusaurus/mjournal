@@ -2,14 +2,14 @@ var expect = require("expectacle");
 var signUp = require("app/users/operations/sign-up");
 var testUtils = require("app/testUtils");
 
-describe("POST /users/sign-in", function() {
+describe("POST /api/users/sign-in", function() {
   [
     {},
     {email: "test@example.com"},
     {password: "password"}
   ].forEach(function(user) {
     it("should 400 incomplete credentials", function(done) {
-      testUtils.post("/users/sign-in")
+      testUtils.post("/api/users/sign-in")
         .send(user)
         .expect(400)
         .end(done);
@@ -23,7 +23,7 @@ describe("POST /users/sign-in", function() {
     };
     signUp(newUser, function(error) {
       expect(error).toBeNull();
-      testUtils.post("/users/sign-in")
+      testUtils.post("/api/users/sign-in")
         .send(newUser)
         .expect(200)
         .end(done);
@@ -31,14 +31,14 @@ describe("POST /users/sign-in", function() {
   });
 });
 
-describe("POST /users/sign-up", function() {
+describe("POST /api/users/sign-up", function() {
   [
    {},
    {email: "test@example.com"},
    {password: "password"}
   ].forEach(function(user) {
     it("should 400 incomplete credentials", function(done) {
-      testUtils.post("/users/sign-up")
+      testUtils.post("/api/users/sign-up")
         .send(user)
         .expect(400)
         .end(done);
@@ -52,7 +52,7 @@ describe("POST /users/sign-up", function() {
     };
     signUp(newUser, function(error) {
       expect(error).toBeNull();
-      testUtils.post("/users/sign-up")
+      testUtils.post("/api/users/sign-up")
         .send(newUser)
         .expect(409)
         .end(done);

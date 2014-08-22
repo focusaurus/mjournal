@@ -1,5 +1,5 @@
 extends layout
 block body
   div(ng-app="mjournal" ng-controller="entries")
-    a.sign-out(href="/users/sign-out" target="_self") Sign Out
+    a.sign-out(href="/api/users/sign-out" target="_self") Sign Out
     include entries/entries.jade

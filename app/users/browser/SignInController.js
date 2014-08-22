@@ -5,7 +5,7 @@ function signInController($scope, $http, $window) {
     event.preventDefault();
     delete $scope.error;
     var user = _.pick($scope, "email", "password");
-    var url = register ? "/users/sign-up" : "/users/sign-in";
+    var url = "/api/users/" + (register ? "sign-up" : "sign-in");
     $http.post(url, user).then(function () {
       $window.location.reload();
     }).catch(function(response) {

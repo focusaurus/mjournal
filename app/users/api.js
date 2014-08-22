@@ -39,17 +39,14 @@ function signOut(req, res) {
   req.session.destroy(function (error) {
     if (error) {
       log.error(error, "session.destroy failed");
-      return;
     }
     res.redirect("/");
   });
 }
 
 var app = express();
-app.set("view engine", "jade");
-app.set("views", __dirname);
-app.post("/users/sign-in", json, signIn);
-app.post("/users/sign-up", json, signUp);
-app.get("/users/sign-out", signOut);
+app.post("/sign-in", json, signIn);
+app.post("/sign-up", json, signUp);
+app.get("/sign-out", signOut);
 
 module.exports = app;
