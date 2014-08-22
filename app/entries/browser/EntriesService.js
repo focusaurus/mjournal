@@ -1,5 +1,5 @@
 function entriesFactory($resource) {
-  return $resource("/entries/:id", {
+  return $resource("/api/entries/:id", {
     id: "@id"
   }, {
     get: {

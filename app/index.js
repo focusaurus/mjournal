@@ -55,6 +55,6 @@ app.get("/", home);
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
 app.use(require("app/users"));
-app.use("/entries", require("app/entries"));
+app.use("/api/entries", require("app/entries/api"));
 app.use(errorHandler);
 module.exports = app;
