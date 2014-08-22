@@ -49,35 +49,46 @@ function exit(error) {
 
 function signInMW(stack) {
   stack.command.option("-u, --user <email>");
-  return stack.use(function(next) {
-    var email, options;
-    options = _.last(arguments);
-    email = options.user || process.env.MJ_USER;
-    if (email) {
-      promptly.password(
-          "password for " + email + ": ", function(error, password) {
-        signInOp({
-          email: email,
-          password: password
-        }, function(error, user) {
-          if (error) {
-            exit(error);
-          }
-          options.user = user;
-          next();
-        });
-      });
-    } else {
+  stack.use(function(callback) {
+    var options = _.last(arguments);
+    var signInOptions = {
+      email: options.user || process.env.MJ_USER,
+      password: options.password || process.env.MJ_PASSWORD
+    };
+    if (!signInOptions.email) {
       exit({
         code: 403,
         message: "Please specify a user with --user <email>"
       });
+      return;
     }
+    function getUser() {
+      signInOp(signInOptions, function(error, user) {
+        if (error) {
+          exit(error);
+        }
+        options.user = user;
+        callback();
+      });
+    }
+    if (signInOptions.password) {
+      getUser();
+      return;
+    }
+    promptly.password(
+      "password for " + signInOptions.email + ": ", function(error, password) {
+        if (error) {
+          callback(error);
+          return;
+        }
+        signInOptions.password = password;
+        getUser();
+      });
   });
 }
 
 function paginate(stack) {
-  return stack.command.option("-p, --page <page>");
+  stack.command.option("-p, --page <page>");
 }
 
 module.exports = {

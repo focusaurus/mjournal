@@ -5,13 +5,14 @@ var cli = require("app/cli");
 var readline = require("readline");
 var entryOps = require("app/entries/operations");
 var program = require("commander");
+/*eslint no-console:0*/
 
 function bodyOption(stack) {
   stack.command.option(
     "-b, --body <body>",
     "Content for the journal entry. Pass 'stdin' to provide on stdin"
   );
-  return stack.use(function(next, options) {
+  stack.use(function(next, options) {
     var input, lines;
     if (options.body === "stdin") {
       input = readline.createInterface({
@@ -26,9 +27,9 @@ function bodyOption(stack) {
         options.body = lines.join("\n");
         return next();
       });
-      return console.log("Type body then ctrl-d when done");
+      console.log("Type body then ctrl-d when done");
     } else {
-      return next();
+      next();
     }
   });
 }

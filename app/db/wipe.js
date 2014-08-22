@@ -5,8 +5,9 @@ if (process.env.NODE_ENV !== "test") {
   /*eslint no-process-exit:0*/
   process.exit(10);
 }
-var config = require("config3");
-config.logStream = process.stdout;
+// enable these lines to see logging during the wipe
+// var config = require("config3");
+// config.logStream = process.stdout;
 
 var async = require("async");
 var log = require("app/log");
