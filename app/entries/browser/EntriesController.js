@@ -70,6 +70,10 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.get();
     }
   };
+  $scope.clearTextSearch = function clearTextSearch() {
+    $scope.textSearch = null;
+    $scope.get();
+  };
   $scope.updateTags = function updateTags(entry) {
     var forUpdate = _.pick(entry, "id");
     forUpdate.tags = entry.tags.map(function (tag) {

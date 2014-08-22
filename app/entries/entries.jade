@@ -13,6 +13,9 @@ div.toolbar
     type="text"
     placeholder=" search entries..."
     ng-model="textSearch" ng-keypress="searchKeypress($event)")
+  button.clearTextSearch(
+    ng-class="{hidden: !textSearch}"
+    ng-click="clearTextSearch()") clear
 div.notebook
   div.page
     div.entries
