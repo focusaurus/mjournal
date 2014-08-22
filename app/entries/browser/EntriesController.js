@@ -4,10 +4,8 @@ var ENTER = 13;
 var PAGE_SIZE = 50;
 
 function EntriesController($scope, $q, $location, Entries) {
-  $scope.get = function get(params) {
-    params = params || {};
-    params.textSearch = $scope.textSearch;
-
+  $scope.get = function get() {
+    var params = $location.search();
     Entries.get(params, function(entries) {
       $scope.disableNext = $scope.disablePrevious = false;
       $scope.entries = entries;
@@ -25,15 +23,17 @@ function EntriesController($scope, $q, $location, Entries) {
   $scope.previous = function previous() {
     var topEntry = $scope.entries[0];
     var params = {before: topEntry && topEntry.id};
-    $location.search(params);
-    $scope.get(params);
+    $location.search("before", params.before);
+    $location.search("after", null);
+    $scope.get();
   };
 
   $scope.next = function next() {
     var bottomEntry = _.last($scope.entries);
     var params = {after: bottomEntry && bottomEntry.id};
-    $location.search(params);
-    $scope.get(params);
+    $location.search("after", params.after);
+    $location.search("before", null);
+    $scope.get();
   };
 
   $scope.update = function update(entry) {
@@ -67,11 +67,17 @@ function EntriesController($scope, $q, $location, Entries) {
   };
   $scope.searchKeypress = function searchKeypress(event) {
     if (event.which === ENTER) {
+      $location.search("before", null);
+      $location.search("after", null);
+      $location.search("textSearch", $scope.textSearch);
       $scope.get();
     }
   };
   $scope.clearTextSearch = function clearTextSearch() {
-    $scope.textSearch = null;
+    $scope.textSearch = "";
+    $location.search("before", null);
+    $location.search("after", null);
+    $location.search("textSearch", null);
     $scope.get();
   };
   $scope.updateTags = function updateTags(entry) {
@@ -91,7 +97,8 @@ function EntriesController($scope, $q, $location, Entries) {
     }
   };
   $scope.entries = [];
-  $scope.get($location.search());
+  $scope.textSearch = $location.search().textSearch || "";
+  $scope.get();
   $scope.tags = Entries.get({id: "tags"});
 }
 
