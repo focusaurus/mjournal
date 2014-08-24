@@ -96,6 +96,18 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.tags.push(newTag);
     }
   };
+  $scope.clickTag = function clickTag(event) {
+    var target = event.target;
+    var isTagSpan = target.tagName === "SPAN" && target.childNodes.length === 1;
+    if (isTagSpan) {
+      event.preventDefault();
+      $scope.textSearch = target.innerText;
+      $location.search("textSearch", target.innerText);
+      $location.search("before", null);
+      $location.search("after", null);
+      $scope.get();
+    }
+  };
   $scope.entries = [];
   $scope.textSearch = $location.search().textSearch || "";
   $scope.get();

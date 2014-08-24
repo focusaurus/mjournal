@@ -1,11 +1,11 @@
 div.toolbar
   button.previous(
-    ng-click="previous()",
+    ng-click="previous()"
     ng-disabled="disablePrevious")
     span.fullText Previous Entries
     span.smallText &larr;
   button.next(
-    ng-click="next()",
+    ng-click="next()"
     ng-disabled="disableNext")
     span.fullText Next Entries
     span.smallText &rarr;
@@ -26,6 +26,7 @@ div.notebook
           ng-model="entry.tags"
           on-tag-removed="updateTags(entry)"
           on-tag-added="updateTags(entry)"
+          ng-click="clickTag($event)"
         )
           auto-complete(source="autoCompleteTags($query)" min-length="2")
   label.new Type a new entry below. SHIFT-ENTER to save.
@@ -34,5 +35,6 @@ div.notebook
     ng-model="newEntryTags"
     replace-spaces-with-dashes="false"
     ng-keyup="create($event)"
+    ng-click="clickTag($event)"
   )
     auto-complete(source="autoCompleteTags($query)" min-length="2")
