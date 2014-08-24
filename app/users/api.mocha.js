@@ -1,5 +1,5 @@
 var expect = require("expectacle");
-var signUp = require("app/users/operations/sign-up");
+var signUp = require("app/users/operations/signUp");
 var testUtils = require("app/testUtils");
 
 describe("POST /api/users/sign-in", function() {
@@ -18,7 +18,7 @@ describe("POST /api/users/sign-in", function() {
 
   it("should 200 a valid user", function(done) {
     var newUser = {
-      email: "users/index/sign-up@example.com",
+      email: "users/api/signUp@example.com",
       password: "password"
     };
     signUp(newUser, function(error) {
@@ -47,7 +47,7 @@ describe("POST /api/users/sign-up", function() {
 
   it("should 409 a re-register", function(done) {
     var newUser = {
-      email: "users/index/sign-up/re-register@example.com",
+      email: "users/api/signUp/re-register@example.com",
       password: "password"
     };
     signUp(newUser, function(error) {

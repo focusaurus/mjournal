@@ -1,6 +1,4 @@
-module.exports = {
-  create: require("./create"),
-  update: require("./update"),
-  view: require("./view"),
-  viewTags: require("./viewTags")
-};
+exports.create = require("./create");
+exports.update = require("./update");
+exports.view = require("./view");
+exports.viewTags = require("./viewTags");

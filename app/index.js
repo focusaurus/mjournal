@@ -1,4 +1,5 @@
 var bmw = require("browserify-middleware");
+var byToken = require("./users/byToken");
 var config = require("config3");
 var cookieParser = require("cookie-parser");
 var errorHandler = require("app/middleware/errorHandler");
@@ -51,10 +52,11 @@ app.use(function(req, res, next) {
   res.locals.user = req.user = req.session.user;
   next();
 });
+app.use(byToken);
 app.get("/", home);
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
-app.use("/api/users", require("app/users/api"));
-app.use("/api/entries", require("app/entries/api"));
+app.use("/api/users", require("./users/api"));
+app.use("/api/entries", require("./entries/api"));
 app.use(errorHandler);
 module.exports = app;

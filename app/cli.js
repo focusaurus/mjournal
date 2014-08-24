@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var signInOp = require("app/users/operations/sign-in");
+var signInOp = require("app/users/operations/signIn");
 var promptly = require("promptly");
 
 function Stack(command) {

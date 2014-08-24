@@ -37,6 +37,7 @@ function run(options, callback) {
       return;
     }
     user.bcryptedPassword = bcryptedPassword;
+    user.email = user.email.toLowerCase();
     var dbOp = db("users").insert(user).returning("id");
     log.debug({
       user: user

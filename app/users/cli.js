@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 var cli = require("app/cli");
 var program = require("commander");
-var signUpOp = require("app/users/operations/sign-up");
+var operations = require("./operations");
 var promptly = require("promptly");
 
 function signUp(email) {
   promptly.password("password for " + email + ": ", function(error, password) {
     console.log("registering " + email);
-    signUpOp({
+    operations.signUp({
       email: email,
       password: password
     }, function(error, user) {
@@ -21,7 +21,23 @@ function signUp(email) {
   });
 }
 
+function token(next, options) {
+  operations.createToken(options, function(error, token) {
+    if (error) {
+      cli.exit(error);
+    }
+    console.log(token);
+    process.exit();
+  });
+}
+
 program.description("operate on user records");
 program.command("sign-up <email>")
   .description("register a new user account").action(signUp);
+var tokenCommand = program.command("create-token")
+  .description("create an authentication token for CLI/API access");
+var tokenStack = new cli.Stack(tokenCommand);
+cli.signInMW(tokenStack);
+tokenStack.use(token);
+
 program.parse(process.argv);

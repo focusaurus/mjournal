@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var signUp = require("app/users/operations/sign-up");
+var signUp = require("app/users/operations/signUp");
 var ops = require("app/entries/operations");
 var expect = require("expectacle");
 

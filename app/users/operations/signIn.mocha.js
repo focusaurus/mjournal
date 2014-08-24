@@ -1,10 +1,10 @@
 var expect = require("expectacle");
-var signIn = require("app/users/operations/sign-in");
-var signUp = require("app/users/operations/sign-up");
+var signIn = require("app/users/operations/signIn");
+var signUp = require("app/users/operations/signUp");
 
-describe("users/operations/sign-in", function() {
+describe("users/operations/signIn", function() {
   var newUser = {
-    email: "test/users/operations/sign-in@example.com",
+    email: "test/users/operations/signIn@example.com",
     password: "password"
   };
   before(function(done) {
@@ -16,7 +16,7 @@ describe("users/operations/sign-in", function() {
       expect(user).not.toHaveProperty("bcryptedPassword");
       expect(user).toHaveProperty("id");
       expect(user).toHaveProperty("email");
-      expect(user.email).toBe(newUser.email);
+      expect(user.email).toBe(newUser.email.toLowerCase());
       done();
     });
   });

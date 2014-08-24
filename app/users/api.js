@@ -2,14 +2,12 @@ var _ = require("lodash");
 var express = require("express");
 var json = require("body-parser").json();
 var log = require("app/log");
-var signInOp = require("app/users/operations/sign-in");
-var signUpOp = require("app/users/operations/sign-up");
+var operations = require("./operations");
 
 function respond(res) {
   return function _respond(error, user) {
     if (error) {
-      res.status(error.status || 403);
-      res.send(error);
+      res.status(error.status || 403).send(error);
       return;
     }
     var session = res.req.session;
@@ -26,13 +24,13 @@ function respond(res) {
 
 function signIn(req, res) {
   var options = _.pick(req.body, "email", "password");
-  signInOp(options, respond(res));
+  operations.signIn(options, respond(res));
 }
 
 function signUp(req, res) {
   var options = _.pick(req.body, "email", "password");
   res.status(201);
-  signUpOp(options, respond(res));
+  operations.signUp(options, respond(res));
 }
 
 function signOut(req, res) {
@@ -44,9 +42,24 @@ function signOut(req, res) {
   });
 }
 
+function createToken(req, res, next) {
+  var options = {
+    user: req.user
+  };
+  res.status(201);
+  operations.createToken(options, function (error, result) {
+    if (error) {
+      next(error);
+      return;
+    }
+    res.json({value: result});
+  });
+}
+
 var app = express();
 app.post("/sign-in", json, signIn);
 app.post("/sign-up", json, signUp);
 app.get("/sign-out", signOut);
+app.post("/token", createToken);
 
 module.exports = app;
