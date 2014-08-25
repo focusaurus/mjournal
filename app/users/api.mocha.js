@@ -59,3 +59,40 @@ describe("POST /api/users/sign-up", function() {
     });
   });
 });
+
+describe("POST /api/users/token anonymous", function () {
+  it("should 401 an anonymous user", function(done) {
+    testUtils.post("/api/users/token")
+      .expect(401, done);
+  });
+});
+
+describe("POST /api/users/token authorized", function () {
+  var token;
+  before(function (done) {
+    this.session = new testUtils.Session();
+    this.session.post("/api/users/sign-up")
+      .send({email: "token/authorized@example.com", password: "password"})
+      .expect(201)
+      .end(done);
+  });
+
+  it("should 201 a token for a known user", function(done) {
+    this.session.post("/api/users/token")
+      .expect(201)
+      .end(function (error, res) {
+        expect(res.body).toHaveProperty("value");
+        expect(res.body.value.length).toEqual(20);
+        token = res.body.value;
+        done();
+      });
+  });
+
+  //test depends on previous one. kthnxbai.
+  it("should allow access to entries with token", function (done) {
+    testUtils.get("/api/entries")
+     .set("Authorization", "token " + token)
+     .expect("Content-Type", "application/json; charset=utf-8")
+     .expect(200, done);
+  });
+});
