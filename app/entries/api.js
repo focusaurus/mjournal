@@ -1,9 +1,8 @@
 var _ = require("lodash");
 var api = require("app/api");
-var operations = require("./operations");
 var express = require("express");
-var needUser = require("app/middleware/needUser");
 var json = require("body-parser").json();
+var operations = require("./operations");
 
 function viewEntries(req, res) {
   var options = _.pick(req.query, "page", "after", "before", "textSearch");
@@ -31,8 +30,8 @@ function viewTags(req, res) {
 var app = express();
 app.route("/")
   .get(viewEntries)
-  .post(needUser, json, createEntry);
-app.put("/:id", needUser, json, updateEntry);
-app.get("/tags", needUser, viewTags);
+  .post(json, createEntry);
+app.put("/:id", json, updateEntry);
+app.get("/tags", viewTags);
 
 module.exports = app;
