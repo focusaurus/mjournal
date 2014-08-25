@@ -1,10 +1,21 @@
 var _ = require("lodash");
 var bcrypt = require("bcrypt");
 var db = require("app/db");
-var log = require("app/log");
 var errors = require("httperrors");
+var joi = require("joi");
+var log = require("app/log");
+
+var OPTIONS_SCHEMA = joi.object().keys({
+  email: joi.string().regex(/.@./).required(),
+  password: joi.string().required()
+});
 
 function run(options, callback) {
+  var valid = OPTIONS_SCHEMA.validate(options);
+  if (valid.error) {
+    callback(new errors.BadRequest(valid.error.message));
+    return;
+  }
   var defaultError = new errors.Forbidden(
     "Please check your email/password and try again"
   );
@@ -14,16 +25,9 @@ function run(options, callback) {
     }, "user sign-in denied");
     callback(error || defaultError);
   }
-  var user = _.pick(options, "email", "password");
-  if (_.keys(user).length !== 2) {
-    var error = new errors.BadRequest("email and password are required");
-    denied(error);
-    return;
-  }
-  user.email = user.email.toLowerCase().trim();
-  var dbOp = db("users").select(["id", "bcryptedPassword", "email"])
-    .where({email: user.email}).limit(1);
-  dbOp.exec(function(error, rows) {
+  options.email = options.email.toLowerCase().trim();
+  db("users").select(["id", "bcryptedPassword", "email"])
+    .where({email: options.email}).limit(1).exec(function(error, rows) {
     if (error) {
       callback(error);
       return;

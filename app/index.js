@@ -14,7 +14,7 @@ function home(req, res) {
   if (req.user) {
     res.render("home");
   } else {
-    res.render("users/sign-in");
+    res.render("users/signIn");
   }
 }
 
