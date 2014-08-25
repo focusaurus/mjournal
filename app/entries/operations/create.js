@@ -1,47 +1,45 @@
 var async = require("async");
-var db = require("app/db");
-var log = require("app/log");
-var presentEntry = require("../presentEntry");
 var clientFields = require("../clientFields");
+var db = require("app/db");
+var opMW = require("app/operations/middleware");
+var presentEntry = require("../presentEntry");
 
-function insert(row, callback) {
-  db("entries").insert(row).returning("id").exec(function (error, ids) {
-    callback(error, ids && ids[0]);
-  });
-}
-
-function select(id, callback) {
-  db("entries").select(clientFields).where("id", id).exec(callback);
-}
-
-function run(options, callback) {
-  if (!options.user) {
-    return callback({
-      code: 401,
-      "Please sign in to view your journal":
-        "Please sign in to view your journal"
-    });
-  }
-  var tags = options.tags || [];
+function insert(run, callback) {
+  var tags = run.options.tags || [];
   if (!Array.isArray(tags)) {
     tags = tags.split(" ");
   }
-  var row = {
-    userId: options.user.id,
-    body: options.body,
+  var entry = {
+    userId: run.options.user.id,
+    body: run.options.body,
     tags: tags.join(" ")
   };
-  log.debug(row, "creating new entry");
-  async.waterfall([insert.bind(null, row), select], function (error, rows) {
-    if (error) {
-      log.error({
-        err: error
-      }, "createEntry error");
-      callback(error);
-      return;
-    }
-    callback(null, presentEntry(rows[0]));
+  db("entries").insert(entry).returning("id").exec(function (error, ids) {
+    run.entryId = ids && ids[0];
+    callback(error);
   });
 }
 
-module.exports = run;
+function select(run, callback) {
+  db("entries").select(clientFields).where("id", run.entryId)
+    .exec(function (error, rows) {
+      if (error) {
+        callback(error);
+        return;
+      }
+      run.entry = presentEntry(rows && rows[0]);
+      callback();
+  });
+}
+
+function createEntry(options, callback) {
+  var run = {options: options};
+  async.applyEachSeries([
+    opMW.requireUser,
+    insert,
+    select
+  ], run, function (error) {
+    callback(error, run.entry);
+  });
+}
+module.exports = createEntry;
