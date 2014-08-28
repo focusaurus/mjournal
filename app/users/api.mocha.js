@@ -60,38 +60,38 @@ describe("POST /api/users/sign-up", function() {
   });
 });
 
-describe("POST /api/users/token anonymous", function () {
+describe("POST /api/users/key anonymous", function () {
   it("should 401 an anonymous user", function(done) {
-    testUtils.post("/api/users/token")
+    testUtils.post("/api/users/key")
       .expect(401, done);
   });
 });
 
-describe("POST /api/users/token authorized", function () {
-  var token;
+describe("POST /api/users/key authorized", function () {
+  var key;
   before(function (done) {
     this.session = new testUtils.Session();
     this.session.post("/api/users/sign-up")
-      .send({email: "token/authorized@example.com", password: "password"})
+      .send({email: "key/authorized@example.com", password: "password"})
       .expect(201)
       .end(done);
   });
 
-  it("should 201 a token for a known user", function(done) {
-    this.session.post("/api/users/token")
+  it("should 201 a key for a known user", function(done) {
+    this.session.post("/api/users/key")
       .expect(201)
       .end(function (error, res) {
         expect(res.body).toHaveProperty("value");
         expect(res.body.value.length).toEqual(20);
-        token = res.body.value;
+        key = res.body.value;
         done();
       });
   });
 
   //test depends on previous one. kthnxbai.
-  it("should allow access to entries with token", function (done) {
+  it("should allow access to entries with key", function (done) {
     testUtils.get("/api/entries")
-     .set("Authorization", "token " + token)
+     .set("Authorization", "key " + key)
      .expect("Content-Type", "application/json; charset=utf-8")
      .expect(200, done);
   });

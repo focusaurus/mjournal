@@ -5,7 +5,7 @@ var token = require("rand-token").generator({source: "crypto"});
 
 function generate(run, callback) {
   try {
-    run.token = token.generate(20);
+    run.key = token.generate(20);
     callback();
   } catch (error) {
     callback(error);
@@ -13,13 +13,13 @@ function generate(run, callback) {
 }
 
 function insert(run, callback) {
-  db("tokens").insert({
+  db("keys").insert({
     userId: run.options.user.id,
-    value: run.token
+    value: run.key
   }).exec(callback);
 }
 
-function createToken(options, callback) {
+function createKey(options, callback) {
   var run = {options: options};
   async.applyEachSeries(
     [
@@ -27,9 +27,9 @@ function createToken(options, callback) {
       generate,
       insert
     ], run, function (error) {
-      callback(error, run.token);
+      callback(error, run.key);
     }
   );
 }
 
-module.exports = createToken;
+module.exports = createKey;

@@ -42,12 +42,12 @@ function signOut(req, res) {
   });
 }
 
-function createToken(req, res, next) {
+function createKey(req, res, next) {
   var options = {
     user: req.user
   };
   res.status(201);
-  operations.createToken(options, function (error, result) {
+  operations.createKey(options, function (error, result) {
     if (error) {
       next(error);
       return;
@@ -60,6 +60,6 @@ var app = express();
 app.post("/sign-in", json, signIn);
 app.post("/sign-up", json, signUp);
 app.get("/sign-out", signOut);
-app.post("/token", createToken);
+app.post("/key", createKey);
 
 module.exports = app;

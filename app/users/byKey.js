@@ -1,6 +1,6 @@
-var redeemToken = require("./operations/redeemToken");
+var redeemKey = require("./operations/redeemKey");
 
-function byToken(req, res, next) {
+function byKey(req, res, next) {
   if (req.user) {
     next();
     return;
@@ -10,13 +10,13 @@ function byToken(req, res, next) {
     next();
     return;
   }
-  var prefix = "token ";
+  var prefix = "key ";
   if (auth.slice(0, prefix.length) !== prefix) {
     next();
     return;
   }
-  var token = auth.slice(prefix.length);
-  redeemToken({value: token}, function (error, user) {
+  var key = auth.slice(prefix.length);
+  redeemKey({value: key}, function (error, user) {
     if (error) {
       next(error);
       return;
@@ -26,4 +26,4 @@ function byToken(req, res, next) {
   });
 }
 
-module.exports = byToken;
+module.exports = byKey;

@@ -19,13 +19,13 @@ CREATE TABLE "public"."session" (
 WITH (OIDS=FALSE);
 ALTER TABLE "public"."session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
-CREATE TABLE tokens
+CREATE TABLE keys
 (
   value character varying(20) NOT NULL,
   "userId" integer NOT NULL,
   valid boolean NOT NULL DEFAULT true,
   CONSTRAINT value_pkey PRIMARY KEY (value),
-  CONSTRAINT "tokens_userId_fkey" FOREIGN KEY ("userId")
+  CONSTRAINT "keys_userId_fkey" FOREIGN KEY ("userId")
       REFERENCES users (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )

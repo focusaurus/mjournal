@@ -21,12 +21,12 @@ function signUp(email) {
   });
 }
 
-function token(next, options) {
-  operations.createToken(options, function(error, token) {
+function key(next, options) {
+  operations.createKey(options, function(error, key) {
     if (error) {
       cli.exit(error);
     }
-    console.log(token);
+    console.log(key);
     process.exit();
   });
 }
@@ -34,10 +34,10 @@ function token(next, options) {
 program.description("operate on user records");
 program.command("sign-up <email>")
   .description("register a new user account").action(signUp);
-var tokenCommand = program.command("create-token")
-  .description("create an authentication token for CLI/API access");
-var tokenStack = new cli.Stack(tokenCommand);
-cli.signInMW(tokenStack);
-tokenStack.use(token);
+var keyCommand = program.command("create-key")
+  .description("create an authentication key for CLI/API access");
+var keyStack = new cli.Stack(keyCommand);
+cli.signInMW(keyStack);
+keyStack.use(key);
 
 program.parse(process.argv);
