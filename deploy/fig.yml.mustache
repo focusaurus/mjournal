@@ -1,8 +1,10 @@
 app:
   build: .
   links:
-   - db
+    - db
   ports:
-   - "{{port}}:{{port}}"
+    - "{{port}}:{{port}}"
 db:
   image: postgres
+  volumes:
+    - /volumes/mjournal_db_1/var/lib/postgresql/data:/var/lib/postgresql/data
