@@ -13,7 +13,7 @@ var figHost = process.env.MJOURNAL_DB_1_PORT_5432_TCP_ADDR;
 var figPort = process.env.MJOURNAL_DB_1_PORT_5432_TCP_PORT;
 exports.db = {
   host: figHost || "localhost",
-  port: figPort || 5432,
+  port: parseInt(figPort || 5432, 10),
   user: appName,
   database: appName,
   password: appName

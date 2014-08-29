@@ -6,6 +6,7 @@ var log = require("app/log");
 //eslint bug thinks "setup" is a global from mocha
 //https://github.com/eslint/eslint/issues/1059
 var setup2 = require("app/db/setup");
+var validateConfig = require("./validateConfig");
 
 process.on("uncaughtException", function (error) {
   log.error(error, "uncaught exception. Process will exit.");
@@ -19,6 +20,11 @@ log.debug(
   },
   "%s server process starting", config.pack.name
 );
+var valid = validateConfig(config);
+if (valid.error) {
+  log.error(valid.error, "Config is invalid. Process will exit.");
+  setTimeout(process.exit.bind(null, 66), 1000);
+}
 
 setup2.init(function (error) {
   if (error) {

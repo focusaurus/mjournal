@@ -91,6 +91,14 @@ _dockerfile() {
 doc "* fig: bring up the full system via docker and fig"
 task::fig() {
   _dockerfile
+  if [[ ! -e fig.yml ]]; then
+    #We might be running fig for the very first time,
+    #Try to ensure data volumes exist
+    local docker=$(echo "${DOCKER_HOST}" | cut -d / -f 3 | cut -d : -f 1)
+    echo "Ensuring data volume directories exist on ${docker}"
+    ssh -t "${docker}" sudo mkdir -p \
+      /volumes/mjournal_db_1/var/lib/postgresql/data
+  fi
   ./bin/render_template deploy/fig.yml.mustache > fig.yml
   fig "$@"
 }
@@ -102,6 +110,7 @@ dcip() {
 
 doc "* figlog: tail the log file of the app in the fig container"
 task::figlog() {
+  chmod 0600 deploy/docker_insecure.key
   ssh \
     -i deploy/docker_insecure.key \
     -o UserKnownHostsFile=/dev/null \
