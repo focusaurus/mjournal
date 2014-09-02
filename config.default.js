@@ -1,43 +1,41 @@
 var _ = require("lodash");
 var devNull = require("dev-null");
+var pack = require("./package");
+var config = exports;
 
-var pack = exports.pack = require("./package");
-var PRODUCTION = false;
-var TEST = false;
-var DEVELOPMENT = false;
-
-var appName = exports.appName = pack.name;
-exports.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
-exports.nodeVersion = pack.engines.node;
-var figHost = process.env.MJOURNAL_DB_1_PORT_5432_TCP_ADDR;
-var figPort = process.env.MJOURNAL_DB_1_PORT_5432_TCP_PORT;
-exports.db = {
+config.pack = pack;
+config.NODE_ENV = process.env.NODE_ENV || "development";
+var appName = config.appName = pack.name;
+config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
+config.nodeVersion = pack.engines.node;
+config.registry = "docker.stage.peterlyons.com:5000";
+var figHost = process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR;
+var figPort = process.env.MJOURNAL_DB_PORT_5432_TCP_PORT;
+config.db = {
   host: figHost || "localhost",
   port: parseInt(figPort || 5432, 10),
   user: appName,
   database: appName,
   password: appName
 };
-exports.postgres = _.clone(exports.db);
-exports.postgres.user = "postgres";
-exports.postgres.password = "postgres";
-exports.postgres.database = "postgres";
-exports.logStream = process.stdout;
-exports.port = 9090;
-exports.sessionSecret = "HkpYsNTjVpXz6BthO8hN";
+config.postgres = _.clone(config.db);
+config.postgres.user = "postgres";
+config.postgres.password = "postgres";
+config.postgres.database = "postgres";
+config.logStream = process.stdout;
+config.port = 9090;
+config.sessionSecret = "HkpYsNTjVpXz6BthO8hN";
 
-switch (process.env.NODE_ENV) {
+switch (config.NODE_ENV) {
   case "production":
-    PRODUCTION = true;
+    config.registry = "docker.peterlyons.com:5000";
     break;
   case "test":
-    TEST = true;
-    exports.db.database = appName + "test";
-    exports.db.user = appName + "test";
-    exports.db.password = appName + "test";
-    exports.logStream = devNull();
+    config.db.database = appName + "test";
+    config.db.user = appName + "test";
+    config.db.password = appName + "test";
+    config.logStream = devNull();
     break;
   default:
-    DEVELOPMENT = true;
+    config.browserifyDebug = true;
 }
-exports.browserifyDebug = DEVELOPMENT;

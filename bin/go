@@ -94,10 +94,7 @@ task::fig() {
   if [[ ! -e fig.yml ]]; then
     #We might be running fig for the very first time,
     #Try to ensure data volumes exist
-    local docker=$(echo "${DOCKER_HOST}" | cut -d / -f 3 | cut -d : -f 1)
-    echo "Ensuring data volume directories exist on ${docker}"
-    ssh -t "${docker}" sudo mkdir -p \
-      /volumes/mjournal_db_1/var/lib/postgresql/data
+    source ./bin/provision_stage.sh
   fi
   ./bin/render_template deploy/fig.yml.mustache > fig.yml
   fig "$@"
@@ -129,8 +126,8 @@ Deployment Commands
 -------------------
 "
 
-doc "* docker: render the Dockerfile then run a docker build"
-task::docker() {
+doc "* build: render the Dockerfile then run a docker build"
+task::build() {
   _dockerfile
   exec docker build --tag=mjournal .
 }

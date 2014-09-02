@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcryptjs");
 var db = require("app/db");
 var errors = require("httperrors");
 var joi = require("joi");

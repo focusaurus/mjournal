@@ -41,6 +41,7 @@ var store = new PGStore({
 var app = express();
 app.set("view engine", "jade");
 app.set("views", __dirname);
+app.set("trust proxy", true);
 app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
 app.use(cookieParser());

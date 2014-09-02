@@ -7,4 +7,4 @@ app:
 db:
   image: postgres
   volumes:
-    - /volumes/mjournal_db_1/var/lib/postgresql/data:/var/lib/postgresql/data
+    - /var/local/{{appName}}_db_1:/var/lib/postgresql/data

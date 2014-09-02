@@ -2,6 +2,7 @@
 #https://github.com/phusion/baseimage-docker
 FROM phusion/baseimage:0.9.13
 
+ENV HOME /root
 #get the slow/big stuff done early so the cache is rarely invalidated
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y
@@ -25,19 +26,18 @@ RUN mkdir node && \
   cd node && \
   tar --strip-components=1 --extract --gzip --file \
   ../node-v{{nodeVersion}}-linux-x64.tar.gz
-ADD package.json  /home/app/package.json
 ENV PATH /home/app/node/bin:/home/app/node_modules/.bin:/usr/bin:/bin:/usr/sbin:/sbin
-RUN npm install --production
+ADD package.json  /home/app/package.json
 ADD bower.json  /home/app/bower.json
+RUN npm install --loglevel=info --production
 RUN bower --allow-root --config.analytics=false install
 
 #OK, all the slow stuff has been run and hopefully cached
 RUN cd node_modules && ln -nsf ../app
-ENV HOME /root
 
 ADD deploy/docker_insecure.pub /root/.ssh/authorized_keys
-RUN mkdir /etc/service/mjournal
-ADD deploy/mjournal-run.sh /etc/service/mjournal/run
+RUN mkdir /etc/service/{{appName}}
+ADD deploy/{{appName}}-run.sh /etc/service/{{appName}}/run
 
 ADD app /home/app/app
 ADD wwwroot /home/app/wwwroot
