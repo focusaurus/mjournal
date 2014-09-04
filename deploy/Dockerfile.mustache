@@ -29,7 +29,7 @@ RUN mkdir node && \
 ENV PATH /home/app/node/bin:/home/app/node_modules/.bin:/usr/bin:/bin:/usr/sbin:/sbin
 ADD package.json  /home/app/package.json
 ADD bower.json  /home/app/bower.json
-RUN npm install --loglevel=info --production
+RUN npm install --production
 RUN bower --allow-root --config.analytics=false install
 
 #OK, all the slow stuff has been run and hopefully cached

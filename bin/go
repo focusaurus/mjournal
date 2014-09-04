@@ -47,7 +47,7 @@ doc "* express: start the express server"
 task::express() {
   autoinstall_npm_dependencies
   autoinstall_bower_dependencies
-  node-dev --debug=9091 app/server | tee -a logs/mjournal.log | bistre
+  node-dev --debug=9091 app/server | tee -a logs/mjournal.log
 }
 
 doc "  * aliased as 'start' command as well"
@@ -130,6 +130,17 @@ doc "* build: render the Dockerfile then run a docker build"
 task::build() {
   _dockerfile
   exec docker build --tag=mjournal .
+}
+
+doc "* tag: tag a docker build for pushing to prod and push"
+task::tag_and_push() {
+  local base="docker.peterlyons.com:5000/mjournal"
+  local build="$1"
+  local version="$(./wallah/bin/get_json_value package.json version)"
+  docker tag "${build}" "${base}:v${version}"
+  docker tag "${build}" "${base}:production"
+  docker push "${base}:v${version}"
+  docker push "${base}:production"
 }
 
 ##### main code #####
