@@ -47,7 +47,7 @@ doc "* express: start the express server"
 task::express() {
   autoinstall_npm_dependencies
   autoinstall_bower_dependencies
-  node-dev --debug=9091 app/server | tee -a logs/mjournal.log
+  node-dev --debug=9091 app/server | tee -a logs/mjournal.log | bistre
 }
 
 doc "  * aliased as 'start' command as well"
