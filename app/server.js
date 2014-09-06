@@ -16,7 +16,7 @@ process.on("uncaughtException", function (error) {
 log.debug(
   {
     env: process.env.NODE_ENV,
-    db: _.without(config.db, "password")
+    db: _.omit(config.db, "password")
   },
   "%s server process starting", config.pack.name
 );
