@@ -16,16 +16,21 @@ function http(method, path) {
     "Authorization", "key " + program.key);
 }
 
-function exitIfError(error) {
-  if (error) {
-    switch (error.code) {
+function exitIfError(error, response) {
+  var oops = error || (response && response.error);
+  if (oops) {
+    var code = oops.code || oops.status;
+    switch (code) {
       case "ECONNREFUSED":
         console.error("Could not connect to mjournal server");
         break;
+      case 401:
+        console.error("Incorrect API key");
+        break;
       default:
-        console.error(error);
+        console.error(oops);
     }
-    process.exit(error.statusCode || 53);
+    process.exit(oops.status ? (oops.status - 400) : 10);
   }
 }
 
@@ -55,13 +60,13 @@ function printEntry(entry) {
 }
 
 function printEntries(error, response) {
-  exitIfError(error);
+  exitIfError(error, response);
   response.body.forEach(printEntry);
 }
 
 function viewAction(options) {
-  options.textSearch = options.search;
-  var opOptions = _.pick(options, "before", "after", "textSearch");
+  var opOptions = _.pick(options, "before", "after");
+  opOptions.textSearch = options.search;
   http("get", "/entries")
     .query(opOptions)
     .end(printEntries);
@@ -82,17 +87,6 @@ var viewCommand = program.command("view")
     "search for entries mentioning or tagged with a keyword"
   ).action(viewAction);
 
-function createAction(options) {
-  if (options.body === "stdin") {
-    stdin(function (body) {
-      options.body = body;
-      postEntry(options);
-    });
-  } else {
-    postEntry(options);
-  }
-}
-
 function postEntry(options) {
   var entry = _.pick(options, "body", "tags");
   http("post", "/entries")
@@ -111,34 +105,40 @@ function postEntry(options) {
       console.log("Entry " + response.body.id + " created");
     });
 }
+
+function createAction(options) {
+  if (options.body === "stdin") {
+    stdin(function (body) {
+      options.body = body;
+      postEntry(options);
+    });
+  } else {
+    postEntry(options);
+  }
+}
+
 var createCommand = program.command("create")
   .description("create a new journal entry")
   .action(createAction);
-
 bodyOption(createCommand);
 tagsOption(createCommand);
 
-function updateAction(next, commandOptions) {
-  var options = _.pick(commandOptions, "key", "body", "tags");
-  options.id = commandOptions.entryId;
-  entryOps.update(options, function(error) {
-    if (error) {
-      cli.exit(error);
-    }
-    console.log("Entry updated");
-    process.exit();
+function updateAction(options) {
+  var opOptions = _.pick(options, "body", "tags");
+  http("put", "/entries/" + options.entryId)
+    .send(opOptions)
+    .end(function(error, response) {
+      exitIfError(error, response);
+      console.log("Entry updated");
   });
 }
 
-// var updateCommand = program.command("update")
-//   .option("-i,--entryId <entryId>")
-//   .description("update an existing entry. Provide new entry body via stdin");
-// var updateStack = new cli.Stack(updateCommand);
-// cli.signInMW(updateStack);
-// bodyOption(updateStack);
-// tagsOption(updateStack);
-// updateStack.use(updateAction);
-// program.description("operate on entry records");
+var updateCommand = program.command("update")
+  .option("-e, --entryId <entryId>")
+  .description("update an existing entry. Provide new entry body via stdin")
+  .action(updateAction);
+bodyOption(updateCommand);
+tagsOption(updateCommand);
 
 if (require.main === module) {
   program.parse(process.argv);
