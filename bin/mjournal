@@ -11,6 +11,11 @@ BASE = BASE + "/api";
 program.usage("--key <key> <command> [options]")
   .option("-k, --key <key>", "API key for authentication");
 
+function http(method, path) {
+  return request[method](BASE + path).set(
+    "Authorization", "key " + program.key);
+}
+
 function exitIfError(error) {
   if (error) {
     switch (error.code) {
@@ -36,29 +41,29 @@ function tagsOption(command) {
     "-t, --tags <tags>", "Tags for the entry. Space-delimited words.");
 }
 
+function printEntry(entry) {
+  console.log(
+    "----- ID: " +
+    entry.id +
+    " Created: " +
+    entry.created +
+    " -----\ntags: " +
+    (entry.tags || "") +
+    "\n\n" +
+    entry.body
+  );
+}
+
 function printEntries(error, response) {
   exitIfError(error);
-  var entries = response.body;
-  entries.forEach(function (entry) {
-    console.log(
-      "----- ID: " +
-      entry.id +
-      " Created: " +
-      entry.created +
-      " -----\ntags: " +
-      (entry.tags || "") +
-      "\n\n" +
-      entry.body
-    );
-  });
+  response.body.forEach(printEntry);
 }
 
 function viewAction(options) {
   options.textSearch = options.search;
   var opOptions = _.pick(options, "before", "after", "textSearch");
-  request.get(BASE + "/entries")
+  http("get", "/entries")
     .query(opOptions)
-    .set("Authorization", "key " + program.key)
     .end(printEntries);
 }
 
@@ -90,8 +95,7 @@ function createAction(options) {
 
 function postEntry(options) {
   var entry = _.pick(options, "body", "tags");
-  request.post(BASE + "/entries")
-    .set("Authorization", "key " + options.key)
+  http("post", "/entries")
     .send(entry)
     .end(function (error, response) {
       if (error) {
