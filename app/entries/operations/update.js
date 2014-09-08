@@ -18,7 +18,7 @@ function select(where, run, next) {
 
 function initDbOp(run, next) {
   run.dbOp = db("entries");
-  return next();
+  next();
 }
 
 function execute(run, next) {

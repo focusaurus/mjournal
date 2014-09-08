@@ -139,4 +139,23 @@ describe("entries/operations/create+update+view+viewTags", function() {
       done();
     });
   });
+  it("should not delete someone else's entry", function(done) {
+    var options = {
+      id: entry.id,
+      user: user2
+    };
+    ops.del(options, function(error) {
+      expect(error).not.toBeNull();
+      expect(error).toHaveProperty("status");
+      expect(error.status).toBe(404);
+      done();
+    });
+  });
+  it("should delete an entry", function(done) {
+    var options = {
+      id: entry.id,
+      user: user
+    };
+    ops.del(options, done);
+  });
 });

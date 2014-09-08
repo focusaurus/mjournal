@@ -23,6 +23,18 @@ function updateEntry(req, res) {
   operations.update(options, api.sendResult(res));
 }
 
+function deleteEntry(req, res) {
+  var options = _.pick(req.params, "id");
+  options.user = req.user;
+  operations.delete(options, function (error) {
+    if (error) {
+      res.status(error.statusCode || 500).send();
+      return;
+    }
+    res.send();
+  });
+}
+
 function viewTags(req, res) {
   operations.viewTags({user: req.user}, api.sendResult(res));
 }
@@ -32,6 +44,7 @@ app.route("/")
   .get(viewEntries)
   .post(json, createEntry);
 app.put("/:id", json, updateEntry);
+app.delete("/:id",  deleteEntry);
 app.get("/tags", viewTags);
 
 module.exports = app;
