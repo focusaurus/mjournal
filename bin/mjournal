@@ -55,7 +55,7 @@ function printEntries(error, response) {
 
 function viewAction(options) {
   options.textSearch = options.search;
-  var opOptions = _.pick(options, "page", "textSearch");
+  var opOptions = _.pick(options, "before", "after", "textSearch");
   request.get(BASE + "/entries")
     .query(opOptions)
     .set("Authorization", "key " + program.key)
@@ -65,8 +65,12 @@ function viewAction(options) {
 var viewCommand = program.command("view")
   .description("view entries for a user")
   .option(
-    "-p, --page <page>",
-    "which page of results to view (1 is most recent)",
+    "-a, --after <entryId>",
+    "view entries created after the given entry",
+    parseInt
+  ).option(
+    "-b, --before <entryId>",
+    "view entries created before the given entry",
     parseInt
   ).option(
     "-s, --search <query>",
