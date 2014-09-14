@@ -144,7 +144,7 @@ describe("entries/operations/create+update+view+viewTags", function() {
       id: entry.id,
       user: user2
     };
-    ops.del(options, function(error) {
+    ops.delete(options, function(error) {
       expect(error).not.toBeNull();
       expect(error).toHaveProperty("status");
       expect(error.status).toBe(404);
@@ -156,6 +156,6 @@ describe("entries/operations/create+update+view+viewTags", function() {
       id: entry.id,
       user: user
     };
-    ops.del(options, done);
+    ops.delete(options, done);
   });
 });

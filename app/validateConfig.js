@@ -8,6 +8,10 @@ var DB_SCHEMA = joi.object().keys({
   password: joi.string(),
   database: joi.string().required()
 });
+var SESSION_SCHEMA = joi.object().keys({
+  secret: joi.string().required(),
+  httpOnly: joi.boolean()
+});
 var CONFIG_SCHEMA = joi.object().keys({
   hostname: joi.string().required(),
   nodeVersion: joi.string().required(),
@@ -15,7 +19,7 @@ var CONFIG_SCHEMA = joi.object().keys({
   postgres: DB_SCHEMA,
   logStream: joi.object().required(),
   port: PORT,
-  sessionSecret: joi.string().required(),
+  session: SESSION_SCHEMA,
   browserifyDebug: joi.boolean()
 });
 

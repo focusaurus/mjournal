@@ -47,7 +47,8 @@ app.use(express.static(paths.browser));
 app.use(cookieParser());
 app.use(session({
   store: store,
-  secret: config.sessionSecret
+  secret: config.session.secret,
+  cookie: config.session.cookie
 }));
 app.use(function(req, res, next) {
   res.locals.user = req.user = req.session.user;

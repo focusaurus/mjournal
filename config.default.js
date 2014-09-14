@@ -24,7 +24,13 @@ config.postgres.password = "postgres";
 config.postgres.database = "postgres";
 config.logStream = process.stdout;
 config.port = 9090;
-config.sessionSecret = "HkpYsNTjVpXz6BthO8hN";
+config.session = {
+  secret: "HkpYsNTjVpXz6BthO8hN",
+  cookie: {
+    httpOnly: true,
+    secure: false
+  }
+};
 
 switch (config.NODE_ENV) {
   case "production":
