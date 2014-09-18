@@ -39,6 +39,7 @@ var store = new PGStore({
   secret: config.sessionSecret
 });
 var app = express();
+app.locals.appVersion = config.appVersion;
 app.set("view engine", "jade");
 app.set("views", __dirname);
 app.set("trust proxy", true);

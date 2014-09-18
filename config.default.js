@@ -6,6 +6,7 @@ var config = exports;
 config.pack = pack;
 config.NODE_ENV = process.env.NODE_ENV || "development";
 var appName = config.appName = pack.name;
+config.appVersion = pack.version;
 config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 config.nodeVersion = pack.engines.node;
 config.registry = "docker.stage.peterlyons.com:5000";
