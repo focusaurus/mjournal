@@ -10,6 +10,8 @@ var pg = require("pg.js");
 var session = require("express-session");
 var stylusBundle = require("app/site/stylusBundle");
 
+bmw.settings.production.minify = {mangle: false};
+
 function home(req, res) {
   if (req.user) {
     res.render("home");
@@ -49,7 +51,9 @@ app.use(cookieParser());
 app.use(session({
   store: store,
   secret: config.session.secret,
-  cookie: config.session.cookie
+  cookie: config.session.cookie,
+  resave: false,
+  saveUninitialized: true
 }));
 app.use(function(req, res, next) {
   res.locals.user = req.user = req.session.user;

@@ -143,6 +143,13 @@ task::tag_and_push() {
   docker push "${base}:production"
 }
 
+doc "* tag: tag a docker build for pushing to prod and push"
+task::tag_stage() {
+  local base="docker.stage.peterlyons.com:5000/mjournal"
+  local build="$1"
+  docker tag "${build}" "${base}:stage"
+}
+
 ##### main code #####
 main() {
   cd $(dirname "$0")/..
