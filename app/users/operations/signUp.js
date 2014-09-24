@@ -3,6 +3,7 @@ var bcrypt = require("bcryptjs");
 var db = require("app/db");
 var log = require("app/log");
 var errors = require("httperrors");
+var userSchema = require("./userSchema");
 
 function hashPassword(cleartext, callback) {
   bcrypt.genSalt(10, function(error, salt) {
@@ -13,24 +14,15 @@ function hashPassword(cleartext, callback) {
   });
 }
 
-function isValidEmail(value) {
-  return typeof value === "string" && value.indexOf("@") > 0;
-}
-
 function run(options, callback) {
+  var valid = userSchema.validate(options);
+  if (valid.error) {
+    setImmediate(function() {
+      callback(new errors.BadRequest(valid.error.message));
+    });
+    return;
+  }
   var user = _.pick(options, "email");
-  if (!isValidEmail(user.email)) {
-    setImmediate(function() {
-      callback(new errors.BadRequest("invalid email"));
-    });
-    return;
-  }
-  if (!options.password) {
-    setImmediate(function() {
-      callback(new errors.BadRequest("password is required"));
-    });
-    return;
-  }
   hashPassword(options.password, function(error, bcryptedPassword) {
     if (error) {
       callback(error);

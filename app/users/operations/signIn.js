@@ -2,16 +2,11 @@ var _ = require("lodash");
 var bcrypt = require("bcryptjs");
 var db = require("app/db");
 var errors = require("httperrors");
-var joi = require("joi");
 var log = require("app/log");
-
-var OPTIONS_SCHEMA = joi.object().keys({
-  email: joi.string().regex(/.@./).required(),
-  password: joi.string().required()
-});
+var userSchema = require("./userSchema");
 
 function run(options, callback) {
-  var valid = OPTIONS_SCHEMA.validate(options);
+  var valid = userSchema.validate(options);
   if (valid.error) {
     callback(new errors.BadRequest(valid.error.message));
     return;
