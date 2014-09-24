@@ -24,9 +24,11 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - This requires an SSH tunnel from your docker host to the production docker registry
   - `ssh dbs` then from dbs `ssh -N -L 5000:localhost:5000 docker.peterlyons.com`
   - on your development system, run `./bin/go tag_and_push <build_id_from_above>`
+- pull the image from the prod registry to the prod docker
+  - `ssh -t docker.peterlyons.com docker pull docker.peterlyons.com:5000/mjournal:production`
 - restart the app in production
   - `ssh -t docker.peterlyons.com sudo restart mjournal`
 
 # Production Deployment Setup
 
-- 
+-
