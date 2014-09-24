@@ -10,6 +10,10 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.disableNext = $scope.disablePrevious = false;
       $scope.entries = entries;
       if (entries.length < PAGE_SIZE) {
+        if (!params.before && !params.after) {
+          //on home page, disable both
+          $scope.disablePrevious = $scope.disableNext = true;
+        }
         if (params.before) {
           $scope.disablePrevious = true;
         }
