@@ -1,0 +1,67 @@
+#!/bin/bash
+export DOCKER_HOST=tcp://localhost:2375
+container="mjournal_db"
+user=postgres
+backup_dir="/var/local/mjournal_db_backups"
+
+list_dbs() {
+  docker exec "${container}" psql --user="${user}" --host=localhost -l -A -F: | \
+    sed -ne "/:/ { /Name:Owner/d; /template0/d; s/:.*$//; p }"
+}
+
+do_backup() {
+  docker exec "${container}" \
+    pg_dump --user="${user}" --host=localhost --create "$1" > "$2"
+  bzip2 "$2"
+}
+
+# DOW=`date +%A`					# Day of the week e.g. Monday
+# DNOW=`date +%u`					# Day number of the week 1 to 7 where 1 represents Monday
+# DOM=`date +%d`					# Date of the Month e.g. 27
+# M=`date +%B`					# Month e.g January
+# W=`date +%V`					# Week Number e.g 37
+
+
+prepare() {
+  export DATE=$(date +%Y-%m-%d)
+  mkdir -p "${backup_dir}"
+}
+
+choose_backups() {
+  if [[ $(date +%d) == "01" ]]; then
+    export MONTHLY=yes
+  fi
+}
+
+
+backup_daily() {
+  local db="$1"
+  echo "Taking daily backup of ${db}"
+  do_backup "${db}" "${backup_dir}/${db}_${DATE}.daily.sql"
+}
+
+backup_monthly() {
+  if [[ -z "${MONTHLY}" ]]; then
+    return 0
+  fi
+  local db="$1"
+  echo "Taking monthly backup of ${db}"
+  do_backup "${db}" "${backup_dir}/${db}_$DATE.monthly.sql.gz"
+}
+
+delete_stale_backups() {
+  find "${backup_dir}" -name '*.daily.sql.bz2' -ctime +30 -print
+  find "${backup_dir}" -name '*.monthly.sql.bz2' -ctime +90 -print
+}
+
+main() {
+  prepare
+  choose_backups
+  for db in $(list_dbs); do
+    backup_daily "${db}"
+    backup_monthly "${db}"
+  done
+  delete_stale_backups
+}
+
+main
