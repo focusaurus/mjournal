@@ -6,8 +6,8 @@ backup_dir="/var/local/mjournal_db_backups"
 
 do_backup() {
   docker exec "${container}" \
-    pg_dumpall --user="${user}" --host=localhost --clean --no-password > "$2"
-  bzip2 "$2"
+    pg_dumpall --user="${user}" --host=localhost --clean --no-password > "$1"
+  bzip2 "$1"
 }
 
 prepare() {
@@ -24,7 +24,7 @@ choose_backups() {
 
 backup_daily() {
   echo "Taking daily backup"
-  do_backup "${backup_dir}/${db}_${DATE}.daily.sql"
+  do_backup "${backup_dir}/${DATE}.daily.sql"
 }
 
 backup_monthly() {
@@ -32,7 +32,7 @@ backup_monthly() {
     return 0
   fi
   echo "Taking monthly backup"
-  do_backup "${backup_dir}/${db}_$DATE.monthly.sql"
+  do_backup "${backup_dir}/$DATE.monthly.sql"
 }
 
 delete_stale_backups() {
@@ -43,8 +43,8 @@ delete_stale_backups() {
 main() {
   prepare
   choose_backups
-  backup_daily "${db}"
-  backup_monthly "${db}"
+  backup_daily
+  backup_monthly
   delete_stale_backups
 }
 

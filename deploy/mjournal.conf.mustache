@@ -5,6 +5,7 @@ respawn
 env DOCKER_HOST=tcp://127.0.0.1:2375
 exec /usr/bin/docker run \
   --rm=true \
+  --restart=on-failure:5 \
   --publish={{port}}:{{port}} \
   --name={{appName}} \
   --link={{appName}}_db:{{appName}}_db \
