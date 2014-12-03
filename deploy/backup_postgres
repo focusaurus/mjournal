@@ -23,7 +23,7 @@ choose_backups() {
 }
 
 backup_daily() {
-  echo "Taking daily backup"
+  # echo "Taking daily backup"
   do_backup "${backup_dir}/${DATE}.daily.sql"
 }
 
@@ -31,13 +31,13 @@ backup_monthly() {
   if [[ -z "${MONTHLY}" ]]; then
     return 0
   fi
-  echo "Taking monthly backup"
+  # echo "Taking monthly backup"
   do_backup "${backup_dir}/$DATE.monthly.sql"
 }
 
 delete_stale_backups() {
-  find "${backup_dir}" -name '*.daily.sql.bz2' -ctime +30 -print
-  find "${backup_dir}" -name '*.monthly.sql.bz2' -ctime +90 -print
+  find "${backup_dir}" -name '*.daily.sql.bz2' -ctime +30 -print0 | xargs -0 rm
+  find "${backup_dir}" -name '*.monthly.sql.bz2' -ctime +90 -print | xargs -0 rm
 }
 
 main() {
