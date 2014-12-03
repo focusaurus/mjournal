@@ -1,13 +1,16 @@
 #!/bin/bash
+# Install this script as root:adm 0755 in /etc/cron.daily/backup-{{appName}}-db
+# sudo install --owner=root --group=adm --mode=0755 \
+#   /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
 export DOCKER_HOST=tcp://localhost:2375
-container="mjournal_db"
+container="{{appName}}_db"
 user=postgres
-backup_dir="/var/local/mjournal_db_backups"
+backup_dir="/var/local/{{appName}}_db_backups"
 
 do_backup() {
   docker exec "${container}" \
     pg_dumpall --user="${user}" --host=localhost --clean --no-password > "$1"
-  bzip2 "$1"
+  bzip2 --force "$1"
 }
 
 prepare() {
@@ -36,8 +39,8 @@ backup_monthly() {
 }
 
 delete_stale_backups() {
-  find "${backup_dir}" -name '*.daily.sql.bz2' -ctime +30 -print0 | xargs -0 rm
-  find "${backup_dir}" -name '*.monthly.sql.bz2' -ctime +90 -print | xargs -0 rm
+  find "${backup_dir}" -name '*.daily.sql.bz2' -ctime +30 -delete
+  find "${backup_dir}" -name '*.monthly.sql.bz2' -ctime +90 -delete
 }
 
 main() {
