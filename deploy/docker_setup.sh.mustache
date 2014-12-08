@@ -53,6 +53,13 @@ prepare_fs() {
     echo "Edit it and add the proper data then re-run this script."
     exit 10
   fi
+
+  log_file=/var/local/{{appName}}/{{appName}}.log
+  readonly log_file
+
+  if [[ ! -e "${log_file}" ]]; then
+    install --owner=www-data --group=www-data --mode=0640 /dev/null "${log_file}"
+  fi
 }
 
 stop_containers() {

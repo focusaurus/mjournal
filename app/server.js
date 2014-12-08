@@ -9,7 +9,10 @@ var setup2 = require("app/db/setup");
 var validateConfig = require("./validateConfig");
 
 process.on("uncaughtException", function (error) {
-  log.error(error, "uncaught exception. Process will exit.");
+  var message = "uncaught exception. Process will exit.";
+  log.error(error, message);
+  //In case log is not writeable, etc
+  console.error(message, error);
   setTimeout(process.exit.bind(null, 66), 1000);
 });
 

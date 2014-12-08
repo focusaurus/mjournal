@@ -42,7 +42,8 @@ switch (config.NODE_ENV) {
     config.envName = "production";
     var logOptions = {
       encoding: "utf8",
-      mode: "a"
+      flags: "a",
+      mode: 600
     };
     var logPath = "/var/log/" + config.appName + ".log";
     config.logStream = fs.createWriteStream(logPath, logOptions);
