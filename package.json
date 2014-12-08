@@ -1,7 +1,7 @@
 {
   "name": "mjournal",
   "description": "Minimalist journaling web application",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "homepage": "http://mjournal.peterlyons.com",
   "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
   "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
