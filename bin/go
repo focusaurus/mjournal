@@ -122,7 +122,7 @@ Release Management Commands
 doc "* release_candidate <major|minor|patch>: prepare develop branch for a release tag"
 task::release_candidate() {
   set -e
-  if [[ $(git status --short | wc -c) != "0" ]]; then
+  if [[ $(git status --short | wc -c | tr -d " ") != "0" ]]; then
     echo "Abort: working directory not clean"
     exit 11
   fi
