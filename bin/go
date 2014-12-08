@@ -42,7 +42,6 @@ ${help}
 EOF
 }
 
-##### development task functions #####
 doc "* express: start the express server"
 task::express() {
   autoinstall_npm_dependencies
@@ -113,6 +112,23 @@ task::figlog() {
     -o StrictHostKeyChecking=no \
     root@$(dcip mjournal_app_1) \
     tail -f /var/log/app.log
+}
+
+doc "
+Release Management Commands
+-------------------
+"
+
+doc "* release_candidate <major|minor|patch>: prepare develop branch for a release tag"
+task::release_candidate() {
+  set -e
+  if [[ $(git status --short | wc -c | tr -d " ") != "0" ]]; then
+    echo "Abort: working directory not clean"
+    exit 11
+  fi
+  git checkout develop
+  git pull origin master
+  npm version "$@"
 }
 
 doc "
