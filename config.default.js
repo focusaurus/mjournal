@@ -1,4 +1,3 @@
-var fs = require("fs");
 var _ = require("lodash");
 var devNull = require("dev-null");
 var pack = require("./package");
@@ -22,7 +21,7 @@ config.db = {
   password: appName
 };
 config.postgres = _.clone(config.db);
-config.postgres.version = "9.3";
+config.postgres.version = "9.4";
 config.postgres.user = "postgres";
 config.postgres.password = "postgres";
 config.postgres.database = "postgres";
@@ -40,13 +39,7 @@ switch (config.NODE_ENV) {
   case "production":
     config.registry = "docker.peterlyons.com:5000";
     config.envName = "production";
-    var logOptions = {
-      encoding: "utf8",
-      flags: "a",
-      mode: 600
-    };
-    var logPath = "/var/log/" + config.appName + ".log";
-    config.logStream = fs.createWriteStream(logPath, logOptions);
+    config.logStream = "/var/log/" + config.appName + ".log";
     break;
   case "test":
     config.db.database = appName + "test";

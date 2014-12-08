@@ -31,10 +31,13 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - `open 'http://dbs:9090'`
 - If the app is working, tag for prod and push
   - This requires an SSH tunnel from your docker host to the production docker registry
+  - stop the stage docker registry (@TODO this is terrible. fix)
+    - `ssh -t dbs sudo stop docker-registry`
   - `ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com`
   - on your development system, run `./bin/go tush_production <build_id_from_above>`
 - pull the image from the prod registry to the prod docker
   - `ssh -t docker.peterlyons.com docker pull docker.peterlyons.com:5000/mjournal:production`
+- start the stage docker registry: `docker start docker-registry`
 - restart the app in production
   - `./bin/go deploy_production`
 

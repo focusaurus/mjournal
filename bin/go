@@ -148,7 +148,7 @@ task::build() {
 }
 
 doc "* tush_production: tag and push a docker build to production"
-task::tag_and_push_prod() {
+task::tush_production() {
   local base="docker.peterlyons.com:5000/mjournal"
   local build="$1"
   local version="$(./wallah/bin/get_json_value package.json version)"

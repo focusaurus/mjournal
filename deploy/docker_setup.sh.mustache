@@ -40,7 +40,7 @@ prepare_fs() {
   # for the postgresql db
   install --owner=root --group=adm --mode=0700 --directory \
     /var/local/{{appName}}_db
-  install --owner=root --group=adm --mode=0755 \
+  install --owner=root --group=root --mode=0755 \
     /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
 
 
