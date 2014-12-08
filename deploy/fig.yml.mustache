@@ -5,6 +5,6 @@ app:
   ports:
     - "{{port}}:{{port}}"
 db:
-  image: postgres
+  image: postgres:{{postgres.version}}
   volumes:
     - /var/local/{{appName}}_db_1:/var/lib/postgresql/data

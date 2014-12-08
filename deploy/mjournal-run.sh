@@ -1,5 +1,5 @@
 #!/bin/bash
 cd /home/app
-exec su www-data \
-  --command '/usr/bin/env NODE_ENV=production ./app/server.js' \
-  >> /var/log/app.log 2>&1
+export NODE_ENV=production
+exec start-stop-daemon --start -c www-data --exec \
+  $(pwd)/app/server.js >> /var/log/app.log 2>&1

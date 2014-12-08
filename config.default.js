@@ -10,6 +10,7 @@ config.appVersion = pack.version;
 config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 config.nodeVersion = pack.engines.node;
 config.registry = "docker.stage.peterlyons.com:5000";
+config.envName = "stage";
 var figHost = process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR;
 var figPort = process.env.MJOURNAL_DB_PORT_5432_TCP_PORT;
 config.db = {
@@ -20,6 +21,7 @@ config.db = {
   password: appName
 };
 config.postgres = _.clone(config.db);
+config.postgres.version = "9.3";
 config.postgres.user = "postgres";
 config.postgres.password = "postgres";
 config.postgres.database = "postgres";
@@ -36,6 +38,7 @@ config.session = {
 switch (config.NODE_ENV) {
   case "production":
     config.registry = "docker.peterlyons.com:5000";
+    config.envName = "production";
     break;
   case "test":
     config.db.database = appName + "test";

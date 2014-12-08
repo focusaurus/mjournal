@@ -1,0 +1,82 @@
+#!/bin/bash
+# This file should be run as root (via sudo) on the docker host
+# after pushing the correct images to the registry
+set -e
+export DOCKER_HOST=tcp://localhost:2375
+
+docker_clean_rm() {
+  local name="$1"
+  # This tr -d nonesense is because mustache and docker inspect
+  # use the same delimiter of a mustache
+  set +e
+  local running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
+  local exit_code=$?
+  set -e
+  if [[ "${running}" == "true" ]]; then
+    printf "✓\nstopping ${name}…"
+    docker stop "${name}"
+  fi
+  if [[ "${running}" == "<no value>" ]]; then
+    return
+  fi
+  if [[ ${exit_code} -eq 0 ]]; then
+    printf "✓\nremoving ${name}…"
+    docker rm "${name}"
+  fi
+  # non-zero exit code from docker inspect probably means doesn't exist
+}
+
+
+prepare_directories() {
+  printf "preparing directories…"
+  install --owner=root --group=adm --mode=0755 --directory \
+    /var/local/{{appName}} \
+    /var/www/{{appName}}.peterlyons.com
+  install --owner=root --group=adm --mode=0700 --directory \
+    /var/local/{{appName}}_db
+  # install --owner=root --group=adm --mode=0644 --target-directory=/etc/init \
+  #  /tmp/{{appName}}.conf /tmp/{{appName}}_db.conf
+  install --owner=root --group=adm --mode=0755 \
+    /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+
+  config_file=/var/local/{{appName}}/config.js
+  readonly config_file
+
+  if [[ ! -e "${config_file}" ]]; then
+    install --group=www-data --mode=0640 /dev/null "${config_file}"
+    echo "Empty config installed to ${config_file}."
+    echo "Edit it and add the proper data then re-run this script."
+    exit 10
+  fi
+}
+
+start_containers() {
+  docker_clean_rm "{{appName}}"
+  docker_clean_rm "{{appName}}_db"
+  printf "✓\nstarting {{appName}}_db…"
+  /usr/bin/docker run \
+    "--name={{appName}}_db" \
+    "--volume=/var/local/{{appName}}_db:/var/lib/postgresql/data" \
+    "--volume=/var/log/{{appName}}_db:/var/log/postgresql" \
+    --detach \
+    --restart=always \
+    postgres:{{postgres.version}}
+
+  printf "✓\nstarting {{appName}}…"
+  docker run \
+    "--publish={{port}}:{{port}}" \
+    "--name={{appName}}" \
+    "--link={{appName}}_db:{{appName}}_db" \
+    "--volume=/var/local/{{appName}}:/etc/{{appName}}" \
+    "--volume=/var/local/{{appName}}:/var/log" \
+    --detach \
+    --restart=on-failure:3 \
+    {{registry}}/{{appName}}:{{envName}}
+}
+
+main() {
+  prepare_directories
+  start_containers
+}
+
+main
