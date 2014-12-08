@@ -22,7 +22,6 @@ RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 #OK, all the slow stuff has been run and hopefully cached
 RUN cd node_modules && ln -nsf ../app
 
-ADD deploy/{{appName}}-run.sh /opt/{{appName}}/{{appName}}-run.sh
 ADD app /opt/{{appName}}/app
 ADD wwwroot /opt/{{appName}}/wwwroot
 ADD config.default.js /opt/{{appName}}/config.default.js

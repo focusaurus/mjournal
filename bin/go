@@ -85,7 +85,6 @@ task::lint() {
 
 _dockerfile() {
   ./bin/render_template deploy/Dockerfile.mustache > Dockerfile
-  ./bin/render_template deploy/webapp.conf.mustache > webapp.conf
 }
 
 doc "* fig: bring up the full system via docker and fig"
@@ -116,15 +115,15 @@ task::figlog() {
     tail -f /var/log/app.log
 }
 
-doc "* clean: delete the build directory"
-task::clean() {
-  rm Dockerfile fig.yml webapp.conf
-}
-
 doc "
 Deployment Commands
 -------------------
 "
+
+doc "* clean: delete the build directory"
+task::clean() {
+  rm Dockerfile fig.yml
+}
 
 doc "* build: render the Dockerfile then run a docker build"
 task::build() {
@@ -132,8 +131,8 @@ task::build() {
   exec docker build --tag=mjournal .
 }
 
-doc "* tag: tag a docker build for pushing to prod and push"
-task::tag_and_push() {
+doc "* tush_production: tag and push a docker build to production"
+task::tag_and_push_prod() {
   local base="docker.peterlyons.com:5000/mjournal"
   local build="$1"
   local version="$(./wallah/bin/get_json_value package.json version)"
@@ -143,11 +142,21 @@ task::tag_and_push() {
   docker push "${base}:production"
 }
 
-doc "* tag: tag a docker build for pushing to prod and push"
+doc "* tag_stage: tag a docker build for stage"
 task::tag_stage() {
   local base="docker.stage.peterlyons.com:5000/mjournal"
   local build="$1"
   docker tag "${build}" "${base}:stage"
+}
+
+doc "* deploy_stage run the docker build tagged 'stage' on stage docker"
+task::deploy_stage() {
+  ./bin/prepare_docker_host.sh dbs
+}
+
+doc "* deploy_production run the docker build tagged 'production' on prod docker"
+task::deploy_production() {
+  NODE_ENV=production ./bin/prepare_docker_host.sh mjournal.peterlyons.com
 }
 
 ##### main code #####

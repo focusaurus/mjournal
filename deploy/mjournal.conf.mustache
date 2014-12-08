@@ -1,6 +1,0 @@
-description "{{appName}} app server"
-start on filesystem and started docker
-stop on runlevel [!2345]
-respawn
-env DOCKER_HOST=tcp://127.0.0.1:2375
-exec /usr/bin/docker start --attach {{appName}}
