@@ -58,7 +58,7 @@ prepare_fs() {
   readonly log_file
 
   if [[ ! -e "${log_file}" ]]; then
-    install --owner=www-data --group=www-data --mode=0640 /dev/null "${log_file}"
+    install --owner=www-data --group=www-data --mode=0666 /dev/null "${log_file}"
   fi
 }
 
