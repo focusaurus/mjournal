@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-var async = require("async");
 var config = require("config3");
 var fs = require("fs");
 var mustache = require("mustache");
@@ -21,9 +20,3 @@ function render(inPath, callback) {
 }
 
 render(process.argv[2], process.exit);
-// async.eachLimit(process.argv.slice(2), 10, render, function (error, result) {
-//   if (error) {
-//     console.error(error);
-//     return;
-//   }
-// });

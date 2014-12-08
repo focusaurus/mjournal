@@ -53,10 +53,12 @@ function EntriesController($scope, $q, $location, Entries) {
     deferred.resolve(matchingTags);
     return deferred.promise;
   };
-  $scope.create = function(event) {
+  $scope.create = function create(event) {
     //Not angular but meh
     var bodyElement = document.querySelector("p.body.new");
-    if (event.which === ENTER && event.shiftKey && bodyElement.innerText) {
+    var doCreate = bodyElement.innerText &&
+      (event === true || (event.which === ENTER && event.shiftKey));
+    if (doCreate) {
       var entryData = {
         body: bodyElement.innerText,
         tags: _.pluck($scope.newEntryTags, "text")
