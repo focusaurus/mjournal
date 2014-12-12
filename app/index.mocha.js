@@ -1,5 +1,5 @@
 var testUtils = require("app/testUtils");
-var expect = require("expectacle");
+var expect = require("chaimel");
 
 describe("app/index site-wide routes", function() {
   ["/grid.gif", "/tag.png"].forEach(function(url) {
@@ -33,7 +33,7 @@ describe("app/index site-wide routes", function() {
 
   it("layout should include HTML comment with app version", function (done) {
     testUtils.loadPage("/", function (error, dom) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       expect(dom("meta[name=x-app-version]").length).toEqual(1);
       done();
     });

@@ -1,7 +1,7 @@
 var _ = require("lodash");
 var signUp = require("app/users/operations/signUp");
 var ops = require("app/entries/operations");
-var expect = require("expectacle");
+var expect = require("chaimel");
 
 describe("entries/operations/create+update+view+viewTags", function() {
   var user = null;
@@ -13,7 +13,7 @@ describe("entries/operations/create+update+view+viewTags", function() {
       password: "password"
     };
     signUp(inUser, function(error, outUser) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       expect(outUser).toHaveProperty("id");
       user = outUser;
       done();
@@ -25,7 +25,7 @@ describe("entries/operations/create+update+view+viewTags", function() {
       password: "password"
     };
     signUp(inUser, function(error, outUser) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       expect(outUser).toHaveProperty("id");
       user2 = outUser;
       done();
@@ -38,12 +38,12 @@ describe("entries/operations/create+update+view+viewTags", function() {
       tags: "e1t1 e1t2"
     };
     ops.create(options, function(error, outEntry) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       expect(outEntry).toHaveProperty("id");
       expect(outEntry).toHaveProperty("created");
       expect(outEntry).toHaveProperty("updated");
       expect(outEntry).toHaveProperty("body");
-      expect(outEntry.body).toBe(options.body);
+      expect(outEntry.body).toEqual(options.body);
       entry = outEntry;
       done();
     });
@@ -55,12 +55,12 @@ describe("entries/operations/create+update+view+viewTags", function() {
       tags: "e2t1 e2t2"
     };
     ops.create(options, function(error, outEntry) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       expect(outEntry).toHaveProperty("id");
       expect(outEntry).toHaveProperty("created");
       expect(outEntry).toHaveProperty("updated");
       expect(outEntry).toHaveProperty("body");
-      expect(outEntry.body).toBe(options.body);
+      expect(outEntry.body).toEqual(options.body);
       done();
     });
   });
@@ -72,12 +72,12 @@ describe("entries/operations/create+update+view+viewTags", function() {
     };
     var oldUpdated = entry.updated;
     ops.update(options, function(error, outEntry) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       expect(outEntry).toHaveProperty("body");
-      expect(outEntry.body).toBe(options.body);
+      expect(outEntry.body).toEqual(options.body);
       expect(outEntry).toHaveProperty("updated");
       expect(outEntry).toHaveProperty("created");
-      expect(oldUpdated).not.toEqual(outEntry.updated);
+      expect(oldUpdated).notToEqual(outEntry.updated);
       done();
     });
   });
@@ -85,8 +85,8 @@ describe("entries/operations/create+update+view+viewTags", function() {
     ops.view({
       user: user
     }, function(error, entries) {
-      expect(error).toBeFalsy();
-      expect(entries).not.toBeEmpty();
+      expect(error).notToExist();
+      expect(entries).notToBeEmpty();
       done();
     });
   });
@@ -94,13 +94,13 @@ describe("entries/operations/create+update+view+viewTags", function() {
     ops.viewTags({
       user: user
     }, function(error, tags) {
-      expect(error).toBeFalsy();
+      expect(error).notToExist();
       tags = _.pluck(tags, "text");
       expect(tags.indexOf("e1t1") >= 0).toBeTrue(tags);
       expect(tags.indexOf("e1t2") >= 0).toBeTrue(tags);
       expect(tags.indexOf("e2t1") >= 0).toBeFalse(tags);
       expect(tags.indexOf("e2t2") >= 0).toBeFalse(tags);
-      expect(tags.length).toBe(2);
+      expect(tags.length).toEqual(2);
       done();
     });
   });
@@ -109,8 +109,8 @@ describe("entries/operations/create+update+view+viewTags", function() {
       user: user,
       textSearch: "body"
     }, function(error, entries) {
-      expect(error).toBeFalsy();
-      expect(entries).not.toBeEmpty(0);
+      expect(error).notToExist();
+      expect(entries).notToBeEmpty();
       done();
     });
   });
@@ -119,8 +119,8 @@ describe("entries/operations/create+update+view+viewTags", function() {
       user: user,
       textSearch: "notpresent"
     }, function(error, entries) {
-      expect(error).toBeFalsy();
-      expect(entries).toBeArray();
+      expect(error).notToExist();
+      expect(entries).toBeAnInstanceOf(Array);
       expect(entries).toBeEmpty();
       done();
     });
@@ -132,9 +132,9 @@ describe("entries/operations/create+update+view+viewTags", function() {
       body: "test body 3 hax0rz"
     };
     ops.update(options, function(error, outEntry) {
-      expect(error).not.toBeNull();
+      expect(error).notToBeNull();
       expect(error).toHaveProperty("status");
-      expect(error.status).toBe(404);
+      expect(error.status).toEqual(404);
       expect(outEntry).toBeUndefined();
       done();
     });
@@ -145,9 +145,9 @@ describe("entries/operations/create+update+view+viewTags", function() {
       user: user2
     };
     ops.delete(options, function(error) {
-      expect(error).not.toBeNull();
+      expect(error).notToBeNull();
       expect(error).toHaveProperty("status");
-      expect(error.status).toBe(404);
+      expect(error.status).toEqual(404);
       done();
     });
   });

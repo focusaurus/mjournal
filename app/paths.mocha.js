@@ -1,12 +1,12 @@
-var paths = require("app/paths");
-var expect = require("expectacle");
+var paths = require("./paths");
+var expect = require("chaimel");
 
 describe("app/paths", function() {
   it("should have the expected exported strings", function() {
-    expect(paths.app).toBeString();
-    expect(paths.browser).toBeString();
-    expect(paths.build).toBeString();
-    expect(paths.thirdParty).toBeString();
-    expect(paths.wwwroot).toBeString();
+    expect(paths.app).toBeA("string");
+    expect(paths.browser).toBeA("string");
+    expect(paths.build).toBeA("string");
+    expect(paths.thirdParty).toBeA("string");
+    expect(paths.wwwroot).toBeA("string");
   });
 });

@@ -1,4 +1,4 @@
-var expect = require("expectacle");
+var expect = require("chaimel");
 var signIn = require("app/users/operations/signIn");
 var signUp = require("app/users/operations/signUp");
 
@@ -13,10 +13,10 @@ describe("users/operations/signIn", function() {
   it("should return the user if password is correct", function(done) {
     signIn(newUser, function(error, user) {
       expect(error).toBeNull();
-      expect(user).not.toHaveProperty("bcryptedPassword");
+      expect(user).notToHaveProperty("bcryptedPassword");
       expect(user).toHaveProperty("id");
       expect(user).toHaveProperty("email");
-      expect(user.email).toBe(newUser.email.toLowerCase());
+      expect(user.email).toEqual(newUser.email.toLowerCase());
       done();
     });
   });
@@ -25,9 +25,9 @@ describe("users/operations/signIn", function() {
       email: newUser.email,
       password: "incorrect"
     }, function(error) {
-      expect(error).toBeTruthy();
+      expect(error).toExist();
       expect(error).toHaveProperty("status");
-      expect(error.status).toBe(403);
+      expect(error.status).toEqual(403);
       done();
     });
   });

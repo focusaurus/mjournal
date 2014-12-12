@@ -1,4 +1,4 @@
-var expect = require("expectacle");
+var expect = require("chaimel");
 var signUp = require("app/users/operations/signUp");
 
 describe("users/operations/signUp", function() {
@@ -9,10 +9,10 @@ describe("users/operations/signUp", function() {
     };
     signUp(newUser, function(error, user) {
       expect(error).toBeNull();
-      expect(user).not.toHaveProperty("bcryptedPassword");
+      expect(user).notToHaveProperty("bcryptedPassword");
       expect(user).toHaveProperty("id");
       expect(user).toHaveProperty("email");
-      expect(user.email).toBe(newUser.email.toLowerCase());
+      expect(user.email).toEqual(newUser.email.toLowerCase());
       done();
     });
   });
@@ -24,9 +24,9 @@ describe("users/operations/signUp", function() {
     signUp(newUser, function(error) {
       expect(error).toBeNull();
       signUp(newUser, function(error) {
-        expect(error).toBeTruthy();
+        expect(error).toExist();
         expect(error).toHaveProperty("status");
-        expect(error.status).toBe(409);
+        expect(error.status).toEqual(409);
         done();
       });
     });
@@ -37,9 +37,9 @@ describe("users/operations/signUp", function() {
       password: "password"
     };
     signUp(newUser, function(error) {
-      expect(error).toBeTruthy();
+      expect(error).toExist();
       expect(error).toHaveProperty("status");
-      expect(error.status).toBe(400);
+      expect(error.status).toEqual(400);
       done();
     });
   });

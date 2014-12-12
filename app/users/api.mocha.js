@@ -1,4 +1,4 @@
-var expect = require("expectacle");
+var expect = require("chaimel");
 var signUp = require("app/users/operations/signUp");
 var testUtils = require("app/testUtils");
 
