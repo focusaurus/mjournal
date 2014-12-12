@@ -1,6 +1,6 @@
 #!/bin/bash
-# Install this script as root:adm 0755 in /etc/cron.daily/backup-{{appName}}-db
-# sudo install --owner=root --group=adm --mode=0755 \
+# Install this script as root:sudo 0750 in /etc/cron.daily/backup-{{appName}}-db
+# sudo install --owner=root --group=sudo --mode=0750 \
 #   /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
 export DOCKER_HOST=tcp://localhost:2375
 container="{{appName}}_db"
@@ -11,11 +11,13 @@ do_backup() {
   docker exec "${container}" \
     pg_dumpall --user="${user}" --host=localhost --clean --no-password > "$1"
   bzip2 --force "$1"
+  chown root:sudo "$1.bz2"
+  chmod 440 "$1.bz2"
 }
 
 prepare() {
   export DATE=$(date +%Y-%m-%d)
-  mkdir -p "${backup_dir}"
+  install -d --owner=root --group=sudo --mode=0750 "${backup_dir}"
 }
 
 choose_backups() {

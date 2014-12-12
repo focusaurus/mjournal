@@ -27,6 +27,7 @@ config.postgres.password = "postgres";
 config.postgres.database = "postgres";
 config.logStream = process.stdout;
 config.port = 9090;
+config.ip = "127.0.0.1";
 config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
   cookie: {
@@ -37,9 +38,10 @@ config.session = {
 
 switch (config.NODE_ENV) {
   case "production":
-    config.registry = "docker.peterlyons.com:5000";
     config.envName = "production";
+    config.ip = "0.0.0.0";
     config.logStream = "/var/log/" + config.appName + ".log";
+    config.registry = "docker.peterlyons.com:5000";
     break;
   case "test":
     config.db.database = appName + "test";

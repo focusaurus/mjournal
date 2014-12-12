@@ -12,5 +12,5 @@ template() {
 echo "Starting containers on ${docker}"
 template "deploy/backup-db.mustache" "/tmp/backup-${app_name}-db"
 template "deploy/nginx.mustache" "/tmp/nginx_${app_name}"
-template "deploy/docker_setup.sh.mustache" "/tmp/docker_setup_${app_name}.sh"
-ssh -t ${docker} sudo bash "/tmp/docker_setup_${app_name}.sh"
+template "deploy/setup_docker.sh.mustache" "/tmp/setup_docker_${app_name}.sh"
+ssh -t ${docker} sudo bash "/tmp/setup_docker_${app_name}.sh"

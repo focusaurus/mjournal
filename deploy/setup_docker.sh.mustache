@@ -30,17 +30,17 @@ docker_clean_rm() {
 prepare_fs() {
   printf "preparing docker host fs…"
   # for the node.js app and nginx
-  install --owner=root --group=adm --mode=0755 --directory \
+  install --owner=root --group=sudo --mode=755 --directory \
     /var/local/{{appName}} \
     /var/www/{{hostname}}
   if [[ "{{envName}}" == "production" ]]; then
-    install --owner=root --group=adm --mode=0755 \
+    install --owner=root --group=sudo --mode=750 \
       /tmp/nginx_{{appName}} /etc/nginx/sites-enabled/{{hostname}}
   fi
-  # for the postgresql db
-  install --owner=root --group=adm --mode=0700 --directory \
+  # for the postgresql db. MUST be 0700 or postgresql won't start
+  install --owner=root --group=sudo --mode=0700 --directory \
     /var/local/{{appName}}_db
-  install --owner=root --group=root --mode=0755 \
+  install --owner=root --group=sudo --mode=750 \
     /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
 
 
@@ -48,18 +48,19 @@ prepare_fs() {
   readonly config_file
 
   if [[ ! -e "${config_file}" ]]; then
-    install --group=www-data --mode=0640 /dev/null "${config_file}"
+    install --owner=www-data --group=sudo --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
     echo "Edit it and add the proper data then re-run this script."
     exit 10
   fi
+  chown www-data:sudo "${config_file}"
+  chmod 0460 "${config_file}"
 
   log_file=/var/local/{{appName}}/{{appName}}.log
   readonly log_file
-
-  if [[ ! -e "${log_file}" ]]; then
-    install --owner=www-data --group=www-data --mode=0666 /dev/null "${log_file}"
-  fi
+  touch "${log_file}"
+  chown www-data:sudo "${log_file}"
+  chmod 0640 "${log_file}"
 }
 
 stop_containers() {
