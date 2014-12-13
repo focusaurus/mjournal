@@ -1,0 +1,15 @@
+#!/bin/bash
+# Install this script as root:sudo 0750 in /etc/cron.daily/backup-{{appName}}-db
+# sudo install --owner=root --group=sudo --mode=0750 \
+#   /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+export DOCKER_HOST=tcp://localhost:2375
+container="{{appName}}_db"
+user=postgres
+backup_path="$1"
+backup_file=$(basename "${backup_path}")
+restore_file=$(echo "${backup_file}" | sed -e s/.\bz2//)
+restore_path="/var/lib/postgresql/data/${restore_file}"
+bunzip2 --stdout "${backup_path}" > "/var/local/"${container}/"${restore_file}"
+docker exec \
+  "${container}" \
+  psql --user="${user}" --no-password --file="${restore_path}"
