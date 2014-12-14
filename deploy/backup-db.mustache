@@ -9,7 +9,7 @@ backup_dir="/var/local/{{appName}}_db_backups"
 
 do_backup() {
   docker exec "${container}" \
-    pg_dumpall --user="${user}" --host=localhost --clean --no-password > "$1"
+    pg_dumpall --clean --user="${user}" --no-password > "$1"
   bzip2 --force "$1"
   chown root:sudo "$1.bz2"
   chmod 440 "$1.bz2"
