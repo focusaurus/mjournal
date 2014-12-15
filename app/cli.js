@@ -93,6 +93,7 @@ function signInMW(stack) {
 
 function paginate(stack) {
   stack.command.option("-p, --page <page>");
+  return stack;
 }
 
 function command(program, name, description) {
