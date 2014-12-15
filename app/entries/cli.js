@@ -12,7 +12,7 @@ function bodyOption(stack) {
     "-b, --body <body>",
     "Content for the journal entry. Pass 'stdin' to provide on stdin"
   );
-  stack.use(function(next, options) {
+  stack.use(function(options, next) {
     var input, lines;
     if (options.body === "stdin") {
       input = readline.createInterface({
@@ -25,7 +25,7 @@ function bodyOption(stack) {
       });
       input.on("close", function() {
         options.body = lines.join("\n");
-        return next();
+        next();
       });
       console.log("Type body then ctrl-d when done");
     } else {
@@ -35,8 +35,9 @@ function bodyOption(stack) {
 }
 
 function tagsOption(stack) {
-  return stack.command.option(
+  stack.command.option(
     "-t, --tags <tags>", "Tags for the entry. Space-delimited words.");
+  return stack;
 }
 
 function viewAction(next, options) {
@@ -73,7 +74,7 @@ cli.signInMW(viewStack);
 cli.paginate(viewStack);
 viewStack.use(viewAction);
 
-function createAction(next, options) {
+function createAction(options) {
   var opOptions = _.pick(options, "user", "body", "tags");
   entryOps.create(opOptions, function(error, entry) {
     if (error) {
@@ -83,13 +84,12 @@ function createAction(next, options) {
     process.exit();
   });
 }
-var createCommand = program.command("create")
-  .description("create a new journal entry");
-var createStack = new cli.Stack(createCommand);
+
+var createStack = cli.command(
+  program, "create", "create a new journal entry");
 cli.signInMW(createStack);
 bodyOption(createStack);
-tagsOption(createStack);
-createStack.use(createAction);
+tagsOption(createStack).use(createAction);
 
 function updateAction(next, commandOptions) {
   var options = _.pick(commandOptions, "user", "body", "tags");
