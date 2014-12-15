@@ -1,39 +1,7 @@
-var _ = require("lodash");
 var signInOp = require("app/users/operations/signIn");
 var promptly = require("promptly");
 var ware = require("ware");
 
-function Stack(command) {
-  this.command = command;
-  this.action = this.action.bind(this);
-  this.use = this.use.bind(this);
-  this.stack = [];
-  this.first = true;
-  this.command.action(this.action);
-}
-
-Stack.prototype.use = function(mw) {
-  this.stack.push(mw);
-  return this;
-};
-
-Stack.prototype.action = function() {
-  var args, mw;
-  mw = this.stack.shift();
-  if (!mw) {
-    return this;
-  }
-  if (this.first) {
-    this.first = false;
-    this.mwArgs = [this.action];
-    args = [].slice.apply(arguments, [0]);
-    this.mwArgs.push.apply(this.mwArgs, args);
-  }
-  mw.apply(this.command, this.mwArgs);
-  return this;
-};
-
-/*eslint no-process-exit:0*/
 function exit(error) {
   var code, message;
   if (error) {
@@ -43,6 +11,7 @@ function exit(error) {
       code = error.status / 10;
     }
     console.error(message);
+    /*eslint no-process-exit:0*/
     process.exit(code);
   }
   process.exit();
@@ -110,6 +79,5 @@ module.exports = {
   exit: exit,
   exitIfError: exitIfError,
   paginate: paginate,
-  signInMW: signInMW,
-  Stack: Stack
+  signInMW: signInMW
 };

@@ -106,6 +106,6 @@ if (require.main === module) {
   program.parse(process.argv);
 }
 
-module.exports = {
-  updateAction: updateAction
-};
+exports.bodyOption = bodyOption;
+exports.tagsOption = tagsOption;
+exports.updateAction = updateAction;
