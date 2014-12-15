@@ -18,6 +18,7 @@ describe("app/index site-wide routes", function() {
       .expect(200)
       .expect("Content-Type", "text/css; charset=utf-8")
       .expect(/tags-input/)
+      .expect(/loading-bar/)
       .expect(/p\.body\.new/)
       .end(done);
   });

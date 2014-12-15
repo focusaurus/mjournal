@@ -22,7 +22,8 @@
   "browser": {
     "angular": "./bower_components/angular/angular.js",
     "angular-resource": "./bower_components/angular-resource/angular-resource.js",
-    "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js"
+    "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js",
+    "angular-loading-bar": "./bower_components/angular-loading-bar/build/loading-bar.js"
   },
   "browserify-shim": {
     "angular": {
@@ -34,6 +35,11 @@
       ]
     },
     "ng-tags-input": {
+      "depends": [
+        "./bower_components/angular/angular.js:angular"
+      ]
+    },
+    "angular-loading-bar": {
       "depends": [
         "./bower_components/angular/angular.js:angular"
       ]
