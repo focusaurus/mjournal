@@ -11,9 +11,7 @@ function signUp(email) {
       email: email,
       password: password
     }, function(error, user) {
-      if (error) {
-        cli.exit(error);
-      }
+      cli.exitIfError(error);
       console.log(user);
       /* eslint no-process-exit:0 */
       process.exit();
@@ -21,11 +19,9 @@ function signUp(email) {
   });
 }
 
-function key(next, options) {
+function key(options) {
   operations.createKey(options, function(error, key) {
-    if (error) {
-      cli.exit(error);
-    }
+    cli.exitIfError(error);
     console.log(key);
     process.exit();
   });
@@ -34,10 +30,9 @@ function key(next, options) {
 program.description("operate on user records");
 program.command("sign-up <email>")
   .description("register a new user account").action(signUp);
-var keyCommand = program.command("create-key")
-  .description("create an authentication key for CLI/API access");
-var keyStack = new cli.Stack(keyCommand);
-cli.signInMW(keyStack);
-keyStack.use(key);
+
+var keyStack = cli.command(
+  program, "create-key", "create an authentication key for CLI/API access");
+cli.signInMW(keyStack).use(key);
 
 program.parse(process.argv);

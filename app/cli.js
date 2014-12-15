@@ -1,38 +1,7 @@
-var _ = require("lodash");
 var signInOp = require("app/users/operations/signIn");
 var promptly = require("promptly");
+var ware = require("ware");
 
-function Stack(command) {
-  this.command = command;
-  this.action = this.action.bind(this);
-  this.use = this.use.bind(this);
-  this.stack = [];
-  this.first = true;
-  this.command.action(this.action);
-}
-
-Stack.prototype.use = function(mw) {
-  this.stack.push(mw);
-  return this;
-};
-
-Stack.prototype.action = function() {
-  var args, mw;
-  mw = this.stack.shift();
-  if (!mw) {
-    return this;
-  }
-  if (this.first) {
-    this.first = false;
-    this.mwArgs = [this.action];
-    args = [].slice.apply(arguments, [0]);
-    this.mwArgs.push.apply(this.mwArgs, args);
-  }
-  mw.apply(this.command, this.mwArgs);
-  return this;
-};
-
-/*eslint no-process-exit:0*/
 function exit(error) {
   var code, message;
   if (error) {
@@ -42,15 +11,21 @@ function exit(error) {
       code = error.status / 10;
     }
     console.error(message);
+    /*eslint no-process-exit:0*/
     process.exit(code);
   }
-  return process.exit();
+  process.exit();
+}
+
+function exitIfError(error) {
+  if (error) {
+    exit(error);
+  }
 }
 
 function signInMW(stack) {
   stack.command.option("-u, --user <email>");
-  stack.use(function(callback) {
-    var options = _.last(arguments);
+  stack.use(function signInInner(options, next) {
     var signInOptions = {
       email: options.user || process.env.MJ_USER,
       password: options.password || process.env.MJ_PASSWORD
@@ -60,15 +35,12 @@ function signInMW(stack) {
         code: 403,
         message: "Please specify a user with --user <email>"
       });
-      return;
     }
     function getUser() {
       signInOp(signInOptions, function(error, user) {
-        if (error) {
-          exit(error);
-        }
+        exitIfError(error);
         options.user = user;
-        callback();
+        next();
       });
     }
     if (signInOptions.password) {
@@ -78,22 +50,34 @@ function signInMW(stack) {
     promptly.password(
       "password for " + signInOptions.email + ": ", function(error, password) {
         if (error) {
-          callback(error);
+          next(error);
           return;
         }
         signInOptions.password = password;
         getUser();
       });
   });
+  return stack;
 }
 
 function paginate(stack) {
   stack.command.option("-p, --page <page>");
+  return stack;
+}
+
+function command(program, name, description) {
+  var stack = ware();
+  stack.command = program
+    .command(name)
+    .description(description)
+    .action(stack.run.bind(stack));
+  return stack;
 }
 
 module.exports = {
+  command: command,
   exit: exit,
+  exitIfError: exitIfError,
   paginate: paginate,
-  signInMW: signInMW,
-  Stack: Stack
+  signInMW: signInMW
 };

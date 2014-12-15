@@ -73,7 +73,8 @@
     "split": "^0.3.0",
     "stdin": "0.0.1",
     "stylus": "^0.47.1",
-    "superagent": "^0.18.2"
+    "superagent": "^0.18.2",
+    "ware": "1.2.0"
   },
   "devDependencies": {
     "bistre": "^1.0.0",
