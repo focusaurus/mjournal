@@ -10,7 +10,7 @@ var log = require("app/log");
 var path = require("path");
 var util = require("util");
 
-var db = knex({client: "pg", connection: config.db});
+var db = require("./index");
 var postgres = knex({client: "pg", connection: config.postgres});
 var ALREADY = [
   "3D000",
@@ -95,6 +95,9 @@ function init(callback) {
       //bad credentials
       log.error(error, "Database credentials are incorrect!");
     }
+    // If we don't do this and the DB is stopped, this app will get an
+    // uncaught exception from the postgres connection
+    postgres.destroy();
     callback(error, result);
   });
 }

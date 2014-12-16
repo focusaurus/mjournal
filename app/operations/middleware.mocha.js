@@ -12,7 +12,7 @@ describe("app/operations/middleware.paginated", function() {
     var next = function() {
       var sql = run.dbOp.toString().toLowerCase();
       expect(sql).toInclude("limit '50'");
-      expect(sql).toInclude("offset '0'");
+      expect(sql).notToInclude("offset '0'");
       done();
     };
     paginated.call(null, run, next);

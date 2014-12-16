@@ -2,27 +2,20 @@
 var _ = require("lodash");
 var app = require("app");
 var config = require("config3");
+var errors = require("app/errors");
 var log = require("app/log");
 //eslint bug thinks "setup" is a global from mocha
 //https://github.com/eslint/eslint/issues/1059
 var setup2 = require("app/db/setup");
 var validateConfig = require("./validateConfig");
 
-process.on("uncaughtException", function (error) {
-  var message = "uncaught exception. Process will exit.";
-  log.error(error, message);
-  //In case log is not writeable, etc
-  console.error(message, error);
-  setTimeout(process.exit.bind(null, 66), 1000);
-});
+process.on("uncaughtException", errors.onUncaughtException);
 
-log.debug(
-  {
+log.debug({
     env: process.env.NODE_ENV,
-    db: _.omit(config.db, "password")
-  },
-  "%s server process starting", config.pack.name
-);
+    db: _.omit(config.db, "password")},
+  "%s server process starting", config.pack.name);
+
 var valid = validateConfig(config);
 if (valid.error) {
   log.error(valid.error, "Config is invalid. Process will exit.");
