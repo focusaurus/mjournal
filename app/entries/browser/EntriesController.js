@@ -45,6 +45,7 @@ function EntriesController($scope, $q, $location, Entries) {
       entry.updated = result.updated;
     });
   };
+
   $scope.autoCompleteTags = function autoCompleteTags(value) {
     var matchingTags = $scope.tags.filter(function (tag) {
       return tag.text.toLowerCase().indexOf(value.toLowerCase()) >= 0;
@@ -53,6 +54,7 @@ function EntriesController($scope, $q, $location, Entries) {
     deferred.resolve(matchingTags);
     return deferred.promise;
   };
+
   $scope.create = function create(event) {
     //Not angular but meh
     var bodyElement = document.querySelector("p.body.new");
@@ -71,6 +73,7 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.newEntryTags.forEach($scope.addAutocompleteTag);
     }
   };
+
   $scope.searchKeypress = function searchKeypress(event) {
     if (event.which === ENTER) {
       $location.search("before", null);
@@ -79,6 +82,7 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.get();
     }
   };
+
   $scope.clearTextSearch = function clearTextSearch() {
     $scope.textSearch = "";
     $location.search("before", null);
@@ -86,6 +90,7 @@ function EntriesController($scope, $q, $location, Entries) {
     $location.search("textSearch", null);
     $scope.get();
   };
+
   $scope.updateTags = function updateTags(entry) {
     var forUpdate = _.pick(entry, "id");
     forUpdate.tags = entry.tags.map(function (tag) {
@@ -94,6 +99,7 @@ function EntriesController($scope, $q, $location, Entries) {
     entry.tags.forEach($scope.addAutocompleteTag);
     Entries.update(forUpdate);
   };
+
   $scope.addAutocompleteTag = function addAutocompleteTag(newTag) {
     var haveIt = $scope.tags.some(function (tag) {
       return tag.text.toLowerCase() === newTag.text.toLowerCase();
@@ -102,6 +108,7 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.tags.push(newTag);
     }
   };
+
   $scope.clickTag = function clickTag(event) {
     var target = event.target;
     var isTagSpan = target.tagName === "SPAN" && target.childNodes.length === 1;
@@ -114,6 +121,7 @@ function EntriesController($scope, $q, $location, Entries) {
       $scope.get();
     }
   };
+
   $scope.entries = [];
   $scope.textSearch = $location.search().textSearch || "";
   $scope.get();

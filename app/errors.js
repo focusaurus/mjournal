@@ -39,5 +39,6 @@ function onUncaughtException(error) {
   setTimeout(process.exit.bind(null, 66), 1000);
 }
 
+exports.canWithstand = canWithstand;
 exports.middleware = middleware;
 exports.onUncaughtException = onUncaughtException;

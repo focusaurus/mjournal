@@ -42,7 +42,7 @@ function link($scope, $element, attrs) {
 function pagination() {
   return {
     restrict: "E",
-    link:  link,
+    link: link,
     template: paginationTemplate,
     scope: {
       array: "=?"
