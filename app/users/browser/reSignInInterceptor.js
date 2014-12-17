@@ -1,12 +1,21 @@
-function reSignInInterceptor($q, $quickDialog) {
+function reSignInInterceptor($q, $timeout, $quickDialog, sessionTtl) {
+  var expiredPromise;
+  function dialog() {
+    $quickDialog.open("reSignIn");
+  }
   return {
     responseError: function reSignIn(res) {
-      console.log("@bug reSignIn for responseError", res);
       if (res.status === 401) {
-        console.log("@bug reSignIn needs to prompt!");
-        $quickDialog.open("reSignIn");
+        dialog();
       }
       return $q.reject(res);
+    },
+    response: function (res) {
+      if (expiredPromise) {
+        $timeout.cancel(expiredPromise);
+      }
+      expiredPromise = $timeout(dialog, sessionTtl);
+      return res;
     }
   };
 }

@@ -32,7 +32,8 @@ config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
   cookie: {
     httpOnly: true,
-    secure: false
+    secure: false,
+    maxAge: 86400 // one day
   }
 };
 
@@ -42,6 +43,7 @@ switch (config.NODE_ENV) {
     config.ip = "0.0.0.0";
     config.logStream = "/var/log/" + config.appName + ".log";
     config.registry = "docker.peterlyons.com:5000";
+    config.session.cookie.secure = true;
     break;
   case "test":
     config.db.database = appName + "test";

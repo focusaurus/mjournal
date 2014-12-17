@@ -7,8 +7,9 @@ function signInController($scope, $http, $window, $quickDialog) {
     var user = _.pick($scope, "email", "password");
     var url = "/api/users/" + (register ? "sign-up" : "sign-in");
     $http.post(url, user).then(function () {
+      delete $scope.password;
+      delete $scope.email;
       if ($scope.re) {
-        console.log("@bug signed in AGAIN");
         $quickDialog.close("reSignIn");
       } else {
         $window.location.reload();

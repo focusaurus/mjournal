@@ -3,10 +3,14 @@ block body
   div(ng-app="mjournal" ng-controller="entries")
     a.sign-out(href="/api/users/sign-out" target="_self") Sign Out
     include entries/entries.jade
-    div.error(ng-bind="error")
     quick-dialog(dialog-name="reSignIn")
-      h2 Please sign in again
-      form(ng-submit="signIn($event)" ng-controller="sign-in" ng-init="re=true")
+      form(
+        class="sign-in"
+        ng-submit="signIn($event)"
+        ng-controller="sign-in"
+        ng-init="re=true")
+        h2 Please sign in again
+        div.error(ng-bind="error")
         label email
         input(type="email" ng-model="email")
         label password
