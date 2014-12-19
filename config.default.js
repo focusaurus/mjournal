@@ -35,7 +35,11 @@ config.session = {
     secure: false
   }
 };
-
+config.email = {
+  to: "pete@peterlyons.com",
+  from: "mjournal reports <mjournalreports@gmail.com>",
+  service: "gmail"
+};
 switch (config.NODE_ENV) {
   case "production":
     config.envName = "production";

@@ -67,7 +67,9 @@
     "joi": "^4.6.2",
     "knex": "~0.7.3",
     "lodash": "^2.4.1",
+    "moment": "2.8.4",
     "mustache": "^0.8.2",
+    "nodemailer": "1.3.0",
     "pathval": "0.1.1",
     "pg": "4.1.1",
     "promptly": "~0.2.0",
@@ -76,7 +78,8 @@
     "stdin": "0.0.1",
     "stylus": "^0.47.1",
     "superagent": "^0.18.2",
-    "ware": "1.2.0"
+    "ware": "1.2.0",
+    "xoauth2": "1.0.0"
   },
   "devDependencies": {
     "bistre": "^1.0.0",
