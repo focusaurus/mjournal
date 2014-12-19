@@ -9,7 +9,7 @@ var xoauth2 = require("xoauth2");
 var BODY = "Entries Today: {{entriesToday}}\n" +
   "Total Entries: {{totalEntries}}\n" +
   "Total Users: {{totalUsers}}\n";
-var SUBJECT = "{{appName}} daily report: {{totalUsers}} users";
+var SUBJECT = "{{appName}} daily summary {{for}}: {{totalUsers}} users";
 var generator = xoauth2.createXOAuth2Generator(config.email.auth.xoauth2);
 var options = _.clone(config.email);
 options.auth.xoauth2 = generator;

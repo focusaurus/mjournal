@@ -34,7 +34,14 @@ function dailySummary(callback) {
     // usersToday: createdBetween.bind(null, "users", start, end),
     entriesToday: createdBetween.bind(null, "entries", start, end)
   };
-  async.parallel(work, callback);
+  async.parallel(work, function (error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+    result.for = start.format("MMM DD YYYY");
+    callback(null, result);
+  });
 }
 
 exports.dailySummary = dailySummary;
