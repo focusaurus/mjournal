@@ -26,7 +26,8 @@ function createdBetween(table, start, end, callback) {
 }
 
 function dailySummary(callback) {
-  var start = moment.utc().startOf("day");
+  //Yesterday midnight UTC
+  var start = moment.utc().subtract(1, "day").startOf("day");
   var end = start.clone().endOf("day");
   var work = {
     totalUsers: count.bind(null, "users"),

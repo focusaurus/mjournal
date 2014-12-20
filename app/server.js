@@ -1,15 +1,16 @@
 #!/usr/bin/env node
+var errors = require("app/errors");
+process.on("uncaughtException", errors.onUncaughtException);
+
 var _ = require("lodash");
 var app = require("app");
 var config = require("config3");
-var errors = require("app/errors");
 var log = require("app/log");
 //eslint bug thinks "setup" is a global from mocha
 //https://github.com/eslint/eslint/issues/1059
 var setup2 = require("app/db/setup");
 var validateConfig = require("./validateConfig");
-
-process.on("uncaughtException", errors.onUncaughtException);
+require("app/emails/scheduled").run();
 
 log.debug({
     env: process.env.NODE_ENV,
