@@ -1,20 +1,35 @@
 #!/bin/bash
-docker_exec() {
+docker_sql() {
   docker exec \
     --interactive \
     --tty \
     "${container}" \
-    /usr/lib/postgresql/9.4/bin/$@
+    psql --user="${user}" --no-password --file="$1"
 }
 
 export DOCKER_HOST=tcp://localhost:2375
 container="{{appName}}_db"
 user=postgres
 backup_path="$1"
+if [[ -z "${backup_path}" ]]; then
+  echo "Provide a path to a backup file" 1>&2
+  exit 1
+fi
 backup_file=$(basename "${backup_path}")
+
 restore_file=$(echo "${backup_file}" | sed -e s/.\bz2//)
 restore_path="/var/lib/postgresql/data/${restore_file}"
 bunzip2 --stdout "${backup_path}" > "/var/local/"${container}/"${restore_file}"
-docker_exec pg_ctl -D /var/lib/postgresql/data start
-docker_exec psql --user="${user}" --no-password --file="${restore_path}" postgres
-docker_exec pg_ctl -D /var/lib/postgresql/data start
+
+terminate_path="/var/lib/postgresql/data/terminate.sql"
+cat <<EOF > "/var/local/${container}/terminate.sql"
+revoke connect on database {{appName}} from public;
+alter database {{appName}} connection limit 0;
+select pg_terminate_backend(pid)
+  from pg_stat_activity
+  where pid <> pg_backend_pid()
+  and datname='{{appName}}';
+EOF
+
+docker_sql "${terminate_path}"
+docker_sql "${restore_path}"
