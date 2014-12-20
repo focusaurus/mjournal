@@ -6,6 +6,8 @@ function canWithstand(error) {
       //terminating connection due to administrator command
     case "EHOSTUNREACH":
       //DB probably down at the moment
+    case "ETIMEDOUT":
+      //DB probably went down with an active connection
     case "ECONNREFUSED":
       //DB probably down
       log.warn(error, "Database connection error");
