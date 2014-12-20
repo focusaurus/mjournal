@@ -48,7 +48,6 @@ app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
-app.use(sharify);
 app.use(require("./middleware/dbDown"));
 app.use(cookieParser());
 app.use(session({
@@ -62,6 +61,7 @@ app.use(function(req, res, next) {
   res.locals.user = req.user = req.session.user;
   next();
 });
+app.use(sharify);
 app.use(byKey);
 app.get("/", home);
 app.use("/api/users", require("./users/api"));
