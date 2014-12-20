@@ -6,7 +6,7 @@ var log = require("app/log");
 var db = module.exports = knex({client: "pg", connection: config.db});
 
 function forceReconnect(callback) {
-  db("users").select("*").limit(1).exec(callback);
+  db.raw("select now()").then(callback);
 }
 
 var call = backoff.call(forceReconnect, function(error) {
