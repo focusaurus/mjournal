@@ -36,9 +36,19 @@ config.session = {
   }
 };
 config.email = {
+  enabled: false,
+  service: "gmail",
   to: "pete@peterlyons.com",
   from: "mjournal reports <mjournalreports@gmail.com>",
-  service: "gmail"
+  auth: {
+    xoauth2: {
+      user: "mjournalreports@gmail.com",
+      clientId: "",
+      clientSecret: "",
+      refreshToken: "",
+      timeout: 3600
+    }
+  }
 };
 switch (config.NODE_ENV) {
   case "production":

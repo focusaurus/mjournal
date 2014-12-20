@@ -1,19 +1,13 @@
 #!/usr/bin/env node
 var _ = require("lodash");
 var config = require("config3");
-var log = require("app/log");
+var emails = require("app/emails");
 var mustache = require("mustache");
-var nodemailer = require("nodemailer");
 var reports = require("app/reports");
-var xoauth2 = require("xoauth2");
 var BODY = "Entries Today: {{entriesToday}}\n" +
   "Total Entries: {{totalEntries}}\n" +
   "Total Users: {{totalUsers}}\n";
 var SUBJECT = "{{appName}} daily summary {{for}}: {{totalUsers}} users";
-var generator = xoauth2.createXOAuth2Generator(config.email.auth.xoauth2);
-var options = _.clone(config.email);
-options.auth.xoauth2 = generator;
-var transport = nodemailer.createTransport(config.email);
 
 function build(callback) {
   reports.dailySummary(function (error, result) {
@@ -38,18 +32,11 @@ function send(callback) {
       callback(error);
       return;
     }
-    log.debug(email, "Sending daily summary report email");
-    transport.sendMail(email, function (error, result) {
-      if (error) {
-        log.error(error, "error sending daily summary report email");
-        return;
-      }
-      log.debug(result, "daily summary report email sent OK");
-    });
+    emails.send(email, callback);
   });
 }
 
 module.exports = send;
 if (require.main === module) {
-  send(_.noop);
+  send(process.exit);
 }
