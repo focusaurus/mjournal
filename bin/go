@@ -54,7 +54,8 @@ task::start() {
   task::express
 }
 
-doc "* test: run all the tests (mocha)"
+doc "* test: run all the tests (mocha)
+    * pass --debug for node-inspector"
 task::test() {
   set -e
   export NODE_ENV=test

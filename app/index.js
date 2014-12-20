@@ -9,6 +9,7 @@ var log = require("app/log");
 var paths = require("app/paths");
 var pg = require("pg");
 var session = require("express-session");
+var sharify = require("sharify");
 var stylusBundle = require("app/site/stylusBundle");
 
 bmw.settings.production.minify = {mangle: false};
@@ -36,13 +37,10 @@ function appCSS(req, res, next) {
 }
 
 var PGStore = require("connect-pg-simple")(session);
-var store = new PGStore({
-  conString: config.db,
-  pg: pg,
-  secret: config.sessionSecret
-});
 var app = express();
-_.extend(app.locals, _.pick(config, "appName", "appVersion"));
+_.extend(sharify.data, _.pick(config, "appName", "appVersion"));
+sharify.data.sessionTtl = config.session.cookie.maxAge;
+_.extend(app.locals, sharify.data);
 app.set("view engine", "jade");
 app.set("views", __dirname);
 app.set("trust proxy", true);
@@ -50,10 +48,11 @@ app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
+app.use(sharify);
 app.use(require("./middleware/dbDown"));
 app.use(cookieParser());
 app.use(session({
-  store: store,
+  store: new PGStore({conString: config.db, pg: pg}),
   secret: config.session.secret,
   cookie: config.session.cookie,
   resave: false,

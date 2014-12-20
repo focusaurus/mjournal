@@ -17,6 +17,7 @@
     "angular-resource": "~1.2.16",
     "angular": "~1.2.16",
     "ng-tags-input": "~2.0.1",
-    "angular-loading-bar": "~0.6.0"
+    "angular-loading-bar": "~0.6.0",
+    "angular-quick-dialog": "~1.0.0"
   }
 }
