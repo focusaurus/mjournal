@@ -44,10 +44,11 @@ _.extend(app.locals, sharify.data);
 app.set("view engine", "jade");
 app.set("views", __dirname);
 app.set("trust proxy", true);
-app.use(express.static(paths.wwwroot));
-app.use(express.static(paths.browser));
+app.use(sharify);
 app.get("/mjournal.css", appCSS);
 app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
+app.use(express.static(paths.wwwroot));
+app.use(express.static(paths.browser));
 app.use(require("./middleware/dbDown"));
 app.use(cookieParser());
 app.use(session({
@@ -61,7 +62,6 @@ app.use(function(req, res, next) {
   res.locals.user = req.user = req.session.user;
   next();
 });
-app.use(sharify);
 app.use(byKey);
 app.get("/", home);
 app.use("/api/users", require("./users/api"));
