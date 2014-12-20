@@ -3,14 +3,15 @@ var _ = require("lodash");
 var config = require("config3");
 var emails = require("app/emails");
 var mustache = require("mustache");
-var reports = require("app/reports");
+var dailySummary = require("app/reports/dailySummary");
+
 var BODY = "Entries Today: {{entriesToday}}\n" +
   "Total Entries: {{totalEntries}}\n" +
   "Total Users: {{totalUsers}}\n";
 var SUBJECT = "{{appName}} daily summary {{for}}: {{totalUsers}} users";
 
 function build(callback) {
-  reports.dailySummary(function (error, result) {
+  dailySummary(function (error, result) {
     if (error) {
       callback(error);
       return;

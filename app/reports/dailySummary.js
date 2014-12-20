@@ -44,4 +44,4 @@ function dailySummary(callback) {
   });
 }
 
-exports.dailySummary = dailySummary;
+module.exports = dailySummary;
