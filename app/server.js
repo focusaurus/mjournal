@@ -35,7 +35,7 @@ setup2.init(function (error) {
       setTimeout(process.exit.bind(null, 10), 1000);
     }
     log.info(
-      {port: config.port},
+      _.pick(config, "ip", "port"),
        "%s express app listening", config.pack.name
     );
   });

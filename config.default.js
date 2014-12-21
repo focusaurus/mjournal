@@ -9,7 +9,6 @@ var appName = config.appName = pack.name;
 config.appVersion = pack.version;
 config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 config.nodeVersion = pack.engines.node;
-config.registry = "docker.stage.peterlyons.com:5000";
 config.envName = "stage";
 var figHost = process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR;
 var figPort = process.env.MJOURNAL_DB_PORT_5432_TCP_PORT;
@@ -28,6 +27,7 @@ config.postgres.database = "postgres";
 config.logStream = process.stdout;
 config.port = 9090;
 config.ip = "127.0.0.1";
+config.registry = "docker.peterlyons.com:5000";
 config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
   cookie: {
@@ -56,7 +56,6 @@ switch (config.NODE_ENV) {
     config.envName = "production";
     config.ip = "0.0.0.0";
     config.logStream = "/var/log/" + config.appName + ".log";
-    config.registry = "docker.peterlyons.com:5000";
     config.session.cookie.secure = true;
     break;
   case "test":

@@ -87,17 +87,17 @@ _dockerfile() {
   ./bin/render_template deploy/Dockerfile.mustache > Dockerfile
 }
 
-doc "* fig: bring up the full system via docker and fig"
-task::fig() {
-  _dockerfile
-  if [[ ! -e fig.yml ]]; then
-    #We might be running fig for the very first time,
-    #Try to ensure data volumes exist
-    source ./bin/provision_stage.sh
-  fi
-  ./bin/render_template deploy/fig.yml.mustache > fig.yml
-  fig "$@"
-}
+# doc "* fig: bring up the full system via docker and fig"
+# task::fig() {
+#   _dockerfile
+#   if [[ ! -e fig.yml ]]; then
+#     #We might be running fig for the very first time,
+#     #Try to ensure data volumes exist
+#     source ./bin/provision_stage.sh
+#   fi
+#   ./bin/render_template deploy/fig.yml.mustache > fig.yml
+#   fig "$@"
+# }
 
 dcip() {
   container=$(docker ps | egrep "\b$1\s*\$" | awk '{print $1}')
@@ -159,15 +159,13 @@ task::tush_production() {
   docker push "${base}:production"
 }
 
-doc "* tag_stage: tag a docker build for stage"
-task::tag_stage() {
-  local base="docker.stage.peterlyons.com:5000/mjournal"
-  local build="$1"
-  docker tag "${build}" "${base}:stage"
-}
-
-doc "* deploy_stage run the docker build tagged 'stage' on stage docker"
+doc "* deploy_stage: tag a docker build as 'stage' and run it
+  * Usage: deploy_stage <build>"
 task::deploy_stage() {
+  local registry=$(config3 registry)
+  local app_name=$(config3 appName)
+  local build="$1"
+  docker tag "${build}" "${registry}/${app_name}:stage"
   ./bin/prepare_docker_host.sh dbs
 }
 

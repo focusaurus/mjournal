@@ -14,14 +14,14 @@ docker_clean_rm() {
   local exit_code=$?
   set -e
   if [[ "${running}" == "true" ]]; then
-    printf "✓\nstopping ${name}…"
+    printf "✓\nstopping %s" "${name}…"
     docker stop "${name}"
   fi
   if [[ "${running}" == "<no value>" ]]; then
     return
   fi
   if [[ ${exit_code} -eq 0 ]]; then
-    printf "✓\nremoving ${name}…"
+    printf "✓\nremoving %s" "${name}…"
     docker rm "${name}"
   fi
   # non-zero exit code from docker inspect probably means doesn't exist
@@ -88,7 +88,7 @@ start_containers() {
     "--volume=/var/local/{{appName}}:/var/log" \
     --detach \
     --restart=on-failure:3 \
-    {{registry}}/{{appName}}:{{envName}}
+    {{{registry}}}/{{appName}}:{{envName}}
 }
 
 main() {
