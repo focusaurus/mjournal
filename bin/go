@@ -161,6 +161,23 @@ task::tag_production() {
   # docker push "${base}:production"
 }
 
+
+doc "* production: push and deploy to production"
+task::production() {
+  local registry="$(config3 registry)"
+  local app_name="$(config3 appName)"
+  local base="${registry}/${app_name}"
+  local version="$(config3 appVersion)"
+  echo "OK, in another terminal, connect the ssh tunnel:"
+  echo "ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com"
+  echo "ENTER to continue when tunnel is up, CTRL-C to abort"
+  read -n 1 confirm
+  docker push "${base}:v${version}"
+  docker push "${base}:production"
+  echo "To switch to the new code live in prod, ssh in and run:
+  docker stop ${app_name} && docker start ${app_name}"
+}
+
 doc "* stage: tag a docker build as 'stage' and run it on stage
   * Usage: stage <build>"
 task::stage() {
