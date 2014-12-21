@@ -54,7 +54,6 @@ switch (config.NODE_ENV) {
     config.envName = "production";
     config.ip = "0.0.0.0";
     config.logStream = "/var/log/" + config.appName + ".log";
-    config.session.cookie.secure = true;
     break;
   case "test":
     config.db.database = appName + "test";

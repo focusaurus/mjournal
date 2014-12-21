@@ -23,17 +23,20 @@ function respond(res) {
 }
 
 function signIn(req, res) {
+  log.debug({email: req.body.email}, "sign-in attempt");
   var options = _.pick(req.body, "email", "password");
   operations.signIn(options, respond(res));
 }
 
 function signUp(req, res) {
+  log.debug({email: req.body.email}, "sign-up attempt");
   var options = _.pick(req.body, "email", "password");
   res.status(201);
   operations.signUp(options, respond(res));
 }
 
 function signOut(req, res) {
+  log.debug({email: req.user.email}, "signing out");
   req.session.destroy(function (error) {
     if (error) {
       log.error(error, "session.destroy failed");
@@ -43,6 +46,7 @@ function signOut(req, res) {
 }
 
 function createKey(req, res, next) {
+  log.debug({email: req.user.email}, "creating key");
   var options = {
     user: req.user
   };
