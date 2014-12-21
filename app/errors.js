@@ -5,11 +5,11 @@ function canWithstand(error) {
     case "57P01":
       //terminating connection due to administrator command
     case "EHOSTUNREACH":
+    case "ECONNREFUSED":
       //DB probably down at the moment
     case "ETIMEDOUT":
+    case "ECONNRESET":
       //DB probably went down with an active connection
-    case "ECONNREFUSED":
-      //DB probably down
       log.warn(error, "Database connection error");
       return true;
     default:
