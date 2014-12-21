@@ -159,9 +159,9 @@ task::tush_production() {
   docker push "${base}:production"
 }
 
-doc "* deploy_stage: tag a docker build as 'stage' and run it
-  * Usage: deploy_stage <build>"
-task::deploy_stage() {
+doc "* stage: tag a docker build as 'stage' and run it on stage
+  * Usage: stage <build>"
+task::stage() {
   local registry=$(config3 registry)
   local app_name=$(config3 appName)
   local build="$1"

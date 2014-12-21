@@ -10,11 +10,9 @@ config.appVersion = pack.version;
 config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 config.nodeVersion = pack.engines.node;
 config.envName = "stage";
-var figHost = process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR;
-var figPort = process.env.MJOURNAL_DB_PORT_5432_TCP_PORT;
 config.db = {
-  host: figHost || "localhost",
-  port: parseInt(figPort || 5432, 10),
+  host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || "localhost",
+  port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
   user: appName,
   database: appName,
   password: appName

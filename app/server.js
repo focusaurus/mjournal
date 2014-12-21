@@ -1,28 +1,31 @@
 #!/usr/bin/env node
+
+// HEY! The order of this early code has been carefully considered.
+// Do not change unless you know what you are doing
+
 var errors = require("app/errors");
 process.on("uncaughtException", errors.onUncaughtException);
 
-var _ = require("lodash");
-var app = require("app");
 var config = require("config3");
-var log = require("app/log");
-//eslint bug thinks "setup" is a global from mocha
-//https://github.com/eslint/eslint/issues/1059
-var setup2 = require("app/db/setup");
 var validateConfig = require("./validateConfig");
-require("app/emails/scheduled").run();
+var valid = validateConfig(config);
+if (valid.error) {
+  console.error(valid.error.details, "Config is invalid. Process will exit.");
+  process.exit(33);
+}
 
+var _ = require("lodash");
+var log = require("app/log");
 log.debug({
     env: process.env.NODE_ENV,
     db: _.omit(config.db, "password")},
   "%s server process starting", config.pack.name);
 
-var valid = validateConfig(config);
-if (valid.error) {
-  log.error(valid.error, "Config is invalid. Process will exit.");
-  setTimeout(process.exit.bind(null, 66), 1000);
-}
-
+var app = require("app");
+require("app/emails/scheduled").run();
+//eslint bug thinks "setup" is a global from mocha
+//https://github.com/eslint/eslint/issues/1059
+var setup2 = require("app/db/setup");
 setup2.init(function (error) {
   if (error) {
     log.error(error, "Error ensuring database is ready. Process will exit.");

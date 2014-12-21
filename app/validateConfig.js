@@ -18,7 +18,7 @@ var CONFIG_SCHEMA = joi.object().keys({
   appVersion: joi.string().required(),
   db: DB_SCHEMA,
   postgres: DB_SCHEMA,
-  logStream: joi.object().required(),
+  logStream: joi.alternatives().try(joi.object(), joi.string()).required(),
   port: PORT,
   session: SESSION_SCHEMA,
   browserifyDebug: joi.boolean()
