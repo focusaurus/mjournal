@@ -55,6 +55,7 @@ task::start() {
 }
 
 doc "* test: run all the tests (mocha)
+    * optionally pass file(s) to run only specific tests
     * pass --debug for node-inspector"
 task::test() {
   set -e
