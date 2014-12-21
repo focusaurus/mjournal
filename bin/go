@@ -148,15 +148,17 @@ task::build() {
   exec docker build --tag=mjournal .
 }
 
-doc "* tush_production: tag and push a docker build to production"
-task::tush_production() {
-  local base="docker.peterlyons.com:5000/mjournal"
+doc "* tag_production: tag a docker build for production"
+task::tag_production() {
   local build="$1"
-  local version="$(./wallah/bin/get_json_value package.json version)"
+  local registry="$(config3 registry)"
+  local app_name="$(config3 appName)"
+  local base="${registry}/${app_name}"
+  local version="$(config3 appVersion)"
   docker tag "${build}" "${base}:v${version}"
   docker tag "${build}" "${base}:production"
-  docker push "${base}:v${version}"
-  docker push "${base}:production"
+  # docker push "${base}:v${version}"
+  # docker push "${base}:production"
 }
 
 doc "* stage: tag a docker build as 'stage' and run it on stage
