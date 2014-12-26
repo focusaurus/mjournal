@@ -175,6 +175,10 @@ task::production() {
   read -n 1 confirm
   docker push "${base}:v${version}"
   docker push "${base}:production"
+  ssh $(NODE_ENV=production config3 hostname) \
+    env DOCKER_HOST=tcp://localhost:2375 docker pull "${base}:v${version}"
+  ssh $(NODE_ENV=production config3 hostname) \
+    env DOCKER_HOST=tcp://localhost:2375 docker pull "${base}:production"
   echo "To switch to the new code live in prod, ssh in and run:
   docker stop ${app_name} && docker start ${app_name}"
 }
