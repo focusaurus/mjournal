@@ -54,6 +54,11 @@ task::start() {
   task::express
 }
 
+doc "* js: build and watch dev js via browserify"
+task::js() {
+  watchify --debug -o wwwroot/mjournal.js -e app/browser.js
+}
+
 doc "* test: run all the tests (mocha)
     * optionally pass file(s) to run only specific tests
     * pass --debug for node-inspector"
@@ -71,6 +76,9 @@ task::test() {
   fi
   echo -n "wiping test database…"
   app/db/wipe.js
+  echo ✓
+  echo -n "browserify…"
+  ./bin/build_js
   echo ✓
   echo "mocha tests…"
   mocha ${args} ${tests}

@@ -13,12 +13,6 @@
     "test": "./bin/go test",
     "postinstall": "./node_modules/.bin/bower --config.analytics=false install"
   },
-  "browserify": {
-    "transform": [
-      "browserify-shim",
-      "brfs"
-    ]
-  },
   "browser": {
     "angular": "./bower_components/angular/angular.js",
     "angular-resource": "./bower_components/angular-resource/angular-resource.js",
@@ -26,42 +20,14 @@
     "angular-loading-bar": "./bower_components/angular-loading-bar/build/loading-bar.js",
     "angular-quick-dialog": "./bower_components/angular-quick-dialog/angular-quick-dialog.min.js"
   },
-  "browserify-shim": {
-    "angular": {
-      "exports": "angular"
-    },
-    "angular-resource": {
-      "depends": [
-        "./bower_components/angular/angular.js:angular"
-      ]
-    },
-    "ng-tags-input": {
-      "depends": [
-        "./bower_components/angular/angular.js:angular"
-      ]
-    },
-    "angular-loading-bar": {
-      "depends": [
-        "./bower_components/angular/angular.js:angular"
-      ]
-    },
-    "angular-quick-dialog": {
-      "depends": [
-        "./bower_components/angular/angular.js:angular"
-      ]
-    }
-  },
   "dependencies": {
     "async": "^0.9.0",
     "backoff": "2.4.1",
     "bcryptjs": "^2.0.2",
     "body-parser": "^1.4.3",
     "bole": "^0.1.0",
-    "bower": "^1.3.8",
-    "brfs": "^1.2.0",
-    "browserify-middleware": "^3.0.1",
-    "browserify-shim": "3.8.1",
     "commander": "^2.2.0",
+    "compression": "1.2.2",
     "config3": "1.0.0",
     "connect-pg-simple": "^2.1.1",
     "cookie-parser": "^1.3.2",
@@ -91,6 +57,7 @@
   "devDependencies": {
     "bistre": "^1.0.0",
     "bower": "1.3.12",
+    "browserify": "8.0.1",
     "chai": "1.10.0",
     "chaimel": "1.2.0",
     "cheerio": "^0.17.0",
@@ -98,10 +65,11 @@
     "mocha": "^1.20.1",
     "mocha-sinon": "^1.1.3",
     "node-dev": "^2.3.0",
-    "node-inspector": "^0.7.4",
     "npm-check-updates": "~1.2.0",
     "sinon": "^1.10.3",
     "supertest": "^0.13.0",
-    "supertest-session": "0.0.7"
+    "supertest-session": "0.0.7",
+    "uglify-js": "2.4.16",
+    "watchify": "2.2.1"
   }
 }

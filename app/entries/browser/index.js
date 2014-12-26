@@ -1,5 +1,5 @@
 module.exports = "mjournal.entries";
-var angular = require("angular");
+require("angular");
 require("angular-resource");
 require("ng-tags-input");
 
@@ -9,5 +9,4 @@ angular.module(module.exports, ["ngResource", "ngTagsInput"])
   })
   .controller("entries", require("./EntriesController"))
   .factory("Entries", require("./EntriesService"))
-  .directive("editText", require("./editText"))
-  .directive("pagination", require("./pagination"));
+  .directive("editText", require("./editText"));

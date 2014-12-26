@@ -24,11 +24,11 @@ describe("app/index site-wide routes", function() {
   });
 
   it("GET /mjournal.js should send JavaScript", function(done) {
-    this.timeout(10000); //Sorry. Browserify has lots of FS IO
     testUtils
       .get("/mjournal.js")
       .expect(200)
-      .expect("Content-Type", "text/javascript")
+      .expect("Content-Type", "application/javascript")
+      .expect("Content-Encoding", "gzip")
       .end(done);
   });
 
