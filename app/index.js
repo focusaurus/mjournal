@@ -47,7 +47,6 @@ app.use(compression());
 app.get("/mjournal.css", appCSS);
 app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
-app.use(require("./middleware/dbDown"));
 app.use(cookieParser());
 app.use(session({
   store: new PGStore({conString: config.db, pg: pg}),
@@ -61,7 +60,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(byKey);
-app.get("/", home);
+app.get("/", require("./middleware/dbDown"), home);
 app.use("/api/users", require("./users/api"));
 app.use("/api/entries", require("./entries/api"));
 app.use(errors.middleware);

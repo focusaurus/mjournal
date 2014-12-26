@@ -1,13 +1,14 @@
 var db = require("app/db");
-var pathval = require("pathval");
 
 function dbDown(req, res, next) {
-  if (pathval.get(db, "client.pool.genericPool.availableObjects.length") > 0) {
-    next();
-    return;
+  function down() {
+    res.locals.cause = "Database is down";
+    res.status(503);
+    res.render("dbDown");
   }
-  res.locals.cause = "Database is down";
-  res.render("dbDown");
+  db.raw("select 1 as db_is_up").then(function () {
+    next();
+  }).catch(down);
 }
 
 module.exports = dbDown;
