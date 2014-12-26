@@ -1,4 +1,4 @@
-var angular = require("angular");
+require("angular");
 require("angular-loading-bar");
 
 angular.module("mjournal", [

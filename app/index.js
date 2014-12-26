@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var bmw = require("browserify-middleware");
+var compression = require("compression");
 var byKey = require("./users/byKey");
 var config = require("config3");
 var cookieParser = require("cookie-parser");
@@ -11,8 +11,6 @@ var pg = require("pg");
 var session = require("express-session");
 var sharify = require("sharify");
 var stylusBundle = require("app/site/stylusBundle");
-
-bmw.settings.production.minify = {mangle: false};
 
 function home(req, res) {
   if (req.user) {
@@ -45,8 +43,8 @@ app.set("view engine", "jade");
 app.set("views", __dirname);
 app.set("trust proxy", true);
 app.use(sharify);
+app.use(compression());
 app.get("/mjournal.css", appCSS);
-app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
 app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
 app.use(require("./middleware/dbDown"));
