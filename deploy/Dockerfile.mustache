@@ -22,9 +22,9 @@ RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 # OK, all the slow stuff has been run and hopefully cached
 ADD app /opt/app
 ADD wwwroot /opt/wwwroot
-ADD bin/build_js /opt/bin/build_js
+ADD bin/build_js.sh /opt/bin/build_js.sh
 RUN ln -nsf ../app node_modules/app
-RUN bash ./bin/build_js
+RUN bash ./bin/build_js.sh
 RUN npm prune --production
 #Yes this command needs to run twice
 RUN ln -nsf ../app node_modules/app

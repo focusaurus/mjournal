@@ -52,7 +52,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # Daily Rotating Backup System
 
 - Backups are taken daily and monthly by way of a `cron.daily` job on the docker host
-- The cron job is installed when the docker host is prepared via `./bin/prepare_docker_host <hostname>`
+- The cron job is installed when the docker host is prepared via `./bin/deploy.sh <hostname>`
 - The details can be found in `deploy/backup-db.mustache` but TL;DR it's basically `pg_dumpall`
 - Files live as bzip-compressed SQL files at `/var/local/mjournal_db_backups` on the docker host with obvious timestamp file names
 - Stale backups are pruned automatically. We retain 1 month of dailies and 3 months of monthlies
@@ -60,7 +60,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # How to restore from backup
 
 - Yes, this has actually been tested on stage ;-p
-- run `./bin/render_template ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
+- run `./bin/render_template.js ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
 - ssh to the docker host
 - run `sudo bash /tmp/restore.sh /var/local/mjournal_db_backups/<FILE_TO_RESTORE_FROM>`
   - sudo is necessary because of how postgresql requires filesystem permissions to be locked down
