@@ -10,8 +10,7 @@
   },
   "scripts": {
     "start": "./bin/go express",
-    "test": "./bin/go test",
-    "postinstall": "./node_modules/.bin/bower --config.analytics=false install"
+    "test": "./bin/go test"
   },
   "browser": {
     "angular": "./bower_components/angular/angular.js",
