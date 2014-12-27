@@ -30,8 +30,8 @@ config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
   cookie: {
     httpOnly: true,
-    secure: false,
-    maxAge: 1000 * 60 * 60 * 24 * 1 // one day in milliseconds
+    maxAge: 1000 * 60 * 60 * 24 * 1, // one day in milliseconds
+    secure: false
   }
 };
 config.email = {

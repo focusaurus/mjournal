@@ -53,6 +53,7 @@ app.use(session({
   secret: config.session.secret,
   cookie: config.session.cookie,
   resave: false,
+  rolling: true,
   saveUninitialized: true
 }));
 app.use(function(req, res, next) {
