@@ -93,7 +93,7 @@ task::lint() {
 }
 
 _dockerfile() {
-  ./bin/render_template deploy/Dockerfile.mustache > Dockerfile
+  ./bin/render_template.js deploy/Dockerfile.mustache > Dockerfile
 }
 
 # doc "* fig: bring up the full system via docker and fig"
