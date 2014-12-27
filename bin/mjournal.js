@@ -75,7 +75,7 @@ function viewAction(options) {
     .end(printEntries);
 }
 
-var viewCommand = program.command("view")
+program.command("view")
   .description("view entries for a user")
   .option(
     "-a, --after <entryId>",
