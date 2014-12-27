@@ -21,25 +21,17 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # How to build and deploy code
 
 - do a docker build
-  - `./bin/go build`
+  - `./bin/go build "v$(config3 pack.version)"`
 - If that succeeds, note the build ID it prints out such as `Successfully built a2452ff73a95`
-- tag that for testing on stage
-  - `./bin/go tag_stage <build_id_from_above>`
-- restart stage with that docker image
-  - `./bin/go deploy_stage`
+- tag and deploy that for testing on stage
+  - `./bin/go stage <build_id_from_above>`
 - Test in a browser
   - `open 'http://dbs:9090'`
-- If the app is working, tag for prod and push
-  - This requires an SSH tunnel from your docker host to the production docker registry
-  - stop the stage docker registry (@TODO this is terrible. fix)
-    - `ssh -t dbs sudo stop docker-registry`
-  - `ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com`
-  - on your development system, run `./bin/go tush_production <build_id_from_above>`
-- pull the image from the prod registry to the prod docker
-  - `ssh -t docker.peterlyons.com docker pull docker.peterlyons.com:5000/mjournal:production`
-- start the stage docker registry: `docker start docker-registry`
-- restart the app in production
-  - `./bin/go deploy_production`
+- If the app is working, tag for prod
+  - `go tag_production <build_id_from_above>`
+- Deploy to production
+  - `go production`
+  - Note this requires an ssh tunnel from dbs to prod. It will prompt you with the command to establish that in another terminal
 
 # Docker Setup
 

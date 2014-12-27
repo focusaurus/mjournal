@@ -31,7 +31,7 @@ config.session = {
   cookie: {
     httpOnly: true,
     secure: false,
-    maxAge: 86400 // one day
+    maxAge: 1000 * 60 * 60 * 24 * 1 // one day in milliseconds
   }
 };
 config.email = {
