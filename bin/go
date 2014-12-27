@@ -138,7 +138,7 @@ task::release_candidate() {
   fi
   git checkout develop
   git pull origin master
-  npm version "$@"
+  npm version -m "Bump version for %s release" "$@"
 }
 
 doc "  * aliased as 'rc'"
@@ -183,25 +183,27 @@ task::tag_production() {
   docker tag "${build}" "${base}:production"
 }
 
-
 doc "* production: push and deploy to production"
 task::production() {
   local registry="$(config3 registry)"
   local app_name="$(config3 appName)"
   local base="${registry}/${app_name}"
   local version="$(config3 appVersion)"
+  local hostname="$(NODE_ENV=production config3 hostname)"
   echo "OK, in another terminal, connect the ssh tunnel:"
   echo "ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com"
-  echo "ENTER to continue when tunnel is up, CTRL-C to abort"
+  echo "ENTER to continue when tunnel is up, CTRL-c to abort"
   read -n 1 confirm
   docker push "${base}:v${version}"
   docker push "${base}:production"
-  ssh $(NODE_ENV=production config3 hostname) \
+  ssh "${hostname}" \
     env DOCKER_HOST=tcp://localhost:2375 docker pull "${base}:v${version}"
-  ssh $(NODE_ENV=production config3 hostname) \
+  ssh "${hostname}" \
     env DOCKER_HOST=tcp://localhost:2375 docker pull "${base}:production"
-  echo "To switch to the new code live in prod, ssh in and run:
-  docker stop ${app_name} && docker start ${app_name}"
+  echo "Everything is prepared and ready to go."
+  echo "ENTER to go live (brief downtime). CTRL-c to abort."
+  read -n 1 confirm
+  NODE_ENV=production ./bin/deploy.sh "${hostname}"
 }
 
 doc "* deploy_production run the docker build tagged 'production' on prod docker"

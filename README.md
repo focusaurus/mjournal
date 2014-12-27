@@ -6,6 +6,8 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 
 # Development Prerequisites
 
+- git
+- curl
 - some docker host. Local VM recommended (Vagrant + VirtualBox)
 - PostgreSQL database (Vagrant + VirtualBox recommended)
 
@@ -40,8 +42,13 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - data lives in `/var/local/mjournal_db` on the docker host
   - volumes used to mount that into the container for both DB data and logs
   - Backups live at `/var/local/mjournal_db_backups` on the docker host
+    - more details on backup/restore below
 - mjournal node/express app runs in a container linked to the db container
   - data lives in `/var/local/mjournal` for logs and configuration
+  - production configuration lives in `/var/local/mjournal/config.js`
+- running a local/private docker registry in prod at `docker.peterlyons.com:5000`
+- all released docker images are tagged with semver
+- docker images are also tagged by environment for "production" and "stage"
 
 # Production Deployment Setup
 
