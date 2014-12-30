@@ -10,7 +10,7 @@ var paths = require("app/paths");
 var pg = require("pg");
 var session = require("express-session");
 var sharify = require("sharify");
-var stylusBundle = require("app/site/stylusBundle");
+var stylusBundle = require("app/theme/stylusBundle");
 
 function home(req, res) {
   if (req.user) {
