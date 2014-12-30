@@ -1,36 +1,8 @@
-@require "theme/base/colorPalette"
-
-moleskine-grid()
-  background url(grid.gif)
-
-.notebook
-  background-color $border2
-  border 0.5em solid $border2
-  border-radius 0.6em
-  margin 0 0.2em
-
-.page
-  background url(grid.gif)
-  border-radius 1em
-  box-shadow -8px 8px $tunnel
-  margin-top 0.5em
-  moleskine-grid()
-
 .entry
-  border-bottom 0.05em dashed $charcoal
-  fancy-font()
-  padding 0.5em
-  padding-bottom 0.2em
   position relative
-  &:first-child
-    // margin-top -@margin-top
-  &:last-child
-    border none
   p
     white-space pre-wrap
   .created
-    font-family georgia, serif
-    color $smoke
     text-align right
     font-size 16px
     font-style italic
@@ -40,8 +12,6 @@ moleskine-grid()
     outline 0
     line-height 1.4em
   .info
-    background-color $background2
-    border-radius 50%
     display none
     min-width 1em
     position absolute
@@ -61,15 +31,11 @@ moleskine-grid()
   margin-bottom -0.2em
 
 label.new
-  color $text2
   margin-top 2em
   margin-bottom 0.5em
 p.body.new
-  border-radius 0.5em
-  fancy-font()
   margin 0
   margin-bottom 1em
-  moleskine-grid()
   outline 0
   padding-left 1em
   //Design A: new entry expands to fit content
@@ -86,10 +52,6 @@ p.body.new
   *, *:before, *:after
     box-sizing initial
 
-tags-input .host .tags
-  border-radius 0.2em
-
 input.tags.new
-  background-color $background1
   font-size 24px
   min-width: 15em
