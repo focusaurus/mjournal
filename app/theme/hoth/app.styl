@@ -1,0 +1,34 @@
+@require "theme/base/app"
+@require "./colorPalette"
+
+fancy-font()
+  font-family "Georgia"
+
+body
+  background-color $white
+  color $blueSteel
+
+.app-name, .app-tag
+  fancy-font()
+  a
+    color $blueSteel
+
+button()
+  background-color $icyWhite
+  border 0.1em solid $bubblegumTorquise
+  border-radius 0.35em
+  color $blueSteel
+
+button
+  button()
+  &:disabled
+    background-color $snowDay
+    border-color $icyWhite
+
+
+.error
+  color $phoneAFish
+
+@require "./tags.component"
+// @require "theme/moleskine/entries"
+// @require "theme/moleskine/signIn"

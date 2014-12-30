@@ -1,13 +1,7 @@
 @require "angular-loading-bar/build/loading-bar.css"
-@require "theme/base/adaptive"
-@require "theme/moleskine/colorPalette"
-
-fancy-font()
-  font-family "Alice"
+@require "./adaptive"
 
 body
-  background-color $bagels
-  color $text1
   margin 0 auto
   max-width 30em
   font-size 24px
@@ -16,29 +10,21 @@ body
     font-size 18px
 
 .app-name, .app-tag
-  fancy-font()
   text-align center
   a
     text-decoration none
-    color $tunnel
-
-.app-tag
-  font-style italic
 
 h1, h2, h3
   margin 0.2em
 
 label
   display block
+
 input[type=submit]
   display block
 
 button()
-  background-color $butterCream
   cursor pointer
-  border 0.1em solid $past
-  border-radius 0.35em
-  color $tunnel
   outline none
   padding 0.5em 0.8em
   text-decoration none
@@ -46,9 +32,6 @@ button()
 button
   button()
   &:disabled
-    background-color $bagels
-    color $butterCream
-    border-color $butterCream
     cursor not-allowed
 
 a.sign-out
@@ -59,13 +42,9 @@ a.sign-out
   font-size 16px
 
 .error
-  color $errorText
   font-size 16px
 
-@require "theme/base/toolbar.component"
+@require "./toolbar.component"
 @require "entries/tags.component"
-@require "theme/moleskine/tags.component"
 @require "entries/entries"
-@require "theme/moleskine/entries"
 @require "users/signIn"
-@require "theme/moleskine/signIn"

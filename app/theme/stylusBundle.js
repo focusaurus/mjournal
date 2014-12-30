@@ -3,7 +3,7 @@ var fs = require("fs");
 var paths = require("app/paths");
 var stylus = require("stylus");
 
-var APPSTYL = paths.app + "/theme/mjournal-moleskine.styl";
+var APPSTYL = paths.app + "/theme/hoth/app.styl";
 
 function render(callback) {
   fs.readFile(APPSTYL, "utf8", function(error, stylusText) {

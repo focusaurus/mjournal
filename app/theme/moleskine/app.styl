@@ -1,0 +1,38 @@
+@require "theme/base/app"
+@require "./colorPalette"
+
+fancy-font()
+  font-family "Alice"
+
+body
+  background-color $bagels
+  color $text1
+
+.app-name, .app-tag
+  fancy-font()
+  a
+    color $tunnel
+
+.app-tag
+  font-style italic
+
+button()
+  background-color $butterCream
+  border 0.1em solid $past
+  border-radius 0.35em
+  color $tunnel
+
+button
+  button()
+  &:disabled
+    background-color $bagels
+    color $butterCream
+    border-color $butterCream
+
+
+.error
+  color $errorText
+
+@require "theme/moleskine/tags.component"
+@require "theme/moleskine/entries"
+@require "theme/moleskine/signIn"
