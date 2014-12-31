@@ -17,6 +17,7 @@
     "angular-resource": "./bower_components/angular-resource/angular-resource.js",
     "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js",
     "angular-loading-bar": "./bower_components/angular-loading-bar/build/loading-bar.js",
+    "angular-ui-bootstrap-dropdown": "./bower_components/angular-ui-bootstrap/src/dropdown/dropdown.js",
     "angular-quick-dialog": "./bower_components/angular-quick-dialog/angular-quick-dialog.min.js"
   },
   "dependencies": {

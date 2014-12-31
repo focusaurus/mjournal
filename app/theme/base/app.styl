@@ -11,8 +11,9 @@ body
 
 .app-name, .app-tag
   text-align center
-  a
-    text-decoration none
+
+a
+  text-decoration none
 
 h1, h2, h3
   margin 0.2em
@@ -34,17 +35,21 @@ button
   &:disabled
     cursor not-allowed
 
-.sign-out
-  button()
+.menu-bar
   position absolute
   top 0.5em
   right 0.5em
   font-size 16px
 
+.sign-out
+  button()
+  padding-left 1em
+
 .error
   font-size 16px
 
 @require "theme/base/toolbar.component"
+@require "settings/settings"
 @require "entries/tags.component"
 @require "entries/entries"
 @require "users/signIn"
