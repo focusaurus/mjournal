@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+var config = require("config3");
 var fs = require("fs");
 var paths = require("app/paths");
 var stylus = require("stylus");
@@ -15,6 +16,7 @@ function render(callback) {
       .include(paths.bower)
       .set("include css", true)
       .set("filename", APPSTYL)
+      .set("sourcemap", {inline: config.css.debug})
       .render(callback);
   });
 }

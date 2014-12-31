@@ -1,5 +1,5 @@
 @require "angular-loading-bar/build/loading-bar.css"
-@require "./adaptive"
+@require "theme/base/adaptive"
 
 body
   margin 0 auto
@@ -34,7 +34,7 @@ button
   &:disabled
     cursor not-allowed
 
-a.sign-out
+.sign-out
   button()
   position absolute
   top 0.5em
@@ -44,7 +44,7 @@ a.sign-out
 .error
   font-size 16px
 
-@require "./toolbar.component"
+@require "theme/base/toolbar.component"
 @require "entries/tags.component"
 @require "entries/entries"
 @require "users/signIn"

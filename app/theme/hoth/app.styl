@@ -1,34 +1,45 @@
 @require "theme/base/app"
-@require "./colorPalette"
+@require "theme/hoth/colorPalette"
 
 fancy-font()
-  font-family "Georgia"
+  font-family "courier", serif
+  font-weight 100
 
 body
   background-color $white
   color $blueSteel
 
-.app-name, .app-tag
-  fancy-font()
-  a
-    color $blueSteel
-
 button()
-  background-color $icyWhite
+  background-color $white
   border 0.1em solid $bubblegumTorquise
   border-radius 0.35em
-  color $blueSteel
+  color $bubblegumTorquise
 
 button
   button()
   &:disabled
-    background-color $snowDay
+    color $icyWhite
     border-color $icyWhite
 
+.app-name, .app-tag
+  fancy-font()
+  color $bubblegumTorquise
+  a
+    color $bubblegumTorquise
+
+.app-name
+  font-size 24px
+
+.app-tag
+  font-size 18px
+  font-style italic
+
+.sign-out
+  color $icyWhite
 
 .error
   color $phoneAFish
 
-@require "./tags.component"
-// @require "theme/moleskine/entries"
-// @require "theme/moleskine/signIn"
+@require "theme/hoth/tags.component"
+@require "theme/hoth/entries"
+// @require "theme/hoth/signIn"

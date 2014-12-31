@@ -49,11 +49,15 @@ config.email = {
     }
   }
 };
+config.css = {
+  debug: true
+};
 switch (config.NODE_ENV) {
   case "production":
     config.envName = "production";
     config.ip = "0.0.0.0";
     config.logStream = "/var/log/" + config.appName + ".log";
+    config.css.debug = false;
     break;
   case "test":
     config.db.database = appName + "test";
