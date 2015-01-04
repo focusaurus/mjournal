@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 var themes = [
   {name: "moleskine", displayName: "Moleskine"},
   {name: "hoth", displayName: "Hoth"}
@@ -12,3 +14,4 @@ function isSelected(user, theme) {
 exports.defaultTheme = themes[0];
 exports.isSelected = isSelected;
 exports.themes = themes;
+exports.names = _.pluck(themes, "name");

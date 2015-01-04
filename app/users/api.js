@@ -36,7 +36,7 @@ function signUp(req, res) {
 }
 
 function signOut(req, res) {
-  log.debug({email: req.user.email}, "signing out");
+  log.debug({user: req.user}, "signing out");
   req.session.destroy(function (error) {
     if (error) {
       log.error(error, "session.destroy failed");

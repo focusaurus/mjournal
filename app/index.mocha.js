@@ -13,8 +13,7 @@ describe("app/index site-wide routes", function() {
     });
   });
 
-  var names = _.pluck(theme.themes, "name");
-  names = _.map(names, function (name) { return "-" + name;});
+  var names = _.map(theme.names, function (name) { return "-" + name;});
   names.unshift("");
   names.forEach(function(theme) {
     var uri = "/mjournal" + theme + ".css";
