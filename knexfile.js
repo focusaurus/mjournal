@@ -3,4 +3,4 @@ var settings = {
   client: "postgresql",
   connection: config.db
 };
-exports[config.envName] = settings;
+exports[config.NODE_ENV] = settings;
