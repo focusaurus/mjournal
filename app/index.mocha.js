@@ -11,16 +11,19 @@ describe("app/index site-wide routes", function() {
     });
   });
 
-  it("GET /mjournal.css should send CSS", function(done) {
-    this.timeout(2000); //Sorry. FS IO
-    testUtils
-      .get("/mjournal.css")
-      .expect(200)
-      .expect("Content-Type", "text/css; charset=utf-8")
-      .expect(/tags-input/)
-      .expect(/loading-bar/)
-      .expect(/p\.body\.new/)
-      .end(done);
+  ["", "-moleskine", "-hoth"].forEach(function(theme) {
+    var uri = "/mjournal" + theme + ".css";
+    it("GET " + uri + " should send CSS", function(done) {
+      this.timeout(2000); //Sorry. FS IO
+      testUtils
+        .get(uri)
+        .expect(200)
+        .expect("Content-Type", "text/css; charset=utf-8")
+        .expect(/tags-input/)
+        .expect(/loading-bar/)
+        .expect(/p\.body\.new/)
+        .end(done);
+    });
   });
 
   it("GET /mjournal.js should send JavaScript", function(done) {

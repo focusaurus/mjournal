@@ -1,6 +1,6 @@
 extends layout
 block body
-  div(ng-app="mjournal" ng-controller="entries")
+  div(ng-controller="entries")
     div.menu-bar
       include settings/menu.jade
       a.sign-out(href="/api/users/sign-out" target="_self") Sign Out

@@ -21,7 +21,7 @@ function home(req, res) {
 }
 
 function appCSS(req, res, next) {
-  stylusBundle(function(error, cssText) {
+  stylusBundle(req.params[0], function(error, cssText) {
     if (error) {
       log.error({
         err: error
@@ -44,7 +44,7 @@ app.set("views", __dirname);
 app.set("trust proxy", true);
 app.use(sharify);
 app.use(compression());
-app.get("/mjournal.css", appCSS);
+app.get(/\/mjournal-?(\w+)?\.css/, appCSS);
 app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
 app.use(cookieParser());

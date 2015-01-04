@@ -1,6 +1,6 @@
-function settingsMenu($scope) {
+function settingsMenu($scope, $rootScope) {
   $scope.theme = function theme(name) {
-    $scope.$broadcast("setTheme", name);
+    $rootScope.$emit("setTheme", name);
   };
 }
 
