@@ -5,9 +5,12 @@ var emails = require("app/emails");
 var mustache = require("mustache");
 var dailySummary = require("app/reports/dailySummary");
 
-var BODY = "Entries Today: {{entriesToday}}\n" +
-  "Total Entries: {{totalEntries}}\n" +
-  "Total Users: {{totalUsers}}\n";
+var BODY = [
+  "Entries Today: {{entriesToday}}",
+  "Total Entries: {{totalEntries}}",
+  "Total Users: {{totalUsers}}",
+  "Users Today: {{usersToday}}"
+  ].join("\n");
 var SUBJECT = "{{appName}} daily summary {{for}}: {{totalUsers}} users";
 
 function build(callback) {
@@ -39,5 +42,7 @@ function send(callback) {
 
 module.exports = send;
 if (require.main === module) {
-  send(process.exit);
+  send(function () {
+    setTimeout(process.exit, 200);
+  });
 }

@@ -32,7 +32,7 @@ function dailySummary(callback) {
   var work = {
     totalUsers: count.bind(null, "users"),
     totalEntries: count.bind(null, "entries"),
-    // usersToday: createdBetween.bind(null, "users", start, end),
+    usersToday: createdBetween.bind(null, "users", start, end),
     entriesToday: createdBetween.bind(null, "entries", start, end)
   };
   async.parallel(work, function (error, result) {

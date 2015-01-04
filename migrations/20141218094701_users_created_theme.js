@@ -2,7 +2,7 @@
 
 exports.up = function up(knex) {
   return knex.schema.table("users", function (table) {
-    table.timestamp("created").defaultTo(knex.raw("now()"));
+    table.timestamp("created").notNullable().defaultTo(knex.raw("now()"));
     table.string("theme");
   });
 };
