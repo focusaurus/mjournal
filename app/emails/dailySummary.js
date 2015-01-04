@@ -7,11 +7,11 @@ var mustache = require("mustache");
 var dailySummary = require("app/reports/dailySummary");
 
 var BODY = [
-  "Entries Created Today: {{entriesToday}}",
+  "Entries Created Today: {{entriesCreated}}",
   "Entries Updated Today: {{entriesUpdated}}",
   "Total Entries: {{totalEntries}}",
   "Total Users: {{totalUsers}}",
-  "New Users Today: {{usersToday}}"
+  "New Users Today: {{usersCreated}}"
   ].join("\n");
 var SUBJECT = "{{appName}} daily summary {{for}}: {{totalUsers}} users";
 
@@ -21,7 +21,7 @@ function build(callback) {
       callback(error);
       return;
     }
-    if (result.entriesToday < 1) {
+    if (result.entriesCreated < 1) {
       log.info("Daily summary report ran but no activity so no email");
       callback(new Error("Not enough activity to warrant email"));
       return;

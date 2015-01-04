@@ -1,3 +1,4 @@
+var _ = require("lodash");
 var async = require("async");
 var db = require("app/db");
 var moment = require("moment");
@@ -45,8 +46,8 @@ function dailySummary(callback) {
   var work = {
     totalUsers: count.bind(null, "users"),
     totalEntries: count.bind(null, "entries"),
-    usersToday: createdBetween.bind(null, "users", start, end),
-    entriesToday: createdBetween.bind(null, "entries", start, end),
+    usersCreated: createdBetween.bind(null, "users", start, end),
+    entriesCreated: createdBetween.bind(null, "entries", start, end),
     entriesUpdated: updatedBetween.bind(null, "entries", start, end)
   };
   async.parallel(work, function (error, result) {
@@ -54,6 +55,9 @@ function dailySummary(callback) {
       callback(error);
       return;
     }
+    result = _.mapValues(result, function (string) {
+      return parseInt(string, 10);
+    });
     result.for = start.format("MMM DD YYYY");
     callback(null, result);
   });
