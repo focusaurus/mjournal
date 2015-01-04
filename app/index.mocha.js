@@ -1,5 +1,7 @@
+var _ = require("lodash");
 var testUtils = require("app/testUtils");
 var expect = require("chaimel");
+var theme = require("app/theme");
 
 describe("app/index site-wide routes", function() {
   ["/grid.gif", "/favicon.png"].forEach(function(url) {
@@ -11,7 +13,10 @@ describe("app/index site-wide routes", function() {
     });
   });
 
-  ["", "-moleskine", "-hoth"].forEach(function(theme) {
+  var names = _.pluck(theme.themes, "name");
+  names = _.map(names, function (name) { return "-" + name;});
+  names.unshift("");
+  names.forEach(function(theme) {
     var uri = "/mjournal" + theme + ".css";
     it("GET " + uri + " should send CSS", function(done) {
       this.timeout(2000); //Sorry. FS IO
@@ -24,6 +29,13 @@ describe("app/index site-wide routes", function() {
         .expect(/p\.body\.new/)
         .end(done);
     });
+  });
+
+  it("GET /mjournal-bogus.css should 404", function(done) {
+    testUtils
+      .get("/mjournal-bogus.css")
+      .expect(404)
+      .end(done);
   });
 
   it("GET /mjournal.js should send JavaScript", function(done) {

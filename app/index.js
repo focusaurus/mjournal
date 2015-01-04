@@ -11,11 +11,13 @@ var pg = require("pg");
 var session = require("express-session");
 var sharify = require("sharify");
 var stylusBundle = require("app/theme/stylusBundle");
+var theme = require("app/theme");
 
 function home(req, res) {
   res.locals.css = "/" + config.appName;
   if (req.user) {
-    res.locals.css += "-" + (req.user.theme || "moleskine") + ".css";
+    var name = req.user.theme || theme.defaultTheme.name;
+    res.locals.css += "-" + name + ".css";
     res.locals.sharify.data.user = _.pick(req.user, "id", "theme");
     res.render("home");
   } else {
@@ -30,7 +32,7 @@ function appCSS(req, res, next) {
       log.error({
         err: error
       }, "Error rendering CSS");
-      next("Error rendering CSS");
+      next(error);
       return;
     }
     res.type("css");

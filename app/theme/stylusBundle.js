@@ -1,13 +1,22 @@
 #!/usr/bin/env node
+var _ = require("lodash");
 var config = require("config3");
 var fs = require("fs");
 var join = require("path").join;
 var paths = require("app/paths");
 var stylus = require("stylus");
+var theme = require("app/theme");
+var errors = require("httperrors");
 
+var names = _.pluck(theme.themes, "name");
 
-function render(theme, callback) {
-  var stylPath = join(paths.app, "theme", theme || "hoth", "app.styl");
+function render(name, callback) {
+  name = name || theme.defaultTheme.name;
+  if (names.indexOf(name) < 0) {
+    callback(new errors.NotFound("No theme named " + name));
+    return;
+  }
+  var stylPath = join(paths.app, "theme", name, "app.styl");
   fs.readFile(stylPath, "utf8", function(error, stylusText) {
     if (error) {
       return callback(error);
