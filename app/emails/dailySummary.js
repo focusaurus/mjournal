@@ -19,6 +19,10 @@ function build(callback) {
       callback(error);
       return;
     }
+    if (result.entriesToday < 1) {
+      callback(new Error("Not enough activity to warrant email"));
+      return;
+    }
     _.extend(result, _.pick(config, "appName"));
     var email = {
       to: config.email.to,
