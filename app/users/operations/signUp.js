@@ -3,7 +3,7 @@ var bcrypt = require("bcryptjs");
 var db = require("app/db");
 var log = require("app/log");
 var errors = require("httperrors");
-var userSchema = require("./userSchema");
+var userSchema = require("../schemas").SIGN_IN;
 
 function hashPassword(cleartext, callback) {
   bcrypt.genSalt(10, function(error, salt) {

@@ -2,6 +2,8 @@ CREATE TABLE "users"
 (
   "id" serial NOT NULL,
   "email" character varying(256) NOT NULL,
+  "theme" character varying(256),
+  "created" timestamp with time zone NOT NULL DEFAULT now(),
   "bcryptedPassword" character(60) NOT NULL,
   CONSTRAINT "users_pkey" PRIMARY KEY (id),
   CONSTRAINT "users_email_key" UNIQUE (email)

@@ -3,7 +3,7 @@ var bcrypt = require("bcryptjs");
 var db = require("app/db");
 var errors = require("httperrors");
 var log = require("app/log");
-var userSchema = require("./userSchema");
+var userSchema = require("../schemas").SIGN_IN;
 
 function run(options, callback) {
   var valid = userSchema.validate(options);
