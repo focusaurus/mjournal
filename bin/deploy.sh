@@ -6,7 +6,7 @@ app_name=$(./wallah/bin/get_json_value package.json name)
 readonly app_name
 
 template() {
-  ./bin/render_template "$1" | ssh "${docker}" tee "$2" > /dev/null
+  ./bin/render_template.js "$1" | ssh "${docker}" tee "$2" > /dev/null
 }
 
 echo "Starting containers on ${docker}"

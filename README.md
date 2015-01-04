@@ -6,6 +6,8 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 
 # Development Prerequisites
 
+- git
+- curl
 - some docker host. Local VM recommended (Vagrant + VirtualBox)
 - PostgreSQL database (Vagrant + VirtualBox recommended)
 
@@ -21,25 +23,17 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # How to build and deploy code
 
 - do a docker build
-  - `./bin/go build`
+  - `./bin/go build "v$(config3 pack.version)"`
 - If that succeeds, note the build ID it prints out such as `Successfully built a2452ff73a95`
-- tag that for testing on stage
-  - `./bin/go tag_stage <build_id_from_above>`
-- restart stage with that docker image
-  - `./bin/go deploy_stage`
+- tag and deploy that for testing on stage
+  - `./bin/go stage <build_id_from_above>`
 - Test in a browser
   - `open 'http://dbs:9090'`
-- If the app is working, tag for prod and push
-  - This requires an SSH tunnel from your docker host to the production docker registry
-  - stop the stage docker registry (@TODO this is terrible. fix)
-    - `ssh -t dbs sudo stop docker-registry`
-  - `ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com`
-  - on your development system, run `./bin/go tush_production <build_id_from_above>`
-- pull the image from the prod registry to the prod docker
-  - `ssh -t docker.peterlyons.com docker pull docker.peterlyons.com:5000/mjournal:production`
-- start the stage docker registry: `docker start docker-registry`
-- restart the app in production
-  - `./bin/go deploy_production`
+- If the app is working, tag for prod
+  - `go tag_production <build_id_from_above>`
+- Deploy to production
+  - `go production`
+  - Note this requires an ssh tunnel from dbs to prod. It will prompt you with the command to establish that in another terminal
 
 # Docker Setup
 
@@ -48,8 +42,13 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - data lives in `/var/local/mjournal_db` on the docker host
   - volumes used to mount that into the container for both DB data and logs
   - Backups live at `/var/local/mjournal_db_backups` on the docker host
+    - more details on backup/restore below
 - mjournal node/express app runs in a container linked to the db container
   - data lives in `/var/local/mjournal` for logs and configuration
+  - production configuration lives in `/var/local/mjournal/config.js`
+- running a local/private docker registry in prod at `docker.peterlyons.com:5000`
+- all released docker images are tagged with semver
+- docker images are also tagged by environment for "production" and "stage"
 
 # Production Deployment Setup
 
@@ -60,7 +59,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # Daily Rotating Backup System
 
 - Backups are taken daily and monthly by way of a `cron.daily` job on the docker host
-- The cron job is installed when the docker host is prepared via `./bin/prepare_docker_host <hostname>`
+- The cron job is installed when the docker host is prepared via `./bin/deploy.sh <hostname>`
 - The details can be found in `deploy/backup-db.mustache` but TL;DR it's basically `pg_dumpall`
 - Files live as bzip-compressed SQL files at `/var/local/mjournal_db_backups` on the docker host with obvious timestamp file names
 - Stale backups are pruned automatically. We retain 1 month of dailies and 3 months of monthlies
@@ -68,7 +67,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # How to restore from backup
 
 - Yes, this has actually been tested on stage ;-p
-- run `./bin/render_template ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
+- run `./bin/render_template.js ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
 - ssh to the docker host
 - run `sudo bash /tmp/restore.sh /var/local/mjournal_db_backups/<FILE_TO_RESTORE_FROM>`
   - sudo is necessary because of how postgresql requires filesystem permissions to be locked down

@@ -15,15 +15,20 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /opt
 ADD package.json  /opt/package.json
+RUN npm install
 ADD bower.json  /opt/bower.json
-RUN npm install --production
 RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 
 # OK, all the slow stuff has been run and hopefully cached
-RUN ln -nsf ../app node_modules/app
-
 ADD app /opt/app
 ADD wwwroot /opt/wwwroot
+ADD bin/build_js.sh /opt/bin/build_js.sh
+RUN ln -nsf ../app node_modules/app
+RUN bash ./bin/build_js.sh
+RUN npm prune --production
+#Yes this command needs to run twice
+RUN ln -nsf ../app node_modules/app
+
 ADD config.default.js /opt/config.default.js
 ENV NODE_ENV production
 EXPOSE {{port}}

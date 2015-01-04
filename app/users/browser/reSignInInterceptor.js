@@ -14,7 +14,8 @@ function reSignInInterceptor($q, $timeout, $quickDialog, sessionTtl) {
       if (expiredPromise) {
         $timeout.cancel(expiredPromise);
       }
-      expiredPromise = $timeout(dialog, sessionTtl);
+      // HTTP cookie max-age is seconds, JS timeout is milliseconds
+      expiredPromise = $timeout(dialog, sessionTtl * 1000);
       return res;
     }
   };

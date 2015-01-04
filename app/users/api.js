@@ -46,7 +46,6 @@ function signOut(req, res) {
 }
 
 function createKey(req, res, next) {
-  log.debug({email: req.user.email}, "creating key");
   var options = {
     user: req.user
   };

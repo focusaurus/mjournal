@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var bmw = require("browserify-middleware");
+var compression = require("compression");
 var byKey = require("./users/byKey");
 var config = require("config3");
 var cookieParser = require("cookie-parser");
@@ -10,9 +10,7 @@ var paths = require("app/paths");
 var pg = require("pg");
 var session = require("express-session");
 var sharify = require("sharify");
-var stylusBundle = require("app/site/stylusBundle");
-
-bmw.settings.production.minify = {mangle: false};
+var stylusBundle = require("app/theme/stylusBundle");
 
 function home(req, res) {
   if (req.user) {
@@ -23,7 +21,7 @@ function home(req, res) {
 }
 
 function appCSS(req, res, next) {
-  stylusBundle(function(error, cssText) {
+  stylusBundle(req.params[0], function(error, cssText) {
     if (error) {
       log.error({
         err: error
@@ -45,17 +43,17 @@ app.set("view engine", "jade");
 app.set("views", __dirname);
 app.set("trust proxy", true);
 app.use(sharify);
-app.get("/mjournal.css", appCSS);
-app.get("/mjournal.js", bmw([{"app/browser": {"add": true}}]));
+app.use(compression());
+app.get(/\/mjournal-?(\w+)?\.css/, appCSS);
 app.use(express.static(paths.wwwroot));
 app.use(express.static(paths.browser));
-app.use(require("./middleware/dbDown"));
 app.use(cookieParser());
 app.use(session({
   store: new PGStore({conString: config.db, pg: pg}),
   secret: config.session.secret,
   cookie: config.session.cookie,
   resave: false,
+  rolling: true,
   saveUninitialized: true
 }));
 app.use(function(req, res, next) {
@@ -63,7 +61,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(byKey);
-app.get("/", home);
+app.get("/", require("./middleware/dbDown"), home);
 app.use("/api/users", require("./users/api"));
 app.use("/api/entries", require("./entries/api"));
 app.use(errors.middleware);

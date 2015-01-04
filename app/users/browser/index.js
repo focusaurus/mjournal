@@ -1,5 +1,5 @@
 module.exports = "mjournal.users";
-var angular = require("angular");
+require("angular");
 require("angular-resource");
 require("angular-quick-dialog");
 var sharify = require("sharify").data;

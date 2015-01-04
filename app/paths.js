@@ -1,9 +1,13 @@
 var path = require("path");
 
-exports.app = __dirname;
-exports.bower = path.normalize(path.join(__dirname, "..", "bower_components"));
-exports.browser = path.normalize(path.join(__dirname, "browser"));
-exports.build = path.normalize(path.join(__dirname, "..", "build"));
-exports.project = path.normalize(path.join(__dirname, ".."));
-exports.thirdParty = path.normalize(path.join(__dirname, "..", "thirdParty"));
-exports.wwwroot = path.normalize(path.join(__dirname, "..", "wwwroot"));
+function full() {
+  return path.normalize(path.join.apply(path, arguments));
+}
+
+exports.app = full(__dirname);
+exports.bower = full(__dirname, "..", "bower_components");
+exports.browser = full(__dirname, "browser");
+exports.build = full(__dirname, "..", "build");
+exports.project = full(__dirname, "..");
+exports.thirdParty = full(__dirname, "..", "thirdParty");
+exports.wwwroot = full(__dirname, "..", "wwwroot");

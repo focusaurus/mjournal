@@ -51,10 +51,16 @@ task::express() {
 
 doc "  * aliased as 'start' command as well"
 task::start() {
-  task::express
+  task::express "$@"
+}
+
+doc "* js: build and watch dev js via browserify"
+task::js() {
+  watchify --debug -o wwwroot/mjournal.js -e app/browser.js
 }
 
 doc "* test: run all the tests (mocha)
+    * optionally pass file(s) to run only specific tests
     * pass --debug for node-inspector"
 task::test() {
   set -e
@@ -71,6 +77,9 @@ task::test() {
   echo -n "wiping test database…"
   app/db/wipe.js
   echo ✓
+  echo -n "browserify…"
+  ./bin/build_js.sh
+  echo ✓
   echo "mocha tests…"
   mocha ${args} ${tests}
   printf "linting…"
@@ -80,11 +89,11 @@ task::test() {
 
 doc "* lint: run eslint code format checker"
 task::lint() {
-  eslint app bin/render_template
+  eslint app bin
 }
 
 _dockerfile() {
-  ./bin/render_template deploy/Dockerfile.mustache > Dockerfile
+  ./bin/render_template.js deploy/Dockerfile.mustache > Dockerfile
 }
 
 # doc "* fig: bring up the full system via docker and fig"
@@ -95,7 +104,7 @@ _dockerfile() {
 #     #Try to ensure data volumes exist
 #     source ./bin/provision_stage.sh
 #   fi
-#   ./bin/render_template deploy/fig.yml.mustache > fig.yml
+#   ./bin/render_template.js deploy/fig.yml.mustache > fig.yml
 #   fig "$@"
 # }
 
@@ -129,7 +138,12 @@ task::release_candidate() {
   fi
   git checkout develop
   git pull origin master
-  npm version "$@"
+  npm version -m "Bump version for %s release" "$@"
+}
+
+doc "  * aliased as 'rc'"
+task::rc() {
+  task::release_candidate "$@"
 }
 
 doc "
@@ -139,24 +153,13 @@ Deployment Commands
 
 doc "* clean: delete the build directory"
 task::clean() {
-  rm Dockerfile fig.yml
+  rm Dockerfile fig.yml wwwroot/*.js
 }
 
 doc "* build: render the Dockerfile then run a docker build"
 task::build() {
   _dockerfile
   exec docker build --tag=mjournal .
-}
-
-doc "* tush_production: tag and push a docker build to production"
-task::tush_production() {
-  local base="docker.peterlyons.com:5000/mjournal"
-  local build="$1"
-  local version="$(./wallah/bin/get_json_value package.json version)"
-  docker tag "${build}" "${base}:v${version}"
-  docker tag "${build}" "${base}:production"
-  docker push "${base}:v${version}"
-  docker push "${base}:production"
 }
 
 doc "* stage: tag a docker build as 'stage' and run it on stage
@@ -166,12 +169,46 @@ task::stage() {
   local app_name=$(config3 appName)
   local build="$1"
   docker tag "${build}" "${registry}/${app_name}:stage"
-  ./bin/prepare_docker_host.sh dbs
+  ./bin/deploy.sh dbs
+}
+
+doc "* tag_production: tag a docker build for production"
+task::tag_production() {
+  local build="$1"
+  local registry="$(config3 registry)"
+  local app_name="$(config3 appName)"
+  local base="${registry}/${app_name}"
+  local version="$(config3 appVersion)"
+  docker tag "${build}" "${base}:v${version}"
+  docker tag "${build}" "${base}:production"
+}
+
+doc "* production: push and deploy to production"
+task::production() {
+  local registry="$(config3 registry)"
+  local app_name="$(config3 appName)"
+  local base="${registry}/${app_name}"
+  local version="$(config3 appVersion)"
+  local hostname="$(NODE_ENV=production config3 hostname)"
+  echo "OK, in another terminal, connect the ssh tunnel:"
+  echo "ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com"
+  echo "ENTER to continue when tunnel is up, CTRL-c to abort"
+  read -n 1 confirm
+  docker push "${base}:v${version}"
+  docker push "${base}:production"
+  ssh "${hostname}" \
+    env DOCKER_HOST=tcp://localhost:2375 docker pull "${base}:v${version}"
+  ssh "${hostname}" \
+    env DOCKER_HOST=tcp://localhost:2375 docker pull "${base}:production"
+  echo "Everything is prepared and ready to go."
+  echo "ENTER to go live (brief downtime). CTRL-c to abort."
+  read -n 1 confirm
+  NODE_ENV=production ./bin/deploy.sh "${hostname}"
 }
 
 doc "* deploy_production run the docker build tagged 'production' on prod docker"
 task::deploy_production() {
-  NODE_ENV=production ./bin/prepare_docker_host.sh mjournal.peterlyons.com
+  NODE_ENV=production ./bin/deploy.sh mjournal.peterlyons.com
 }
 
 ##### main code #####

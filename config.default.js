@@ -30,8 +30,8 @@ config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
   cookie: {
     httpOnly: true,
-    secure: false,
-    maxAge: 86400 // one day
+    maxAge: 1000 * 60 * 60 * 24 * 1, // one day in milliseconds
+    secure: false
   }
 };
 config.email = {
@@ -49,11 +49,15 @@ config.email = {
     }
   }
 };
+config.css = {
+  debug: true
+};
 switch (config.NODE_ENV) {
   case "production":
     config.envName = "production";
     config.ip = "0.0.0.0";
     config.logStream = "/var/log/" + config.appName + ".log";
+    config.css.debug = false;
     break;
   case "test":
     config.db.database = appName + "test";

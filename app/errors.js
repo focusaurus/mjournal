@@ -32,8 +32,6 @@ function middleware(error, req, res, next) {
 
 function onUncaughtException(error) {
   if (canWithstand(error)) {
-    var benign = "Benign uncaught exception: process will survive";
-    log.debug(error, benign);
     return;
   }
   var fatal = "Uncaught exception: process will exit";

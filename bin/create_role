@@ -1,5 +1,0 @@
-#!/bin/bash
-psql -c 'drop role mjournal;' postgres
-#the md5 digest below is "mjournal"
-psql -c "create role mjournal login \
-  encrypted password '568961be4873c84ad00bd9859daef2aa';" postgres
