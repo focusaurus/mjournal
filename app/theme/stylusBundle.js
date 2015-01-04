@@ -7,7 +7,7 @@ var stylus = require("stylus");
 
 
 function render(theme, callback) {
-  var stylPath = join(paths.app, "theme", theme || "moleskine", "app.styl");
+  var stylPath = join(paths.app, "theme", theme || "hoth", "app.styl");
   fs.readFile(stylPath, "utf8", function(error, stylusText) {
     if (error) {
       return callback(error);
