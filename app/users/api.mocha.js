@@ -67,6 +67,13 @@ describe("POST /api/users/key anonymous", function () {
   });
 });
 
+describe("PUT /api/users anonymous", function () {
+  it("should 401 an anonymous user", function(done) {
+    testUtils.put("/api/users")
+      .expect(401, done);
+  });
+});
+
 describe("POST /api/users/key authorized", function () {
   var key;
   before(function (done) {

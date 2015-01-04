@@ -2,7 +2,7 @@ doctype html
 html(ng-app=appName)
   head(ng-controller="theme")
     title mjournal - minimalist journaling
-    link#theme(rel="stylesheet" href="/mjournal.css")
+    link#theme(rel="stylesheet" href=css)
     link(href="/favicon.png" type="image/png" rel="icon")
     link(href="//fonts.googleapis.com/css?family=Alice"
       rel="stylesheet" type="text/css")
@@ -10,7 +10,7 @@ html(ng-app=appName)
   body
     //- .adaptive
     h1.app-name
-      a(href="/") mjournal
+      a(href="/")= appName
     h2.app-tag minimalist journaling
     block body
     block scripts

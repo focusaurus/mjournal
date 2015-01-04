@@ -14,15 +14,11 @@ function loadPage(URL, callback) {
   });
 }
 
-function get(URL) {
-  return request.get(URL);
-}
-
-function post(URL) {
-  return request.post(URL);
-}
+["get", "post", "put"].forEach(function(method) {
+  exports[method] = function methodWrapper(url) {
+    return request[method](url);
+  };
+});
 
 exports.loadPage = loadPage;
-exports.get = get;
-exports.post = post;
 exports.Session = Session;

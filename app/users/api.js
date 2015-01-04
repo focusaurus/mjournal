@@ -46,6 +46,7 @@ function signOut(req, res) {
 }
 
 function createKey(req, res, next) {
+  log.debug({user: req.user}, "creating key");
   var options = {
     user: req.user
   };
@@ -59,10 +60,27 @@ function createKey(req, res, next) {
   });
 }
 
+function update(req, res, next) {
+  log.debug({user: req.user}, "updating user");
+  var options = {
+    user: req.user
+  };
+  _.extend(options, _.pick(req.body, "theme", "email"));
+  operations.update(options, function (error, user) {
+    if (error) {
+      next(error);
+      return;
+    }
+    req.session.user = req.user = user;
+    res.json(user);
+  });
+}
+
 var app = express();
 app.post("/sign-in", json, signIn);
 app.post("/sign-up", json, signUp);
 app.get("/sign-out", signOut);
 app.post("/key", createKey);
+app.put("/", json, update);
 
 module.exports = app;
