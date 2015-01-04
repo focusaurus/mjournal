@@ -179,8 +179,8 @@ task::tag_production() {
   local app_name="$(config3 appName)"
   local base="${registry}/${app_name}"
   local version="$(config3 appVersion)"
-  docker tag "${build}" "${base}:v${version}"
-  docker tag "${build}" "${base}:production"
+  docker tag -f "${build}" "${base}:v${version}"
+  docker tag -f "${build}" "${base}:production"
 }
 
 doc "* production: push and deploy to production"
@@ -194,6 +194,7 @@ task::production() {
   echo "ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com"
   echo "ENTER to continue when tunnel is up, CTRL-c to abort"
   read -n 1 confirm
+  set -e
   docker push "${base}:v${version}"
   docker push "${base}:production"
   ssh "${hostname}" \
