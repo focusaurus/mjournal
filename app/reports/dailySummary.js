@@ -25,6 +25,19 @@ function createdBetween(table, start, end, callback) {
   });
 }
 
+function updatedBetween(table, start, end, callback) {
+  db(table)
+    .count()
+    .whereBetween("updated", [start.toDate(), end.toDate()])
+    .exec(function (error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+    callback(null, result[0].count);
+  });
+}
+
 function dailySummary(callback) {
   //Yesterday midnight UTC
   var start = moment.utc().subtract(1, "day").startOf("day");
@@ -33,7 +46,8 @@ function dailySummary(callback) {
     totalUsers: count.bind(null, "users"),
     totalEntries: count.bind(null, "entries"),
     usersToday: createdBetween.bind(null, "users", start, end),
-    entriesToday: createdBetween.bind(null, "entries", start, end)
+    entriesToday: createdBetween.bind(null, "entries", start, end),
+    entriesUpdated: updatedBetween.bind(null, "entries", start, end)
   };
   async.parallel(work, function (error, result) {
     if (error) {

@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 var _ = require("lodash");
 var config = require("config3");
+var log = require("app/log");
 var emails = require("app/emails");
 var mustache = require("mustache");
 var dailySummary = require("app/reports/dailySummary");
 
 var BODY = [
-  "Entries Today: {{entriesToday}}",
+  "Entries Created Today: {{entriesToday}}",
+  "Entries Updated Today: {{entriesUpdated}}",
   "Total Entries: {{totalEntries}}",
   "Total Users: {{totalUsers}}",
-  "Users Today: {{usersToday}}"
+  "New Users Today: {{usersToday}}"
   ].join("\n");
 var SUBJECT = "{{appName}} daily summary {{for}}: {{totalUsers}} users";
 
@@ -20,6 +22,7 @@ function build(callback) {
       return;
     }
     if (result.entriesToday < 1) {
+      log.info("Daily summary report ran but no activity so no email");
       callback(new Error("Not enough activity to warrant email"));
       return;
     }
