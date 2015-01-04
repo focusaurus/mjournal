@@ -30,6 +30,8 @@ RUN npm prune --production
 RUN ln -nsf ../app node_modules/app
 
 ADD config.default.js /opt/config.default.js
+ADD knexfile.js /opt/knexfile.js
+ADD migrations /opt/migrations
 ENV NODE_ENV production
 EXPOSE {{port}}
 USER www-data

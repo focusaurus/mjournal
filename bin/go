@@ -89,7 +89,7 @@ task::test() {
 
 doc "* lint: run eslint code format checker"
 task::lint() {
-  eslint app bin
+  eslint app bin migrations
 }
 
 _dockerfile() {
@@ -168,7 +168,7 @@ task::stage() {
   local registry=$(config3 registry)
   local app_name=$(config3 appName)
   local build="$1"
-  docker tag "${build}" "${registry}/${app_name}:stage"
+  docker tag -f "${build}" "${registry}/${app_name}:stage"
   ./bin/deploy.sh dbs
 }
 
