@@ -13,9 +13,12 @@ var sharify = require("sharify");
 var stylusBundle = require("app/theme/stylusBundle");
 
 function home(req, res) {
+  res.locals.css = "/" + config.appName;
   if (req.user) {
+    res.locals.css += "-" + (req.user.theme || "moleskine") + ".css";
     res.render("home");
   } else {
+    res.locals.css += ".css";
     res.render("users/signIn");
   }
 }

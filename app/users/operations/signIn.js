@@ -4,8 +4,12 @@ var db = require("app/db");
 var errors = require("httperrors");
 var log = require("app/log");
 var userSchema = require("../schemas").SIGN_IN;
+var clientFields = require("./clientFields");
 
-function run(options, callback) {
+var signInFields = _.clone(clientFields);
+signInFields.push("bcryptedPassword");
+
+function signIn(options, callback) {
   var valid = userSchema.validate(options);
   if (valid.error) {
     callback(new errors.BadRequest(valid.error.message));
@@ -21,7 +25,7 @@ function run(options, callback) {
     callback(error || defaultError);
   }
   options.email = options.email.toLowerCase().trim();
-  db("users").select(["id", "bcryptedPassword", "email"])
+  db("users").select(signInFields)
     .where({email: options.email}).limit(1).exec(function(error, rows) {
     if (error) {
       callback(error);
@@ -42,10 +46,10 @@ function run(options, callback) {
         denied();
         return;
       }
-      var user = _.pick(row, "id", "email");
+      var user = _.pick(row, clientFields);
       callback(null, user);
     });
   });
 }
 
-module.exports = run;
+module.exports = signIn;

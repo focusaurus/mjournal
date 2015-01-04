@@ -71,6 +71,7 @@ function update(req, res, next) {
       next(error);
       return;
     }
+    req.session.user = req.user = user;
     res.json(user);
   });
 }

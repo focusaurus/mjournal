@@ -4,6 +4,7 @@ var db = require("app/db");
 var errors = require("httperrors");
 var log = require("app/log");
 var opMW = require("app/operations/middleware");
+var select = require("./select");
 var userSchema = require("../schemas").UPDATE;
 
 function update(run, callback) {
@@ -30,8 +31,6 @@ function update(run, callback) {
       callback(error);
       return;
     }
-    user.id = run.options.id;
-    run.user = user;
     callback();
   });
 }
@@ -40,7 +39,8 @@ function updateUser(options, callback) {
   var run = {options: options};
   async.applyEachSeries([
     opMW.requireUser,
-    update
+    update,
+    select
   ], run, function (error) {
     callback(error, run.user);
   });
