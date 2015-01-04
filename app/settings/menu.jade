@@ -1,0 +1,7 @@
+nav.settings-menu(ng-controller="settingsMenu")
+  span.dropdown(dropdown)
+    a.menu(dropdown-toggle)
+      i.icon-cog  
+    ul.dropdown-menu(role="menu")
+      li(ng-click="theme('hoth')") Hoth
+      li(ng-click="theme('moleskine')") Moleskine

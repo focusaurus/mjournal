@@ -1,7 +1,9 @@
 extends layout
 block body
-  div(ng-app="mjournal" ng-controller="entries")
-    a.sign-out(href="/api/users/sign-out" target="_self") Sign Out
+  div(ng-controller="entries")
+    div.menu-bar
+      include settings/menu.jade
+      a.sign-out(href="/api/users/sign-out" target="_self") Sign Out
     include entries/entries.jade
     quick-dialog(dialog-name="reSignIn")
       form(

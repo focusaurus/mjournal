@@ -1,0 +1,43 @@
+@require "theme/base/app"
+@require "theme/hoth/colorPalette"
+
+fancy-font()
+  font-family "courier", serif
+  font-weight 100
+
+body
+  background-color $white
+  color $blueSteel
+
+button()
+  background-color $snowDay
+  border 0.1em solid $bubblegumTorquise
+  border-radius 0.35em
+  color $bubblegumTorquise
+
+button
+  button()
+  &:disabled
+    color $icyWhite
+    border-color $icyWhite
+
+.app-name, .app-tag
+  fancy-font()
+  color $bubblegumTorquise
+  a
+    color $bubblegumTorquise
+
+.app-name
+  font-size 24px
+
+.app-tag
+  font-size 18px
+  font-style italic
+
+.error
+  color $phoneAFish
+
+@require "theme/hoth/tags.component"
+@require "theme/hoth/entries"
+@require "theme/hoth/settings"
+@require "theme/hoth/signIn"

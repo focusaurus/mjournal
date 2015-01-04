@@ -1,13 +1,8 @@
-@require "site/colorPalette"
-@require "site/adaptive"
 @require "angular-loading-bar/build/loading-bar.css"
-
-fancy-font()
-  font-family "Alice"
+@require "icomoon/style.css"
+@require "theme/base/adaptive"
 
 body
-  background-color $bagels
-  color $text1
   margin 0 auto
   max-width 30em
   font-size 24px
@@ -16,29 +11,22 @@ body
     font-size 18px
 
 .app-name, .app-tag
-  fancy-font()
   text-align center
-  a
-    text-decoration none
-    color $tunnel
 
-.app-tag
-  font-style italic
+a
+  text-decoration none
 
 h1, h2, h3
   margin 0.2em
 
 label
   display block
+
 input[type=submit]
   display block
 
 button()
-  background-color $butterCream
   cursor pointer
-  border 0.1em solid $past
-  border-radius 0.35em
-  color $tunnel
   outline none
   padding 0.5em 0.8em
   text-decoration none
@@ -46,23 +34,24 @@ button()
 button
   button()
   &:disabled
-    background-color $bagels
-    color $butterCream
-    border-color $butterCream
     cursor not-allowed
 
-a.sign-out
-  button()
+.menu-bar
   position absolute
   top 0.5em
   right 0.5em
   font-size 16px
 
+.sign-out
+  button()
+  padding-left 1em
+
 .error
-  color $errorText
   font-size 16px
 
-@require "site/toolbar.component"
+@require "theme/base/toolbar.component"
+@require "settings/dropdown.component"
+@require "settings/settings"
 @require "entries/tags.component"
 @require "entries/entries"
 @require "users/signIn"

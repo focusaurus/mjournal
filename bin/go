@@ -153,7 +153,7 @@ Deployment Commands
 
 doc "* clean: delete the build directory"
 task::clean() {
-  rm Dockerfile fig.yml
+  rm Dockerfile fig.yml wwwroot/*.js
 }
 
 doc "* build: render the Dockerfile then run a docker build"

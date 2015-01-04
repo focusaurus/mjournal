@@ -17,6 +17,7 @@
     "angular-resource": "./bower_components/angular-resource/angular-resource.js",
     "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js",
     "angular-loading-bar": "./bower_components/angular-loading-bar/build/loading-bar.js",
+    "angular-ui-bootstrap-dropdown": "./bower_components/angular-ui-bootstrap/src/dropdown/dropdown.js",
     "angular-quick-dialog": "./bower_components/angular-quick-dialog/angular-quick-dialog.min.js"
   },
   "dependencies": {
@@ -48,7 +49,7 @@
     "sharify": "0.1.6",
     "split": "^0.3.0",
     "stdin": "0.0.1",
-    "stylus": "^0.47.1",
+    "stylus": "0.49.3",
     "superagent": "^0.18.2",
     "ware": "1.2.0",
     "xoauth2": "1.0.0"

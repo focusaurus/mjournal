@@ -1,0 +1,18 @@
+// Generic and reusable dropdown styling
+// Don't put app-specific styles here
+
+.dropdown
+  position relative
+  .dropdown-menu
+    position absolute
+    top 100%
+    left 0
+    z-index 1
+    display none
+    padding 0
+    margin 0
+    li
+      cursor pointer
+      list-style-type none
+  &.open .dropdown-menu
+    display block
