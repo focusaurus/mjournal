@@ -2,11 +2,11 @@ var testUtils = require("app/testUtils");
 var expect = require("chaimel");
 
 describe("app/index site-wide routes", function() {
-  ["/grid.gif", "/tag.png"].forEach(function(url) {
+  ["/grid.gif", "/favicon.png"].forEach(function(url) {
     it("GET " + url + " should 200/image", function(done) {
       testUtils.get(url)
         .expect(200)
-        .expect("Content-Type", /image/)
+        .expect("Content-Type", /^image/)
         .end(done);
     });
   });
@@ -40,6 +40,22 @@ describe("app/index site-wide routes", function() {
       expect(error).notToExist();
       expect(dom("meta[name=x-app-version]").length).toEqual(1);
       done();
+    });
+  });
+
+
+  [
+    "/fonts/icomoon.eot",
+    "/fonts/icomoon.svg",
+    "/fonts/icomoon.ttf",
+    "/fonts/icomoon.woff"
+  ].forEach(function(uri) {
+    it("GET " + uri + " should send a font", function(done) {
+      testUtils
+        .get(uri)
+        .expect(200)
+        .expect("Content-Type", /(font|svg)/)
+        .end(done);
     });
   });
 });
