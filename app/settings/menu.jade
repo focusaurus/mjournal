@@ -1,9 +1,12 @@
 nav.settings-menu(ng-controller="settingsMenu")
   span.dropdown(dropdown)
-    a.menu(dropdown-toggle)
-      i.icon-cog  
+    a.menu.icon-menu(dropdown-toggle)
     ul.dropdown-menu(role="menu")
       li
+        i.icon-exit
         a.sign-out(href="/api/users/sign-out" target="_self") Sign Out
-      li(ng-click="theme('hoth')") Hoth
-      li(ng-click="theme('moleskine')") Moleskine
+      li(
+        ng-repeat="theme in themes"
+        ng-click="setTheme(theme.name)")
+        i(ng-class="{'icon-checkmark': theme.selected, 'icon-checkmark2': !theme.selected}")
+        Theme: {{theme.displayName}}

@@ -16,6 +16,7 @@ function home(req, res) {
   res.locals.css = "/" + config.appName;
   if (req.user) {
     res.locals.css += "-" + (req.user.theme || "moleskine") + ".css";
+    res.locals.sharify.data.user = _.pick(req.user, "id", "theme");
     res.render("home");
   } else {
     res.locals.css += ".css";
