@@ -61,7 +61,7 @@ function createKey(req, res, next) {
 }
 
 function update(req, res, next) {
-  log.debug({email: req.user.email}, "updating user");
+  log.debug({user: req.user}, "updating user");
   var options = {
     user: req.user
   };
@@ -80,6 +80,6 @@ app.post("/sign-in", json, signIn);
 app.post("/sign-up", json, signUp);
 app.get("/sign-out", signOut);
 app.post("/key", createKey);
-app.put("/:userId", update);
+app.put("/", json, update);
 
 module.exports = app;

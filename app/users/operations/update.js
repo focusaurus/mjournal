@@ -1,19 +1,21 @@
 var _ = require("lodash");
+var async = require("async");
 var db = require("app/db");
-var log = require("app/log");
 var errors = require("httperrors");
+var log = require("app/log");
+var opMW = require("app/operations/middleware");
 var userSchema = require("../schemas").UPDATE;
 
-function run(options, callback) {
-  var valid = userSchema.validate(options);
+function update(run, callback) {
+  var valid = userSchema.validate(run.options);
   if (valid.error) {
     setImmediate(function() {
       callback(new errors.BadRequest(valid.error.message));
     });
     return;
   }
-  var user = _.pick(options, "email", "theme");
-  var dbOp = db("users").update(user).where({id: options.id});
+  var user = _.pick(run.options, "email", "theme");
+  var dbOp = db("users").update(user).where({id: run.options.user.id});
   log.debug({
     user: user
   }, "updating user");
@@ -28,9 +30,20 @@ function run(options, callback) {
       callback(error);
       return;
     }
-    user.id = options.id;
-    callback(error, user);
+    user.id = run.options.id;
+    run.user = user;
+    callback();
   });
 }
 
-module.exports = run;
+function updateUser(options, callback) {
+  var run = {options: options};
+  async.applyEachSeries([
+    opMW.requireUser,
+    update
+  ], run, function (error) {
+    callback(error, run.user);
+  });
+}
+
+module.exports = updateUser;

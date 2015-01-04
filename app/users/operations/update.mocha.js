@@ -17,7 +17,7 @@ describe("users/operations/update", function() {
         theme: "hoth"
       };
       update(changes, function (error, updatedUser) {
-        expect(error).toBeNull();
+        expect(error).notToExist();
         expect(updatedUser).toHaveProperty("theme", "hoth");
         done();
       });
