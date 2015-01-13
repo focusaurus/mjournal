@@ -1,7 +1,8 @@
 require("mocha-sinon");
 var createKey = require("./createKey");
-var db = require("app/db");
 var expect = require("chaimel");
+var redeemKey = require("./redeemKey");
+var signUp = require("./signUp");
 
 describe("users/operations/createKey", function () {
   it("should require a user option", function(done) {
@@ -14,15 +15,37 @@ describe("users/operations/createKey", function () {
 });
 
 describe("users/operations/createKey", function () {
-  before(function () {
-    this.sinon.stub(db.client.QueryBuilder.prototype, "exec")
-      .yields(null, 1);
+  var user;
+  var firstKey;
+  before(function (done) {
+    var options = {email: "createKey@example.com", password: "password"};
+    signUp(options, function (error, result) {
+      user = result;
+      done(error);
+    });
   });
-  it("should save to the DB and return value", function(done) {
-    createKey({user: {id: 1}}, function (error, value) {
+
+  it("should create a key that can be redeemed", function(done) {
+    createKey({user: user}, function (error, value) {
       expect(error).notToExist();
       expect(value).toMatch(/[a-z0-9]{20}/i);
-      done();
+      firstKey = value;
+      redeemKey({value: firstKey}, function (error, result) {
+        expect(error).notToExist();
+        expect(result).toHaveProperty("email", "createkey@example.com");
+        done();
+      });
+    });
+  });
+
+  it("should invalidate existing keys", function(done) {
+    createKey({user: user}, function (error) {
+      expect(error).notToExist();
+      redeemKey({value: firstKey}, function (error2, user2) {
+        expect(error2).notToExist();
+        expect(user2).notToExist();
+        done();
+      });
     });
   });
 });
