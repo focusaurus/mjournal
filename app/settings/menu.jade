@@ -8,3 +8,6 @@ nav.settings-menu(ng-controller="settingsMenu")
       a(ng-repeat="theme in themes" ng-click="setTheme(theme.name)")
         i(ng-class="{'icon-checkmark': theme.selected, 'icon-checkmark2': !theme.selected}")
         | Theme: {{theme.displayName}}
+      a(href="/docs" target="_self")
+        i.icon-lifebuoy
+        | Documentation

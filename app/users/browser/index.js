@@ -7,7 +7,8 @@ var sharify = require("sharify").data;
 angular.module(module.exports, ["ngResource", "angularQuickDialog"])
   .value("user", sharify.user)
   .constant("sessionTtl", sharify.sessionTtl)
-  .controller("sign-in", require("./SignInController"))
+  .controller("signIn", require("./SignInController"))
+  .controller("apiKey", require("./apiKeyController"))
   .service("usersService", require("./usersService"))
   .factory("reSignInInterceptor", require("./reSignInInterceptor"))
   .config(function($httpProvider) {

@@ -54,6 +54,14 @@ describe("app/index site-wide routes", function() {
     });
   });
 
+  it("GET /docs should include API docs", function (done) {
+    testUtils.loadPage("/docs", function (error, dom) {
+      expect(error).notToExist();
+      expect(dom.html()).toContain("Authorization: key");
+      done();
+    });
+  });
+
 
   [
     "/fonts/icomoon.eot",

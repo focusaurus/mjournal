@@ -5,6 +5,9 @@ function reSignInInterceptor($q, $timeout, $quickDialog, sessionTtl) {
   }
   return {
     responseError: function reSignIn(res) {
+      if (res.config.url === "/api/users/key") {
+        return $q.reject(res);
+      }
       if (res.status === 401) {
         dialog();
       }

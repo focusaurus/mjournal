@@ -1,6 +1,6 @@
 var _ = require("lodash");
-var compression = require("compression");
 var byKey = require("./users/byKey");
+var compression = require("compression");
 var config = require("config3");
 var cookieParser = require("cookie-parser");
 var errors = require("app/errors");
@@ -11,17 +11,12 @@ var pg = require("pg");
 var session = require("express-session");
 var sharify = require("sharify");
 var stylusBundle = require("app/theme/stylusBundle");
-var theme = require("app/theme");
+var themeMW = require("app/middleware/theme");
 
 function home(req, res) {
-  res.locals.css = "/" + config.appName;
   if (req.user) {
-    var name = req.user.theme || theme.defaultTheme.name;
-    res.locals.css += "-" + name + ".css";
-    res.locals.sharify.data.user = _.pick(req.user, "id", "theme");
     res.render("home");
   } else {
-    res.locals.css += ".css";
     res.render("users/signIn");
   }
 }
@@ -64,10 +59,16 @@ app.use(session({
 }));
 app.use(function(req, res, next) {
   res.locals.user = req.user = req.session.user;
+  if (req.user) {
+    res.locals.sharify.data.user = _.pick(req.user, "id", "theme");
+  }
   next();
 });
 app.use(byKey);
-app.get("/", require("./middleware/dbDown"), home);
+app.get("/", require("./middleware/dbDown"), themeMW, home);
+app.get("/docs", themeMW, function (req, res) {
+  res.render("docs");
+});
 app.use("/api/users", require("./users/api"));
 app.use("/api/entries", require("./entries/api"));
 app.use(errors.middleware);

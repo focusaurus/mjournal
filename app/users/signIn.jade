@@ -1,6 +1,6 @@
 extends ../layout
 block body
-  div(ng-controller="sign-in").sign-in
+  div(ng-controller="signIn").sign-in
     div.error(ng-bind="error")
     form(ng-submit="signIn($event)")
       label email
