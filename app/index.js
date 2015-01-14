@@ -67,7 +67,7 @@ app.use(function(req, res, next) {
 app.use(byKey);
 app.get("/", require("./middleware/dbDown"), themeMW, home);
 app.get("/docs", themeMW, function (req, res) {
-  res.render("docs");
+  res.render("docs/docs");
 });
 app.use("/api/users", require("./users/api"));
 app.use("/api/entries", require("./entries/api"));

@@ -1,0 +1,65 @@
+extends ../layout
+block body
+  section.docs
+    h1 mjournal HTTP API Documentation
+      
+    h2 Authentication
+      
+    p All requests must include an <code>Authorization</code> header in the form:
+      
+    code Authorization: key &lt;api-key&gt;
+      
+    p You can obtain an API key by signing in to the web application then using the button below
+    
+    div(ng-controller="apiKey")
+      p.error(ng-if="error" ng-bind="error")
+      button(ng-click="getKey()" ng-if="!apiKey") Get API Key
+      p(ng-if="apiKey") Your API Key is: {{apiKey}}
+      
+    :markdown
+      ## Entries
+      `GET /api/entries`
+      
+      Get one page of entries as json. Each entry has the fields:
+      
+      - `id` a unique identifier
+      - `body` the text body of the entry
+      - `created` ISO-8601 timestamp when the entry was created
+      - `updated` ISO-8601 timestamp when the entry was last updated
+      - `tags` list of strings representing the entry's tag names
+      
+      Pagination is handled by referring to entries in the query string:
+      
+      - `?before=41` will get a page of entries immediately before entry 41
+        - this is used when paging backward from later to earlier
+      - `?after=42` will get a page of entries immediately after entry 42
+        - this is used when paging forward from earlier to later
+      
+      ----
+      `POST /api/entries`
+      
+      Create a new entry. Provide a JSON request body with:
+      
+      - `body` - the text body of the entry
+      - `tags` - optional array of tag string names
+      
+      
+      ----
+      `PUT /api/entries/:id`
+      
+      Update an existing entry. Provide a JSON request body with:
+      
+      - `body` - optional new text body
+      - `tags` - optional new array of tag string names
+      
+      ----
+      `DELETE /api/entries/:id`
+      
+      - delete an entry by its id
+
+      ----
+      `GET /api/entries/tags`
+      
+      Get a list of tags as an array of objects:
+      
+      `[{"text": "the-big-dig"}, {"text": "side-project"}]`
