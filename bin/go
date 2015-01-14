@@ -146,6 +146,13 @@ task::rc() {
   task::release_candidate "$@"
 }
 
+doc "* release: merge a tagged release candidate to master and push"
+task::release() {
+  git checkout master
+  git merge develop
+  git push --tags origin master
+}
+
 doc "
 Deployment Commands
 -------------------
@@ -162,8 +169,7 @@ task::build() {
   exec docker build --tag=mjournal .
 }
 
-doc "* stage: tag a docker build as 'stage' and run it on stage
-  * Usage: stage <build>"
+doc "* stage <docker-image>: tag a docker image as 'stage' and run it on stage"
 task::stage() {
   local registry=$(config3 registry)
   local app_name=$(config3 appName)
@@ -172,7 +178,7 @@ task::stage() {
   ./bin/deploy.sh dbs
 }
 
-doc "* tag_production: tag a docker build for production"
+doc "* tag_production <docker-image>: tag a docker build for production"
 task::tag_production() {
   local build="$1"
   local registry="$(config3 registry)"
@@ -205,11 +211,6 @@ task::production() {
   echo "ENTER to go live (brief downtime). CTRL-c to abort."
   read -n 1 confirm
   NODE_ENV=production ./bin/deploy.sh "${hostname}"
-}
-
-doc "* deploy_production run the docker build tagged 'production' on prod docker"
-task::deploy_production() {
-  NODE_ENV=production ./bin/deploy.sh mjournal.peterlyons.com
 }
 
 ##### main code #####
