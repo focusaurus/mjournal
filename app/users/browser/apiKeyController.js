@@ -1,7 +1,7 @@
 function apiKey($scope, $http) {
   $scope.getKey = function getKey() {
     $http.post("/api/users/key").then(function (res) {
-      $scope.apiKey = res.data.value;
+      $scope.apiKey = res.data.key;
     }).catch(function(res) {
       switch (res.status) {
         case 401:

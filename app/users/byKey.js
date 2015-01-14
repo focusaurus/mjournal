@@ -16,7 +16,7 @@ function byKey(req, res, next) {
     return;
   }
   var key = auth.slice(prefix.length);
-  redeemKey({value: key}, function (error, user) {
+  redeemKey({key: key}, function (error, user) {
     if (error) {
       next(error);
       return;

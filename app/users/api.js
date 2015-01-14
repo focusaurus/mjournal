@@ -56,7 +56,7 @@ function createKey(req, res, next) {
       next(error);
       return;
     }
-    res.json({value: result});
+    res.json({key: result});
   });
 }
 

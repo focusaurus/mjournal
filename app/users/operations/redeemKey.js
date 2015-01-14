@@ -4,7 +4,7 @@ function redeemKey(options, callback) {
   db("users").select(["id", "email"])
     .innerJoin("keys", "users.id", "keys.userId")
     .where("keys.valid", true)
-    .where("keys.value", options.value)
+    .where("keys.value", options.key)
     .exec(function (error, rows) {
       callback(error, rows && rows[0]);
     });

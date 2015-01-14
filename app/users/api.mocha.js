@@ -88,9 +88,9 @@ describe("POST /api/users/key authorized", function () {
     this.session.post("/api/users/key")
       .expect(201)
       .end(function (error, res) {
-        expect(res.body).toHaveProperty("value");
-        expect(res.body.value.length).toEqual(20);
-        key = res.body.value;
+        expect(res.body).toHaveProperty("key");
+        expect(res.body.key.length).toEqual(20);
+        key = res.body.key;
         done();
       });
   });

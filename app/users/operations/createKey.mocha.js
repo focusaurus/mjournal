@@ -30,7 +30,7 @@ describe("users/operations/createKey", function () {
       expect(error).notToExist();
       expect(value).toMatch(/[a-z0-9]{20}/i);
       firstKey = value;
-      redeemKey({value: firstKey}, function (error, result) {
+      redeemKey({key: firstKey}, function (error, result) {
         expect(error).notToExist();
         expect(result).toHaveProperty("email", "createkey@example.com");
         done();
@@ -41,7 +41,7 @@ describe("users/operations/createKey", function () {
   it("should invalidate existing keys", function(done) {
     createKey({user: user}, function (error) {
       expect(error).notToExist();
-      redeemKey({value: firstKey}, function (error2, user2) {
+      redeemKey({key: firstKey}, function (error2, user2) {
         expect(error2).notToExist();
         expect(user2).notToExist();
         done();
