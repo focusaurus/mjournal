@@ -8,6 +8,9 @@ var methods = {
   },
   create: {
     method: "POST"
+  },
+  delete: {
+    method: "DELETE"
   }
 };
 

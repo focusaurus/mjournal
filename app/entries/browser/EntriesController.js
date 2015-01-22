@@ -3,7 +3,7 @@ var _ = require("lodash");
 var ENTER = 13;
 var PAGE_SIZE = 50;
 
-function EntriesController($scope, $q, $location, Entries) {
+function EntriesController($scope, $q, $location, $timeout, Entries) {
   $scope.get = function get() {
     var params = $location.search();
     Entries.get(params, function(entries) {
@@ -72,6 +72,20 @@ function EntriesController($scope, $q, $location, Entries) {
       });
       $scope.newEntryTags.forEach($scope.addAutocompleteTag);
     }
+  };
+
+  $scope.delete = function del(entry) {
+    if (!entry.confirmingDelete) {
+      entry.confirmingDelete = true;
+      entry.confirmPromise = $timeout(function () {
+        delete entry.confirmingDelete;
+      }, 3000);
+      return;
+    }
+    $timeout.cancel(entry.confirmPromise);
+    Entries.delete({id: entry.id}, function () {
+      $scope.entries = _.without($scope.entries, entry);
+    });
   };
 
   $scope.searchKeypress = function searchKeypress(event) {

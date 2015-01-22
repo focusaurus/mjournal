@@ -20,6 +20,10 @@ div.notebook
   div.page
     div.entries
       div.entry(ng-repeat="entry in entries")
+        i.delete-entry.meta(
+          ng-click="delete(entry)"
+          title="delete entry (click twice)"
+          ng-class="{'icon-bin2': !entry.confirmingDelete, 'icon-warning': entry.confirmingDelete}")
         div.created.meta(ng-bind="entry.created | date:'medium'")
         p.body(ng-model="entry.body" edit-text ng-change="update(entry)")
         tags-input.meta(
