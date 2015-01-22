@@ -148,6 +148,7 @@ task::rc() {
 
 doc "* release: merge a tagged release candidate to master and push"
 task::release() {
+  set -e
   git checkout master
   git merge develop
   git push --tags origin master

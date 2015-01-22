@@ -20,6 +20,7 @@ div.notebook
   div.page
     div.entries
       div.entry(ng-repeat="entry in entries")
+        button.delete-entry(ng-click="delete(entry)") ×
         div.created.meta(ng-bind="entry.created | date:'medium'")
         p.body(ng-model="entry.body" edit-text ng-change="update(entry)")
         tags-input.meta(

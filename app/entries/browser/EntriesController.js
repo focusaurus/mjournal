@@ -74,6 +74,12 @@ function EntriesController($scope, $q, $location, Entries) {
     }
   };
 
+  $scope.delete = function del(entry) {
+    Entries.delete({id: entry.id}, function () {
+      $scope.entries = _.without($scope.entries, entry);
+    });
+  };
+
   $scope.searchKeypress = function searchKeypress(event) {
     if (event.which === ENTER) {
       $location.search("before", null);
