@@ -58,6 +58,35 @@
 		{
 			"icon": {
 				"paths": [
+					"M192 1024h640l64-704h-768zM640 128v-128h-256v128h-320v192l64-64h768l64 64v-192h-320zM576 128h-128v-64h128v64z"
+				],
+				"attrs": [],
+				"tags": [
+					"bin",
+					"trashcan",
+					"remove",
+					"delete",
+					"recycle",
+					"dispose"
+				],
+				"defaultCode": 57935,
+				"grid": 16
+			},
+			"attrs": [],
+			"properties": {
+				"id": 681,
+				"order": 10,
+				"prevSize": 32,
+				"code": 59821,
+				"ligatures": "bin2, trashcan2",
+				"name": "bin2"
+			},
+			"setIdx": 0,
+			"iconIdx": 173
+		},
+		{
+			"icon": {
+				"paths": [
 					"M64 192h896v192h-896zM64 448h896v192h-896zM64 704h896v192h-896z"
 				],
 				"attrs": [],
