@@ -72,3 +72,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 - run `sudo bash /tmp/restore.sh /var/local/mjournal_db_backups/<FILE_TO_RESTORE_FROM>`
   - sudo is necessary because of how postgresql requires filesystem permissions to be locked down
   - the restore file should be a `.sql.bz2` file
+
+# License
+
+Copyright 2015 Peter Lyons LLC
