@@ -4,6 +4,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 
 (grid background image stolen from http://bulletjournal.com)
 
+![Build Status](https://api.travis-ci.org/focusaurus/mjournal.svg)
 # Development Prerequisites
 
 - git
