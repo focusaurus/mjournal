@@ -2,6 +2,9 @@
 # This file should be run as root (via sudo) on the docker host
 # after pushing the correct images to the registry
 # and copying the config files into /tmp
+
+# FYI here's the docker options we use on stage:
+# DOCKER_OPTS="--ip=0.0.0.0 --host=tcp://0.0.0.0:2375 --dns=8.8.8.8 --icc=false --iptables=true --insecure-registry=docker.peterlyons.com:5000"
 set -e
 export DOCKER_HOST=tcp://localhost:2375
 
