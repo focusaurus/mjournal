@@ -15,6 +15,7 @@
   "browser": {
     "angular": "./bower_components/angular/angular.js",
     "angular-resource": "./bower_components/angular-resource/angular-resource.js",
+    "ng-scroll-to": "./bower_components/ngScrollTo/ng-scrollto.js",
     "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js",
     "angular-loading-bar": "./bower_components/angular-loading-bar/build/loading-bar.js",
     "angular-ui-bootstrap-dropdown": "./bower_components/angular-ui-bootstrap/src/dropdown/dropdown.js",
