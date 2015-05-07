@@ -56,7 +56,7 @@ switch (config.NODE_ENV) {
   case "production":
     config.envName = "production";
     config.ip = "0.0.0.0";
-    config.logStream = "/var/log/" + config.appName + ".log";
+    config.logStream = process.stdout;
     config.css.debug = false;
     break;
   case "test":

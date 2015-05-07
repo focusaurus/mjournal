@@ -5,9 +5,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # npm prereqs: build_essential, python
 # bower prereqs: git-core
+# runit contains svlogd which handles log rotation
 RUN apt-get update && apt-get install -y \
   build-essential \
   git-core \
+  runit \
   python
 
 # Clean up APT when done.
@@ -32,7 +34,8 @@ RUN ln -nsf ../app node_modules/app
 ADD config.default.js /opt/config.default.js
 ADD knexfile.js /opt/knexfile.js
 ADD migrations /opt/migrations
+
 ENV NODE_ENV production
 EXPOSE {{port}}
 USER www-data
-CMD ["/opt/app/server.js"]
+CMD /opt/app/server.js 2>&1 | svlogd /var/log/{{appName}}

@@ -176,7 +176,7 @@ task::stage() {
   local app_name=$(config3 appName)
   local build="$1"
   docker tag -f "${build}" "${registry}/${app_name}:stage"
-  ./bin/deploy.sh dbs
+  ./bin/deploy.sh "${DOCKER_IP}"
 }
 
 doc "* tag_production <docker-image>: tag a docker build for production"
@@ -198,7 +198,7 @@ task::production() {
   local version="$(config3 appVersion)"
   local hostname="$(NODE_ENV=production config3 hostname)"
   echo "OK, in another terminal, connect the ssh tunnel:"
-  echo "ssh -t dbs ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com"
+  echo "ssh -t ${DOCKER_IP} ssh -N -L 5000:localhost:5000 yoyo.peterlyons.com"
   echo "ENTER to continue when tunnel is up, CTRL-c to abort"
   read -n 1 confirm
   set -e

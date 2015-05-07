@@ -1,19 +1,27 @@
-#!/bin/bash
+#!/bin/sh
 # This file should be run as root (via sudo) on the docker host
 # after pushing the correct images to the registry
 # and copying the config files into /tmp
 
 # FYI here's the docker options we use on stage:
 # DOCKER_OPTS="--ip=0.0.0.0 --host=tcp://0.0.0.0:2375 --dns=8.8.8.8 --icc=false --iptables=true --insecure-registry=docker.peterlyons.com:5000"
-set -e
-export DOCKER_HOST=tcp://localhost:2375
+set -o errexit    # always exit on error
+set -o pipefail   # don"t ignore exit codes when piping output
+# set -x          # enable debugging
+
+cd "$(dirname "$0")"
+IFS="$(printf "\n\t")"
+cd "$(dirname "$0")"
+IFS="$(printf "\n\t")"
+# export DOCKER_HOST=tcp://localhost:2375
+WWW_DATA_UID=33
 
 docker_clean_rm() {
   local name="$1"
   # This tr -d nonesense is because mustache and docker inspect
   # use the same delimiter of a mustache
   set +e
-  local running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
+  running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
   local exit_code=$?
   set -e
   if [[ "${running}" == "true" ]]; then
@@ -33,37 +41,32 @@ docker_clean_rm() {
 prepare_fs() {
   printf "preparing docker host fs…"
   # for the node.js app and nginx
-  install --owner=root --group=sudo --mode=755 --directory \
+  install --owner="${WWW_DATA_UID}" --group=staff --mode=755 --directory \
     /var/local/{{appName}} \
     /var/www/{{hostname}}
   if [[ "{{envName}}" == "production" ]]; then
-    install --owner=root --group=sudo --mode=750 \
+    install --owner=root --group=staff --mode=750 \
       /tmp/nginx_{{appName}} /etc/nginx/sites-enabled/{{hostname}}
   fi
   # for the postgresql db. MUST be 0700 or postgresql won't start
-  install --owner=root --group=sudo --mode=0700 --directory \
+  install --owner=root --group=staff --mode=0700 --directory \
     /var/local/{{appName}}_db
-  install --owner=root --group=sudo --mode=750 \
-    /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+  if [[ "{{envName}}" == "production" ]]; then
+    install --owner=root --group=staff --mode=750 \
+      /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+  fi
 
-
-  config_file=/var/local/{{appName}}/config.js
+  local config_file=/var/local/{{appName}}/config.js
   readonly config_file
 
   if [[ ! -e "${config_file}" ]]; then
-    install --owner=www-data --group=sudo --mode=0460 /dev/null "${config_file}"
+    install --owner="${WWW_DATA_UID}" --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
     echo "Edit it and add the proper data then re-run this script."
     exit 10
   fi
-  chown www-data:sudo "${config_file}"
+  chown "${WWW_DATA_UID}:staff" "${config_file}"
   chmod 0460 "${config_file}"
-
-  log_file=/var/local/{{appName}}/{{appName}}.log
-  readonly log_file
-  touch "${log_file}"
-  chown www-data:sudo "${log_file}"
-  chmod 0640 "${log_file}"
 }
 
 stop_containers() {
@@ -74,7 +77,7 @@ stop_containers() {
 
 start_containers() {
   printf "✓\nstarting {{appName}}_db…"
-  /usr/bin/docker run \
+  docker run \
     "--name={{appName}}_db" \
     "--volume=/var/local/{{appName}}_db:/var/lib/postgresql/data" \
     "--volume=/var/log/{{appName}}_db:/var/log/postgresql" \
@@ -88,7 +91,7 @@ start_containers() {
     "--name={{appName}}" \
     "--link={{appName}}_db:{{appName}}_db" \
     "--volume=/var/local/{{appName}}:/etc/{{appName}}" \
-    "--volume=/var/local/{{appName}}:/var/log" \
+    "--volume=/var/local/{{appName}}:/var/log/{{appName}}" \
     --detach \
     --restart=on-failure:3 \
     {{{registry}}}/{{appName}}:{{envName}}
