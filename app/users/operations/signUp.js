@@ -34,19 +34,19 @@ function run(options, callback) {
     log.debug({
       user: user
     }, "creating user");
-    dbOp.exec(function(error, rows) {
-      if (error && /unique/i.test(error.message)) {
+    dbOp.exec(function(error2, rows) {
+      if (error2 && /unique/i.test(error2.message)) {
         var upError = new errors.Conflict("That email is already registered");
         callback(upError);
         return;
       }
-      if (error) {
-        callback(error);
+      if (error2) {
+        callback(error2);
         return;
       }
       user.id = rows[0];
       delete user.bcryptedPassword;
-      callback(error, user);
+      callback(error2, user);
     });
   });
 }

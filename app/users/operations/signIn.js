@@ -37,9 +37,9 @@ function signIn(options, callback) {
       return;
     }
     bcrypt.compare(
-        options.password, row.bcryptedPassword, function(error, match) {
-      if (error) {
-        callback(error);
+        options.password, row.bcryptedPassword, function(error2, match) {
+      if (error2) {
+        callback(error2);
         return;
       }
       if (!match) {

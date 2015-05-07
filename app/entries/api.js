@@ -44,7 +44,7 @@ app.route("/")
   .get(viewEntries)
   .post(json, createEntry);
 app.put("/:id", json, updateEntry);
-app.delete("/:id",  deleteEntry);
+app.delete("/:id", deleteEntry);
 app.get("/tags", viewTags);
 
 module.exports = app;

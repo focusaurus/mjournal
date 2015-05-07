@@ -22,7 +22,9 @@ function execute(run, next) {
       next(error);
       return;
     }
-    var set = _.map(rows, function (row) {return row.tags.split(" ");});
+    var set = _.map(rows, function (row) {
+      return row.tags.split(" ");
+    });
     set = _.flatten(set);
     set = _.uniq(set);
     run.result = set.map(function (tag) {

@@ -12,9 +12,9 @@ function respond(res) {
     }
     var session = res.req.session;
     session.user = res.req.user = user;
-    session.save(function (error) {
-      if (error) {
-        log.error(error, "session.save failed");
+    session.save(function (error2) {
+      if (error2) {
+        log.error(error2, "session.save failed");
         return;
       }
       res.send(user);

@@ -30,8 +30,8 @@ describe("users/operations/createKey", function () {
       expect(error).notToExist();
       expect(value).toMatch(/[a-z0-9]{20}/i);
       firstKey = value;
-      redeemKey({key: firstKey}, function (error, result) {
-        expect(error).notToExist();
+      redeemKey({key: firstKey}, function (error2, result) {
+        expect(error2).notToExist();
         expect(result).toHaveProperty("email", "createkey@example.com");
         done();
       });

@@ -23,10 +23,10 @@ describe("users/operations/signUp", function() {
     };
     signUp(newUser, function(error) {
       expect(error).toBeNull();
-      signUp(newUser, function(error) {
-        expect(error).toExist();
-        expect(error).toHaveProperty("status");
-        expect(error.status).toEqual(409);
+      signUp(newUser, function(error2) {
+        expect(error2).toExist();
+        expect(error2).toHaveProperty("status");
+        expect(error2.status).toEqual(409);
         done();
       });
     });

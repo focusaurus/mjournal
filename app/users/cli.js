@@ -10,8 +10,8 @@ function signUp(email) {
     operations.signUp({
       email: email,
       password: password
-    }, function(error, user) {
-      cli.exitIfError(error);
+    }, function(error2, user) {
+      cli.exitIfError(error2);
       console.log(user);
       /* eslint no-process-exit:0 */
       process.exit();
@@ -19,7 +19,7 @@ function signUp(email) {
   });
 }
 
-function key(options) {
+function keyMW(options) {
   operations.createKey(options, function(error, key) {
     cli.exitIfError(error);
     console.log(key);
@@ -33,6 +33,6 @@ program.command("sign-up <email>")
 
 var keyStack = cli.command(
   program, "create-key", "create an authentication key for CLI/API access");
-cli.signInMW(keyStack).use(key);
+cli.signInMW(keyStack).use(keyMW);
 
 program.parse(process.argv);

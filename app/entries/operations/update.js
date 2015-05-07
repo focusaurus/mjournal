@@ -53,7 +53,7 @@ function execute(run, next) {
       return;
     }
     log.debug(set, "entries/update");
-    select(where, run,  next);
+    select(where, run, next);
   });
 }
 

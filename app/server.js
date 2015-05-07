@@ -31,9 +31,9 @@ setup2.init(function (error) {
     log.error(error, "Error ensuring database is ready. Process will exit.");
     setTimeout(process.exit.bind(null, 20), 1000);
   }
-  app.listen(config.port, config.ip, function(error) {
-    if (error) {
-      log.error(error, "Unable to bind network socket. Exiting");
+  app.listen(config.port, config.ip, function(error2) {
+    if (error2) {
+      log.error(error2, "Unable to bind network socket. Exiting");
       /*eslint no-process-exit:0*/
       setTimeout(process.exit.bind(null, 10), 1000);
     }

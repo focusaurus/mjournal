@@ -16,8 +16,8 @@ describe("users/operations/update", function() {
         email: "test/users/operations/update2@example.com",
         theme: "hoth"
       };
-      update(changes, function (error, updatedUser) {
-        expect(error).notToExist();
+      update(changes, function (error2, updatedUser) {
+        expect(error2).notToExist();
         expect(updatedUser).toHaveProperty("theme", "hoth");
         done();
       });

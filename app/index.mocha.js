@@ -13,10 +13,12 @@ describe("app/index site-wide routes", function() {
     });
   });
 
-  var names = _.map(theme.names, function (name) { return "-" + name;});
+  var names = _.map(theme.names, function (name) {
+    return "-" + name;
+  });
   names.unshift("");
-  names.forEach(function(theme) {
-    var uri = "/mjournal" + theme + ".css";
+  names.forEach(function(themeName) {
+    var uri = "/mjournal" + themeName + ".css";
     it("GET " + uri + " should send CSS", function(done) {
       this.timeout(2000); //Sorry. FS IO
       testUtils
