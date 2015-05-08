@@ -12,6 +12,6 @@ template() {
 echo "copying scripts to ${docker}"
 template "deploy/backup-db.mustache" "/tmp/backup-${app_name}-db"
 template "deploy/nginx.mustache" "/tmp/nginx_${app_name}"
-template "deploy/setup_docker.sh.mustache" "/tmp/setup_docker_${app_name}.sh"
+template "deploy/setup-docker.sh.mustache" "/tmp/setup-docker_${app_name}.sh"
 echo "running docker setup script on ${docker}"
-ssh -t ${docker} sudo /bin/sh "/tmp/setup_docker_${app_name}.sh"
+ssh -t ${docker} sudo /bin/sh "/tmp/setup-docker_${app_name}.sh"
