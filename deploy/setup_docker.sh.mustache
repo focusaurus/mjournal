@@ -5,16 +5,10 @@
 
 # FYI here's the docker options we use on stage:
 # DOCKER_OPTS="--ip=0.0.0.0 --host=tcp://0.0.0.0:2375 --dns=8.8.8.8 --icc=false --iptables=true --insecure-registry=docker.peterlyons.com:5000"
+
 set -o errexit    # always exit on error
 set -o pipefail   # don"t ignore exit codes when piping output
 # set -x          # enable debugging
-
-cd "$(dirname "$0")"
-IFS="$(printf "\n\t")"
-cd "$(dirname "$0")"
-IFS="$(printf "\n\t")"
-# export DOCKER_HOST=tcp://localhost:2375
-WWW_DATA_UID=33
 
 docker_clean_rm() {
   local name="$1"
@@ -40,8 +34,9 @@ docker_clean_rm() {
 
 prepare_fs() {
   printf "preparing docker host fs…"
+  local www_data_uid=33
   # for the node.js app and nginx
-  install --owner="${WWW_DATA_UID}" --group=staff --mode=755 --directory \
+  install --owner="${www_data_uid}" --group=staff --mode=755 --directory \
     /var/local/{{appName}} \
     /var/www/{{hostname}}
   if [[ "{{envName}}" == "production" ]]; then
@@ -60,12 +55,12 @@ prepare_fs() {
   readonly config_file
 
   if [[ ! -e "${config_file}" ]]; then
-    install --owner="${WWW_DATA_UID}" --group=staff --mode=0460 /dev/null "${config_file}"
+    install --owner="${www_data_uid}" --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
     echo "Edit it and add the proper data then re-run this script."
     exit 10
   fi
-  chown "${WWW_DATA_UID}:staff" "${config_file}"
+  chown "${www_data_uid}:staff" "${config_file}"
   chmod 0460 "${config_file}"
 }
 
@@ -98,6 +93,12 @@ start_containers() {
 }
 
 main() {
+  cd "$(dirname "$0")"
+  IFS="$(printf "\n\t")"
+
+  if [[ ! -e /var/run/docker.sock ]]; then
+    export DOCKER_HOST=tcp://localhost:2375
+  fi
   prepare_fs
   stop_containers
   start_containers

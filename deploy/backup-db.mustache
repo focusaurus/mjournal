@@ -2,7 +2,9 @@
 # Install this script as root:sudo 0750 in /etc/cron.daily/backup-{{appName}}-db
 # sudo install --owner=root --group=sudo --mode=0750 \
 #   /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
-export DOCKER_HOST=tcp://localhost:2375
+if [[ ! -e /var/run/docker.sock ]]; then
+  export DOCKER_HOST=tcp://localhost:2375
+fi
 container="{{appName}}_db"
 user=postgres
 backup_dir="/var/local/{{appName}}_db_backups"
@@ -10,7 +12,8 @@ backup_dir="/var/local/{{appName}}_db_backups"
 do_backup() {
   docker exec "${container}" \
     pg_dumpall --clean --user="${user}" --no-password > "$1"
-  bzip2 --force "$1"
+  # use -f and not --force here for busybox/boot2docker compatibility
+  bzip2 -f "$1"
   chown root:sudo "$1.bz2"
   chmod 440 "$1.bz2"
 }
@@ -41,8 +44,9 @@ backup_monthly() {
 }
 
 delete_stale_backups() {
-  find "${backup_dir}" -name '*.daily.sql.bz2' -ctime +30 -delete
-  find "${backup_dir}" -name '*.monthly.sql.bz2' -ctime +90 -delete
+  # Use -mtime here instead of -ctime for busybox/boot2docker compatibility
+  find "${backup_dir}" -name '*.daily.sql.bz2' -mtime +30 -delete
+  find "${backup_dir}" -name '*.monthly.sql.bz2' -mtime +90 -delete
 }
 
 main() {
