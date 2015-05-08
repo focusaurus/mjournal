@@ -78,7 +78,7 @@ task::test() {
   app/db/wipe.js
   echo ✓
   echo -n "browserify…"
-  ./bin/build_js.sh
+  ./bin/build-js.sh
   echo ✓
   echo "mocha tests…"
   mocha ${args} ${tests}
