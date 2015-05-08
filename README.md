@@ -68,7 +68,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # How to restore from backup
 
 - Yes, this has actually been tested on stage ;-p
-- run `./bin/render_template.js ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
+- run `./bin/render-template.js ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
 - ssh to the docker host
 - run `sudo bash /tmp/restore.sh /var/local/mjournal_db_backups/<FILE_TO_RESTORE_FROM>`
   - sudo is necessary because of how postgresql requires filesystem permissions to be locked down
