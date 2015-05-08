@@ -3,11 +3,13 @@
 # after pushing the correct images to the registry
 # and copying the config files into /tmp
 
+# It's code must be old school bourne shell (not bash)
+# in order to support the busysbox /bin/sh used by boot2docker
+
 # FYI here's the docker options we use on stage:
 # DOCKER_OPTS="--ip=0.0.0.0 --host=tcp://0.0.0.0:2375 --dns=8.8.8.8 --icc=false --iptables=true --insecure-registry=docker.peterlyons.com:5000"
 
 set -o errexit    # always exit on error
-set -o pipefail   # don"t ignore exit codes when piping output
 # set -x          # enable debugging
 
 docker_clean_rm() {
@@ -18,14 +20,14 @@ docker_clean_rm() {
   running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
   local exit_code=$?
   set -e
-  if [[ "${running}" == "true" ]]; then
+  if [ "${running}" = "true" ]; then
     printf "✓\nstopping %s" "${name}…"
     docker stop "${name}"
   fi
-  if [[ "${running}" == "<no value>" ]]; then
+  if [ "${running}" = "<no value>" ]; then
     return
   fi
-  if [[ ${exit_code} -eq 0 ]]; then
+  if [ ${exit_code} -eq 0 ]; then
     printf "✓\nremoving %s" "${name}…"
     docker rm "${name}"
   fi
@@ -39,14 +41,14 @@ prepare_fs() {
   install --owner="${www_data_uid}" --group=staff --mode=755 --directory \
     /var/local/{{appName}} \
     /var/www/{{hostname}}
-  if [[ "{{envName}}" == "production" ]]; then
+  if [ "{{envName}}" = "production" ]; then
     install --owner=root --group=staff --mode=750 \
       /tmp/nginx_{{appName}} /etc/nginx/sites-enabled/{{hostname}}
   fi
   # for the postgresql db. MUST be 0700 or postgresql won't start
   install --owner=root --group=staff --mode=0700 --directory \
     /var/local/{{appName}}_db
-  if [[ "{{envName}}" == "production" ]]; then
+  if [ "{{envName}}" = "production" ]; then
     install --owner=root --group=staff --mode=750 \
       /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
   fi
@@ -54,7 +56,7 @@ prepare_fs() {
   local config_file=/var/local/{{appName}}/config.js
   readonly config_file
 
-  if [[ ! -e "${config_file}" ]]; then
+  if [ ! -e "${config_file}" ]; then
     install --owner="${www_data_uid}" --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
     echo "Edit it and add the proper data then re-run this script."
@@ -96,7 +98,7 @@ main() {
   cd "$(dirname "$0")"
   IFS="$(printf "\n\t")"
 
-  if [[ ! -e /var/run/docker.sock ]]; then
+  if [ ! -e /var/run/docker.sock ]; then
     export DOCKER_HOST=tcp://localhost:2375
   fi
   prepare_fs

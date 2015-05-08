@@ -29,7 +29,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 - tag and deploy that for testing on stage
   - `./bin/go stage <build_id_from_above>`
 - Test in a browser
-  - `open 'http://dbs:9090'`
+  - `open "http://${DOCKER_IP}:9090"`
 - If the app is working, tag for prod
   - `go tag_production <build_id_from_above>`
 - Deploy to production
