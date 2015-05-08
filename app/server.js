@@ -18,20 +18,37 @@ var _ = require("lodash");
 var log = require("app/log");
 log.debug({
     env: process.env.NODE_ENV,
-    db: _.omit(config.db, "password")},
+    db: _.omit(config.db, "password")
+  },
   "%s server process starting", config.pack.name);
-
 var app = require("app");
+var server;
+
+function gracefulShutdown() {
+  log.info("server doing graceful shutdown due to kill signal");
+  if (!server) {
+    process.exit();
+  }
+  server.close(function() {
+    log.debug("server connections gracefully closed. Exting.");
+    process.exit();
+  });
+
+  setTimeout(function() {
+    log.debug("server exiting abruptly. Connections did not complete quickly.");
+    process.exit();
+  }, 10 * 1000);
+}
+process.on("SIGTERM", gracefulShutdown);
+
 require("app/emails/scheduled").run();
-//eslint bug thinks "setup" is a global from mocha
-//https://github.com/eslint/eslint/issues/1059
-var setup2 = require("app/db/setup");
-setup2.init(function (error) {
+var setup = require("app/db/setup");
+setup.init(function(error) {
   if (error) {
     log.error(error, "Error ensuring database is ready. Process will exit.");
     setTimeout(process.exit.bind(null, 20), 1000);
   }
-  app.listen(config.port, config.ip, function(error2) {
+  server = app.listen(config.port, config.ip, function(error2) {
     if (error2) {
       log.error(error2, "Unable to bind network socket. Exiting");
       /*eslint no-process-exit:0*/
@@ -39,7 +56,7 @@ setup2.init(function (error) {
     }
     log.info(
       _.pick(config, "ip", "port"),
-       "%s express app listening", config.pack.name
+      "%s express app listening", config.pack.name
     );
   });
 });
