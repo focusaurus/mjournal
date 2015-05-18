@@ -22,6 +22,13 @@ config.postgres.version = "9.4";
 config.postgres.user = "postgres";
 config.postgres.password = "password";
 config.postgres.database = "postgres";
+//heroku support
+if (process.env.DATABASE_URL) {
+  config.db = process.env.DATABASE_URL;
+  config.postgres = config.db;
+
+}
+
 config.logStream = process.stdout;
 config.port = 9090;
 config.ip = "127.0.0.1";
