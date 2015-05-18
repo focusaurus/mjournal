@@ -9,7 +9,7 @@
     "node": "0.10.36"
   },
   "scripts": {
-    "start": "./bin/go express",
+    "start": "./app/server.js",
     "test": "./bin/go test"
   },
   "browser": {
