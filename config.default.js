@@ -11,6 +11,8 @@ config.appVersion = pack.version;
 config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
 config.nodeVersion = pack.engines.node;
 config.envName = "stage";
+config.port = parseInt(process.env.PORT, 10) || 9090;
+config.ip = "127.0.0.1";
 config.db = {
   host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || "localhost",
   port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
@@ -36,11 +38,10 @@ if (process.env.DATABASE_URL) {
   };
   // heroku gives your main app user db admin rights
   config.postgres = config.db;
+  config.ip = "0.0.0.0";
 }
 
 config.logStream = process.stdout;
-config.port = parseInt(process.env.PORT, 10) || 9090;
-config.ip = "127.0.0.1";
 config.registry = "docker.peterlyons.com:5000";
 config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
