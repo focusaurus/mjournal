@@ -84,3 +84,4 @@ switch (config.NODE_ENV) {
   default:
     config.browserifyDebug = true;
 }
+console.log("@bug heroku config:", config);
