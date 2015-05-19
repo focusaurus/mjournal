@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var devNull = require("dev-null");
 var pack = require("./package");
+var url = require("url");
 var config = exports;
 
 config.pack = pack;
@@ -24,9 +25,17 @@ config.postgres.password = "password";
 config.postgres.database = "postgres";
 //heroku support
 if (process.env.DATABASE_URL) {
-  config.db = process.env.DATABASE_URL;
+  var parsed = url.parse(process.env.DATABASE_URL);
+  var auth = parsed.auth.split(":");
+  config.db = {
+    host: parsed.hostname,
+    port: parsed.port,
+    user: auth[0],
+    password: auth[1],
+    database: parsed.path.slice(1) // remove leading slash
+  };
+  // heroku gives your main app user db admin rights
   config.postgres = config.db;
-
 }
 
 config.logStream = process.stdout;
