@@ -14,6 +14,7 @@ var db = require("./index");
 var postgres = knex({client: "pg", connection: config.postgres});
 var ALREADY = [
   "3D000",
+  "42501", //permission denied to create role
   "42710", //role already exists
   "42P04", //database already exists
   "42P07", //table already exists
