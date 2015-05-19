@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "./app/server.js",
-    "test": "./bin/go test"
+    "test": "./bin/go test",
+    "postinstall": "./bin/build.sh"
   },
   "browser": {
     "angular": "./bower_components/angular/angular.js",

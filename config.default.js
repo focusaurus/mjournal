@@ -40,8 +40,7 @@ if (process.env.DATABASE_URL) {
 
 config.logStream = process.stdout;
 config.port = parseInt(process.env.PORT, 10) || 9090;
-// config.ip = "127.0.0.1";
-config.ip = "0.0.0.0";
+config.ip = "127.0.0.1";
 config.registry = "docker.peterlyons.com:5000";
 config.session = {
   secret: "HkpYsNTjVpXz6BthO8hN",
