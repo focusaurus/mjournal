@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 var config = require("config3");
+var errors = require("httperrors");
 var fs = require("fs");
 var join = require("path").join;
 var paths = require("app/paths");
+var rupture = require("rupture");
 var stylus = require("stylus");
 var theme = require("app/theme");
-var errors = require("httperrors");
 
 function render(name, callback) {
   name = name || theme.defaultTheme.name;
@@ -22,6 +23,7 @@ function render(name, callback) {
       .include(paths.app)
       .include(paths.bower)
       .include(paths.wwwroot)
+      .use(rupture())
       .set("include css", true)
       .set("filename", stylPath)
       .set("sourcemap", {inline: config.css.debug})
@@ -30,7 +32,7 @@ function render(name, callback) {
 }
 
 function main() {
-  render(function(error, cssText) {
+  render("moleskine", function(error, cssText) {
     if (error) {
       console.error(error);
       return;

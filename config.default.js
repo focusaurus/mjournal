@@ -3,7 +3,6 @@ var devNull = require("dev-null");
 var pack = require("./package");
 var url = require("url");
 var config = exports;
-console.log("@bug heroku env", process.env);
 config.pack = pack;
 config.NODE_ENV = process.env.NODE_ENV || "development";
 var appName = config.appName = pack.name;
@@ -85,4 +84,3 @@ switch (config.NODE_ENV) {
   default:
     config.browserifyDebug = true;
 }
-console.log("@bug heroku config:", _.omit(config, "logStream"));

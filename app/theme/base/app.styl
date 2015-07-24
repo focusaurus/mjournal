@@ -1,14 +1,13 @@
 @require "angular-loading-bar/build/loading-bar.css"
 @require "icomoon/style.css"
-@require "theme/base/adaptive"
 
 body
   margin 0 auto
   max-width 30em
-  font-size 24px
+  font-size 18px
+  +above("s")
+    font-size 24px
   padding-bottom 3em // leave room for scroll-to-top button
-  @media smallScreen
-    font-size 18px
 
 .app-name, .app-tag
   text-align center

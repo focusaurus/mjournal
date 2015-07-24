@@ -27,6 +27,8 @@ describe("app/index site-wide routes", function() {
         .expect("Content-Type", "text/css; charset=utf-8")
         .expect(/tags-input/)
         .expect(/loading-bar/)
+        // rupture media queries for +above("s")
+        .expect(/media only screen and \(min-width: 400px\)/)
         .expect(/p\.body\.new/)
         .end(done);
     });

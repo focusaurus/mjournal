@@ -6,17 +6,18 @@
   input
     min-width 15em
     height 2em
-  .smallText
-    display none
   .clearTextSearch
     background-color $charcoal
     &.hidden
       visibility hidden
-  @media smallScreen
-    .smallText
-      display inline
-    .fullText
+  .smallText
+    display inline
+    +above("s")
       display none
+  .fullText
+    display none
+    +above("s")
+      display inline
   .previous
     position absolute
     top 0
