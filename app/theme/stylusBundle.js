@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+var autoprefixer = require("autoprefixer-stylus");
 var config = require("config3");
 var errors = require("httperrors");
 var fs = require("fs");
@@ -24,6 +25,7 @@ function render(name, callback) {
       .include(paths.bower)
       .include(paths.wwwroot)
       .use(rupture())
+      .use(autoprefixer())
       .set("include css", true)
       .set("filename", stylPath)
       .set("sourcemap", {inline: config.css.debug})
