@@ -1,8 +1,8 @@
 .toolbar
-  width 100%
-  position relative
+  display flex
+  justify-content space-between
   text-align center
-  margin-bottom 0.5em
+  margin 0.2em
   input
     min-width 15em
     height 2em
@@ -12,17 +12,9 @@
       visibility hidden
   .smallText
     display inline
-    +above("s")
+    +above("m")
       display none
   .fullText
     display none
-    +above("s")
+    +above("m")
       display inline
-  .previous
-    position absolute
-    top 0
-    left 1em
-  .next
-    position absolute
-    top 0
-    right 1em
