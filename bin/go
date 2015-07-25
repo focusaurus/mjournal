@@ -77,6 +77,8 @@ task::test() {
   echo -n "wiping test database…"
   app/db/wipe.js
   echo ✓
+  echo "tape tests…"
+  tape $(find app -type f -name '*.tape.js' | xargs)
   echo -n "browserify…"
   ./bin/build-js.sh
   echo ✓
