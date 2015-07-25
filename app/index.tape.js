@@ -3,7 +3,8 @@ var _ = require('lodash')
 var testUtils = require('app/testUtils')
 var theme = require('app/theme')
 
-;['/grid.gif', '/favicon.png'].forEach(function (url) {
+var urls = ['/grid.gif', '/favicon.png']
+urls.forEach(function (url) {
   test('app/index GET ' + url + ' should 200/image', function (assert) {
     testUtils.get(url)
       .expect(200)
@@ -64,12 +65,14 @@ test('app/index GET /docs should include API docs', function (assert) {
     assert.ok(dom.html().indexOf('Authorization: key') >= 0)
     assert.end()
   })
-});[
+})
+urls = [
   '/fonts/icomoon.eot',
   '/fonts/icomoon.svg',
   '/fonts/icomoon.ttf',
   '/fonts/icomoon.woff'
-].forEach(function (uri) {
+]
+urls.forEach(function (uri) {
   test('app/index GET ' + uri + ' should send a font', function (assert) {
     testUtils
       .get(uri)

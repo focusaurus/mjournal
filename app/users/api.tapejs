@@ -3,11 +3,12 @@ var testUtils = require('app/testUtils')
 var test = require('tape')
 
 var group = 'POST /api/users/sign-in'
-;[
+var users = [
   {},
   {email: 'test@example.com'},
   {password: 'password'}
-].forEach(function (user) {
+]
+users.forEach(function (user) {
   test('should 400 incomplete credentials', function (assert) {
     testUtils.post('/api/users/sign-in')
       .send(user)
@@ -31,11 +32,12 @@ test(group + ' should 200 a valid user', function (assert) {
 })
 
 group = 'POST /api/users/sign-up'
-;[
+users = [
   {},
   {email: 'test@example.com'},
   {password: 'password'}
-].forEach(function (user) {
+]
+users.forEach(function (user) {
   test(group + ' should 400 incomplete credentials', function (assert) {
     testUtils.post('/api/users/sign-up')
       .send(user)

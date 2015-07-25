@@ -24,7 +24,9 @@ function initDbOp (run, next) {
 function execute (run, next) {
   var set = {
     updated: new Date()
-  };['body', 'tags'].forEach(function (property) {
+  }
+  var properties = ['body', 'tags']
+  properties.forEach(function (property) {
     if (_.has(run.options, property)) {
       set[property] = run.options[property]
     }

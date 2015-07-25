@@ -2,7 +2,6 @@
   "extends": [
     "./node_modules/eslint-config-standard/eslintrc.json"
   ],
-
   "env": {
     "browser": true,
     "node": true
@@ -11,7 +10,6 @@
     "angular": true
   },
   "rules": {
-    "max-len": [1, 80, 2],
-    "strict": 0
+    "max-len": [1, 80, 2]
   }
 }

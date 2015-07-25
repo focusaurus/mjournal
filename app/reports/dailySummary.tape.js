@@ -5,12 +5,14 @@ test(
   'reports/dailySummary should have the correct fields and numbers',
   function (assert) {
   dailySummary(function (error, result) {
-    assert.error(error);[
+    assert.error(error)
+    var properties = [
       'entriesCreated',
       'entriesUpdated',
       'totalEntries',
       'usersCreated',
-      'totalUsers'].forEach(function (property) {
+      'totalUsers']
+    properties.forEach(function (property) {
       assert.equal(typeof result[property], 'number')
     })
     assert.end()
