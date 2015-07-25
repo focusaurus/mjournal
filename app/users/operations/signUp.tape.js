@@ -3,7 +3,7 @@ var test = require('tape')
 
 var group = 'users/operations/signUp'
 
-test(group + 'should create a user.id and not return the password', function (assert) {
+test(group + ' should create a user.id and not return the password', function (assert) {
   var newUser = {
     email: 'test/users/operations/signUp@example.com',
     password: 'password'
@@ -18,7 +18,7 @@ test(group + 'should create a user.id and not return the password', function (as
   })
 })
 
-test(group + 'should prevent duplicate emails', function (assert) {
+test(group + ' should prevent duplicate emails', function (assert) {
   var newUser = {
     email: 'dupe@example.com',
     password: 'password'
@@ -32,7 +32,7 @@ test(group + 'should prevent duplicate emails', function (assert) {
   })
 })
 
-test(group + 'should require a valid-ish email address', function (assert) {
+test(group + ' should require a valid-ish email address', function (assert) {
   var newUser = {
     email: 'no_at_sign_at_example.com',
     password: 'password'

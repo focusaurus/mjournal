@@ -12,7 +12,7 @@ test(group + 'setup', function (assert) {
   signUp(newUser, assert.end.bind(assert))
 })
 
-test(group + 'should return the user if password is correct', function (assert) {
+test(group + ' should return the user if password is correct', function (assert) {
   signIn(newUser, function (error, user) {
     assert.error(error)
     assert.ok(user.id)
@@ -23,7 +23,7 @@ test(group + 'should return the user if password is correct', function (assert) 
   })
 })
 
-test(group + 'should fail with incorrect password', function (assert) {
+test(group + ' should fail with incorrect password', function (assert) {
   signIn({
     email: newUser.email,
     password: 'incorrect'

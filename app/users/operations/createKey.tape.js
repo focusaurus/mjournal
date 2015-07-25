@@ -4,7 +4,7 @@ var signUp = require('./signUp')
 var test = require('tape')
 
 var group = 'users/operations/createKey'
-test(group + 'should require a user option', function (assert) {
+test(group + ' should require a user option', function (assert) {
   createKey({}, function (error) {
     assert.ok(error)
     assert.equal(error.status, 401)
@@ -15,7 +15,7 @@ test(group + 'should require a user option', function (assert) {
 var user
 var firstKey
 
-test(group + 'should create a key that can be redeemed', function (assert) {
+test(group + ' should create a key that can be redeemed', function (assert) {
   var options = {email: 'createKey@example.com', password: 'password'}
   signUp(options, function (error, result) {
     assert.error(error)
@@ -33,7 +33,7 @@ test(group + 'should create a key that can be redeemed', function (assert) {
   })
 })
 
-test(group + 'should invalidate existing keys', function (assert) {
+test(group + ' should invalidate existing keys', function (assert) {
   createKey({user: user}, function (error) {
     assert.error(error)
     redeemKey({key: firstKey}, function (error2, user2) {

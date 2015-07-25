@@ -41,7 +41,7 @@ test(group + ' should create an entry', function (assert) {
   })
 })
 
-test(group + 'should view the newly created entry', function (assert) {
+test(group + ' should view the newly created entry', function (assert) {
   ops.view({
     user: users[0]
   }, function (error, entries) {
@@ -51,7 +51,7 @@ test(group + 'should view the newly created entry', function (assert) {
   })
 })
 
-test(group + 'should find the entry with text search', function (assert) {
+test(group + ' should find the entry with text search', function (assert) {
   ops.view({
     user: users[0],
     textSearch: 'body'
@@ -62,7 +62,7 @@ test(group + 'should find the entry with text search', function (assert) {
   })
 })
 
-test(group + 'should not find the entry with non-matching text search', function (assert) {
+test(group + ' should not find the entry with non-matching text search', function (assert) {
   ops.view({
     user: users[0],
     textSearch: 'notpresent'
@@ -74,7 +74,7 @@ test(group + 'should not find the entry with non-matching text search', function
   })
 })
 
-test(group + "should view the user's tags", function (assert) {
+test(group + " should view the user's tags", function (assert) {
   ops.viewTags({
     user: users[0]
   }, function (error, tags) {
@@ -89,7 +89,7 @@ test(group + "should view the user's tags", function (assert) {
   })
 })
 
-test(group + 'should update an entry', function (assert) {
+test(group + ' should update an entry', function (assert) {
   var entry = entries[0]
   var options = {
     id: entries[0].id,
@@ -129,7 +129,7 @@ test(group + ' should create a 2nd entry with 2nd user', function (assert) {
   })
 })
 
-test(group + "should not update someone else's entry", function (assert) {
+test(group + " should not update someone else's entry", function (assert) {
   var options = {
     id: entries[0].id,
     user: users[1],
@@ -144,7 +144,7 @@ test(group + "should not update someone else's entry", function (assert) {
   })
 })
 
-test(group + "should not delete someone else's entry", function (assert) {
+test(group + " should not delete someone else's entry", function (assert) {
   var options = {
     id: entries[0].id,
     user: users[1]
@@ -157,7 +157,7 @@ test(group + "should not delete someone else's entry", function (assert) {
   })
 })
 
-test(group + 'should delete an entry', function (assert) {
+test(group + ' should delete an entry', function (assert) {
   var options = {
     id: entries[0].id,
     user: users[0]
