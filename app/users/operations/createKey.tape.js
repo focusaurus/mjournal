@@ -14,20 +14,21 @@ test(group + 'should require a user option', function (assert) {
 
 var user
 var firstKey
-var options = {email: 'createKey@example.com', password: 'password'}
-signUp(options, function (error, result) {
-  user = result
-})
 
 test(group + 'should create a key that can be redeemed', function (assert) {
-  createKey({user: user}, function (error, value) {
+  var options = {email: 'createKey@example.com', password: 'password'}
+  signUp(options, function (error, result) {
     assert.error(error)
-    assert.ok(/[a-z0-9]{20}/i.test(value))
-    firstKey = value
-    redeemKey({key: firstKey}, function (error2, result) {
-      assert.error(error2)
-      assert.equal(result.email, 'createkey@example.com')
-      assert.end()
+    user = result
+    createKey({user: user}, function (error, value) {
+      assert.error(error)
+      assert.ok(/[a-z0-9]{20}/i.test(value))
+      firstKey = value
+      redeemKey({key: firstKey}, function (error2, result) {
+        assert.error(error2)
+        assert.equal(result.email, 'createkey@example.com')
+        assert.end()
+      })
     })
   })
 })
