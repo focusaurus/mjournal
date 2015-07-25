@@ -144,7 +144,7 @@ test(group + "should not update someone else's entry", function (assert) {
   })
 })
 
-test("should not delete someone else's entry", function (assert) {
+test(group + "should not delete someone else's entry", function (assert) {
   var options = {
     id: entries[0].id,
     user: users[1]
