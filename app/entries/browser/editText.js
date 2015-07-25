@@ -6,38 +6,38 @@ to not care about HTML
 @see https://github.com/angular/angular.js/issues/528#issuecomment-7573166
 */
 
-function editText() {
+function editText () {
   return {
-    restrict: "A",
-    require: "?ngModel",
-    link: function($scope, $element, attrs, ngModel) {
+    restrict: 'A',
+    require: '?ngModel',
+    link: function ($scope, $element, attrs, ngModel) {
       if (!ngModel) {
-        return;
+        return
       }
-      $element.attr("contenteditable", true);
-      $element.removeAttr("edittext");
-      $element.bind("blur", function(event) {
-        $scope.$apply(function() {
-          ngModel.$setViewValue(event.target.innerText);
-          ngModel.$render();
-        });
-      });
-      $element.bind("keydown", function(event) {
+      $element.attr('contenteditable', true)
+      $element.removeAttr('edittext')
+      $element.bind('blur', function (event) {
+        $scope.$apply(function () {
+          ngModel.$setViewValue(event.target.innerText)
+          ngModel.$render()
+        })
+      })
+      $element.bind('keydown', function (event) {
         if (event.which === 13 && event.shiftKey) {
-          event.preventDefault();
+          event.preventDefault()
           if (event.target && event.target.blur) {
-            event.target.blur();
+            event.target.blur()
           }
         }
-      });
-      var oldRender = ngModel.$render;
-      ngModel.$render = function() {
+      })
+      var oldRender = ngModel.$render
+      ngModel.$render = function () {
         if (oldRender) {
-          oldRender();
+          oldRender()
         }
-        $element.text(ngModel.$viewValue || "");
-      };
+        $element.text(ngModel.$viewValue || '')
+      }
     }
-  };
+  }
 }
-module.exports = editText;
+module.exports = editText

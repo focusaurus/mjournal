@@ -1,15 +1,1 @@
-{
-  "env": {
-    "browser": true,
-    "mocha": true,
-    "node": true
-  },
-  "globals": {
-    "angular": true
-  },
-  "rules": {
-    "max-len": [1, 80, 2],
-    "quotes": [2, "double", "avoid-escape"],
-    "strict": 0
-  }
-}
+node_modules/eslint-config-standard/eslintrc.json

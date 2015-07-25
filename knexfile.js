@@ -1,6 +1,6 @@
-var config = require("config3");
+var config = require('config3')
 var settings = {
-  client: "postgresql",
+  client: 'postgresql',
   connection: config.db
-};
-exports[config.NODE_ENV] = settings;
+}
+exports[config.NODE_ENV] = settings

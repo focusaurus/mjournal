@@ -1,13 +1,13 @@
-var config = require("config3");
-var theme = require("app/theme");
+var config = require('config3')
+var theme = require('app/theme')
 
-function themeMW(req, res, next) {
-  res.locals.css = "/" + config.appName + ".css";
+function themeMW (req, res, next) {
+  res.locals.css = '/' + config.appName + '.css'
   if (req.user) {
-    var name = req.user.theme || theme.defaultTheme.name;
-    res.locals.css = "/" + config.appName + "-" + name + ".css";
+    var name = req.user.theme || theme.defaultTheme.name
+    res.locals.css = '/' + config.appName + '-' + name + '.css'
   }
-  next();
+  next()
 }
 
-module.exports = themeMW;
+module.exports = themeMW

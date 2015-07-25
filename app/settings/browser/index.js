@@ -1,6 +1,6 @@
-module.exports = "mjournal.settings";
-require("angular");
-require("angular-ui-bootstrap-dropdown");
+module.exports = 'mjournal.settings'
+require('angular')
+require('angular-ui-bootstrap-dropdown')
 
-angular.module(module.exports, ["ui.bootstrap.dropdown"])
-  .controller("settingsMenu", require("./settingsMenu"));
+angular.module(module.exports, ['ui.bootstrap.dropdown'])
+  .controller('settingsMenu', require('./settingsMenu'))

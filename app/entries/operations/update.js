@@ -1,64 +1,63 @@
-var _ = require("lodash");
-var async = require("async");
-var clientFields = require("../clientFields");
-var db = require("app/db");
-var errors = require("httperrors");
-var log = require("app/log");
-var opMW = require("app/operations/middleware");
-var presentEntry = require("../presentEntry");
+var _ = require('lodash')
+var async = require('async')
+var clientFields = require('../clientFields')
+var db = require('app/db')
+var errors = require('httperrors')
+var log = require('app/log')
+var opMW = require('app/operations/middleware')
+var presentEntry = require('../presentEntry')
 
-function select(where, run, next) {
-  db("entries").select(clientFields)
+function select (where, run, next) {
+  db('entries').select(clientFields)
     .where(where)
-    .exec(function(error, rows) {
-      run.result = presentEntry(rows && rows[0]);
-      next(error);
-  });
+    .exec(function (error, rows) {
+      run.result = presentEntry(rows && rows[0])
+      next(error)
+    })
 }
 
-function initDbOp(run, next) {
-  run.dbOp = db("entries");
-  next();
+function initDbOp (run, next) {
+  run.dbOp = db('entries')
+  next()
 }
 
-function execute(run, next) {
+function execute (run, next) {
   var set = {
     updated: new Date()
-  };
-  ["body", "tags"].forEach(function (property) {
+  };['body', 'tags'].forEach(function (property) {
     if (_.has(run.options, property)) {
-      set[property] = run.options[property];
+      set[property] = run.options[property]
     }
-  });
+  })
   if (Array.isArray(set.tags)) {
-    set.tags = set.tags.join(" ");
+    set.tags = set.tags.join(' ')
   }
   var where = {
     id: run.options.id
-  };
-  run.dbOp.update(set).where(where).exec(function(error, rowCount) {
+  }
+  run.dbOp.update(set).where(where).exec(function (error, rowCount) {
     if (error) {
       log.info({
         err: error
-      }, "error updating an entry");
-      next(error);
-      return;
+      }, 'error updating an entry')
+      next(error)
+      return
     }
     if (rowCount < 1) {
       log.info(
         {options: run.options},
-        "zero rowCount on entry update (HAX0RZ?)"
-      );
-      next(new errors.NotFound("No entry with id " + run.options.id));
-      return;
+        'zero rowCount on entry update (HAX0RZ?)'
+      )
+      next(new errors.NotFound('No entry with id ' + run.options.id))
+      return
     }
-    log.debug(set, "entries/update");
-    select(where, run, next);
-  });
+    log.debug(set, 'entries/update')
+    select(where, run, next)
+  })
 }
 
-function update(options, callback) {
-  var run = {options: options};
+function update (options, callback) {
+  var run = {options: options}
   async.applyEachSeries(
     [
       opMW.requireUser,
@@ -66,9 +65,9 @@ function update(options, callback) {
       opMW.whereUser,
       execute
     ], run, function (error) {
-      callback(error, run.result);
+      callback(error, run.result)
     }
-  );
+  )
 }
 
-module.exports = update;
+module.exports = update

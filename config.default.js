@@ -1,86 +1,88 @@
-var _ = require("lodash");
-var devNull = require("dev-null");
-var pack = require("./package");
-var url = require("url");
-var config = exports;
-config.pack = pack;
-config.NODE_ENV = process.env.NODE_ENV || "development";
-var appName = config.appName = pack.name;
-config.appVersion = pack.version;
-config.hostname = process.env.HOSTNAME || "mjournal.peterlyons.com";
-config.nodeVersion = pack.engines.node;
-config.envName = "stage";
-config.port = parseInt(process.env.PORT, 10) || 9090;
-config.ip = "127.0.0.1";
+var _ = require('lodash')
+var devNull = require('dev-null')
+var pack = require('./package')
+var url = require('url')
+
+var config = exports
+config.pack = pack
+config.NODE_ENV = process.env.NODE_ENV || 'development'
+var appName = config.appName = pack.name
+config.appVersion = pack.version
+
+config.hostname = process.env.HOSTNAME || 'mjournal.peterlyons.com'
+config.nodeVersion = pack.engines.node
+config.envName = 'stage'
+config.port = parseInt(process.env.PORT, 10) || 9090
+config.ip = '127.0.0.1'
 config.db = {
-  host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || "localhost",
+  host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || 'localhost',
   port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
   user: appName,
   database: appName,
   password: appName
-};
-config.postgres = _.clone(config.db);
-config.postgres.version = "9.4";
-config.postgres.user = "postgres";
-config.postgres.password = "password";
-config.postgres.database = "postgres";
-//heroku support
+}
+config.postgres = _.clone(config.db)
+config.postgres.version = '9.4'
+config.postgres.user = 'postgres'
+config.postgres.password = 'password'
+config.postgres.database = 'postgres'
+// heroku support
 if (process.env.DATABASE_URL) {
-  var parsed = url.parse(process.env.DATABASE_URL);
-  var auth = parsed.auth.split(":");
+  var parsed = url.parse(process.env.DATABASE_URL)
+  var auth = parsed.auth.split(':')
   config.db = {
     host: parsed.hostname,
     port: parsed.port,
     user: auth[0],
     password: auth[1],
     database: parsed.path.slice(1) // remove leading slash
-  };
+  }
   // heroku gives your main app user db admin rights
-  config.postgres = config.db;
-  config.ip = "0.0.0.0";
+  config.postgres = config.db
+  config.ip = '0.0.0.0'
 }
 
-config.logStream = process.stdout;
-config.registry = "docker.peterlyons.com:5000";
+config.logStream = process.stdout
+config.registry = 'docker.peterlyons.com:5000'
 config.session = {
-  secret: "HkpYsNTjVpXz6BthO8hN",
+  secret: 'HkpYsNTjVpXz6BthO8hN',
   cookie: {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 1, // one day in milliseconds
     secure: false
   }
-};
+}
 config.email = {
   enabled: false,
-  service: "gmail",
-  to: "pete@peterlyons.com",
-  from: "mjournal reports <mjournalreports@gmail.com>",
+  service: 'gmail',
+  to: 'pete@peterlyons.com',
+  from: 'mjournal reports <mjournalreports@gmail.com>',
   auth: {
     xoauth2: {
-      user: "mjournalreports@gmail.com",
-      clientId: "",
-      clientSecret: "",
-      refreshToken: "",
+      user: 'mjournalreports@gmail.com',
+      clientId: '',
+      clientSecret: '',
+      refreshToken: '',
       timeout: 3600
     }
   }
-};
+}
 config.css = {
   debug: true
-};
+}
 switch (config.NODE_ENV) {
-  case "production":
-    config.envName = "production";
-    config.ip = "0.0.0.0";
-    config.logStream = process.stdout;
-    config.css.debug = false;
-    break;
-  case "test":
-    config.db.database = appName + "test";
-    config.db.user = appName + "test";
-    config.db.password = appName + "test";
-    config.logStream = devNull();
-    break;
+  case 'production':
+    config.envName = 'production'
+    config.ip = '0.0.0.0'
+    config.logStream = process.stdout
+    config.css.debug = false
+    break
+  case 'test':
+    config.db.database = appName + 'test'
+    config.db.user = appName + 'test'
+    config.db.password = appName + 'test'
+    config.logStream = devNull()
+    break
   default:
-    config.browserifyDebug = true;
+    config.browserifyDebug = true
 }

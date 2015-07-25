@@ -1,9 +1,9 @@
-var bole = require("bole");
-var config = require("config3");
+var bole = require('bole')
+var config = require('config3')
 
 bole.output({
-  level: "debug",
+  level: 'debug',
   stream: config.logStream
-});
+})
 
-module.exports = bole(config.pack.name);
+module.exports = bole(config.pack.name)

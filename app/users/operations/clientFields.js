@@ -1,1 +1,1 @@
-module.exports = ["id", "email", "theme"];
+module.exports = ['id', 'email', 'theme']

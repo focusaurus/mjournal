@@ -1,21 +1,21 @@
 var methods = {
   get: {
-    method: "GET",
+    method: 'GET',
     isArray: true
   },
   update: {
-    method: "PUT"
+    method: 'PUT'
   },
   create: {
-    method: "POST"
+    method: 'POST'
   },
   delete: {
-    method: "DELETE"
+    method: 'DELETE'
   }
-};
-
-function entriesFactory($resource) {
-  return $resource("/api/entries/:id", {id: "@id"}, methods);
 }
 
-module.exports = entriesFactory;
+function entriesFactory ($resource) {
+  return $resource('/api/entries/:id', {id: '@id'}, methods)
+}
+
+module.exports = entriesFactory
