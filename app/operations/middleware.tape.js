@@ -4,7 +4,9 @@ var test = require('tape')
 
 var group = 'app/operations/middleware.paginated'
 
-test(group + ' should set page 1 by default and a default limit', function (assert) {
+test(
+  group + ' should set page 1 by default and a default limit',
+  function (assert) {
   var run = {
     options: {},
     dbOp: db.select('example', ['id'])
@@ -18,7 +20,9 @@ test(group + ' should set page 1 by default and a default limit', function (asse
   paginated(run, next)
 })
 
-test(group + ' should set limit and offset when page is > 1', function (assert) {
+test(
+  group + ' should set limit and offset when page is > 1',
+  function (assert) {
   var run = {
     dbOp: db.select('example', ['id']),
     options: {

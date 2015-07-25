@@ -1,7 +1,6 @@
-var sinon = require('sinon')
 var cli = require('app/cli')
+var sinon = require('sinon')
 var test = require('tape')
-
 test('app/cli should add a page option', function (assert) {
   var mockStack = {
     command: {
@@ -9,7 +8,6 @@ test('app/cli should add a page option', function (assert) {
     }
   }
   cli.paginate(mockStack)
-  assert.plan(1)
-  assert.true(mockStack.command.option.calledWith('-p, --page <page>'))
+  assert.ok(mockStack.command.option.calledWith('-p, --page <page>'))
   assert.end()
 })

@@ -10,8 +10,11 @@ var users = []
 var entries = []
 
 function createUser (callback) {
+  var email = 'test/entries/operations/create' +
+    (users.length + 1) +
+    '@example.com'
   var inUser = {
-    email: 'test/entries/operations/create' + (users.length + 1) + '@example.com',
+    email: email,
     password: 'password'
   }
   signUp(inUser, function (error, user) {
@@ -62,7 +65,9 @@ test(group + ' should find the entry with text search', function (assert) {
   })
 })
 
-test(group + ' should not find the entry with non-matching text search', function (assert) {
+test(
+  group + ' should not find the entry with non-matching text search',
+  function (assert) {
   ops.view({
     user: users[0],
     textSearch: 'notpresent'

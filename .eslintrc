@@ -1,1 +1,17 @@
-node_modules/eslint-config-standard/eslintrc.json
+{
+  "extends": [
+    "./node_modules/eslint-config-standard/eslintrc.json"
+  ],
+
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "angular": true
+  },
+  "rules": {
+    "max-len": [1, 80, 2],
+    "strict": 0
+  }
+}

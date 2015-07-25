@@ -48,7 +48,9 @@ test('app/index GET /mjournal.js should send JavaScript', function (assert) {
     .end(assert.end.bind(assert))
 })
 
-test('app/index layout should include HTML comment with app version', function (assert) {
+test(
+  'app/index layout should include HTML comment with app version',
+  function (assert) {
   testUtils.loadPage('/', function (error, dom) {
     assert.error(error)
     assert.equal(dom('meta[name=x-app-version]').length, 1)

@@ -1,7 +1,9 @@
 var test = require('tape')
 var dailySummary = require('./dailySummary')
 
-test('reports/dailySummary should have the correct fields and numbers', function (assert) {
+test(
+  'reports/dailySummary should have the correct fields and numbers',
+  function (assert) {
   dailySummary(function (error, result) {
     assert.error(error);[
       'entriesCreated',

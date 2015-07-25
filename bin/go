@@ -59,31 +59,29 @@ task::js() {
   watchify --debug -o wwwroot/mjournal.js -e app/browser.js
 }
 
-doc "* test: run all the tests (mocha)
+doc "* test: run all the tests (tape)
     * optionally pass file(s) to run only specific tests
     * pass --debug for node-inspector"
 task::test() {
   set -e
   export NODE_ENV=test
-  args="--slow 200 --reporter spec --colors --recursive --check-leaks"
+  args=""
   if [[ "${1}" == "--debug" ]]; then
-    args="${args} --timeout 0 --debug-brk=9093"
+    args="${args} --debug-brk=9093"
     shift
   fi
   tests="$@"
   if [[ -z "${tests}" ]]; then
-    tests=$(find app -type f -name '*.mocha.js' | xargs)
+    tests=$(find app -type f -name '*.tape.js' | xargs)
   fi
   echo -n "wiping test database…"
   app/db/wipe.js
   echo ✓
   echo "tape tests…"
-  tape $(find app -type f -name '*.tape.js' | xargs) | faucet
+  tape ${args} ${tests} ./app/db/disconnect.js | faucet
   echo -n "browserify…"
   ./bin/build-js.sh
   echo ✓
-  echo "mocha tests…"
-  mocha ${args} ${tests}
   printf "linting…"
   task::lint
   echo ✓
