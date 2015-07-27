@@ -1,5 +1,4 @@
 var _ = require('lodash')
-var expect = require('chaimel')
 var ops = require('app/entries/operations')
 var signUp = require('app/users/operations/signUp')
 var test = require('tape')
@@ -33,11 +32,11 @@ test(group + ' should create an entry', function (assert) {
     }
     ops.create(options, function (error, outEntry) {
       assert.error(error)
-      expect(outEntry).toHaveProperty('id')
-      expect(outEntry).toHaveProperty('created')
-      expect(outEntry).toHaveProperty('updated')
-      expect(outEntry).toHaveProperty('body')
-      expect(outEntry.body).toEqual(options.body)
+      assert.ok(outEntry.id)
+      assert.ok(outEntry.created)
+      assert.ok(outEntry.updated)
+      assert.ok(outEntry.body)
+      assert.equal(outEntry.body, options.body)
       entries.push(outEntry)
       assert.end()
     })
@@ -48,8 +47,8 @@ test(group + ' should view the newly created entry', function (assert) {
   ops.view({
     user: users[0]
   }, function (error, entries) {
-    expect(error).notToExist()
-    expect(entries).notToBeEmpty()
+    assert.error(error)
+    assert.ok(entries.length)
     assert.end()
   })
 })
@@ -59,8 +58,8 @@ test(group + ' should find the entry with text search', function (assert) {
     user: users[0],
     textSearch: 'body'
   }, function (error, entries) {
-    expect(error).notToExist()
-    expect(entries).notToBeEmpty()
+    assert.error(error)
+    assert.ok(entries.length)
     assert.end()
   })
 })
@@ -72,9 +71,8 @@ test(
     user: users[0],
     textSearch: 'notpresent'
   }, function (error, entries) {
-    expect(error).notToExist()
-    expect(entries).toBeAnInstanceOf(Array)
-    expect(entries).toBeEmpty()
+    assert.error(error)
+    assert.equal(entries.length, 0)
     assert.end()
   })
 })
@@ -83,13 +81,13 @@ test(group + " should view the user's tags", function (assert) {
   ops.viewTags({
     user: users[0]
   }, function (error, tags) {
-    expect(error).notToExist()
+    assert.error(error)
     tags = _.pluck(tags, 'text')
-    expect(tags.indexOf('e1t1') >= 0).toBeTrue(tags)
-    expect(tags.indexOf('e1t2') >= 0).toBeTrue(tags)
-    expect(tags.indexOf('e2t1') >= 0).toBeFalse(tags)
-    expect(tags.indexOf('e2t2') >= 0).toBeFalse(tags)
-    expect(tags.length).toEqual(2)
+    assert.ok(tags.indexOf('e1t1') >= 0)
+    assert.ok(tags.indexOf('e1t2') >= 0)
+    assert.notOk(tags.indexOf('e2t1') >= 0)
+    assert.notOk(tags.indexOf('e2t2') >= 0)
+    assert.equal(tags.length, 2)
     assert.end()
   })
 })
@@ -103,12 +101,11 @@ test(group + ' should update an entry', function (assert) {
   }
   var oldUpdated = entry.updated
   ops.update(options, function (error, outEntry) {
-    expect(error).notToExist()
-    expect(outEntry).toHaveProperty('body')
-    expect(outEntry.body).toEqual(options.body)
-    expect(outEntry).toHaveProperty('updated')
-    expect(outEntry).toHaveProperty('created')
-    expect(oldUpdated).notToEqual(outEntry.updated)
+    assert.error(error)
+    assert.equal(outEntry.body, options.body)
+    assert.ok(outEntry.updated)
+    assert.ok(outEntry.created)
+    assert.notEqual(oldUpdated, outEntry.updated)
     assert.end()
   })
 })
@@ -122,12 +119,12 @@ test(group + ' should create a 2nd entry with 2nd user', function (assert) {
       tags: 'e2t1 e2t2'
     }
     ops.create(options, function (error, outEntry) {
-      expect(error).notToExist()
-      expect(outEntry).toHaveProperty('id')
-      expect(outEntry).toHaveProperty('created')
-      expect(outEntry).toHaveProperty('updated')
-      expect(outEntry).toHaveProperty('body')
-      expect(outEntry.body).toEqual(options.body)
+      assert.error(error)
+      assert.ok(outEntry.id)
+      assert.ok(outEntry.created)
+      assert.ok(outEntry.updated)
+      assert.ok(outEntry.body)
+      assert.equal(outEntry.body, options.body)
       entries.push(outEntry)
       assert.end()
     })
@@ -141,10 +138,8 @@ test(group + " should not update someone else's entry", function (assert) {
     body: 'test body 3 hax0rz'
   }
   ops.update(options, function (error, outEntry) {
-    expect(error).notToBeNull()
-    expect(error).toHaveProperty('status')
-    expect(error.status).toEqual(404)
-    expect(outEntry).toBeUndefined()
+    assert.equal(error.status, 404)
+    assert.notOk(outEntry)
     assert.end()
   })
 })
@@ -155,9 +150,7 @@ test(group + " should not delete someone else's entry", function (assert) {
     user: users[1]
   }
   ops.delete(options, function (error) {
-    expect(error).notToBeNull()
-    expect(error).toHaveProperty('status')
-    expect(error.status).toEqual(404)
+    assert.equal(error.status, 404)
     assert.end()
   })
 })
