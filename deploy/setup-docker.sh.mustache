@@ -108,6 +108,7 @@ start_containers() {
 main() {
   cd "$(dirname "$0")"
   IFS="$(printf "\n\t")"
+  export DOCKER_HOST=tcp://localhost:2375
 
   if uname -r | grep boot2docker > /dev/null; then
     # we are on stage
