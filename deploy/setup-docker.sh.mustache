@@ -12,6 +12,14 @@
 set -o errexit    # always exit on error
 # set -x          # enable debugging
 
+
+prepare_registry() {
+  if ! grep 'docker\.peterlyons\.com' /etc/hosts > /dev/null; then
+    echo "loopback hostname for docker registry not set in /etc/hosts. Setting."
+    echo 127.0.0.1 docker.peterlyons.com >> /etc/hosts
+  fi
+}
+
 docker_clean_rm() {
   local name="$1"
   # This tr -d nonesense is because mustache and docker inspect
@@ -92,14 +100,18 @@ start_containers() {
     --detach \
     --restart=on-failure:3 \
     {{{registry}}}/{{appName}}:{{envName}}
+
+  # registry should be running with
+  # docker run --detach --restart=always --publish=5000:5000 registry
 }
 
 main() {
   cd "$(dirname "$0")"
   IFS="$(printf "\n\t")"
 
-  if [ ! -e /var/run/docker.sock ]; then
-    export DOCKER_HOST=tcp://localhost:2375
+  if uname -r | grep boot2docker > /dev/null; then
+    # we are on stage
+    prepare_registry
   fi
   prepare_fs
   stop_containers
