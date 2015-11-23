@@ -67,15 +67,15 @@ test(group + ' should find the entry with text search', function (assert) {
 test(
   group + ' should not find the entry with non-matching text search',
   function (assert) {
-  ops.view({
-    user: users[0],
-    textSearch: 'notpresent'
-  }, function (error, entries) {
-    assert.error(error)
-    assert.equal(entries.length, 0)
-    assert.end()
+    ops.view({
+      user: users[0],
+      textSearch: 'notpresent'
+    }, function (error, entries) {
+      assert.error(error)
+      assert.equal(entries.length, 0)
+      assert.end()
+    })
   })
-})
 
 test(group + " should view the user's tags", function (assert) {
   ops.viewTags({

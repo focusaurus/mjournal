@@ -5,7 +5,12 @@ function signInController ($scope, $http, $window, $quickDialog) {
     event.preventDefault()
     delete $scope.error
     var user = _.pick($scope, 'email', 'password')
-    var url = '/api/users/' + (register ? 'sign-up' : 'sign-in')
+    var url = '/api/users/'
+    if (register) {
+      url += 'sign-up'
+    } else {
+      url += 'sign-in'
+    }
     $http.post(url, user).then(function () {
       delete $scope.password
       delete $scope.email

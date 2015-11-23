@@ -25,8 +25,11 @@ function signIn (options, callback) {
     callback(error || defaultError)
   }
   options.email = options.email.toLowerCase().trim()
-  db('users').select(signInFields)
-    .where({email: options.email}).limit(1).exec(function (error, rows) {
+  var query = db('users').select(signInFields)
+    .where({
+      email: options.email
+    }).limit(1)
+  query.exec(function (error, rows) {
     if (error) {
       callback(error)
       return

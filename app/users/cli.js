@@ -7,17 +7,17 @@ var promptly = require('promptly')
 function signUp (email) {
   const prompt = 'password for ' + email + ': '
   promptly.password(prompt, function (ignore, password) {
-      console.log('registering ' + email)
-      operations.signUp({
-        email: email,
-        password: password
-      }, function (error2, user) {
-        cli.exitIfError(error2)
-        console.log(user)
-        /* eslint no-process-exit:0 */
-        process.exit()
-      })
+    console.log('registering ' + email)
+    operations.signUp({
+      email: email,
+      password: password
+    }, function (error2, user) {
+      cli.exitIfError(error2)
+      console.log(user)
+      /* eslint no-process-exit:0 */
+      process.exit()
     })
+  })
 }
 
 function keyMW (options) {

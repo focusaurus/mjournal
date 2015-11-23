@@ -6,6 +6,6 @@ test('close db connection when tests are done', function (assert) {
   db.destroy(function (error) {
     assert.error(error)
     assert.end()
-    process.exit()
+    process.exit() // eslint-disable-line no-process-exit
   })
 })

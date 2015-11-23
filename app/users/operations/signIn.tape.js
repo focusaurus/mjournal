@@ -14,15 +14,15 @@ test(group + 'setup', function (assert) {
 
 test(
   group + ' should return the user if password is correct', function (assert) {
-  signIn(newUser, function (error, user) {
-    assert.error(error)
-    assert.ok(user.id)
-    assert.ok(user.email)
-    assert.notOk(user.bcryptedPassword)
-    assert.equal(user.email, newUser.email.toLowerCase())
-    assert.end()
+    signIn(newUser, function (error, user) {
+      assert.error(error)
+      assert.ok(user.id)
+      assert.ok(user.email)
+      assert.notOk(user.bcryptedPassword)
+      assert.equal(user.email, newUser.email.toLowerCase())
+      assert.end()
+    })
   })
-})
 
 test(group + ' should fail with incorrect password', function (assert) {
   signIn({

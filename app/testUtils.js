@@ -1,7 +1,7 @@
 var app = require('app')
 var cheerio = require('cheerio')
 var request = require('supertest')(app)
-var Session = require('supertest-session')({app: app})
+var Session = require('supertest-session')(app)
 
 function loadPage (URL, callback) {
   request.get(URL).expect(200).end(function (error, res) {

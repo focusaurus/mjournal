@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* eslint no-console:0 */
-/* eslint no-process-exit:0 */
+/* eslint-disable no-console */
+/* eslint-disable no-process-exit */
 var _ = require('lodash')
 var program = require('commander')
 var request = require('superagent')
@@ -33,7 +33,11 @@ function exitIfError (error, response) {
       default:
         console.error(oops)
     }
-    process.exit(oops.status ? (oops.status - 400) : 10)
+    var exitCode = 10
+    if (oops.status) {
+      exitCode = oops.status - 400
+    }
+    process.exit(exitCode)
   }
 }
 

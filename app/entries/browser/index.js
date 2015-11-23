@@ -1,4 +1,5 @@
 module.exports = 'mjournal.entries'
+/* global angular */
 require('angular')
 require('angular-resource')
 require('ng-tags-input')

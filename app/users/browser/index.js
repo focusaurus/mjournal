@@ -4,6 +4,7 @@ require('angular-resource')
 require('angular-quick-dialog')
 var sharify = require('sharify').data
 
+/* global angular */
 angular.module(module.exports, ['ngResource', 'angularQuickDialog'])
   .value('user', sharify.user)
   .constant('sessionTtl', sharify.sessionTtl)
