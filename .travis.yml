@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "0.10.36"
+  - "4.2.2"
 before_script: bower install
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
