@@ -5,18 +5,26 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 (grid background image stolen from http://bulletjournal.com)
 
 ![Build Status](https://api.travis-ci.org/focusaurus/mjournal.svg)
-# Development Prerequisites
+## How to Setup For Local Development
 
-- git
-- curl
-- some docker host. Local VM recommended (Vagrant + VirtualBox)
-- PostgreSQL database (Vagrant + VirtualBox recommended)
+- install the prerequisites
+  - node and npm (nvm recommended)
+    - see `package.json` `engines.node` field for correct version
+  - git
+  - curl
+  - GNU coreutils and findutils (homebrew recommended on OSX)
+- Get access to some docker host
+  - boot2docker recommended
+- Get access to a PostgreSQL 9.4 database
+  - Running in a docker container recommended
+- Adjust local configuration
+  - create a `config.local.js` and override anything from `config.default.js` you need such as `db.user`, `db.password`, etc
 
 # How to prepare a release
 
 - get new changes in the `develop` branch committed and ready to go
 - ensure your working directory is in a clean git state
-- run `./bin/go release_candidate <major|minor|patch>`
+- run `./bin/release-candidate.sh <major|minor|patch>`
   - This will pull origin/master into develop
   - This will do an `npm version` to increment the version and tag the commit
 - Move on to the build and test instructions below
@@ -24,16 +32,16 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 # How to build and deploy code
 
 - do a docker build
-  - `./bin/go build "v$(config3 pack.version)"`
+  - `./bin/build-docker.sh`
 - If that succeeds, note the build ID it prints out such as `Successfully built a2452ff73a95`
 - tag and deploy that for testing on stage
-  - `./bin/go stage <build_id_from_above>`
+  - `./bin/deploy-stage.sh <build_id_from_above>`
 - Test in a browser
   - `open "http://${DOCKER_IP}:9090"`
 - If the app is working, tag for prod
-  - `go tag_production <build_id_from_above>`
+  - `./bin/tag-production.sh <build_id_from_above>`
 - Deploy to production
-  - `go production`
+  - `./bin/deploy-production.sh`
   - Note this requires an ssh tunnel from dbs to prod. It will prompt you with the command to establish that in another terminal
 
 # Docker Setup

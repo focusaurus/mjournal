@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "./app/server.js",
-    "test": "./bin/go test",
+    "test": "./bin/test.sh",
     "postinstall": "./bin/build.sh"
   },
   "browser": {
