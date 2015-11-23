@@ -5,7 +5,7 @@ var url = require('url')
 
 var config = exports
 config.pack = pack
-config.NODE_ENV = process.env.NODE_ENV || 'development'
+config.NODE_ENV = process.env.NODE_ENV || 'production'
 var appName = config.appName = pack.name
 config.appVersion = pack.version
 

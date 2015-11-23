@@ -29,15 +29,19 @@ function gracefulShutdown () {
   if (!server) {
     process.exit()
   }
-  server.close(function () {
+  server.close(function onClose () {
     log.debug('server connections gracefully closed. Exting.')
     process.exit()
   })
 
-  setTimeout(function () {
+  // Max 10s to clean up before forced exit
+  var exitTimeout = setTimeout(function exitTimeout () {
     log.debug('server exiting abruptly. Connections did not complete quickly.')
-    process.exit()
+    process.exit(10)
   }, 10 * 1000)
+
+  // but don't keep the process alive just for the exit timer
+  exitTimeout.unref()
 }
 process.on('SIGTERM', gracefulShutdown)
 
