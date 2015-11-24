@@ -4,5 +4,4 @@ node_modules
 config.local.js*
 logs/*.log
 Dockerfile
-fig.yml
 wwwroot/*.js

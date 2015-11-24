@@ -3,5 +3,4 @@ bower_components
 build
 config.local.js*
 logs/*.log
-node
 node_modules

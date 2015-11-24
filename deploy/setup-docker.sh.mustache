@@ -112,6 +112,7 @@ main() {
 
   if uname -r | grep boot2docker > /dev/null; then
     # we are on stage
+    unset DOCKER_HOST
     prepare_registry
   fi
   prepare_fs

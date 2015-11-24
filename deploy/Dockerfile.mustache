@@ -16,24 +16,22 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /opt
-ADD package.json  /opt/package.json
+ADD ./package.json  /opt/package.json
 RUN npm install
-ADD bower.json  /opt/bower.json
+ADD ./bower.json  /opt/bower.json
 RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 
 # OK, all the slow stuff has been run and hopefully cached
 ADD app /opt/app
 ADD wwwroot /opt/wwwroot
-ADD bin/build-js.sh /opt/bin/build-js.sh
-RUN ln -nsf ../app node_modules/app
-RUN bash ./bin/build-js.sh
-RUN npm prune --production
-#Yes this command needs to run twice
-RUN ln -nsf ../app node_modules/app
-
-ADD config.default.js /opt/config.default.js
-ADD knexfile.js /opt/knexfile.js
 ADD migrations /opt/migrations
+ADD knexfile.js config.default.js /opt/
+ADD bin/build-browserify.sh /opt/bin/build-browserify.sh
+#Yes this ln command needs to run twice
+RUN ln -nsf ../app node_modules/app && \
+  bash ./bin/build-browserify.sh && \
+  npm prune --production && \
+  ln -nsf ../app node_modules/app
 
 ENV NODE_ENV production
 EXPOSE {{port}}
