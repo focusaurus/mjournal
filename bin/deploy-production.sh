@@ -23,4 +23,4 @@ ssh "${hostname}" \
 echo "Everything is prepared and ready to go."
 echo "ENTER to go live (brief downtime). CTRL-c to abort."
 read -n 1 confirm
-NODE_ENV=production ./bin/deploy.sh "${hostname}"
+NODE_ENV=production ./deploy/docker-server.sh "${hostname}"

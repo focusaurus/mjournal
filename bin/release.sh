@@ -11,3 +11,4 @@ fi
 git checkout master
 git merge develop
 git push --tags origin master
+git checkout develop
