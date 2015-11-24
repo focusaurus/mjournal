@@ -5,6 +5,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 (grid background image stolen from http://bulletjournal.com)
 
 ![Build Status](https://api.travis-ci.org/focusaurus/mjournal.svg)
+
 ## How to Setup For Local Development
 
 - install the prerequisites
@@ -14,7 +15,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - curl
   - GNU coreutils and findutils (homebrew recommended on OSX)
 - Get access to some docker host
-  - boot2docker recommended
+  - docker-machine recommended
 - Get access to a PostgreSQL 9.4 database
   - Running in a docker container recommended
 - Adjust local configuration
