@@ -59,7 +59,7 @@ test(
     })
   })
 
-test.only('app/index GET /docs should include API docs', function (assert) {
+test('app/index GET /docs should include API docs', function (assert) {
   testUtils.loadPage('/docs', function (error, dom) {
     console.log('@bug wtf', error, dom) // @bug
     assert.error(error)
