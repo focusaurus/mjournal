@@ -39,8 +39,9 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - `./bin/deploy-stage.sh <container_id_from_above>`
 - Test in a browser
   - `open "http://${DOCKER_IP}:9090"`
-- If the app is working, tag for prod
+- If the app is working, tag for prod and release
   - `./bin/tag-production.sh <container_id_from_above>`
+  - `./bin/release.sh`
 - Deploy to production
   - `./bin/deploy-production.sh`
   - Note this requires an ssh tunnel from dbs to prod. It will prompt you with the command to establish that in another terminal
