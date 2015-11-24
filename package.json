@@ -43,6 +43,7 @@
     "joi": "7.0.0",
     "knex": "0.7.6",
     "lodash": "3.10.1",
+    "marked": "0.3.5",
     "moment": "2.10.6",
     "mustache": "2.2.0",
     "nodemailer": "1.10.0",
