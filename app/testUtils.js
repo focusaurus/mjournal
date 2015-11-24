@@ -10,6 +10,7 @@ function loadPage (URL, callback) {
       callback(error, res)
       return
     }
+    console.log('@bug wtf2', res.text) // @bug
     var $ = cheerio.load(res.text)
     callback(null, $)
   })
