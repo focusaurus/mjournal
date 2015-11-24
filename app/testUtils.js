@@ -6,7 +6,7 @@ var Session = require('supertest-session')(app)
 function loadPage (URL, callback) {
   request.get(URL).expect(200).end(function (error, res) {
     if (error) {
-      callback(error)
+      callback(error, res)
       return
     }
     var $ = cheerio.load(res.text)

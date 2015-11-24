@@ -61,6 +61,7 @@ test(
 
 test('app/index GET /docs should include API docs', function (assert) {
   testUtils.loadPage('/docs', function (error, dom) {
+    console.log('@bug wtf', error, dom) // @bug
     assert.error(error)
     assert.ok(dom.html().indexOf('Authorization: key') >= 0)
     assert.end()
