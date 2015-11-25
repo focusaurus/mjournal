@@ -1,6 +1,0 @@
-language: node_js
-node_js:
-  - "4.2.2"
-before_script: ./bin/build-ci.sh
-addons:
-  postgresql: "9.3"
