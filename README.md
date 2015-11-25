@@ -2,9 +2,11 @@
 
 Minimalist journal aiming to be one journal for all of your technical projects. Geared toward sparse and clean UI and categorization through labels.
 
-(grid background image stolen from http://bulletjournal.com)
+CI Tests - develop branch ![CI Tests - develop](https://circleci.com/gh/focusaurus/mjournal/tree/develop.svg?style=shield&circle-token=a09625b6074f955f1c504ea600922cf57a4e291c)
 
-![Build Status](https://api.travis-ci.org/focusaurus/mjournal.svg)
+CI Tests - master branch ![CI Tests - master](https://circleci.com/gh/focusaurus/mjournal/tree/master.svg?style=shield&circle-token=a09625b6074f955f1c504ea600922cf57a4e291c)
+
+(grid background image stolen from http://bulletjournal.com)
 
 ## How to Setup For Local Development
 
