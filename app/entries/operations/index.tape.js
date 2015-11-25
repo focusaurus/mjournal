@@ -1,4 +1,3 @@
-console.log(__filename, 'start of file') // @bug
 var _ = require('lodash')
 var ops = require('app/entries/operations')
 var signUp = require('app/users/operations/signUp')
@@ -24,7 +23,6 @@ function createUser (callback) {
 }
 
 test(group + ' should create an entry', function (assert) {
-  console.log(__filename, 'trying to create a user') // @bug
   createUser(function (error, user) {
     assert.error(error)
     var options = {
