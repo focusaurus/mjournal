@@ -65,7 +65,7 @@
     "bistre": "1.0.1",
     "chai": "3.4.1",
     "cheerio": "0.19.0",
-    "eslint": "1.10.1",
+    "eslint": "1.10.2",
     "eslint-config-standard": "4.4.0",
     "node-dev": "2.7.1",
     "sinon": "1.17.2",
