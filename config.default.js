@@ -17,9 +17,9 @@ config.ip = '127.0.0.1'
 config.db = {
   host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || 'localhost',
   port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
-  user: appName,
+  user: process.env.DATABASE_POSTGRESQL_USERNAME || appName,
   database: appName,
-  password: appName
+  password: process.env.DATABASE_POSTGRESQL_USERNAME || appName
 }
 config.postgres = _.clone(config.db)
 config.postgres.version = '9.4'
@@ -32,7 +32,7 @@ if (process.env.DATABASE_URL) {
   var auth = parsed.auth.split(':')
   config.db = {
     host: parsed.hostname,
-    port: parsed.port,
+    port: parsed.port || 5432,
     user: auth[0],
     password: auth[1],
     database: parsed.path.slice(1) // remove leading slash
@@ -78,9 +78,6 @@ switch (config.NODE_ENV) {
     config.css.debug = false
     break
   case 'test':
-    config.db.database = appName + 'test'
-    config.db.user = appName + 'test'
-    config.db.password = appName + 'test'
     config.logStream = devNull()
     break
   default:
