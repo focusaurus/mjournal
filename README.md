@@ -2,9 +2,7 @@
 
 Minimalist journal aiming to be one journal for all of your technical projects. Geared toward sparse and clean UI and categorization through labels.
 
-CI Tests - develop branch ![CI Tests - develop](https://circleci.com/gh/focusaurus/mjournal/tree/develop.svg?style=shield&circle-token=a09625b6074f955f1c504ea600922cf57a4e291c)
-
-CI Tests - master branch ![CI Tests - master](https://circleci.com/gh/focusaurus/mjournal/tree/master.svg?style=shield&circle-token=a09625b6074f955f1c504ea600922cf57a4e291c)
+CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/projects/ada70239-ae02-4cc2-9c7c-da1652fd03f0/617307/badge.svg)](https://semaphoreci.com/focusaurus/mjournal)
 
 (grid background image stolen from http://bulletjournal.com)
 
