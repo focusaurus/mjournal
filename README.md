@@ -45,6 +45,7 @@ Host 192.168.99.*
 
 - get new changes in the `develop` branch committed and ready to go
 - ensure your working directory is in a clean git state
+- Make sure to pull down changes in `github/develop` from automated greenkeeper pull requests for dependency updates
 - run `./bin/release-candidate.sh <major|minor|patch>`
   - This will pull origin/master into develop
   - This will do an `npm version` to increment the version and tag the commit
