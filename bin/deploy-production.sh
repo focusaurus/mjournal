@@ -5,6 +5,11 @@ cd "$(dirname "$0")/.."
 source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
+
+if [[ -z "${DOCKER_IP}" ]]; then
+  echo "DOCKER_IP env var not set, run 'dme' to set it" 1>&2
+  exit 1
+fi
 readonly registry="$(config3 registry)"
 readonly app_name="$(config3 appName)"
 readonly base="${registry}/${app_name}"

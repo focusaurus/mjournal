@@ -19,9 +19,29 @@ CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/proj
 - Get access to a PostgreSQL 9.4 database
   - Running in a docker container recommended
 - Adjust local configuration
-  - create a `config.local.js` and override anything from `config.default.js` you need such as `db.user`, `db.password`, etc
+  - `cp config.local.example.js config.local.js` and override anything from `config.default.js` you need such as `db.user`, `db.password`, etc
+  - you local configuration should not get checked into the git repo and is thus matched by the `.gitignore`
 
-# How to prepare a release
+## Local Stage Deployment Setup
+
+- I use a local docker-machine setup to act as my staging server
+- After a `docker-machine create` command has created your docker host, make sure you have ssh access set up
+  - I do this with a section such as this in my `~/.ssh/config`
+
+```
+##### docker-machine #####
+Host 192.168.99.*
+  User docker
+  IdentityFile ~/.docker/machine/machines/default/id_rsa
+```
+
+- As long as you can ssh into your docker host as a user with sudo permissions, that should work
+- Stage shares the single production docker registry, but uses an ssh tunnel for authentication as the production docker registry is not accessible from the Internet
+- To make this work requires 2 key bits:
+  - Hack `/etc/hosts` to have the production docker registry hostname resolve to localhost. This is handled automatically by the `setup-docker.sh` script.
+  - Use an ssh tunnel from stage to production so docker images can be transfered from stage to production. The deploy scripts will prompt you with the necessary command for this when needed.
+
+## How to prepare a release
 
 - get new changes in the `develop` branch committed and ready to go
 - ensure your working directory is in a clean git state
@@ -30,7 +50,7 @@ CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/proj
   - This will do an `npm version` to increment the version and tag the commit
 - Move on to the build and test instructions below
 
-# How to build and deploy code
+## How to build and deploy code
 
 - do a docker build
   - `./bin/build-docker.sh`
@@ -46,7 +66,7 @@ CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/proj
   - `./bin/deploy-production.sh`
   - Note this requires an ssh tunnel from dbs to prod. It will prompt you with the command to establish that in another terminal
 
-# Docker Setup
+## Docker Setup
 
 - Use public postgres docker image
   - container running with name `mjournal_db`
@@ -61,13 +81,13 @@ CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/proj
 - all released docker images are tagged with semver
 - docker images are also tagged by environment for "production" and "stage"
 
-# Production Deployment Setup
+## Production Deployment Setup
 
 - digital ocean vm: yoyo.peterlyons.com
 - docker and nginx running directly on yoyo
 - postgresql and mjournal running in docker containers
 
-# Daily Rotating Backup System
+## Daily Rotating Backup System
 
 - Backups are taken daily and monthly by way of a `cron.daily` job on the docker host
 - The cron job is installed when the docker host is prepared via `./bin/deploy.sh <hostname>`
@@ -75,7 +95,7 @@ CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/proj
 - Files live as bzip-compressed SQL files at `/var/local/mjournal_db_backups` on the docker host with obvious timestamp file names
 - Stale backups are pruned automatically. We retain 1 month of dailies and 3 months of monthlies
 
-# How to restore from backup
+## How to restore from backup
 
 - Yes, this has actually been tested on stage ;-p
 - run `./bin/render-template.js ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
@@ -84,6 +104,6 @@ CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/proj
   - sudo is necessary because of how postgresql requires filesystem permissions to be locked down
   - the restore file should be a `.sql.bz2` file
 
-# License
+## License
 
 Copyright 2015 Peter Lyons LLC

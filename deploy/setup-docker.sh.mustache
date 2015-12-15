@@ -84,6 +84,7 @@ start_containers() {
   printf "✓\nstarting {{appName}}_db…"
   docker run \
     "--name={{appName}}_db" \
+    "--publish={{db.port}}:{{db.port}}" \
     "--volume=/var/local/{{appName}}_db:/var/lib/postgresql/data" \
     "--volume=/var/log/{{appName}}_db:/var/log/postgresql" \
     --detach \
