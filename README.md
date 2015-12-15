@@ -79,6 +79,7 @@ Host 192.168.99.*
   - data lives in `/var/local/mjournal` for logs and configuration
   - production configuration lives in `/var/local/mjournal/config.js`
 - running a local/private docker registry in prod at `docker.peterlyons.com:5000`
+  - Command to run this: `docker run --detach --restart=always --publish=5000:5000 registry`
 - all released docker images are tagged with semver
 - docker images are also tagged by environment for "production" and "stage"
 
@@ -86,7 +87,7 @@ Host 192.168.99.*
 
 - digital ocean vm: yoyo.peterlyons.com
 - docker and nginx running directly on yoyo
-- postgresql and mjournal running in docker containers
+- docker registry, postgresql, and mjournal running in docker containers
 
 ## Daily Rotating Backup System
 
