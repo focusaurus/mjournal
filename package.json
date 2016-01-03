@@ -50,7 +50,7 @@
     "nodemailer": "1.11.0",
     "pathval": "0.1.1",
     "pg": "4.4.3",
-    "promptly": "0.2.1",
+    "promptly": "1.0.0",
     "rand-token": "0.2.1",
     "rupture": "0.6.1",
     "sharify": "0.1.6",
