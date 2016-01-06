@@ -39,7 +39,7 @@
     "dev-null": "0.1.1",
     "express": "4.13.3",
     "express-session": "1.12.1",
-    "httperrors": "1.1.0",
+    "httperrors": "1.2.0",
     "jade": "1.11.0",
     "joi": "7.1.0",
     "knex": "0.7.6",
