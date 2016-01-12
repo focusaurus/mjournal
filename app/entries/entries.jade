@@ -18,6 +18,16 @@
     span.fullText Next Entries
     span.smallText &rarr;
 .notebook
+  label.new Type a new entry below. SHIFT-ENTER to save.
+  p.body.new(ng-keyup="create($event)" contenteditable="true")
+  tags-input(
+    ng-model="newEntryTags"
+    replace-spaces-with-dashes="false"
+    ng-keyup="create($event)"
+    ng-click="clickTag($event)"
+    )
+    auto-complete(source="autoCompleteTags($query)" min-length="2")
+  button(ng-click="create(true)") Save
   .page
     .entries
       .entry(ng-repeat="entry in entries")
@@ -35,15 +45,5 @@
           ng-click="clickTag($event)"
         )
           auto-complete(source="autoCompleteTags($query)" min-length="2")
-  label.new Type a new entry below. SHIFT-ENTER to save.
-  p.body.new(ng-keyup="create($event)" contenteditable="true")
-  tags-input(
-    ng-model="newEntryTags"
-    replace-spaces-with-dashes="false"
-    ng-keyup="create($event)"
-    ng-click="clickTag($event)"
-  )
-    auto-complete(source="autoCompleteTags($query)" min-length="2")
-  button(ng-click="create(true)") Save
   button.scroll-to-top(scroll-to)
     i.icon-arrow-up2 Top
