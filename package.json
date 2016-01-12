@@ -74,6 +74,6 @@
     "supertest-session": "2.0.0",
     "tap-spec": "4.1.1",
     "tape": "4.4.0",
-    "watchify": "3.6.1"
+    "watchify": "3.7.0"
   }
 }
