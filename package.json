@@ -71,7 +71,7 @@
     "node-dev": "2.7.1",
     "sinon": "1.17.2",
     "supertest": "1.1.0",
-    "supertest-session": "2.0.0",
+    "supertest-session": "2.0.1",
     "tap-spec": "4.1.1",
     "tape": "4.4.0",
     "watchify": "3.7.0"
