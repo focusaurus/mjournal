@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "async": "1.5.2",
-    "autoprefixer-stylus": "0.8.1",
+    "autoprefixer-stylus": "0.9.1",
     "backoff": "2.4.1",
     "bcryptjs": "2.3.0",
     "body-parser": "1.14.2",
