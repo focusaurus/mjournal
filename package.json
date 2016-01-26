@@ -78,5 +78,5 @@
     "supertest-session": "2.0.0",
     "watchify": "3.7.0"
   },
-  "license": "Copyright 2016 Peter Lyons LLC"
+  "license": "MIT"
 }

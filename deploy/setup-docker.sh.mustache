@@ -67,8 +67,6 @@ prepare_fs() {
   if [ ! -e "${config_file}" ]; then
     install --owner="${www_data_uid}" --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
-    echo "Edit it and add the proper data then re-run this script."
-    exit 10
   fi
   chown "${www_data_uid}:staff" "${config_file}"
   chmod 0460 "${config_file}"
