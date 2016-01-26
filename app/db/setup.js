@@ -22,7 +22,7 @@ var ALREADY = [
 ]
 
 function alreadyExists (error) {
-  return error && _.include(ALREADY, error.code)
+  return error && _.includes(ALREADY, error.code)
 }
 
 function runDdl (onDb, ddl, callback) {

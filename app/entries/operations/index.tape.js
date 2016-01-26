@@ -82,7 +82,7 @@ test(group + " should view the user's tags", function (assert) {
     user: users[0]
   }, function (error, tags) {
     assert.error(error)
-    tags = _.pluck(tags, 'text')
+    tags = _.map(tags, 'text')
     assert.ok(tags.indexOf('e1t1') >= 0)
     assert.ok(tags.indexOf('e1t2') >= 0)
     assert.notOk(tags.indexOf('e2t1') >= 0)

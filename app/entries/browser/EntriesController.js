@@ -63,7 +63,7 @@ function EntriesController ($scope, $q, $location, $timeout, Entries) {
     if (doCreate) {
       var entryData = {
         body: bodyElement.innerText,
-        tags: _.pluck($scope.newEntryTags, 'text')
+        tags: _.map($scope.newEntryTags, 'text')
       }
       bodyElement.focus()
       Entries.create(entryData, function (entry) {

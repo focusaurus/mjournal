@@ -14,4 +14,4 @@ function isSelected (user, theme) {
 exports.defaultTheme = themes[0]
 exports.isSelected = isSelected
 exports.themes = themes
-exports.names = _.pluck(themes, 'name')
+exports.names = _.map(themes, 'name')
