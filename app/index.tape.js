@@ -54,7 +54,7 @@ test(
   function (assert) {
     testUtils.loadPage('/', function (error, dom) {
       assert.error(error)
-      assert.equal(dom('meta[name=x-app-version]').length, 1)
+      assert.equal(dom('meta[name="x-app-version"]').length, 1)
       assert.end()
     })
   })
