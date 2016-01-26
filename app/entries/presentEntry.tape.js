@@ -1,5 +1,5 @@
 var presentEntry = require('./presentEntry')
-var test = require('tape')
+var test = require('prova')
 
 var group = 'app/entries/presentEntry'
 

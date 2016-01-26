@@ -1,7 +1,7 @@
 var cli = require('./cli')
 var sinon = require('sinon')
 var ware = require('ware')
-var test = require('tape')
+var test = require('prova')
 
 test('app/entries/cli tagsOption should add a tags option', function (assert) {
   var mockStack = {

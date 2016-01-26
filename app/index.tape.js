@@ -1,4 +1,4 @@
-var test = require('tape')
+var test = require('prova')
 var _ = require('lodash')
 var testUtils = require('app/testUtils')
 var theme = require('app/theme')

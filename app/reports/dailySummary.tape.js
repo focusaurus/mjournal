@@ -1,4 +1,4 @@
-var test = require('tape')
+var test = require('prova')
 var dailySummary = require('./dailySummary')
 
 test(

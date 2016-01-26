@@ -1,7 +1,7 @@
 var _ = require('lodash')
 var ops = require('app/entries/operations')
 var signUp = require('app/users/operations/signUp')
-var test = require('tape')
+var test = require('prova')
 
 var group = 'app/entries/operations/index'
 

@@ -1,6 +1,6 @@
 var db = require('app/db')
 var paginated = require('app/operations/middleware').paginated
-var test = require('tape')
+var test = require('prova')
 
 var group = 'app/operations/middleware.paginated'
 
