@@ -4,6 +4,8 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 
 CI Tests - develop branch - [![Build Status](https://semaphoreci.com/api/v1/projects/ada70239-ae02-4cc2-9c7c-da1652fd03f0/617307/badge.svg)](https://semaphoreci.com/focusaurus/mjournal)
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 (grid background image stolen from http://bulletjournal.com)
 
 ## How to Setup For Local Development

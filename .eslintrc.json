@@ -1,6 +1,6 @@
 {
   "extends": [
-    "./node_modules/eslint-config-standard/eslintrc.json"
+    "standard"
   ],
   "rules": {
     "block-scoped-var": 2,
