@@ -72,7 +72,7 @@
     "eslint-config-standard": "4.4.0",
     "node-dev": "2.7.1",
     "prova": "2.1.2",
-    "sinon": "1.17.2",
+    "sinon": "1.17.3",
     "superagent": "1.7.1",
     "supertest": "1.1.0",
     "supertest-session": "2.0.0",
