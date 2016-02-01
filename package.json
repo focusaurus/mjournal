@@ -67,7 +67,7 @@
     "bistre": "1.0.1",
     "bower": "1.7.2",
     "chai": "3.4.1",
-    "cheerio": "0.19.0",
+    "cheerio": "0.20.0",
     "eslint": "1.10.3",
     "eslint-config-standard": "4.4.0",
     "node-dev": "2.7.1",
