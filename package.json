@@ -69,7 +69,7 @@
     "chai": "3.5.0",
     "cheerio": "0.20.0",
     "eslint": "1.10.3",
-    "eslint-config-standard": "4.4.0",
+    "eslint-config-standard": "5.1.0",
     "node-dev": "3.0.0",
     "prova": "2.1.2",
     "sinon": "1.17.3",
