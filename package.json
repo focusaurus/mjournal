@@ -27,7 +27,7 @@
     "autoprefixer-stylus": "0.9.1",
     "backoff": "2.4.1",
     "bcryptjs": "2.3.0",
-    "body-parser": "1.14.2",
+    "body-parser": "1.15.0",
     "bole": "2.0.0",
     "bower": "1.7.7",
     "browserify": "13.0.0",
