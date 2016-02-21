@@ -39,7 +39,7 @@
     "dev-null": "0.1.1",
     "express": "4.13.4",
     "express-session": "1.13.0",
-    "httperrors": "1.2.0",
+    "httperrors": "2.0.1",
     "jade": "1.11.0",
     "joi": "8.0.0",
     "jstransformer-marked": "1.0.1",
