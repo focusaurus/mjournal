@@ -41,7 +41,7 @@
     "express-session": "1.13.0",
     "httperrors": "1.2.0",
     "jade": "1.11.0",
-    "joi": "8.0.0",
+    "joi": "8.0.3",
     "jstransformer-marked": "1.0.1",
     "knex": "0.7.6",
     "lodash": "4.5.0",
