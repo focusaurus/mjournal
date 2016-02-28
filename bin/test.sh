@@ -21,4 +21,4 @@ app/db/wipe.js
 echo ✓
 IFS=" "
 prova --progress ${args} ${tests} ./app/db/disconnect.js
-./bin/lint.sh xxx
+./bin/lint.sh
