@@ -6,7 +6,7 @@
   "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
   "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
   "engines": {
-    "node": "4.2.5"
+    "node": "4.3.1"
   },
   "scripts": {
     "start": "./app/server.js",
@@ -41,10 +41,10 @@
     "express-session": "1.13.0",
     "httperrors": "2.0.1",
     "jade": "1.11.0",
-    "joi": "8.0.3",
+    "joi": "8.0.4",
     "jstransformer-marked": "1.0.1",
     "knex": "0.7.6",
-    "lodash": "4.5.1",
+    "lodash": "4.6.1",
     "marked": "0.3.5",
     "moment": "2.11.2",
     "mustache": "2.2.1",
