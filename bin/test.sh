@@ -7,7 +7,7 @@ source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
 export NODE_ENV=test
-args=""
+args="--require ./app/tape-exit"
 if [[ "${1}" == "--debug" ]]; then
   args="${args} --debug-brk=9093"
   shift
@@ -20,5 +20,5 @@ echo -n "wiping test database…"
 app/db/wipe.js
 echo ✓
 IFS=" "
-tape ${args} ${tests} ./app/db/disconnect.js | tap-min
+tape ${args} ${tests} | tap-dot
 ./bin/lint.sh
