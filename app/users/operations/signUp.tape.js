@@ -1,5 +1,5 @@
 var signUp = require('app/users/operations/signUp')
-var test = require('prova')
+var test = require('tape')
 
 var group = 'users/operations/signUp'
 

@@ -1,6 +1,6 @@
 var cli = require('app/cli')
 var sinon = require('sinon')
-var test = require('prova')
+var test = require('tape')
 test('app/cli should add a page option', function (assert) {
   var mockStack = {
     command: {

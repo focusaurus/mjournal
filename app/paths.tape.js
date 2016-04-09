@@ -1,4 +1,4 @@
-var test = require('prova')
+var test = require('tape')
 var paths = require('./paths')
 
 test('app/paths should have the expected exported strings', function (assert) {

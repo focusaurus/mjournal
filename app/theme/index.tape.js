@@ -1,4 +1,4 @@
-var test = require('prova')
+var test = require('tape')
 var theme = require('./index')
 
 var group = 'app/theme/index'

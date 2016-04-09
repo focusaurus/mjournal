@@ -1,4 +1,4 @@
-var test = require('prova')
+var test = require('tape')
 var testUtils = require('app/testUtils')
 
 test('app/docs GET /docs should include API docs', function (assert) {

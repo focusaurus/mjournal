@@ -1,6 +1,6 @@
 var signUp = require('app/users/operations/signUp')
 var update = require('app/users/operations/update')
-var test = require('prova')
+var test = require('tape')
 
 var group = 'users/operations/update'
 test(group + ' should update email and theme', function (assert) {
