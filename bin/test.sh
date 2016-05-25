@@ -20,5 +20,5 @@ echo -n "wiping test database…"
 app/db/wipe.js
 echo ✓
 IFS=" "
-tape ${args} ${tests} | tap-dot
+tape ${args} ${tests}
 ./bin/lint.sh

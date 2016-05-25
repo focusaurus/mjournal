@@ -1,9 +1,11 @@
 var log = require('app/log')
 
 function canWithstand (error) {
+  /* eslint-disable no-fallthrough */
   switch (error.code) {
     case '57P01':
     // terminating connection due to administrator command
+
     case 'EHOSTUNREACH':
     case 'ECONNREFUSED':
     // DB probably down at the moment
@@ -15,6 +17,7 @@ function canWithstand (error) {
     default:
       return false
   }
+  /* eslint-enable no-fallthrough */
 }
 
 /*eslint no-unused-vars:0*/
