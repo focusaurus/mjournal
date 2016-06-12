@@ -10,7 +10,6 @@ var appName = config.appName = pack.name
 config.appVersion = pack.version
 
 config.hostname = process.env.HOSTNAME || 'mjournal.peterlyons.com'
-config.nodeVersion = pack.engines.node
 config.envName = 'stage'
 config.port = parseInt(process.env.PORT, 10) || 9090
 config.ip = '127.0.0.1'
@@ -18,7 +17,7 @@ config.db = {
   host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || 'localhost',
   port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
   user: process.env.DATABASE_POSTGRESQL_USERNAME || appName,
-  database: appName,
+  database: `${appName}_local_dev`,
   password: process.env.DATABASE_POSTGRESQL_USERNAME || appName
 }
 config.postgres = _.clone(config.db)

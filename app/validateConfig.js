@@ -14,7 +14,6 @@ var SESSION_SCHEMA = joi.object().keys({
 })
 var CONFIG_SCHEMA = joi.object().keys({
   hostname: joi.string().required(),
-  nodeVersion: joi.string().required(),
   appVersion: joi.string().required(),
   db: DB_SCHEMA,
   postgres: DB_SCHEMA,

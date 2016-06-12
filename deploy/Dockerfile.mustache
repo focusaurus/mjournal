@@ -1,20 +1,10 @@
-# https://registry.hub.docker.com/u/nodesource/node/
-FROM nodesource/wheezy:4.2.2
+#https://hub.docker.com/r/mhart/alpine-node/
+FROM mhart/alpine-node:6.2.1
 # get the slow/big stuff done early so the cache is rarely invalidated
-ENV DEBIAN_FRONTEND noninteractive
 
-# npm prereqs: build_essential, python
-# bower prereqs: git-core
-# runit contains svlogd which handles log rotation
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  git-core \
-  runit \
-  python
-
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+# git is a bower dependency
+# bash is used for some scripts in ./bin which also run in the container build
+RUN apk add git bash --update-cache
 WORKDIR /opt
 ADD ./package.json  /opt/package.json
 RUN npm install
@@ -35,5 +25,5 @@ RUN ln -nsf ../app node_modules/app && \
 
 ENV NODE_ENV production
 EXPOSE {{port}}
-USER www-data
-CMD /opt/app/server.js 2>&1 | svlogd /var/log/{{appName}}
+USER nobody
+CMD /opt/app/server.js

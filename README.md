@@ -7,21 +7,48 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 
 (grid background image stolen from http://bulletjournal.com)
 
-## How to Setup For Local Development
+## How to Setup for Local Development
 
 - install the prerequisites
   - node and npm (nvm recommended)
-    - see `package.json` `engines.node` field for correct version
-  - git
-  - curl
-  - GNU coreutils and findutils (homebrew recommended on OSX)
+    - see `.nvmrc` for correct version of node
+  - curl (version included with OS X is fine)
+  - git (homebrew recommended on OS X)
+  - GNU coreutils and findutils (homebrew recommended on OS X)
 - Get access to some docker host
-  - docker-machine recommended
+  - docker for Mac (beta as of June 2016) recommended
 - Get access to a PostgreSQL 9.4 database
   - Running in a docker container recommended
+  - docker-compose recommended
+  - See [the example docker-compose.yml file below](#sample-docker-compose)
+  - Run with `docker-compose -f path/to/your/docker-compose.yml up -d`
 - Adjust local configuration
   - `cp config.local.example.js config.local.js` and override anything from `config.default.js` you need such as `db.user`, `db.password`, etc
-  - you local configuration should not get checked into the git repo and is thus matched by the `.gitignore`
+  - you local configuration should not get checked into the git repo and is thus ignored in the mjournal `.gitignore`
+
+### <a name="sample-docker-compose"></a>Sample docker-compose.yml file
+
+Here is a sample of a `docker-compose.yml` file you can use for local development running postgres under docker.
+
+```yml
+version: '2'
+services:
+  postgres:
+    container_name: 'postgres'
+    ports: ['127.0.0.1:5432:5432']
+    volumes: ['~/docker-volume/postgres:/host']
+    image: 'postgres'
+    environment:
+      POSTGRES_PASSWORD: 'password'
+```
+
+## How to Run the Tests
+
+- `./bin/test.sh`
+
+## How to Run Code Lint
+
+- `./bin/lint.sh`
 
 ## Local Stage Deployment Setup
 
@@ -46,7 +73,7 @@ Host 192.168.99.*
 
 - get new changes in the `develop` branch committed and ready to go
 - ensure your working directory is in a clean git state
-- Make sure to pull down changes in `github/develop` from automated greenkeeper pull requests for dependency updates
+- Make sure to pull down changes in `github/develop`. There normally be won't any, but for the rare pull request.
 - run `./bin/release-candidate.sh <major|minor|patch>`
   - This will pull origin/master into develop
   - This will do an `npm version` to increment the version and tag the commit

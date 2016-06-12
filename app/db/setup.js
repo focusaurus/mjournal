@@ -113,5 +113,5 @@ module.exports = {
 }
 
 if (require.main === module) {
-  init(_.noop)
+  init(() => {})
 }

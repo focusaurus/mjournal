@@ -1,0 +1,18 @@
+version: '2'
+services:
+  {{appName}}_db:
+    container_name: '{{appName}}_db'
+    environment:
+      POSTGRES_PASSWORD: '{{postgres.password}}'
+    image: 'postgres:{{postgres.version}}'
+    network_mode: 'bridge'
+  {{appName}}:
+    build: '.'
+    container_name: '{{appName}}'
+    network_mode: 'bridge'
+    ports: ['127.0.0.1:{{port}}:{{port}}']
+    volumes:
+      - '/var/local/{{appName}}:/var/log/{{appName}}'
+      - '/var/local/{{appName}}:/etc/{{appName}}'
+    depends_on: ['{{appName}}_db']
+    links: ['{{appName}}_db']

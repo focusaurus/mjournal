@@ -4,4 +4,5 @@ node_modules
 config.local.js*
 logs/*.log
 Dockerfile
+docker-compose-mjournal.yml
 wwwroot/*.js
