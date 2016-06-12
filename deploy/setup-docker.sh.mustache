@@ -97,7 +97,7 @@ start_containers() {
     "--volume=/var/local/{{appName}}:/etc/{{appName}}" \
     "--volume=/var/local/{{appName}}:/var/log/{{appName}}" \
     --detach \
-    --restart=on-failure:3 \
+    --restart=on-failure \
     {{{registry}}}/{{appName}}:{{envName}}
 
   # registry should be running with
