@@ -13,7 +13,7 @@ var BODY = [
   'Total Users: {{totalUsers}}',
   'New Users Today: {{usersCreated}}'
 ].join('\n')
-var SUBJECT = '{{appName}} daily summary {{for}}: {{totalUsers}} users'
+var SUBJECT = '{{appName}} daily summary {{for}}: {{usersCreated}} new users'
 
 function build (callback) {
   dailySummary(function (error, result) {
@@ -21,8 +21,8 @@ function build (callback) {
       callback(error)
       return
     }
-    if (result.entriesCreated < 1) {
-      log.info('Daily summary report ran but no activity so no email')
+    if (result.usersCreated < 1) {
+      log.info('Daily summary report ran but no new users so no email')
       callback(new Error('Not enough activity to warrant email'))
       return
     }
