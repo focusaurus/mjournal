@@ -3,11 +3,9 @@
   "description": "Minimalist journaling web application",
   "version": "1.11.1",
   "homepage": "http://mjournal.peterlyons.com",
-  "repository": "ssh://git.peterlyons.com/home/plyons/projects/mjournal.git",
+  "repository": "focusaurus/mjournal",
   "author": "Peter Lyons <pete@peterlyons.com> (http://peterlyons.com)",
-  "engines": {
-    "node": "4.3.1"
-  },
+  "main": "./app/server",
   "scripts": {
     "start": "./app/server.js",
     "test": "./bin/test.sh",
