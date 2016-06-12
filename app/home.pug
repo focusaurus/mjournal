@@ -2,8 +2,8 @@ extends layout
 block body
   div(ng-controller="entries")
     div.menu-bar
-      include settings/menu.jade
-    include entries/entries.jade
+      include settings/menu.pug
+    include entries/entries.pug
     quick-dialog(dialog-name="reSignIn")
       form(
         class="sign-in"

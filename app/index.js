@@ -40,7 +40,7 @@ var app = express()
 _.extend(sharify.data, _.pick(config, 'appName', 'appVersion'))
 sharify.data.sessionTtl = config.session.cookie.maxAge
 _.extend(app.locals, sharify.data)
-app.set('view engine', 'jade')
+app.set('view engine', 'pug')
 app.set('views', __dirname)
 app.set('trust proxy', true)
 app.use(sharify)
