@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # docker based deployment for stage/production
 # Usage: deploy.sh <docker-host>"
 
