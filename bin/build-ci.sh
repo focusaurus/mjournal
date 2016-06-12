@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Prepare for running tests in CI
 
 cd "$(dirname "$0")/.."

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # lint JS code via eslint
 
 cd "$(dirname "$0")/.."

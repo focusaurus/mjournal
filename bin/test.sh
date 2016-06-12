@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # run automated unit tests
 # Usage: test.sh [--debug]"
 

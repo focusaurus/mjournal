@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # begin git work to prepare for a build/test/release
 # Usage: release-candidate.sh <patch|minor|major>"

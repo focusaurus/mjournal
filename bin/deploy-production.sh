@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # deploy the docker image tagged "production" to the production server
 
 cd "$(dirname "$0")/.."

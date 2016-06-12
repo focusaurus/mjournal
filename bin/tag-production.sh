@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # tag a docker image for production
 # Usage $0 <image-id>
 

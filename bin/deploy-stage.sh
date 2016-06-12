@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # deploy a docker image to the stage docker server
 # Usage $0 <image-id>
 

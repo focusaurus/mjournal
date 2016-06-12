@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # build browser js
 # This does not source ./lib/strict-mode.sh for convenience within docker
 set -o errexit    # always exit on error

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 repo_root=$(dirname "${0}")/..
 command_name=$(basename "$0")
 help() {

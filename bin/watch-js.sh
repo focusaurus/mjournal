@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # build and watch JS for local development
 
 cd "$(dirname "$0")/.."
