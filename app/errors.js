@@ -3,15 +3,11 @@ var log = require('app/log')
 function canWithstand (error) {
   /* eslint-disable no-fallthrough */
   switch (error.code) {
-    case '57P01':
-    // terminating connection due to administrator command
-
-    case 'EHOSTUNREACH':
-    case 'ECONNREFUSED':
-    // DB probably down at the moment
-    case 'ETIMEDOUT':
-    case 'ECONNRESET':
-      // DB probably went down with an active connection
+    case '57P01': // terminating connection due to administrator command
+    case 'EHOSTUNREACH': // network issue
+    case 'ECONNREFUSED': // DB probably down at the moment
+    case 'ETIMEDOUT': // network issue
+    case 'ECONNRESET': // DB probably went down with an active connection
       log.warn(error, 'Database connection error')
       return true
     default:
