@@ -23,7 +23,7 @@ prepare_registry() {
 docker_clean_rm() {
   local name="$1"
   # This tr -d nonesense is because mustache and docker inspect
-  # use the same delimiter of a mustache
+  # both use the same {{}} (mustache) delimiter
   set +e
   running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
   local exit_code=$?
@@ -101,7 +101,7 @@ start_containers() {
     {{{registry}}}/{{appName}}:{{envName}}
 
   # registry should be running with
-  # docker run --detach --restart=always --publish=5000:5000 registry
+  # docker run --detach --restart=always --publish=127.0.0.1:5000:5000 registry
 }
 
 main() {
