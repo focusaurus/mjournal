@@ -24,14 +24,26 @@ log.debug({
 var app = require('.')
 var server
 
-function gracefulShutdown () {
-  log.info('server doing graceful shutdown due to kill signal')
+function immediateExit () {
+  log.error('2nd SIGINT received. Exiting now.')
+  process.exit(11)
+}
+
+function gracefulExit (error) {
+  let exitCode = 10
+  if (error) {
+    log.error(error, 'unhandled error. Server will close and exit.')
+  } else {
+    log.info('server doing graceful shutdown due to signal')
+    exitCode = 0
+  }
   if (!server) {
-    process.exit()
+    // never started listening. OK to just exit.
+    process.exit(exitCode)
   }
   server.close(function onClose () {
-    log.debug('server connections gracefully closed. Exting.')
-    process.exit()
+    log.debug('server connections gracefully closed. Exiting.')
+    process.exit(exitCode)
   })
 
   // Max 10s to clean up before forced exit
@@ -42,8 +54,14 @@ function gracefulShutdown () {
 
   // but don't keep the process alive just for the exit timer
   exitTimeout.unref()
+
+  // If another SIGINT arrives during grace period, GTFO
+  process.on('SIGINT', immediateExit)
 }
-process.on('SIGTERM', gracefulShutdown)
+/* eslint-enable no-process-exit */
+process.once('uncaughtException', gracefulExit)
+process.once('SIGINT', gracefulExit) // CTRL-C in terminal, pm2
+process.on('SIGTERM', gracefulExit) // docker
 
 require('./emails/scheduled').run()
 var setup = require('./db/setup')
