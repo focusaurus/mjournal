@@ -6,3 +6,4 @@ logs/*.log
 Dockerfile
 docker-compose-mjournal.yml
 wwwroot/*.js
+.vagrant
