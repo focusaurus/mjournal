@@ -1,5 +1,5 @@
 var signUp = require('./signUp')
-var test = require('tape')
+var test = require('tape-catch')
 
 var group = 'users/operations/signUp'
 

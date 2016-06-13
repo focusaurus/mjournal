@@ -1,6 +1,6 @@
 var signUp = require('./signUp')
 var update = require('./update')
-var test = require('tape')
+var test = require('tape-catch')
 
 var group = 'users/operations/update'
 test(group + ' should update email and theme', function (assert) {

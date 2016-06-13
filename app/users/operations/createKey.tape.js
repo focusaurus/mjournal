@@ -1,7 +1,7 @@
 var createKey = require('./createKey')
 var redeemKey = require('./redeemKey')
 var signUp = require('./signUp')
-var test = require('tape')
+var test = require('tape-catch')
 
 var group = 'users/operations/createKey'
 test(group + ' should require a user option', function (assert) {

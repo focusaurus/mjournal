@@ -1,6 +1,6 @@
 var db = require('../db')
 var paginated = require('../operations/middleware').paginated
-var test = require('tape')
+var test = require('tape-catch')
 
 var group = 'app/operations/middleware.paginated'
 

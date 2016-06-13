@@ -1,4 +1,4 @@
-var test = require('tape')
+var test = require('tape-catch')
 var testUtils = require('../testUtils')
 
 test('app/docs GET /docs should include API docs', function (assert) {

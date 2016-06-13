@@ -1,4 +1,4 @@
-var test = require('tape')
+var test = require('tape-catch')
 var signIn = require('./signIn')
 var signUp = require('./signUp')
 
