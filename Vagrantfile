@@ -1,18 +1,3 @@
-# # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-# VAGRANTFILE_API_VERSION = "2"
-#
-# Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-#   # common settings shared by all vagrant boxes for this project
-#   config.vm.box = "ubuntu/trusty64"
-#   config.ssh.forward_agent = true
-#   # stage box intended for configuration closely matching production
-#   config.vm.define "mj-stage" do |stage|
-#     config.vm.network :private_network, ip: "10.9.8.91"
-#     stage.vm.synced_folder "./", "/vagrant", disabled: true
-#   end
-# end
-
-
 # Optionally install this plugin for automatic /etc/hosts updating:
 # vagrant plugin install vagrant-hostsupdater
 
