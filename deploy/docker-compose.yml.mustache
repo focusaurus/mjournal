@@ -6,13 +6,15 @@ services:
       POSTGRES_PASSWORD: '{{postgres.password}}'
     image: 'postgres:{{postgres.version}}'
     network_mode: 'bridge'
+    volumes: ['{{appName}}_data:/var/lib/postgresql/data']
   {{appName}}:
     build: '.'
     container_name: '{{appName}}'
     network_mode: 'bridge'
     ports: ['127.0.0.1:{{port}}:{{port}}']
     volumes:
-      - '/var/local/{{appName}}:/var/log/{{appName}}'
       - '/var/local/{{appName}}:/etc/{{appName}}'
     depends_on: ['{{appName}}_db']
     links: ['{{appName}}_db']
+volumes:
+  '{{appName}}_data':
