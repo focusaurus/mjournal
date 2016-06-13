@@ -50,6 +50,14 @@ services:
 
 - `./bin/lint.sh`
 
+## How to Run with docker-compose
+
+- `./bin/start-docker-compose.sh`
+
+This should get the data volume, postgres container, and node container created, linked, and running. You should be able to access the app at [http://127.0.0.1:9090]().
+
+This is suitable for local tests that the app works under docker. It does differ from production by a few details, so it does not constitute a suitable stage or pre-production environment.
+
 ## Local Stage Deployment Setup
 
 - I use a local docker-machine setup to act as my staging server
