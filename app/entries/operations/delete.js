@@ -1,10 +1,10 @@
 var async = require('async')
-var db = require('app/db')
+var db = require('../../db')
 var errors = require('httperrors')
 var joi = require('joi')
-var log = require('app/log')
-var opMW = require('app/operations/middleware')
-var userSchema = require('app/common/userSchema')
+var log = require('../../log')
+var opMW = require('../../operations/middleware')
+var userSchema = require('../../common/userSchema')
 
 var OPTIONS_SCHEMA = joi.object().keys({
   id: joi.number().integer().min(1),

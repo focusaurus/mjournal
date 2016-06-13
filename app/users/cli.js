@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var cli = require('app/cli')
+var cli = require('../cli')
 var program = require('commander')
 var operations = require('./operations')
 var promptly = require('promptly')

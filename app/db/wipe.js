@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'test') {
 // config.logStream = process.stdout
 
 var async = require('async')
-var log = require('app/log')
+var log = require('../log')
 var path = require('path')
 var setup = require('./setup')
 

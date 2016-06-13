@@ -1,5 +1,5 @@
-var signUp = require('app/users/operations/signUp')
-var testUtils = require('app/testUtils')
+var signUp = require('./operations/signUp')
+var testUtils = require('../testUtils')
 var test = require('tape')
 
 var group = 'POST /api/users/sign-in'

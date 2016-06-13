@@ -17,11 +17,8 @@ ADD wwwroot /opt/wwwroot
 ADD migrations /opt/migrations
 ADD knexfile.js config.default.js /opt/
 ADD bin/build-browserify.sh /opt/bin/build-browserify.sh
-#Yes this ln command needs to run twice
-RUN ln -nsf ../app node_modules/app && \
-  bash ./bin/build-browserify.sh && \
-  npm prune --production && \
-  ln -nsf ../app node_modules/app
+RUN bash ./bin/build-browserify.sh \
+  && npm prune --production
 
 ENV NODE_ENV production
 EXPOSE {{port}}

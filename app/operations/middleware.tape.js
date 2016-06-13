@@ -1,5 +1,5 @@
-var db = require('app/db')
-var paginated = require('app/operations/middleware').paginated
+var db = require('../db')
+var paginated = require('../operations/middleware').paginated
 var test = require('tape')
 
 var group = 'app/operations/middleware.paginated'

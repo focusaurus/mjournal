@@ -1,4 +1,4 @@
-var db = require('app/db')
+var db = require('../../db')
 var clientFields = require('./clientFields')
 
 function select (run, callback) {

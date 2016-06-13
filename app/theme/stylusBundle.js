@@ -4,10 +4,10 @@ var config = require('config3')
 var errors = require('httperrors')
 var fs = require('fs')
 var join = require('path').join
-var paths = require('app/paths')
+var paths = require('../paths')
 var rupture = require('rupture')
 var stylus = require('stylus')
-var theme = require('app/theme')
+var theme = require('../theme')
 
 function render (name, callback) {
   name = name || theme.defaultTheme.name

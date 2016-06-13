@@ -1,7 +1,7 @@
 var async = require('async')
 var clientFields = require('../clientFields')
-var db = require('app/db')
-var opMW = require('app/operations/middleware')
+var db = require('../../db')
+var opMW = require('../../operations/middleware')
 var presentEntry = require('../presentEntry')
 
 function insert (run, callback) {

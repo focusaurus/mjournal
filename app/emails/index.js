@@ -1,6 +1,6 @@
 var _ = require('lodash')
 var config = require('config3')
-var log = require('app/log')
+var log = require('../log')
 var nodemailer = require('nodemailer')
 var xoauth2 = require('xoauth2')
 

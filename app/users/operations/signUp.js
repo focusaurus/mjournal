@@ -1,7 +1,7 @@
 var _ = require('lodash')
 var bcrypt = require('bcryptjs')
-var db = require('app/db')
-var log = require('app/log')
+var db = require('../../db')
+var log = require('../../log')
 var errors = require('httperrors')
 var userSchema = require('../schemas').SIGN_IN
 

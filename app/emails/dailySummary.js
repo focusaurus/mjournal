@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 var _ = require('lodash')
 var config = require('config3')
-var log = require('app/log')
-var emails = require('app/emails')
+var log = require('./log')
+var emails = require('.')
 var mustache = require('mustache')
-var dailySummary = require('app/reports/dailySummary')
+var dailySummary = require('../../reports/dailySummary')
 
 var BODY = [
   'Entries Created Today: {{entriesCreated}}',

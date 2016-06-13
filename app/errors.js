@@ -1,4 +1,4 @@
-var log = require('app/log')
+var log = require('./log')
 
 function canWithstand (error) {
   /* eslint-disable no-fallthrough */

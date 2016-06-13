@@ -1,8 +1,8 @@
 var _ = require('lodash')
 var async = require('async')
-var db = require('app/db')
-var log = require('app/log')
-var opMW = require('app/operations/middleware')
+var db = require('../../db')
+var log = require('../../log')
+var opMW = require('../../operations/middleware')
 
 function initDbOp (run, next) {
   run.dbOp = db('entries').distinct('tags').select()

@@ -1,4 +1,4 @@
-var db = require('app/db')
+var db = require('../../db')
 
 function redeemKey (options, callback) {
   db('users').select(['id', 'email'])

@@ -1,6 +1,6 @@
 var async = require('async')
-var opMW = require('app/operations/middleware')
-var db = require('app/db')
+var opMW = require('../../operations/middleware')
+var db = require('../../db')
 var token = require('rand-token').generator({source: 'crypto'})
 
 function generate (run, callback) {

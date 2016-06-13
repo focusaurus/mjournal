@@ -1,4 +1,4 @@
-var log = require('app/log')
+var log = require('./log')
 
 function sendResult (res) {
   return function (error, result) {

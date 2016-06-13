@@ -1,4 +1,4 @@
-var theme = require('app/theme')
+var theme = require('../../theme')
 
 function settingsMenu ($scope, user) {
   $scope.themes = theme.themes // for the template

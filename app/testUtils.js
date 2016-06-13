@@ -1,4 +1,4 @@
-var app = require('app')
+var app = require('.')
 var cheerio = require('cheerio')
 var request = require('supertest')(app)
 var Session = require('supertest-session')(app)

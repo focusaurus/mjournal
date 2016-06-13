@@ -1,8 +1,8 @@
 var backoff = require('backoff')
 var config = require('config3')
-var errors = require('app/errors')
+var errors = require('../errors')
 var knex = require('knex')
-var log = require('app/log')
+var log = require('../log')
 var db = module.exports = knex({client: 'pg', connection: config.db})
 
 function forceReconnect (callback) {

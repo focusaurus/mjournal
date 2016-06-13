@@ -1,8 +1,8 @@
 var _ = require('lodash')
 var bcrypt = require('bcryptjs')
-var db = require('app/db')
+var db = require('../../db')
 var errors = require('httperrors')
-var log = require('app/log')
+var log = require('../../log')
 var userSchema = require('../schemas').SIGN_IN
 var clientFields = require('./clientFields')
 

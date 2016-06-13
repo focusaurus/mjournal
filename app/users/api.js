@@ -1,7 +1,7 @@
 var _ = require('lodash')
 var express = require('express')
 var json = require('body-parser').json()
-var log = require('app/log')
+var log = require('../log')
 var operations = require('./operations')
 
 function respond (res) {

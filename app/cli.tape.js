@@ -1,4 +1,4 @@
-var cli = require('app/cli')
+var cli = require('./cli')
 var sinon = require('sinon')
 var test = require('tape')
 test('app/cli should add a page option', function (assert) {

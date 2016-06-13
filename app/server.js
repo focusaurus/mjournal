@@ -3,7 +3,7 @@
 // HEY! The order of this early code has been carefully considered.
 // Do not change unless you know what you are doing
 
-var errors = require('app/errors')
+var errors = require('./errors')
 process.on('uncaughtException', errors.onUncaughtException)
 
 var config = require('config3')
@@ -15,13 +15,13 @@ if (valid.error) {
 }
 
 var _ = require('lodash')
-var log = require('app/log')
+var log = require('./log')
 log.debug({
   env: process.env.NODE_ENV,
   db: _.omit(config.db, 'password')
 },
   '%s server process starting', config.pack.name)
-var app = require('app')
+var app = require('.')
 var server
 
 function gracefulShutdown () {
@@ -45,8 +45,8 @@ function gracefulShutdown () {
 }
 process.on('SIGTERM', gracefulShutdown)
 
-require('app/emails/scheduled').run()
-var setup = require('app/db/setup')
+require('./emails/scheduled').run()
+var setup = require('./db/setup')
 setup.init(function (error) {
   if (error) {
     log.error(error, 'Error ensuring database is ready. Process will exit.')

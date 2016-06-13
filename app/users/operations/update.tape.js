@@ -1,5 +1,5 @@
-var signUp = require('app/users/operations/signUp')
-var update = require('app/users/operations/update')
+var signUp = require('./signUp')
+var update = require('./update')
 var test = require('tape')
 
 var group = 'users/operations/update'

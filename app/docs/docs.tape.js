@@ -1,5 +1,5 @@
 var test = require('tape')
-var testUtils = require('app/testUtils')
+var testUtils = require('../testUtils')
 
 test('app/docs GET /docs should include API docs', function (assert) {
   testUtils.loadPage('/docs', function (error, dom) {

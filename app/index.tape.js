@@ -1,7 +1,7 @@
 var test = require('tape')
 var _ = require('lodash')
-var testUtils = require('app/testUtils')
-var theme = require('app/theme')
+var testUtils = require('./testUtils')
+var theme = require('./theme')
 
 var urls = ['/grid.gif', '/favicon.png']
 urls.forEach(function (url) {

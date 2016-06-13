@@ -1,5 +1,5 @@
 var config = require('config3')
-var theme = require('app/theme')
+var theme = require('../theme')
 
 function themeMW (req, res, next) {
   res.locals.css = '/' + config.appName + '.css'

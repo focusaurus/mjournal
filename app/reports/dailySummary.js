@@ -1,6 +1,6 @@
 var _ = require('lodash')
 var async = require('async')
-var db = require('app/db')
+var db = require('../db')
 var moment = require('moment')
 
 function count (table, callback) {

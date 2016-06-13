@@ -1,5 +1,5 @@
 var _ = require('lodash')
-var api = require('app/api')
+var api = require('../api')
 var express = require('express')
 var json = require('body-parser').json()
 var operations = require('./operations')

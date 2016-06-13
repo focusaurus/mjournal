@@ -1,9 +1,9 @@
 var _ = require('lodash')
 var async = require('async')
-var db = require('app/db')
+var db = require('../../db')
 var errors = require('httperrors')
-var log = require('app/log')
-var opMW = require('app/operations/middleware')
+var log = require('../../log')
+var opMW = require('../../operations/middleware')
 var select = require('./select')
 var userSchema = require('../schemas').UPDATE
 

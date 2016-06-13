@@ -2,9 +2,9 @@
 /* eslint no-process-exit:0 */
 /*eslint no-console:0*/
 var _ = require('lodash')
-var cli = require('app/cli')
+var cli = require('../cli')
 var readline = require('readline')
-var entryOps = require('app/entries/operations')
+var entryOps = require('./operations')
 var program = require('commander')
 
 function bodyOption (stack) {

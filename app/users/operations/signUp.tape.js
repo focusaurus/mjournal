@@ -1,4 +1,4 @@
-var signUp = require('app/users/operations/signUp')
+var signUp = require('./signUp')
 var test = require('tape')
 
 var group = 'users/operations/signUp'

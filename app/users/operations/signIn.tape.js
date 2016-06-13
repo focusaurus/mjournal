@@ -1,6 +1,6 @@
 var test = require('tape')
-var signIn = require('app/users/operations/signIn')
-var signUp = require('app/users/operations/signUp')
+var signIn = require('./signIn')
+var signUp = require('./signUp')
 
 var group = 'users/operations/signIn'
 var newUser = {

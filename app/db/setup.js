@@ -6,7 +6,7 @@ var config = require('config3')
 var crypt = require('crypto')
 var fs = require('fs')
 var knex = require('knex')
-var log = require('app/log')
+var log = require('../log')
 var path = require('path')
 var util = require('util')
 
