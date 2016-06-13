@@ -20,28 +20,6 @@ prepare_registry() {
   fi
 }
 
-docker_clean_rm() {
-  local name="$1"
-  # This tr -d nonesense is because mustache and docker inspect
-  # both use the same {{}} (mustache) delimiter
-  set +e
-  running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
-  local exit_code=$?
-  set -e
-  if [ "${running}" = "true" ]; then
-    printf "✓\nstopping %s" "${name}…"
-    docker stop "${name}"
-  fi
-  if [ "${running}" = "<no value>" ]; then
-    return
-  fi
-  if [ ${exit_code} -eq 0 ]; then
-    printf "✓\nremoving %s" "${name}…"
-    docker rm "${name}"
-  fi
-  # non-zero exit code from docker inspect probably means doesn't exist
-}
-
 prepare_fs() {
   printf "preparing docker host fs…"
   local www_data_uid=33
@@ -70,6 +48,28 @@ prepare_fs() {
   fi
   chown "${www_data_uid}:staff" "${config_file}"
   chmod 0460 "${config_file}"
+}
+
+docker_clean_rm() {
+  local name="$1"
+  # This tr -d nonesense is because mustache and docker inspect
+  # both use the same {{}} (mustache) delimiter
+  set +e
+  running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
+  local exit_code=$?
+  set -e
+  if [ "${running}" = "true" ]; then
+    printf "✓\nstopping %s" "${name}…"
+    docker stop "${name}"
+  fi
+  if [ "${running}" = "<no value>" ]; then
+    return
+  fi
+  if [ ${exit_code} -eq 0 ]; then
+    printf "✓\nremoving %s" "${name}…"
+    docker rm "${name}"
+  fi
+  # non-zero exit code from docker inspect probably means doesn't exist
 }
 
 stop_containers() {
@@ -107,7 +107,9 @@ start_containers() {
 main() {
   cd "$(dirname "$0")"
   IFS="$(printf "\n\t")"
-  export DOCKER_HOST=tcp://localhost:2375
+  if [ ! -e /var/run/docker.sock ]; then
+    export DOCKER_HOST=tcp://localhost:2375
+  fi
 
   if uname -r | grep boot2docker > /dev/null; then
     # we are on stage

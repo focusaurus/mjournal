@@ -2,7 +2,7 @@
 # deploy a docker image to the stage docker server
 # Usage $0 <image-id>
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit
 source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
