@@ -17,6 +17,9 @@ setup_old_docker() {
   echo 'deb https://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
   apt-get --quiet --quiet --yes update
   apt-get --quiet --yes install apt-transport-https ca-certificates lxc-docker
+  curl --location --silent --fail "https://github.com/docker/compose/releases/download/1.7.1/docker-compose-$(uname -s)-$(uname -m)" \
+    > /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose
 }
 
 prepare_registry() {
@@ -54,58 +57,33 @@ setup_{{appName}}_config() {
   chmod 0460 "${config_file}"
 }
 
-docker_clean_rm() {
-  local name="$1"
-  # This tr -d nonesense is because mustache and docker inspect
-  # both use the same {{}} (mustache) delimiter
-  set +e
-  running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
-  local exit_code=$?
-  set -e
-  if [ "${running}" = "true" ]; then
-    printf "✓\nstopping %s" "${name}…"
-    docker stop "${name}"
-  fi
-  if [ "${running}" = "<no value>" ]; then
-    return
-  fi
-  if [ ${exit_code} -eq 0 ]; then
-    printf "✓\nremoving %s" "${name}…"
-    docker rm "${name}"
-  fi
-  # non-zero exit code from docker inspect probably means doesn't exist
-}
+# docker_clean_rm() {
+#   local name="$1"
+#   # This tr -d nonesense is because mustache and docker inspect
+#   # both use the same {{}} (mustache) delimiter
+#   set +e
+#   running=$(docker inspect -f $(echo "{z{.State.Running}z}" | tr -d z) "${name}")
+#   local exit_code=$?
+#   set -e
+#   if [ "${running}" = "true" ]; then
+#     printf "✓\nstopping %s" "${name}…"
+#     docker stop "${name}"
+#   fi
+#   if [ "${running}" = "<no value>" ]; then
+#     return
+#   fi
+#   if [ ${exit_code} -eq 0 ]; then
+#     printf "✓\nremoving %s" "${name}…"
+#     docker rm "${name}"
+#   fi
+#   # non-zero exit code from docker inspect probably means doesn't exist
+# }
 
-stop_containers() {
-  #app stops first for clean shutdown
-  docker_clean_rm "{{appName}}"
-  docker_clean_rm "{{appName}}_db"
-}
-
-start_containers() {
-  printf "✓\nstarting {{appName}}_db…"
-  docker run \
-    "--name={{appName}}_db" \
-    "--publish={{db.port}}:{{db.port}}" \
-    "--volume=/var/local/{{appName}}_db:/var/lib/postgresql/data" \
-    "--volume=/var/log/{{appName}}_db:/var/log/postgresql" \
-    --detach \
-    --restart=always \
-    postgres:{{postgres.version}}
-
-  printf "✓\nstarting {{appName}}…"
-  docker run \
-    "--publish={{port}}:{{port}}" \
-    "--name={{appName}}" \
-    "--link={{appName}}_db:{{appName}}_db" \
-    "--volume=/var/local/{{appName}}:/etc/{{appName}}" \
-    "--volume=/var/local/{{appName}}:/var/log/{{appName}}" \
-    --detach \
-    --restart=on-failure \
-    {{{registry}}}/{{appName}}:{{envName}}
-
+down_up_containers() {
   # registry should be running with
   # docker run --detach --restart=always --publish=127.0.0.1:5000:5000 registry
+  docker-compose -f /tmp/docker-compose-{{appName}}.yml down
+  docker-compose -f /tmp/docker-compose-{{appName}}.yml up -d
 }
 
 main() {
@@ -130,8 +108,7 @@ main() {
   setup_nginx
   setup_cron_backups
   setup_{{appName}}_config
-  stop_containers
-  start_containers
+  down_up_containers
 }
 
 main "$@"
