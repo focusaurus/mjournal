@@ -9,44 +9,44 @@
 
 # Please Use Google Shell Style: https://google.github.io/styleguide/shell.xml
 
-setup_old_docker() {
+setup_docker() {
   # This is the NEW docker signing key for docker-engine
-  # apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+  apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
   # This is the OLD docker signing key for lxc-docker
-  apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
-  echo 'deb https://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+  # apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+  # echo 'deb https://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+  echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
   apt-get --quiet --quiet --yes update
-  apt-get --quiet --yes install apt-transport-https ca-certificates lxc-docker
+  apt-get --quiet --yes purge lxc-docker
+  apt-get --quiet --yes install apt-transport-https ca-certificates "linux-image-extra-$(uname -r)" apparmor docker-engine
+  service docker start || true
+  docker run hello-world
+  groupadd docker || true
+  usermod -aG docker vagrant || true
+  usermod -aG docker plyons || true
   curl --location --silent --fail "https://github.com/docker/compose/releases/download/1.7.1/docker-compose-$(uname -s)-$(uname -m)" \
     > /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose
 }
 
-prepare_registry() {
-  if ! grep 'docker\.peterlyons\.com' /etc/hosts > /dev/null; then
-    echo "loopback hostname for docker registry not set in /etc/hosts. Setting."
-    echo 127.0.0.1 docker.peterlyons.com >> /etc/hosts
-  fi
-}
-
 setup_nginx() {
   apt-get --quiet --yes install nginx-core
   install --owner="www-data" --group=staff --mode=755 --directory \
-    /var/www/{{hostname}}
+    /var/www/${host_name}
   install --owner=root --group=staff --mode=750 \
-    /tmp/nginx_{{appName}} /etc/nginx/sites-enabled/{{hostname}}
+    /tmp/nginx_${app_name} /etc/nginx/sites-enabled/${host_name}
 }
 
 setup_cron_backups() {
   echo -n "setting up cron backups…"
   install --owner=www-data --group=staff --mode=755 --directory \
-    /var/local/{{appName}}
+    /var/local/${app_name}
   install --owner=root --group=staff --mode=750 \
-    /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+    /tmp/backup-${app_name}-db /etc/cron.daily/backup-${app_name}-db
 }
 
-setup_{{appName}}_config() {
-  local config_file=/var/local/{{appName}}/config.js
+setup_app_config() {
+  local config_file=/var/local/${app_name}/config.js
   readonly config_file
 
   if [[ ! -e "${config_file}" ]]; then
@@ -82,8 +82,8 @@ setup_{{appName}}_config() {
 down_up_containers() {
   # registry should be running with
   # docker run --detach --restart=always --publish=127.0.0.1:5000:5000 registry
-  docker-compose -f /tmp/docker-compose-{{appName}}.yml down
-  docker-compose -f /tmp/docker-compose-{{appName}}.yml up -d
+  docker-compose -f /tmp/docker-compose-${app_name}.yml down
+  docker-compose -f /tmp/docker-compose-${app_name}.yml up -d
 }
 
 main() {
@@ -99,15 +99,13 @@ main() {
   # End unofficial bash strict mode boilerplate
   cd "$(dirname "$0")"
 
-  if uname -r | grep boot2docker > /dev/null; then
-    # we are on stage
-    unset DOCKER_HOST
-    prepare_registry
-  fi
-  setup_old_docker
+  app_name="${APP_NAME-mjournal}"
+  host_name="${HOST_NAME-mjournal.peterlyons.com}"
+
+  setup_docker
   setup_nginx
   setup_cron_backups
-  setup_{{appName}}_config
+  setup_app_config
   down_up_containers
 }
 
