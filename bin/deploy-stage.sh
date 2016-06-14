@@ -9,5 +9,5 @@ PATH=$(npm bin):$PATH
 readonly registry=$(config3 registry)
 readonly app_name=$(config3 appName)
 readonly build="$1"
-docker tag -f "${build}" "${registry}/${app_name}:stage"
-./deploy/docker-server.sh "${DOCKER_IP}"
+# docker tag -f "${build}" "${registry}/${app_name}:stage"
+./deploy/docker-server.sh mj-stage

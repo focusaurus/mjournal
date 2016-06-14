@@ -1,17 +1,23 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
 # This file should be run as root (via sudo) on the docker host
 # after pushing the correct images to the registry
 # and copying the config files into /tmp
 
-# It's code must be old school bourne shell (not bash)
-# in order to support the busysbox /bin/sh used by boot2docker
-
 # FYI here's the docker options we use on stage:
 # DOCKER_OPTS="--ip=0.0.0.0 --host=tcp://0.0.0.0:2375 --dns=8.8.8.8 --icc=false --iptables=true --insecure-registry=docker.peterlyons.com:5000"
 
-set -o errexit    # always exit on error
-# set -x          # enable debugging
+# Please Use Google Shell Style: https://google.github.io/styleguide/shell.xml
 
+setup_old_docker() {
+  # This is the NEW docker signing key for docker-engine
+  # apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+  # This is the OLD docker signing key for lxc-docker
+  apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+  echo 'deb https://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+  apt-get --quiet --quiet --yes update
+  apt-get --quiet --yes install apt-transport-https ca-certificates lxc-docker
+}
 
 prepare_registry() {
   if ! grep 'docker\.peterlyons\.com' /etc/hosts > /dev/null; then
@@ -20,33 +26,31 @@ prepare_registry() {
   fi
 }
 
-prepare_fs() {
-  printf "preparing docker host fs…"
-  local www_data_uid=33
-  # for the node.js app and nginx
-  install --owner="${www_data_uid}" --group=staff --mode=755 --directory \
-    /var/local/{{appName}} \
+setup_nginx() {
+  apt-get --quiet --yes install nginx-core
+  install --owner="www-data" --group=staff --mode=755 --directory \
     /var/www/{{hostname}}
-  if [ "{{envName}}" = "production" ]; then
-    install --owner=root --group=staff --mode=750 \
-      /tmp/nginx_{{appName}} /etc/nginx/sites-enabled/{{hostname}}
-  fi
-  # for the postgresql db. MUST be 0700 or postgresql won't start
-  install --owner=root --group=staff --mode=0700 --directory \
-    /var/local/{{appName}}_db
-  if [ "{{envName}}" = "production" ]; then
-    install --owner=root --group=staff --mode=750 \
-      /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
-  fi
+  install --owner=root --group=staff --mode=750 \
+    /tmp/nginx_{{appName}} /etc/nginx/sites-enabled/{{hostname}}
+}
 
+setup_cron_backups() {
+  echo -n "setting up cron backups…"
+  install --owner=www-data --group=staff --mode=755 --directory \
+    /var/local/{{appName}}
+  install --owner=root --group=staff --mode=750 \
+    /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+}
+
+setup_{{appName}}_config() {
   local config_file=/var/local/{{appName}}/config.js
   readonly config_file
 
-  if [ ! -e "${config_file}" ]; then
-    install --owner="${www_data_uid}" --group=staff --mode=0460 /dev/null "${config_file}"
+  if [[ ! -e "${config_file}" ]]; then
+    install --owner=www-data --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
   fi
-  chown "${www_data_uid}:staff" "${config_file}"
+  chown "www-data:staff" "${config_file}"
   chmod 0460 "${config_file}"
 }
 
@@ -105,18 +109,27 @@ start_containers() {
 }
 
 main() {
-  cd "$(dirname "$0")"
+  # Start unofficial bash strict mode boilerplate
+  # http://redsymbol.net/articles/unofficial-bash-strict-mode/
+  set -o errexit    # always exit on error
+  set -o errtrace   # trap errors in functions as well
+  set -o pipefail   # don't ignore exit codes when piping output
+  set -o posix      # more strict failures in subshells
+  # set -x          # enable debugging
+
   IFS="$(printf "\n\t")"
-  if [ ! -e /var/run/docker.sock ]; then
-    export DOCKER_HOST=tcp://localhost:2375
-  fi
+  # End unofficial bash strict mode boilerplate
+  cd "$(dirname "$0")"
 
   if uname -r | grep boot2docker > /dev/null; then
     # we are on stage
     unset DOCKER_HOST
     prepare_registry
   fi
-  prepare_fs
+  setup_old_docker
+  setup_nginx
+  setup_cron_backups
+  setup_{{appName}}_config
   stop_containers
   start_containers
 }
