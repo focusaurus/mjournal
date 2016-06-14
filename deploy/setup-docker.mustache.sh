@@ -12,9 +12,6 @@
 setup_docker() {
   # This is the NEW docker signing key for docker-engine
   apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-  # This is the OLD docker signing key for lxc-docker
-  # apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
-  # echo 'deb https://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
   echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
   apt-get --quiet --quiet --yes update
   apt-get --quiet --yes purge lxc-docker
@@ -32,21 +29,21 @@ setup_docker() {
 setup_nginx() {
   apt-get --quiet --yes install nginx-core
   install --owner="www-data" --group=staff --mode=755 --directory \
-    /var/www/${host_name}
+    "/var/www/${host_name}"
   install --owner=root --group=staff --mode=750 \
-    /tmp/nginx_${app_name} /etc/nginx/sites-enabled/${host_name}
+    "/tmp/nginx_${app_name}" "/etc/nginx/sites-enabled/${host_name}"
 }
 
 setup_cron_backups() {
   echo -n "setting up cron backups…"
   install --owner=www-data --group=staff --mode=755 --directory \
-    /var/local/${app_name}
+    "/var/local/${app_name}"
   install --owner=root --group=staff --mode=750 \
-    /tmp/backup-${app_name}-db /etc/cron.daily/backup-${app_name}-db
+    "/tmp/backup-${app_name}-db" "/etc/cron.daily/backup-${app_name}-db"
 }
 
 setup_app_config() {
-  local config_file=/var/local/${app_name}/config.js
+  local config_file="/var/local/${app_name}/config.js"
   readonly config_file
 
   if [[ ! -e "${config_file}" ]]; then
@@ -80,10 +77,8 @@ setup_app_config() {
 # }
 
 down_up_containers() {
-  # registry should be running with
-  # docker run --detach --restart=always --publish=127.0.0.1:5000:5000 registry
-  docker-compose -f /tmp/docker-compose-${app_name}.yml down
-  docker-compose -f /tmp/docker-compose-${app_name}.yml up -d
+  docker-compose -f "/tmp/docker-compose-${app_name}.yml" down
+  docker-compose -f "/tmp/docker-compose-${app_name}.yml" up -d
 }
 
 main() {
@@ -99,8 +94,8 @@ main() {
   # End unofficial bash strict mode boilerplate
   cd "$(dirname "$0")"
 
-  app_name="${APP_NAME-mjournal}"
-  host_name="${HOST_NAME-mjournal.peterlyons.com}"
+  app_name="{{appName}}"
+  host_name="{{hostname}}"
 
   setup_docker
   setup_nginx

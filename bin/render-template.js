@@ -1,22 +1,16 @@
 #!/usr/bin/env node
-var config = require('config3')
-var fs = require('fs')
-var mustache = require('mustache')
+'use strict'
 
-function render (inPath, callback) {
-  var outPath = inPath.replace('.mustache', '')
-  if (outPath === inPath) {
-    callback(new Error('Template paths must end in .mustache file extension'))
-    return
-  }
-  fs.readFile(inPath, 'utf8', function (error, must) {
-    if (error) {
-      callback(error)
-      return
-    }
-    var output = mustache.render(must, config)
-    process.stdout.write(output, 'utf8', callback)
-  })
+const config = require('config3')
+const fs = require('fs')
+const mustache = require('mustache')
+
+let must
+try {
+  must = fs.readFileSync(process.argv[2], 'utf8') // eslint-disable-line no-sync
+} catch (error) {
+  console.error(error)
+  process.exit(10) // eslint-disable-line no-process-exit
 }
-
-render(process.argv[2], process.exit)
+const output = mustache.render(must, config)
+process.stdout.write(output, 'utf8')

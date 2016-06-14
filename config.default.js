@@ -25,6 +25,7 @@ config.postgres.version = '9.4'
 config.postgres.user = 'postgres'
 config.postgres.password = 'password'
 config.postgres.database = 'postgres'
+
 // heroku support
 if (process.env.DATABASE_URL) {
   var parsed = url.parse(process.env.DATABASE_URL)
@@ -42,7 +43,7 @@ if (process.env.DATABASE_URL) {
 }
 
 config.logStream = process.stdout
-config.registry = 'docker.peterlyons.com:5000'
+config.registry = '' // https://dub.docker.com default
 config.session = {
   secret: 'HkpYsNTjVpXz6BthO8hN',
   cookie: {
