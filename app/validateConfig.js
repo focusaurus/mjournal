@@ -2,7 +2,7 @@ var joi = require('joi')
 
 var PORT = joi.number().integer().min(1024).max(65535).required()
 var DB_SCHEMA = joi.alternatives().try(joi.object().keys({
-  host: joi.string().required(),
+  host: joi.string().hostname().required(),
   port: PORT,
   user: joi.string().required(),
   password: joi.string(),
@@ -13,7 +13,7 @@ var SESSION_SCHEMA = joi.object().keys({
   httpOnly: joi.boolean()
 })
 var CONFIG_SCHEMA = joi.object().keys({
-  hostname: joi.string().required(),
+  domain: joi.string().hostname().required(),
   appVersion: joi.string().required(),
   db: DB_SCHEMA,
   postgres: DB_SCHEMA,

@@ -1,6 +1,6 @@
 version: '2'
 services:
-  {{appName}}_db:
+  '{{appName}}_db':
     container_name: '{{appName}}_db'
     environment:
       POSTGRES_PASSWORD: '{{postgres.password}}'
@@ -8,11 +8,11 @@ services:
     network_mode: 'bridge'
     restart: 'unless-stopped'
     volumes: ['{{appName}}_data:/var/lib/postgresql/data']
-  {{appName}}:
+  '{{appName}}':
     # build: '.'
     container_name: '{{appName}}'
     depends_on: ['{{appName}}_db']
-    image: '{{appName}}_app:stage'
+    image: '{{dockerHubUsername}}/{{appName}}:stage'
     links: ['{{appName}}_db']
     network_mode: 'bridge'
     ports: ['127.0.0.1:{{port}}:{{port}}']

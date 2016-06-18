@@ -7,6 +7,9 @@ source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
 readonly build="$1"
-readonly app_name="$(config3 appName)"
-docker tag -f "${build}" "${app_name}:stage"
-./deploy/docker-server.sh mj-stage
+readonly tag="$(config3 dockerHubUsername)/$(config3 appName):stage"
+docker tag "${build}" "${tag}"
+docker push "${tag}"
+export DOMAIN='stage-mj.peterlyons.com'
+export TLS_EMAIL='pete@peterlyons.com'
+./deploy/docker-server.sh "${DOMAIN}"

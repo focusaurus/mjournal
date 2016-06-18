@@ -2,7 +2,12 @@
 // Edit as necessary for your local setup.
 // You only need to specify the values you need to change from the defaults.
 
+/* eslint-disable max-len */
 var config = exports
+config.css = {
+  debug: true
+}
+config.browserifyDebug = true
 config.email = {
   enabled: false,
   auth: {
@@ -21,3 +26,4 @@ config.postgres = {
   host: config.db.host,
   password: 'your db admin password'
 }
+config.ip = '127.0.0.1'

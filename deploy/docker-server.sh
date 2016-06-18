@@ -11,14 +11,13 @@ main() {
   source ./bin/lib/strict-mode.sh
   readonly docker="$1"
   readonly app_name=$(config3 appName)
-  readonly host_name=$(config3 hostname)
   echo "copying scripts to ${docker}"
   template "./deploy/backup-db.mustache" "/tmp/backup-${app_name}-db"
   template "./deploy/nginx.mustache" "/tmp/nginx_${app_name}"
-  template "./deploy/docker-compose-${app_name}.yml.mustache" "/tmp/docker-compose-${app_name}.yml"
-  template "./deploy/setup-docker.mustache.sh" "/tmp/setup-docker_${app_name}.sh"
+  template "./deploy/compose.mustache.yml" "/tmp/docker-compose-${app_name}.yml"
+  template "./deploy/setup-docker.mustache.sh" "/tmp/setup-docker-${app_name}.sh"
   echo "running docker setup script on ${docker}"
-  ssh -t "${docker}" sudo /bin/bash "/tmp/setup-docker_${app_name}.sh"
+  ssh -t "${docker}" sudo /bin/bash "/tmp/setup-docker-${app_name}.sh"
 }
 
 main "$@"

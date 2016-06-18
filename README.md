@@ -50,6 +50,31 @@ services:
 
 - `./bin/lint.sh`
 
+## Docker Setup Details
+
+** containers**
+
+- mjournal_data
+  - Data-only container storing the PostgreSQL database data files
+- mjournal_db
+  - Run the PostgreSQL relational database (docker image name "postgres")
+  - Holds all mjournal application and session data by using the mjournal_data data volume
+- mjournal
+  - The mjournal node/express web application
+  - Linked to mjournal_db for access to the database
+  - exposes port 9090 for the HTTP API and web application
+
+** Host OS Integration **
+
+We integrate with the host OS (Ubuntu x64) on stage and production for the following functionality
+
+- application configuration is specified in a CommonJS module `config.js` file
+  - This is mounted into the `mjournal` container at `/etc/mjournal` and mapped to `/var/local/mjournal` on the host OS
+- A cron job to run daily database backups
+  - Configured in `/etc/cron.daily/backup-mjournal-db`
+- nginx reverse proxy
+  - Handles TLS and serving static files
+
 ## How to Run with docker-compose
 
 - `./bin/start-docker-compose.sh`
@@ -74,7 +99,7 @@ Host 192.168.99.*
 - As long as you can ssh into your docker host as a user with sudo permissions, that should work
 - Stage shares the single production docker registry, but uses an ssh tunnel for authentication as the production docker registry is not accessible from the Internet
 - To make this work requires 2 key bits:
-  - Hack `/etc/hosts` to have the production docker registry hostname resolve to localhost. This is handled automatically by the `setup-docker.sh` script.
+  - Hack `/etc/hosts` to have the production docker registry domain resolve to localhost. This is handled automatically by the `setup-docker.sh` script.
   - Use an ssh tunnel from stage to production so docker images can be transfered from stage to production. The deploy scripts will prompt you with the necessary command for this when needed.
 
 ## How to prepare a release
@@ -128,7 +153,7 @@ Host 192.168.99.*
 ## Daily Rotating Backup System
 
 - Backups are taken daily and monthly by way of a `cron.daily` job on the docker host
-- The cron job is installed when the docker host is prepared via `./bin/deploy.sh <hostname>`
+- The cron job is installed when the docker host is prepared via `./bin/deploy.sh <domain>`
 - The details can be found in `deploy/backup-db.mustache` but TL;DR it's basically `pg_dumpall`
 - Files live as bzip-compressed SQL files at `/var/local/mjournal_db_backups` on the docker host with obvious timestamp file names
 - Stale backups are pruned automatically. We retain 1 month of dailies and 3 months of monthlies

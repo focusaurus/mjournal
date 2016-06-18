@@ -9,10 +9,11 @@ config.NODE_ENV = process.env.NODE_ENV || 'production'
 var appName = config.appName = pack.name
 config.appVersion = pack.version
 
-config.hostname = process.env.HOSTNAME || 'mjournal.peterlyons.com'
-config.envName = 'stage'
+config.domain = process.env.DOMAIN || 'mjournal.peterlyons.com'
+config.tlsEmail = process.env.TLS_EMAIL || ''
+config.dockerHubUsername = 'focusaurus'
 config.port = parseInt(process.env.PORT, 10) || 9090
-config.ip = '127.0.0.1'
+config.ip = process.env.IP || '0.0.0.0'
 config.db = {
   host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || 'localhost',
   port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
@@ -31,7 +32,7 @@ if (process.env.DATABASE_URL) {
   var parsed = url.parse(process.env.DATABASE_URL)
   var auth = parsed.auth.split(':')
   config.db = {
-    host: parsed.hostname,
+    host: parsed.domain,
     port: parsed.port || 5432,
     user: auth[0],
     password: auth[1],
@@ -39,7 +40,6 @@ if (process.env.DATABASE_URL) {
   }
   // heroku gives your main app user db admin rights
   config.postgres = config.db
-  config.ip = '0.0.0.0'
 }
 
 config.logStream = process.stdout
@@ -68,18 +68,11 @@ config.email = {
   }
 }
 config.css = {
-  debug: true
+  debug: false
 }
+
 switch (config.NODE_ENV) {
-  case 'production':
-    config.envName = 'production'
-    config.ip = '0.0.0.0'
-    config.logStream = process.stdout
-    config.css.debug = false
-    break
   case 'test':
     config.logStream = devNull()
     break
-  default:
-    config.browserifyDebug = true
 }
