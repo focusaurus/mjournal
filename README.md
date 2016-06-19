@@ -20,26 +20,31 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
 - Get access to a PostgreSQL 9.4 database
   - Running in a docker container recommended
   - docker-compose recommended
-  - See [the example docker-compose.yml file below](#sample-docker-compose)
-  - Run with `docker-compose -f path/to/your/docker-compose.yml up -d`
+  - See [the example docker-compose.json file below](#sample-docker-compose)
+  - Run with `docker-compose -f path/to/your/docker-compose.json up -d`
 - Adjust local configuration
   - `cp config.local.example.js config.local.js` and override anything from `config.default.js` you need such as `db.user`, `db.password`, etc
   - you local configuration should not get checked into the git repo and is thus ignored in the mjournal `.gitignore`
 
-### <a name="sample-docker-compose"></a>Sample docker-compose.yml file
+### <a name="sample-docker-compose"></a>Sample docker-compose.json file
 
-Here is a sample of a `docker-compose.yml` file you can use for local development running postgres under docker.
+Here is a sample of a `docker-compose.json` file you can use for local development running postgres under docker.
 
-```yml
-version: '2'
-services:
-  postgres:
-    container_name: 'postgres'
-    ports: ['127.0.0.1:5432:5432']
-    volumes: ['~/docker-volume/postgres:/host']
-    image: 'postgres'
-    environment:
-      POSTGRES_PASSWORD: 'password'
+```json
+{
+  "services": {
+    "postgres": {
+      "container_name": "postgres",
+      "environment": {
+        "POSTGRES_PASSWORD": "password"
+      },
+      "image": "postgres",
+      "ports": ["127.0.0.1:5432:5432"],
+      "volumes": ["~/docker-volume/postgres:/host"]
+    }
+  },
+  "version": "2"
+}
 ```
 
 ## How to Run the Tests

@@ -4,6 +4,6 @@ node_modules
 config.local.js*
 logs/*.log
 Dockerfile
-docker-compose-mjournal.yml
+docker-compose-mjournal.*
 wwwroot/*.js
 .vagrant

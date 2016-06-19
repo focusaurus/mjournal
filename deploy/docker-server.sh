@@ -14,7 +14,7 @@ main() {
   echo "copying scripts to ${docker}"
   template "./deploy/backup-db.mustache" "/tmp/backup-${app_name}-db"
   template "./deploy/nginx.mustache" "/tmp/nginx_${app_name}"
-  template "./deploy/compose.mustache.yml" "/tmp/docker-compose-${app_name}.yml"
+  template "./deploy/compose.mustache.json" "/tmp/docker-compose-${app_name}.json"
   template "./deploy/setup-docker.mustache.sh" "/tmp/setup-docker-${app_name}.sh"
   echo "running docker setup script on ${docker}"
   ssh -t "${docker}" sudo /bin/bash "/tmp/setup-docker-${app_name}.sh"
