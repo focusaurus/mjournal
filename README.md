@@ -58,6 +58,9 @@ Here is a sample of a `docker-compose.json` file you can use for local developme
 ## How to run the app server directly
 
 - `node .`
+- **OR** `node-dev .`
+- **OR** `./bin/start-dev.sh`
+  - this one captures logs as well. RTFS for details.
 
 ## How to Run with docker-compose
 

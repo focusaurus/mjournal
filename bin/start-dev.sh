@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # run node app server for development
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 10
 source ./bin/lib/strict-mode.sh
 PATH=$(npm bin):$PATH
-node-dev --debug=9091 app/server | tee -a logs/mjournal.log | bistre
+node-dev --debug=9091 . | tee -a logs/mjournal.log
