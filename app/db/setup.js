@@ -122,6 +122,5 @@ module.exports = {
 }
 
 if (require.main === module) {
-  init(() => {
-  })
+  init(() => {})
 }
