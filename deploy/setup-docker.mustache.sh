@@ -30,6 +30,7 @@ setup_docker() {
     apt-get --quiet --yes purge lxc-docker
     apt-get --quiet --yes install apt-transport-https ca-certificates "linux-image-extra-$(uname -r)" apparmor docker-engine
   fi
+  echo 'DOCKER_OPTS="--icc=false --iptables=true"' > /etc/default/docker
   service docker start 2> /dev/null || true
   docker run --rm hello-world > /dev/null
   groupadd docker 2> /dev/null || true
