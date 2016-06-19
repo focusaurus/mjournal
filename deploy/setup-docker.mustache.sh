@@ -104,9 +104,9 @@ main() {
   # End unofficial bash strict mode boilerplate
   cd "$(dirname "$0")"
 
-  app_name='{{appName}}'
-  domain='{{domain}}'
-  email='{{tlsEmail}}'
+  app_name='{{MJ_APP_NAME}}'
+  domain='{{MJ_DOMAIN}}'
+  email='{{MJ_TLS_EMAIL}}'
 
   echo -en "setting up docker…"
   setup_docker

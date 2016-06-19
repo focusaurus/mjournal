@@ -3,19 +3,19 @@
     "{{MJ_APP_NAME}}": {
       "container_name": "{{MJ_APP_NAME}}",
       "depends_on": ["{{MJ_APP_NAME}}_db"],
-      "image": "{{dockerHubUsername}}/{{MJ_APP_NAME}}:stage",
+      "image": "{{MJ_DOCKER_HUB_USER}}/{{MJ_APP_NAME}}:stage",
       "links": ["{{MJ_APP_NAME}}_db" ],
       "network_mode": "bridge",
-      "ports": ["127.0.0.1:{{port}}:{{port}}"],
+      "ports": ["127.0.0.1:{{MJ_PORT}}:{{MJ_PORT}}"],
       "restart": "unless-stopped",
       "volumes": ["/var/local/{{MJ_APP_NAME}}:/etc/{{MJ_APP_NAME}}"]
     },
     "{{MJ_APP_NAME}}_db": {
       "container_name": "{{MJ_APP_NAME}}_db",
       "environment": {
-        "POSTGRES_PASSWORD": "{{postgres.password}}"
+        "POSTGRES_PASSWORD": "{{MJ_PG_PASSWORD}}"
       },
-      "image": "postgres:{{postgres.version}}",
+      "image": "postgres:{{MJ_PG_VERSION}}",
       "network_mode": "bridge",
       "restart": "unless-stopped",
       "volumes": ["{{MJ_APP_NAME}}_data:/var/lib/postgresql/data"]

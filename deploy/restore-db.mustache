@@ -8,7 +8,7 @@ docker_sql() {
 }
 
 export DOCKER_HOST=tcp://localhost:2375
-container="{{appName}}_db"
+container="{{MJ_APP_NAME}}_db"
 user=postgres
 backup_path="$1"
 if [[ -z "${backup_path}" ]]; then
@@ -23,12 +23,12 @@ bunzip2 --stdout "${backup_path}" > "/var/local/"${container}/"${restore_file}"
 
 terminate_path="/var/lib/postgresql/data/terminate.sql"
 cat <<EOF > "/var/local/${container}/terminate.sql"
-revoke connect on database {{appName}} from public;
-alter database {{appName}} connection limit 0;
+revoke connect on database {{MJ_APP_NAME}} from public;
+alter database {{MJ_APP_NAME}} connection limit 0;
 select pg_terminate_backend(pid)
   from pg_stat_activity
   where pid <> pg_backend_pid()
-  and datname='{{appName}}';
+  and datname='{{MJ_APP_NAME}}';
 EOF
 
 docker_sql "${terminate_path}"
