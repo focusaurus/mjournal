@@ -1,13 +1,13 @@
 #!/usr/bin/env node
+
 if (process.env.NODE_ENV !== 'test') {
   console.error('Refusing to wipe non-test DB.' +
     ' Edit this wipe.js script if you seriously want to wipe a dev/prod DB')
   /* eslint no-process-exit:0 */
   process.exit(10)
 }
-// enable these lines to see logging during the wipe
-// var config = require('config3')
-// config.logStream = process.stdout
+// enable the next line to see logging during the wipe
+// var config = require('config3'); config.logStream = process.stdout
 
 var async = require('async')
 var log = require('../log')
