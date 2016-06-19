@@ -6,17 +6,6 @@
 
 # Please Use Google Shell Style: https://google.github.io/styleguide/shell.xml
 
-# ---- Start unofficial bash strict mode boilerplate
-# http://redsymbol.net/articles/unofficial-bash-strict-mode/
-set -o errexit    # always exit on error
-set -o errtrace   # trap errors in functions as well
-set -o pipefail   # don't ignore exit codes when piping output
-set -o posix      # more strict failures in subshells
-# set -x          # enable debugging
-
-IFS="$(printf "\n\t")"
-# ---- End unofficial bash strict mode boilerplate
-
 setup_docker() {
   if [[ ! -x /usr/local/bin/docker-compose ]]; then
     curl --location --silent --fail "https://github.com/docker/compose/releases/download/1.7.1/docker-compose-$(uname -s)-$(uname -m)" \
@@ -46,13 +35,7 @@ setup_tls() {
   fi
 
   if [[ ! -e "/etc/letsencrypt/live/${domain}/fullchain.pem" ]]; then
-    certbot-auto --non-interactive --domain "${domain}" --email "${email}" certonly
-  fi
-
-  local dhparam="/etc/nginx/sites-available/${domain}.dhparam.pem"
-  if [[ ! -e "${dhparam}" ]]; then
-    echo "Generating dhparam file at ${dhparam} (please wait…)"
-    openssl dhparam -out "${dhparam}" 2048
+    certbot-auto --non-interactive --domain "${domain}" --email "${email}" --standalone --agree-tos certonly
   fi
 }
 
@@ -64,6 +47,13 @@ setup_nginx() {
     "/var/www/${domain}"
   install --owner=root --group=staff --mode=750 \
     "/tmp/nginx_${app_name}" "/etc/nginx/sites-available/${domain}"
+
+  local dhparam="/etc/nginx/sites-available/${domain}.dhparam.pem"
+  if [[ ! -e "${dhparam}" ]]; then
+    echo "Generating dhparam file at ${dhparam} (please wait…)"
+    openssl dhparam -out "${dhparam}" 2048
+  fi
+
   ln -nsf "../sites-available/${domain}" "/etc/nginx/sites-enabled/${domain}"
   service nginx reload > /dev/null
 }
@@ -92,7 +82,7 @@ start_containers() {
 }
 
 main() {
-  # Start unofficial bash strict mode boilerplate
+  # ---- Start unofficial bash strict mode boilerplate
   # http://redsymbol.net/articles/unofficial-bash-strict-mode/
   set -o errexit    # always exit on error
   set -o errtrace   # trap errors in functions as well
@@ -101,7 +91,7 @@ main() {
   # set -x          # enable debugging
 
   IFS="$(printf "\n\t")"
-  # End unofficial bash strict mode boilerplate
+  # ---- End unofficial bash strict mode boilerplate
   cd "$(dirname "$0")"
 
   app_name='{{MJ_APP_NAME}}'

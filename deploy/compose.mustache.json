@@ -13,7 +13,7 @@
     "{{MJ_APP_NAME}}_db": {
       "container_name": "{{MJ_APP_NAME}}_db",
       "environment": {
-        "POSTGRES_PASSWORD": "{{MJ_PG_PASSWORD}}"
+        "POSTGRES_PASSWORD": "{{MJ_PG_ADMIN_PASSWORD}}"
       },
       "image": "postgres:{{MJ_PG_VERSION}}",
       "network_mode": "bridge",
