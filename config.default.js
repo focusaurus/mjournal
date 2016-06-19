@@ -1,78 +1,83 @@
-var _ = require('lodash')
-var devNull = require('dev-null')
-var pack = require('./package')
-var url = require('url')
+const joi = require('joi')
+const pack = require('./package')
+const url = require('url')
 
-var config = exports
-config.pack = pack
-config.NODE_ENV = process.env.NODE_ENV || 'production'
-var appName = config.appName = pack.name
-config.appVersion = pack.version
+const appName = pack.name
+const port = joi.number().integer().min(1024).max(65535)
 
-config.domain = process.env.DOMAIN || 'mjournal.peterlyons.com'
-config.tlsEmail = process.env.TLS_EMAIL || ''
-config.dockerHubUsername = 'focusaurus'
-config.port = parseInt(process.env.PORT, 10) || 9090
-config.ip = process.env.IP || '0.0.0.0'
-config.db = {
-  host: process.env.MJOURNAL_DB_PORT_5432_TCP_ADDR || 'localhost',
-  port: parseInt(process.env.MJOURNAL_DB_PORT_5432_TCP_PORT || 5432, 10),
-  user: process.env.DATABASE_POSTGRESQL_USERNAME || appName,
-  database: `${appName}_local_dev`,
-  password: process.env.DATABASE_POSTGRESQL_USERNAME || appName
-}
-config.postgres = _.clone(config.db)
-config.postgres.version = '9.4'
-config.postgres.user = 'postgres'
-config.postgres.password = 'password'
-config.postgres.database = 'postgres'
+/* eslint-disable max-len */
+const schema = joi.object().keys({
+  DATABASE_URL: joi.string().uri(),
+  MJ_APP_NAME: joi.string().token().default(appName),
+  MJ_DEBUG_BROWSERIFY: joi.boolean().default(false),
+  MJ_DEBUG_CSS: joi.boolean().default(false),
+  MJ_DOCKER_HUB_USER: joi.string().default('focusaurus'),
+  MJ_DOCKER_REGISTRY: joi.string().uri().valid('').default(''), // https://dub.docker.com default
+  MJ_DOMAIN: joi.string().hostname().default('mjournal.peterlyons.com'),
+  MJ_EMAIL_CLIENT_ID: joi.string(),
+  MJ_EMAIL_CLIENT_SECRET: joi.string(),
+  MJ_EMAIL_FROM: joi.string().email().default('mjournal reports <mjournalreports@gmail.com>'),
+  MJ_EMAIL_REFRESH_TOKEN: joi.string(),
+  MJ_EMAIL_SERVICE: joi.string().default('gmail'),
+  MJ_EMAIL_TO: joi.string().email().default('pete@peterlyons.com'),
+  MJ_EMAIL_USER: joi.string().email().default('mjournalreports@gmail.com'),
+  MJ_ENABLE_EMAIL: joi.boolean().default(false),
+  MJ_IP: joi.string().ip().default('0.0.0.0'),
+  MJ_PG_ADMIN_DATABASE: joi.string().default('postgres'),
+  MJ_PG_ADMIN_PASSWORD: joi.string().default(''),
+  MJ_PG_ADMIN_USER: joi.string().default('postgres'),
+  MJ_PG_DATABASE: joi.string().default(appName),
+  MJ_PG_HOST: joi.string().hostname().default('localhost'),
+  MJ_PG_PASSWORD: joi.string().default(''),
+  MJ_PG_PORT: port.default(5432),
+  MJ_PG_USER: joi.string().default(process.env.DATABASE_POSTGRESQL_USERNAME || appName),
+  MJ_PG_VERSION: joi.string().default('9.4'),
+  MJ_PORT: port.default(9090),
+  MJ_SESSION_SECRET: joi.string().default('HkpYsNTjVpXz6BthO8hN'),
+  MJ_TLS_EMAIL: joi.string().email().default(''),
+  MJ_VERSION: pack.version,
+  MJOURNAL_DB_PORT_5432_TCP_ADDR: joi.string().hostname(), // docker linking support
+  MJOURNAL_DB_PORT_5432_TCP_PORT: port // docker linking support
+})
+/* eslint-enable max-len */
 
-// heroku support
-if (process.env.DATABASE_URL) {
-  var parsed = url.parse(process.env.DATABASE_URL)
-  var auth = parsed.auth.split(':')
-  config.db = {
-    host: parsed.domain,
-    port: parsed.port || 5432,
-    user: auth[0],
-    password: auth[1],
-    database: parsed.path.slice(1) // remove leading slash
+const result = schema.validate(process.env, {stripUnknown: true})
+
+/* istanbul ignore if */
+if (result.error) {
+  exports._error = 'Invalid configuration:\n' + result.error.details
+    .map((error) => error.message)
+    .join('.\n')
+} else {
+  // export each configuration key from this commonjs module
+  // using joi coerced values
+  Object.assign(exports, result.value)
+  exports.MJ_LOG_STREAM = process.stdout
+  // docker support
+  exports.MJ_PG_HOST = exports.MJOURNAL_DB_PORT_5432_TCP_ADDR ||
+    exports.MJ_PG_HOST
+  exports.MJ_PG_PORT = exports.MJOURNAL_DB_PORT_5432_TCP_PORT ||
+    exports.MJ_PG_PORT
+
+  // heroku support
+  if (exports.DATABASE_URL) {
+    const parsed = url.parse(exports.DATABASE_URL)
+    const auth = parsed.auth.split(':')
+    exports.MJ_PG_HOST = parsed.domain
+    exports.MJ_PG_PORT = parsed.port || 5432
+    exports.MJ_PG_USER = auth[0]
+    exports.MJ_PG_PASSORD = auth[1]
+    exports.MJ_PG_DATABASE = parsed.path.slice(1) // remove leading slash
+
+    // heroku gives your main app user db admin rights
+    exports.MJ_PG_ADMIN_USER = exports.MJ_PG_ADMIN_USER || exports.MJ_PG_USER
+    exports.MJ_PG_ADMIN_PASSWORD = exports.MJ_PG_ADMIN_PASSWORD ||
+      exports.MJ_PG_PASSWORD
   }
-  // heroku gives your main app user db admin rights
-  config.postgres = config.db
 }
 
-config.logStream = process.stdout
-config.registry = '' // https://dub.docker.com default
-config.session = {
-  secret: 'HkpYsNTjVpXz6BthO8hN',
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 1, // one day in milliseconds
-    secure: false
-  }
-}
-config.email = {
-  enabled: false,
-  service: 'gmail',
-  to: 'pete@peterlyons.com',
-  from: 'mjournal reports <mjournalreports@gmail.com>',
-  auth: {
-    xoauth2: {
-      user: 'mjournalreports@gmail.com',
-      clientId: '',
-      clientSecret: '',
-      refreshToken: '',
-      timeout: 3600
-    }
-  }
-}
-config.css = {
-  debug: false
-}
-
-switch (config.NODE_ENV) {
+switch (process.env.NODE_ENV) {
   case 'test':
-    config.logStream = devNull()
+    exports.MJ_LOG_STREAM = require('dev-null')()
     break
 }

@@ -13,7 +13,7 @@ var BODY = [
   'Total Users: {{totalUsers}}',
   'New Users Today: {{usersCreated}}'
 ].join('\n')
-var SUBJECT = '{{appName}} daily summary {{for}}: {{usersCreated}} new users'
+const SUBJECT = '{{MJ_APP_NAME}} daily summary {{for}}: {{usersCreated}} new users' // eslint-disable-line max-len
 
 function build (callback) {
   dailySummary(function (error, result) {
@@ -26,10 +26,10 @@ function build (callback) {
       callback(new Error('Not enough activity to warrant email'))
       return
     }
-    _.extend(result, _.pick(config, 'appName'))
+    _.extend(result, _.pick(config, 'MJ_APP_NAME'))
     var email = {
-      to: config.email.to,
-      from: config.email.from,
+      to: config.MJ_EMAIL_TO,
+      from: config.MJ_EMAIL_FROM,
       subject: mustache.render(SUBJECT, result),
       text: mustache.render(BODY, result)
     }

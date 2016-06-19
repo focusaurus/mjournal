@@ -1,26 +1,29 @@
 #!/usr/bin/env node
+'use strict'
 
 // HEY! The order of this early code has been carefully considered.
 // Do not change unless you know what you are doing
 
-var errors = require('./errors')
+const errors = require('./errors')
 process.on('uncaughtException', errors.onUncaughtException)
 
-var config = require('config3')
-var validateConfig = require('./validateConfig')
-var valid = validateConfig(config)
-if (valid.error) {
-  console.error(valid.error.details, 'Config is invalid. Process will exit.')
-  process.exit(33)
+const config = require('config3')
+const log = require('./log')
+const main = require.main === module
+
+// if starting the real server and the config isn't valid, exit right away
+/* istanbul ignore if */
+if (main && config._error) {
+  log.fatal(config._error)
+  process.exit(33) // eslint-disable-line no-process-exit
 }
 
 var _ = require('lodash')
-var log = require('./log')
 log.debug({
   env: process.env.NODE_ENV,
-  db: _.omit(config.db, 'password')
+  db: _.pick(config, 'MJ_PG_HOST', 'MJ_PG_DATABASE')
 },
-  '%s server process starting', config.pack.name)
+  '%s server process starting', config.MJ_APP_NAME)
 var app = require('.')
 var server
 
@@ -70,7 +73,7 @@ setup.init(function (error) {
     log.error(error, 'Error ensuring database is ready. Process will exit.')
     setTimeout(process.exit.bind(null, 20), 1000)
   }
-  server = app.listen(config.port, config.ip, function (error2) {
+  server = app.listen(config.MJ_PORT, config.MJ_IP, function (error2) {
     if (error2) {
       log.error(error2, 'Unable to bind network socket. Exiting')
       /*eslint no-process-exit:0*/
@@ -78,7 +81,7 @@ setup.init(function (error) {
     }
     log.info(
       _.pick(config, 'ip', 'port'),
-      '%s express app listening', config.pack.name
+      '%s express app listening', config.MJ_APP_NAME
     )
   })
 })

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Install this script as root:sudo 0750 in /etc/cron.daily/backup-{{appName}}-db
+# Install this script as root:sudo 0750 in /etc/cron.daily/backup-{{MJ_APP_NAME}}-db
 # sudo install --owner=root --group=sudo --mode=0750 \
-#   /tmp/backup-{{appName}}-db /etc/cron.daily/backup-{{appName}}-db
+#   /tmp/backup-{{MJ_APP_NAME}}-db /etc/cron.daily/backup-{{MJ_APP_NAME}}-db
 if [[ ! -e /var/run/docker.sock ]]; then
   export DOCKER_HOST=tcp://localhost:2375
 fi
-container="{{appName}}_db"
+container="{{MJ_APP_NAME}}_db"
 user=postgres
-backup_dir="/var/local/{{appName}}_db_backups"
+backup_dir="/var/local/{{MJ_APP_NAME}}_db_backups"
 
 do_backup() {
   docker exec "${container}" \

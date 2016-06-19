@@ -11,7 +11,16 @@ var path = require('path')
 var util = require('util')
 
 var db = require('./index')
-var postgres = knex({client: 'pg', connection: config.postgres})
+var postgres = knex({
+  client: 'pg',
+  connection: {
+    database: config.MJ_PG_ADMIN_DATABASE,
+    host: config.MJ_PG_HOST,
+    password: config.MJ_PG_ADMIN_PASSWORD,
+    port: config.MJ_PG_PORT,
+    user: config.MJ_PG_ADMIN_USER
+  }
+})
 var ALREADY = [
   '3D000',
   '42501', // permission denied to create role (heroku)
@@ -56,14 +65,14 @@ function runFile (ddlPath, callback) {
 function ensureDatabase (callback) {
   // http://stackoverflow.com/a/17431573/266795
   var passwordMd5Hex = 'md5' + crypt.createHash('md5')
-      .update(config.db.password + config.db.user).digest('hex')
+    .update(config.MJ_PG_PASSWORD + config.MJ_PG_USER).digest('hex')
   var createRole = util.format(
     "create role %s login encrypted password '%s'",
-    config.db.user,
+    config.MJ_PG_USER,
     passwordMd5Hex
   )
   var createDatabase = util.format(
-    'create database "%s" owner %s', config.db.database, config.db.user)
+    'create database "%s" owner %s', config.MJ_PG_DATABASE, config.MJ_PG_USER)
   async.eachSeries(
     [createRole, createDatabase],
     runDdl.bind(null, postgres),
@@ -113,5 +122,6 @@ module.exports = {
 }
 
 if (require.main === module) {
-  init(() => {})
+  init(() => {
+  })
 }

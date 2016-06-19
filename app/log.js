@@ -3,7 +3,7 @@ var config = require('config3')
 
 bole.output({
   level: 'debug',
-  stream: config.logStream
+  stream: config.MJ_LOG_STREAM
 })
 
-module.exports = bole(config.pack.name)
+module.exports = bole(config.MJ_APP_NAME)

@@ -3,7 +3,16 @@ var config = require('config3')
 var errors = require('../errors')
 var knex = require('knex')
 var log = require('../log')
-var db = module.exports = knex({client: 'pg', connection: config.db})
+var db = module.exports = knex({
+  client: 'pg',
+  connection: {
+    database: config.MJ_PG_DATABASE,
+    host: config.MJ_PG_HOST,
+    password: config.MJ_PG_PASSWORD,
+    port: config.MJ_PG_PORT,
+    user: config.MJ_PG_USER
+  }
+})
 
 function forceReconnect (callback) {
   db.raw('select now()').then(callback)

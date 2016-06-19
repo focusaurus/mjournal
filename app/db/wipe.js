@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== 'test') {
   process.exit(10)
 }
 // enable the next line to see logging during the wipe
-// var config = require('config3'); config.logStream = process.stdout
+// var config = require('config3'); config.MJ_LOG_STREAM = process.stdout
 
 var async = require('async')
 var log = require('../log')

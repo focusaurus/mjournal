@@ -10,7 +10,7 @@ main() {
   cd "$(dirname "$0")/.." || exit 10
   source ./bin/lib/strict-mode.sh
   readonly docker="$1"
-  readonly app_name=$(config3 appName)
+  readonly app_name=$(config3 MJ_APP_NAME)
   echo "copying scripts to ${docker}"
   template "./deploy/backup-db.mustache" "/tmp/backup-${app_name}-db"
   template "./deploy/nginx.mustache" "/tmp/nginx_${app_name}"

@@ -1,6 +1,12 @@
 var config = require('config3')
 var settings = {
   client: 'postgresql',
-  connection: config.db
+  connection: {
+    database: config.MJ_PG_DATABASE,
+    host: config.MJ_PG_HOST,
+    password: config.MJ_PG_PASSWORD,
+    port: config.MJ_PG_PORT,
+    user: config.MJ_PG_USER
+  }
 }
-exports[config.NODE_ENV] = settings
+exports[process.env.NODE_ENV] = settings

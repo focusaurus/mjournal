@@ -28,7 +28,7 @@ function render (name, callback) {
       .use(autoprefixer())
       .set('include css', true)
       .set('filename', stylPath)
-      .set('sourcemap', {inline: config.css.debug})
+      .set('sourcemap', {inline: config.MJ_DEBUG_CSS})
       .render(callback)
   })
 }

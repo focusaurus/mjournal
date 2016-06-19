@@ -13,6 +13,8 @@ var sharify = require('sharify')
 var stylusBundle = require('./theme/stylusBundle')
 var themeMW = require('./middleware/theme')
 
+const ONE_DAY_MS = 1000 * 60 * 60 * 24 * 1
+
 function home (req, res) {
   if (req.user) {
     res.render('home')
@@ -37,8 +39,8 @@ function appCSS (req, res, next) {
 
 var PGStore = require('connect-pg-simple')(session)
 var app = express()
-_.extend(sharify.data, _.pick(config, 'appName', 'appVersion'))
-sharify.data.sessionTtl = config.session.cookie.maxAge
+_.extend(sharify.data, _.pick(config, 'MJ_APP_NAME', 'MJ_APP_VERSION'))
+sharify.data.sessionTtl = ONE_DAY_MS
 _.extend(app.locals, sharify.data)
 app.set('view engine', 'pug')
 app.set('views', __dirname)
@@ -50,9 +52,22 @@ app.use(express.static(paths.wwwroot))
 app.use(express.static(paths.browser))
 app.use(cookieParser())
 app.use(session({
-  store: new PGStore({conString: config.db, pg: pg}),
-  secret: config.session.secret,
-  cookie: config.session.cookie,
+  store: new PGStore({
+    conString: {
+      database: config.MJ_PG_DATABASE,
+      host: config.MJ_PG_HOST,
+      password: config.MJ_PG_PASSWORD,
+      port: config.MJ_PG_PORT,
+      user: config.MJ_PG_USER
+    },
+    pg: pg
+  }),
+  secret: config.MJ_SESSION_SECRET,
+  cookie: {
+    httpOnly: true,
+    maxAge: ONE_DAY_MS,
+    secure: false
+  },
   resave: false,
   rolling: true,
   saveUninitialized: true
