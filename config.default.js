@@ -7,7 +7,9 @@ const port = joi.number().integer().min(1024).max(65535)
 
 /* eslint-disable max-len */
 const schema = joi.object().keys({
-  DATABASE_URL: joi.string().uri(),
+  DATABASE_POSTGRESQL_PASSWORD: joi.string(), // semaphore CI
+  DATABASE_POSTGRESQL_USERNAME: joi.string(), // semaphore CI
+  DATABASE_URL: joi.string().uri(), // heroku
   MJ_APP_NAME: joi.string().token().default(appName),
   MJ_DEBUG_BROWSERIFY: joi.boolean().default(false),
   MJ_DEBUG_CSS: joi.boolean().default(false),
@@ -58,6 +60,12 @@ if (result.error) {
     exports.MJ_PG_HOST
   exports.MJ_PG_PORT = exports.MJOURNAL_DB_PORT_5432_TCP_PORT ||
     exports.MJ_PG_PORT
+
+  // semaphore CI support
+  exports.MJ_PG_USER = exports.DATABASE_POSTGRESQL_USERNAME ||
+    exports.MJ_PG_USER
+  exports.MJ_PG_PASSWORD = exports.DATABASE_POSTGRESQL_PASSWORD ||
+    exports.MJ_PG_PASSWORD
 
   // heroku support
   if (exports.DATABASE_URL) {
