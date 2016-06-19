@@ -55,21 +55,42 @@ Here is a sample of a `docker-compose.json` file you can use for local developme
 
 - `./bin/lint.sh`
 
+## How to run the app server directly
+
+- `node .`
+
+## How to Run with docker-compose
+
+- `./bin/start-docker-compose.sh`
+
+This should get the data volume, postgres container, and node container created, linked, and running. You should be able to access the app at [http://127.0.0.1:9090]().
+
+This is suitable for local tests that the app works under docker. It does differ from production by a few details (TLS, etc), so it does not constitute a suitable stage or pre-production environment.
+
 ## Docker Setup Details
 
-** containers**
+We use the public docker registry to host our images. This vastly simplies things over trying to run our own registries.
 
-- mjournal_data
+### Containers
+
+- **mjournal_data**
   - Data-only container storing the PostgreSQL database data files
-- mjournal_db
-  - Run the PostgreSQL relational database (docker image name "postgres")
+- **mjournal_db**
+  - Runs the PostgreSQL relational database (docker image name "postgres")
   - Holds all mjournal application and session data by using the mjournal_data data volume
-- mjournal
+- **mjournal**
   - The mjournal node/express web application
   - Linked to mjournal_db for access to the database
   - exposes port 9090 for the HTTP API and web application
+  - configuration (secrets, etc) comes from a configuration file at `/var/local/mjournal/config.js` which is mounted in the container at `/etc/mjournal/config.js`
 
-** Host OS Integration **
+### Deployed Host Setup and OS Integration
+
+When deployed on stage and production, I use an Ubuntu 14.04 x64 droplet on digital ocean, but that OS on any hosting platform should work fine. The only manual setup from a fresh droplet is ssh access:
+
+- create your OS user (as root on droplet: `adduser plyons`)
+- allow sudo with password (as root on droplet: `adduser plyons sudo`)
+- Configure passwordless ssh (from your local machine: `ssh-copy-id new-droplet-ip`)
 
 We integrate with the host OS (Ubuntu x64) on stage and production for the following functionality
 
@@ -79,35 +100,16 @@ We integrate with the host OS (Ubuntu x64) on stage and production for the follo
   - Configured in `/etc/cron.daily/backup-mjournal-db`
 - nginx reverse proxy
   - Handles TLS and serving static files
+  - TLS certs from [letsencrypt](https://letsencrypt.org) managed by certbot-auto
 
-## How to Run with docker-compose
+### Further Notes
 
-- `./bin/start-docker-compose.sh`
+- Backups live at `/var/local/mjournal_db_backups` on the docker host
+  - more details on backup/restore below
+- all released docker images are tagged with semver
+  - docker images are also tagged by environment for "production" and "stage"
 
-This should get the data volume, postgres container, and node container created, linked, and running. You should be able to access the app at [http://127.0.0.1:9090]().
-
-This is suitable for local tests that the app works under docker. It does differ from production by a few details, so it does not constitute a suitable stage or pre-production environment.
-
-## Local Stage Deployment Setup
-
-- I use a local docker-machine setup to act as my staging server
-- After a `docker-machine create` command has created your docker host, make sure you have ssh access set up
-  - I do this with a section such as this in my `~/.ssh/config`
-
-```
-##### docker-machine #####
-Host 192.168.99.*
-  User docker
-  IdentityFile ~/.docker/machine/machines/default/id_rsa
-```
-
-- As long as you can ssh into your docker host as a user with sudo permissions, that should work
-- Stage shares the single production docker registry, but uses an ssh tunnel for authentication as the production docker registry is not accessible from the Internet
-- To make this work requires 2 key bits:
-  - Hack `/etc/hosts` to have the production docker registry domain resolve to localhost. This is handled automatically by the `setup-docker.sh` script.
-  - Use an ssh tunnel from stage to production so docker images can be transfered from stage to production. The deploy scripts will prompt you with the necessary command for this when needed.
-
-## How to prepare a release
+## How to Prepare a Release
 
 - get new changes in the `develop` branch committed and ready to go
 - ensure your working directory is in a clean git state
@@ -117,7 +119,7 @@ Host 192.168.99.*
   - This will do an `npm version` to increment the version and tag the commit
 - Move on to the build and test instructions below
 
-## How to build and deploy code
+## How to Build and Deploy Code
 
 - do a docker build
   - `./bin/build-docker.sh`
@@ -125,35 +127,12 @@ Host 192.168.99.*
 - tag and deploy that for testing on stage
   - `./bin/deploy-stage.sh <container_id_from_above>`
 - Test in a browser
-  - `open "http://${DOCKER_IP}:9090"`
+  - `open "https://stage-mj.peterlyons.com"`
 - If the app is working, tag for prod and release
   - `./bin/tag-production.sh <container_id_from_above>`
   - `./bin/release.sh`
 - Deploy to production
   - `./bin/deploy-production.sh`
-  - Note this requires an ssh tunnel from dbs to prod. It will prompt you with the command to establish that in another terminal
-
-## Docker Setup
-
-- Use public postgres docker image
-  - container running with name `mjournal_db`
-  - data lives in `/var/local/mjournal_db` on the docker host
-  - volumes used to mount that into the container for both DB data and logs
-  - Backups live at `/var/local/mjournal_db_backups` on the docker host
-    - more details on backup/restore below
-- mjournal node/express app runs in a container linked to the db container
-  - data lives in `/var/local/mjournal` for logs and configuration
-  - production configuration lives in `/var/local/mjournal/config.js`
-- running a local/private docker registry in prod at `docker.peterlyons.com:5000`
-  - Command to run this: `docker run --detach --restart=always --publish=5000:5000 registry`
-- all released docker images are tagged with semver
-- docker images are also tagged by environment for "production" and "stage"
-
-## Production Deployment Setup
-
-- digital ocean vm: yoyo.peterlyons.com
-- docker and nginx running directly on yoyo
-- docker registry, postgresql, and mjournal running in docker containers
 
 ## Daily Rotating Backup System
 
@@ -163,7 +142,7 @@ Host 192.168.99.*
 - Files live as bzip-compressed SQL files at `/var/local/mjournal_db_backups` on the docker host with obvious timestamp file names
 - Stale backups are pruned automatically. We retain 1 month of dailies and 3 months of monthlies
 
-## How to restore from backup
+## How to Restore from Backup
 
 - Yes, this has actually been tested on stage ;-p
 - run `./bin/render-template.js ./deploy/restore-db.mustache | ssh <docker_host> tee /tmp/restore.sh`
