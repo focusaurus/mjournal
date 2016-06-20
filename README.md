@@ -93,7 +93,7 @@ When deployed on stage and production, I use an Ubuntu 14.04 x64 droplet on digi
 
 - create your OS user (as root on droplet: `adduser plyons`)
 - allow sudo with password (as root on droplet: `adduser plyons sudo`)
-- Configure passwordless ssh (from your local machine: `ssh-copy-id new-droplet-ip`)
+- Configure passwordless ssh (from your local machine: `ssh-copy-id  new-droplet-ip`)
 
 We integrate with the host OS (Ubuntu x64) on stage and production for the following functionality
 
@@ -129,6 +129,9 @@ We integrate with the host OS (Ubuntu x64) on stage and production for the follo
 - If that succeeds, note the container ID it prints out such as `Successfully built a2452ff73a95`
 - tag and deploy that for testing on stage
   - `./bin/deploy-stage.sh <container_id_from_above>`
+- If this is the first deploy to this host, the script will stop after the empty configuration file has been created
+  - ssh in and edit the configuration file `/var/local/mjournal/config.js` with per-deployment values for `exports.MJ_PG_PASSWORD`. `exports.MJ_PG_ADMIN_PASSWORD` and `exports.MJ_SESSION_SECRET`
+  - run the deploy script a second time
 - Test in a browser
   - `open "https://stage-mj.peterlyons.com"`
 - If the app is working, tag for prod and release

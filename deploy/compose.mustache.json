@@ -3,6 +3,10 @@
     "{{MJ_APP_NAME}}": {
       "container_name": "{{MJ_APP_NAME}}",
       "depends_on": ["{{MJ_APP_NAME}}_db"],
+      "environment": {
+        "MJ_PG_ADMIN_PASSWORD": "{{MJ_PG_ADMIN_PASSWORD}}",
+        "MJ_PG_PASSWORD": "{{MJ_PG_PASSWORD}}"
+      },
       "image": "{{MJ_DOCKER_HUB_USER}}/{{MJ_APP_NAME}}:stage",
       "links": ["{{MJ_APP_NAME}}_db" ],
       "network_mode": "bridge",

@@ -72,6 +72,8 @@ setup_app_config() {
   if [[ ! -e "${config_file}" ]]; then
     install --owner=www-data --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
+    echo "Edit it with secrets and redeploy"
+    exit 0
   fi
   chown "www-data:staff" "${config_file}"
   chmod 0460 "${config_file}"
