@@ -26,8 +26,16 @@ const adminDb = knex({
 })
 
 appDb.raw('select 1')
-  .then(() => console.log(`connected to app db ${config.MJ_PG_USER}@${config.MJ_PG_HOST}`))
+  .then(() => {
+    console.log('connected to app db',
+      `${config.MJ_PG_USER}@${config.MJ_PG_HOST}`)
+  }
+)
   .catch(console.error)
 adminDb.raw('select 1')
-  .then(() => console.log(`connected to admin db ${config.MJ_PG_ADMIN_USER}@${config.MJ_PG_HOST}`))
+  .then(() => {
+    console.log('connected to admin db',
+      `${config.MJ_PG_ADMIN_USER}@${config.MJ_PG_HOST}`)
+  }
+)
   .catch(console.error)
