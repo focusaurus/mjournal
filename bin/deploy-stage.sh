@@ -5,7 +5,7 @@
 cd "$(dirname "$0")/.." || exit
 source ./bin/lib/strict-mode.sh
 
-PATH=$(npm bin):$PATH
+PATH="$(npm bin):${PATH}"
 readonly build="$1"
 readonly tag="$(config3 MJ_DOCKER_HUB_USER)/$(config3 MJ_APP_NAME):stage"
 docker tag "${build}" "${tag}"

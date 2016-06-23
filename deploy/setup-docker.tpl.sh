@@ -100,16 +100,17 @@ main() {
   domain='{{MJ_DOMAIN}}'
   email='{{MJ_TLS_EMAIL}}'
 
-  echo -en "setting up docker…"
-  setup_docker
-  echo -en "✓ \nsetting up tls…"
-  setup_tls
-  echo -en "✓ \nsetting up nginx…"
-  setup_nginx
-  echo -en "✓ \nsetting up db backups…"
-  setup_cron_backups
-  echo -en "✓ \nsetting up containers…"
+  echo -en "setting up config/secrets file…"
   setup_app_config
+  echo -en "✓\nsetting up docker…"
+  setup_docker
+  echo -en "✓\nsetting up tls…"
+  setup_tls
+  echo -en "✓\nsetting up nginx…"
+  setup_nginx
+  echo -en "✓\nsetting up db backups…"
+  setup_cron_backups
+  echo -en "✓\nsetting up containers…"
   start_containers
   echo -en "✓\n"
 }
