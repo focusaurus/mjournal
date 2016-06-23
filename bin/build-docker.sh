@@ -3,5 +3,5 @@
 cd "$(dirname "$0")/.."
 source ./bin/lib/strict-mode.sh
 
-./bin/render-template.js deploy/Dockerfile.mustache > Dockerfile
+./bin/render-template.js deploy/Dockerfile.tpl > Dockerfile
 exec docker build --tag=mjournal .

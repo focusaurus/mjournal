@@ -12,10 +12,10 @@ main() {
   readonly docker="$1"
   readonly app_name=$(config3 MJ_APP_NAME)
   echo "copying scripts to ${docker}"
-  template "./deploy/backup-db.mustache" "/tmp/backup-${app_name}-db"
-  template "./deploy/nginx.mustache" "/tmp/nginx_${app_name}"
-  template "./deploy/compose.mustache.json" "/tmp/docker-compose-${app_name}.json"
-  template "./deploy/setup-docker.mustache.sh" "/tmp/setup-docker-${app_name}.sh"
+  template "./deploy/backup-db.tpl.sh" "/tmp/backup-${app_name}-db"
+  template "./deploy/nginx.tpl" "/tmp/nginx_${app_name}"
+  template "./deploy/compose.tpl.json" "/tmp/docker-compose-${app_name}.json"
+  template "./deploy/setup-docker.tpl.sh" "/tmp/setup-docker-${app_name}.sh"
   echo "running docker setup script on ${docker}"
   ssh -t "${docker}" sudo /bin/bash "/tmp/setup-docker-${app_name}.sh"
 }
