@@ -70,6 +70,8 @@ setup_app_config() {
   readonly config_file
 
   if [[ ! -e "${config_file}" ]]; then
+    install --owner=www-data --group=staff --mode=755 --directory \
+      "/var/local/${app_name}"
     install --owner=www-data --group=staff --mode=0460 /dev/null "${config_file}"
     echo "Empty config installed to ${config_file}."
     echo "Edit it with secrets and redeploy"
