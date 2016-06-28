@@ -24,7 +24,4 @@ docker push "${tag}"
 export MJ_DOMAIN='mjournal.peterlyons.com'
 export MJ_TLS_EMAIL='pete@peterlyons.com'
 export NODE_ENV='production'
-echo 'Everything is prepared and ready to go.'
-echo 'ENTER to go live (brief downtime). CTRL-c to abort.'
-read -n 1 confirm
 ./deploy/docker-server.sh "${MJ_DOMAIN}"

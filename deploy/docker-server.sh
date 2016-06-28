@@ -16,6 +16,9 @@ main() {
   template "./deploy/nginx.tpl" "/tmp/nginx_${app_name}"
   template "./deploy/compose.tpl.json" "/tmp/docker-compose-${app_name}.json"
   template "./deploy/setup-docker.tpl.sh" "/tmp/setup-docker-${app_name}.sh"
+  echo 'Everything is prepared and ready to go.'
+  echo 'ENTER to go live (brief downtime). CTRL-c to abort.'
+  read -n 1 confirm
   echo "running docker setup script on ${server_hostname}"
   ssh -t "${server_hostname}" sudo /bin/bash "/tmp/setup-docker-${app_name}.sh"
 }
