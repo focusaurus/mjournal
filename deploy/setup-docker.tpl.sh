@@ -37,6 +37,13 @@ setup_tls() {
   if [[ ! -e "/etc/letsencrypt/live/${domain}/fullchain.pem" ]]; then
     certbot-auto --non-interactive --domain "${domain}" --email "${email}" --standalone --agree-tos certonly
   fi
+  local renew_cron="/etc/cron.weekly/renew-tls-certificates"
+  cat <<EOF > "${renew_cron}"
+#!/usr/bin/env bash
+certbot-auto renew --quiet --standalone --pre-hook "service nginx stop" --post-hook "service nginx start"
+EOF
+  chmod 755 "${renew_cron}"
+  chown root:root "${renew_cron}"
 }
 
 setup_nginx() {
