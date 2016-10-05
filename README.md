@@ -16,7 +16,7 @@ Minimalist journal aiming to be one journal for all of your technical projects. 
   - git (homebrew recommended on OS X)
   - GNU coreutils and findutils (homebrew recommended on OS X)
 - Get access to some docker host
-  - docker for Mac (beta as of June 2016) recommended
+  - docker for Mac recommended
 - Get access to a PostgreSQL 9.4 database
   - Running in a docker container recommended
   - docker-compose recommended
