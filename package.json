@@ -75,8 +75,8 @@
     "sinon": "1.17.4",
     "supertest": "1.2.0",
     "supertest-session": "2.0.1",
-    "tape": "4.5.1",
-    "tape-catch": "1.0.5",
+    "tape": "4.6.2",
+    "tape-catch": "1.0.6",
     "watchify": "3.7.0"
   },
   "license": "MIT"
