@@ -1,13 +1,14 @@
 {
   "extends": [
-    "standard"
+    "standard", "eslint:recommended"
   ],
   "rules": {
     "block-scoped-var": "error",
     "consistent-this": ["error", "self"],
     "func-style": ["error", "declaration"],
-    "max-len": [1, 80, 2],
+    "max-len": ["warn", 80, 2],
     "max-nested-callbacks": ["error", 4],
+    "no-console": "off",
     "no-else-return": "error",
     "no-eq-null": "error",
     "no-nested-ternary": "error",
