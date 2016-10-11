@@ -1,12 +1,14 @@
-var errors = require('httperrors')
-var joi = require('joi')
+'use strict'
 
-var PAGE_SIZE = 50
-var PAGE_SCHEMA = joi.number().integer().min(1).default(1)
+const errors = require('httperrors')
+const joi = require('joi')
+
+const PAGE_SIZE = 50
+const PAGE_SCHEMA = joi.number().integer().min(1).default(1)
 
 function paginated (run, next) {
-  var valid = PAGE_SCHEMA.validate(run.options.page)
-  var page = valid.value || 1
+  const valid = PAGE_SCHEMA.validate(run.options.page)
+  const page = valid.value || 1
   run.dbOp.limit(PAGE_SIZE).offset((page - 1) * PAGE_SIZE)
   next()
 }

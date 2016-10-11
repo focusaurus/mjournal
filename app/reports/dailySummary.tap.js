@@ -1,20 +1,24 @@
-var test = require('tape-catch')
+'use strict'
+const tap = require('tap')
+
+tap.tearDown(process.exit)
+
 var dailySummary = require('./dailySummary')
 
-test(
+tap.test(
   'reports/dailySummary should have the correct fields and numbers',
-  function (assert) {
+  function (test) {
     dailySummary(function (error, result) {
-      assert.error(error)
-      var properties = [
+      test.error(error)
+      const properties = [
         'entriesCreated',
         'entriesUpdated',
         'totalEntries',
         'usersCreated',
         'totalUsers']
       properties.forEach(function (property) {
-        assert.equal(typeof result[property], 'number')
+        test.equal(typeof result[property], 'number')
       })
-      assert.end()
+      test.end()
     })
   })
