@@ -59,6 +59,18 @@ test(
     })
   })
 
+test(
+  'should exclude the X-Powered-By header',
+  function (assert) {
+    testUtils
+    .get('/')
+    .end((error, res) => {
+      assert.error(error)
+      assert.notOk(res.headers['x-powered-by'])
+      assert.end()
+    })
+  })
+
 urls = [
   '/fonts/icomoon.eot',
   '/fonts/icomoon.svg',
