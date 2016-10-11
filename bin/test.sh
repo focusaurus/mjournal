@@ -7,10 +7,9 @@ source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
 export NODE_ENV=test
-args="--require ./app/tape-exit"
 args=""
 if [[ "${1}" == "--debug" ]]; then
-  args="${args} --debug-brk=9093"
+  args="--timeout=0 --debug-brk=9093 --node-arg=--inspect"
   shift
 fi
 tests="$*"

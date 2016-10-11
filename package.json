@@ -76,8 +76,6 @@
     "supertest": "1.2.0",
     "supertest-session": "2.0.1",
     "tap": "7.1.2",
-    "tape": "4.6.2",
-    "tape-catch": "1.0.6",
     "watchify": "3.7.0"
   },
   "license": "MIT"

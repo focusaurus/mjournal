@@ -1,7 +1,9 @@
-var app = require('.')
-var cheerio = require('cheerio')
-var request = require('supertest')(app)
-var Session = require('supertest-session')(app)
+'use strict'
+
+const app = require('.')
+const cheerio = require('cheerio')
+const request = require('supertest')(app)
+const superTestSession = require('supertest-session')
 
 function loadPage (URL, callback) {
   // request.get(URL).expect(200).end(function (error, res) {
@@ -21,5 +23,9 @@ function loadPage (URL, callback) {
   }
 })
 
+function session () {
+  return superTestSession(app)
+}
+
 exports.loadPage = loadPage
-exports.Session = Session
+exports.session = session

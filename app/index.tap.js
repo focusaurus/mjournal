@@ -1,25 +1,29 @@
-var test = require('tape-catch')
-var _ = require('lodash')
-var testUtils = require('./testUtils')
-var theme = require('./theme')
+'use strict'
 
-var urls = ['/grid.gif', '/favicon.png']
+const _ = require('lodash')
+const tap = require('tap')
+const testUtils = require('./testUtils')
+const theme = require('./theme')
+
+tap.tearDown(process.exit)
+
+let urls = ['/grid.gif', '/favicon.png']
 urls.forEach(function (url) {
-  test('app/index GET ' + url + ' should 200/image', function (assert) {
+  tap.test('app/index GET ' + url + ' should 200/image', (test) => {
     testUtils.get(url)
       .expect(200)
       .expect('Content-Type', /^image/)
-      .end(assert.end.bind(assert))
+      .end(test.end.bind(test))
   })
 })
 
-var names = _.map(theme.names, function (name) {
+const names = _.map(theme.names, function (name) {
   return '-' + name
 })
 names.unshift('')
 names.forEach(function (themeName) {
-  var uri = '/mjournal' + themeName + '.css'
-  test('app/index GET ' + uri + ' should send CSS', function (assert) {
+  const uri = '/mjournal' + themeName + '.css'
+  tap.test('app/index GET ' + uri + ' should send CSS', (test) => {
     testUtils
       .get(uri)
       .expect(200)
@@ -29,57 +33,57 @@ names.forEach(function (themeName) {
       // rupture media queries for +above("s")
       .expect(/media only screen and \(min-width: 400px\)/)
       .expect(/p\.body\.new/)
-      .end(assert.end.bind(assert))
+      .end(test.end.bind(test))
   })
 })
 
-test('app/index GET /mjournal-bogus.css should 404', function (assert) {
+tap.test('app/index GET /mjournal-bogus.css should 404', (test) => {
   testUtils
     .get('/mjournal-bogus.css')
     .expect(404)
-    .end(assert.end.bind(assert))
+    .end(test.end.bind(test))
 })
 
-test('app/index GET /mjournal.js should send JavaScript', function (assert) {
+tap.test('app/index GET /mjournal.js should send JavaScript', (test) => {
   testUtils
     .get('/mjournal.js')
     .expect(200)
     .expect('Content-Type', 'application/javascript')
     .expect('Content-Encoding', 'gzip')
-    .end(assert.end.bind(assert))
+    .end(test.end.bind(test))
 })
 
-test(
+tap.test(
   'app/index layout should include HTML comment with app version',
-  function (assert) {
+  (test) => {
     testUtils.loadPage('/', function (error, dom) {
-      assert.error(error)
-      assert.equal(dom('meta[name="x-app-version"]').length, 1)
-      assert.end()
+      test.error(error)
+      test.same(dom('meta[name="x-app-version"]').length, 1)
+      test.end()
     })
   })
 
-test(
+tap.test(
   'HTTP header security',
-  function (assert) {
+  (test) => {
     testUtils
     .get('/')
     .end((error, res) => {
-      assert.error(error)
-      assert.notOk(res.headers['x-powered-by'], 'should exclude X-Powered-By')
-      assert.equal(
+      test.error(error)
+      test.notOk(res.headers['x-powered-by'], 'should exclude X-Powered-By')
+      test.same(
         res.headers['x-frame-options'],
         'DENY',
         'should send X-Frame-Options')
-      assert.equal(
+      test.same(
         res.headers['x-content-type-options'],
         'nosniff',
         'should send X-Content-Type-Options')
-      assert.equal(
+      test.same(
         res.headers['x-xss-protection'],
         '1',
         'should send X-XSS-Protection')
-      assert.end()
+      test.end()
     })
   })
 
@@ -90,11 +94,11 @@ urls = [
   '/fonts/icomoon.woff'
 ]
 urls.forEach(function (uri) {
-  test('app/index GET ' + uri + ' should send a font', function (assert) {
+  tap.test('app/index GET ' + uri + ' should send a font', (test) => {
     testUtils
       .get(uri)
       .expect(200)
       .expect('Content-Type', /(font|svg)/)
-      .end(assert.end.bind(assert))
+      .end(test.end.bind(test))
   })
 })
