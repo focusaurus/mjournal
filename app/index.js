@@ -51,6 +51,7 @@ app.use(compression())
 app.use((req, res, next) => {
   res.header('X-Frame-Options', 'DENY')
   res.header('X-Content-Type-Options', 'nosniff')
+  res.header('X-XSS-Protection', '1')
   next()
 })
 app.get(/\/mjournal-?(\w+)?\.css/, appCSS)

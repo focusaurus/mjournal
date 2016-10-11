@@ -69,6 +69,7 @@ test(
       assert.notOk(res.headers['x-powered-by'], 'should exclude X-Powered-By')
       assert.equal(res.headers['x-frame-options'], 'DENY', 'should send X-Frame-Options')
       assert.equal(res.headers['x-content-type-options'], 'nosniff', 'should send X-Content-Type-Options')
+      assert.equal(res.headers['x-xss-protection'], '1', 'should send X-XSS-Protection')
       assert.end()
     })
   })
