@@ -60,13 +60,14 @@ test(
   })
 
 test(
-  'should exclude the X-Powered-By header',
+  'HTTP header security',
   function (assert) {
     testUtils
     .get('/')
     .end((error, res) => {
       assert.error(error)
-      assert.notOk(res.headers['x-powered-by'])
+      assert.notOk(res.headers['x-powered-by'], 'should exclude X-Powered-By')
+      assert.equal(res.headers['x-frame-options'], 'DENY', 'should send X-Frame-Options')
       assert.end()
     })
   })
