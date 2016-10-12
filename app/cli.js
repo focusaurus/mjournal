@@ -1,4 +1,4 @@
-var signInOp = require('./users/operations/signIn')
+var signInOp = require('./users/operations/sign-in')
 var promptly = require('promptly')
 var ware = require('ware')
 

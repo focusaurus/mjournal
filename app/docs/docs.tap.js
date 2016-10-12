@@ -1,6 +1,6 @@
 'use strict'
 const tap = require('tap')
-const testUtils = require('../testUtils')
+const testUtils = require('../test-utils')
 
 tap.test('app/docs GET /docs should include API docs', function (test) {
   testUtils.loadPage('/docs', function (error, dom) {

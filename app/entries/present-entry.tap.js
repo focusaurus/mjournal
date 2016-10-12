@@ -1,7 +1,7 @@
 'use strict'
 const tap = require('tap')
 
-var presentEntry = require('./presentEntry')
+var presentEntry = require('./present-entry')
 
 tap.same(presentEntry(null), null, 'should handle null')
 tap.same(presentEntry({}).tags, [], 'should handle empty object')

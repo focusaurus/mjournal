@@ -4,7 +4,7 @@ var errors = require('httperrors')
 var joi = require('joi')
 var log = require('../../log')
 var opMW = require('../../operations/middleware')
-var userSchema = require('../../common/userSchema')
+var userSchema = require('../../common/user-schema')
 
 var OPTIONS_SCHEMA = joi.object().keys({
   id: joi.number().integer().min(1),

@@ -3,10 +3,10 @@ const tap = require('tap')
 
 tap.tearDown(process.exit)
 
-var dailySummary = require('./dailySummary')
+var dailySummary = require('./daily-summary')
 
 tap.test(
-  'reports/dailySummary should have the correct fields and numbers',
+  'reports/daily-summary should have the correct fields and numbers',
   function (test) {
     dailySummary(function (error, result) {
       test.error(error)

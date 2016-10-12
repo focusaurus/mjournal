@@ -2,7 +2,7 @@
 
 const _ = require('lodash')
 const tap = require('tap')
-const testUtils = require('./testUtils')
+const testUtils = require('./test-utils')
 const theme = require('./theme')
 
 tap.tearDown(process.exit)

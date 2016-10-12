@@ -1,5 +1,5 @@
 var _ = require('lodash')
-var byKey = require('./users/byKey')
+var byKey = require('./users/by-key')
 var compression = require('compression')
 var config = require('config3')
 var cookieParser = require('cookie-parser')
@@ -10,7 +10,7 @@ var paths = require('./paths')
 var pg = require('pg')
 var session = require('express-session')
 var sharify = require('sharify')
-var stylusBundle = require('./theme/stylusBundle')
+var stylusBundle = require('./theme/stylus-bundle')
 var themeMW = require('./middleware/theme')
 
 const ONE_DAY_MS = 1000 * 60 * 60 * 24 * 1
@@ -19,7 +19,7 @@ function home (req, res) {
   if (req.user) {
     res.render('home')
   } else {
-    res.render('users/signIn')
+    res.render('users/sign-in')
   }
 }
 
@@ -87,7 +87,7 @@ app.use(function (req, res, next) {
   next()
 })
 app.use(byKey)
-app.get('/', require('./middleware/dbDown'), themeMW, home)
+app.get('/', require('./middleware/db-down'), themeMW, home)
 app.get('/docs', themeMW, function (req, res) {
   res.render('docs/docs')
 })

@@ -1,4 +1,4 @@
-var dailySummary = require('./dailySummary')
+var dailySummary = require('./daily-summary')
 var moment = require('moment')
 
 function delay () {

@@ -1,4 +1,4 @@
-var redeemKey = require('./operations/redeemKey')
+var redeemKey = require('./operations/redeem-key')
 
 function byKey (req, res, next) {
   if (req.user) {

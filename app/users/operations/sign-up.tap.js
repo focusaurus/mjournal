@@ -3,11 +3,11 @@ const tap = require('tap')
 
 tap.tearDown(process.exit)
 
-const signUp = require('./signUp')
+const signUp = require('./sign-up')
 
 tap.test('should create a user.id and not return the password', (test) => {
   const newUser = {
-    email: 'test/users/operations/signUp@example.com',
+    email: 'test/users/operations/sign-up@example.com',
     password: 'password'
   }
   signUp(newUser, function (error, user) {

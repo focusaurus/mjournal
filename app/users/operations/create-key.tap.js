@@ -3,9 +3,9 @@ const tap = require('tap')
 
 tap.tearDown(process.exit)
 
-const createKey = require('./createKey')
-const redeemKey = require('./redeemKey')
-const signUp = require('./signUp')
+const createKey = require('./create-key')
+const redeemKey = require('./redeem-key')
+const signUp = require('./sign-up')
 
 tap.test('should require a user option', function (test) {
   createKey({}, function (error) {

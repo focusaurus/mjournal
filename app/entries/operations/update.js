@@ -1,11 +1,11 @@
 var _ = require('lodash')
 var async = require('async')
-var clientFields = require('../clientFields')
+var clientFields = require('../client-fields')
 var db = require('../../db')
 var errors = require('httperrors')
 var log = require('../../log')
 var opMW = require('../../operations/middleware')
-var presentEntry = require('../presentEntry')
+var presentEntry = require('../present-entry')
 
 function select (where, run, next) {
   db('entries').select(clientFields)

@@ -1,5 +1,5 @@
 var db = require('../../db')
-var clientFields = require('./clientFields')
+var clientFields = require('./client-fields')
 
 function select (run, callback) {
   db('users').select(clientFields).where('id', run.options.user.id)

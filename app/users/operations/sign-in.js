@@ -4,7 +4,7 @@ var db = require('../../db')
 var errors = require('httperrors')
 var log = require('../../log')
 var userSchema = require('../schemas').SIGN_IN
-var clientFields = require('./clientFields')
+var clientFields = require('./client-fields')
 
 var signInFields = _.clone(clientFields)
 signInFields.push('bcryptedPassword')

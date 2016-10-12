@@ -3,11 +3,11 @@ const tap = require('tap')
 
 tap.tearDown(process.exit)
 
-const signIn = require('./signIn')
-const signUp = require('./signUp')
+const signIn = require('./sign-in')
+const signUp = require('./sign-up')
 
 const newUser = {
-  email: 'test/users/operations/signIn@example.com',
+  email: 'test/users/operations/sign-in@example.com',
   password: 'password'
 }
 

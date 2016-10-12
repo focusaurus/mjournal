@@ -1,8 +1,8 @@
 var async = require('async')
-var clientFields = require('../clientFields')
+var clientFields = require('../client-fields')
 var db = require('../../db')
 var opMW = require('../../operations/middleware')
-var presentEntry = require('../presentEntry')
+var presentEntry = require('../present-entry')
 
 function insert (run, callback) {
   var tags = run.options.tags || []

@@ -3,8 +3,8 @@ const tap = require('tap')
 
 tap.tearDown(process.exit)
 
-const signUp = require('./operations/signUp')
-const testUtils = require('../testUtils')
+const signUp = require('./operations/sign-up')
+const testUtils = require('../test-utils')
 
 let group = 'POST /api/users/sign-in'
 let users = [
@@ -23,7 +23,7 @@ users.forEach(function (user) {
 
 tap.test(group + ' should 200 a valid user', function (assert) {
   const newUser = {
-    email: 'users/api/signUp@example.com',
+    email: 'users/api/sign-up@example.com',
     password: 'password'
   }
   signUp(newUser, function (error) {
@@ -52,7 +52,7 @@ users.forEach(function (user) {
 
 tap.test(group + ' should 409 a re-register', function (assert) {
   const newUser = {
-    email: 'users/api/signUp/re-register@example.com',
+    email: 'users/api/sign-up/re-register@example.com',
     password: 'password'
   }
   signUp(newUser, function (error) {

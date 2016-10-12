@@ -3,7 +3,7 @@ const tap = require('tap')
 
 tap.tearDown(process.exit)
 
-const signUp = require('./signUp')
+const signUp = require('./sign-up')
 const update = require('./update')
 
 tap.test('should update email and theme', (test) => {

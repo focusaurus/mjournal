@@ -4,7 +4,7 @@ var config = require('config3')
 var log = require('../log')
 var emails = require('./')
 var mustache = require('mustache')
-var dailySummary = require('../reports/dailySummary')
+var dailySummary = require('../reports/daily-summary')
 
 var BODY = [
   'Entries Created Today: {{entriesCreated}}',
