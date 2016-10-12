@@ -1,5 +1,5 @@
 #https://hub.docker.com/r/mhart/alpine-node/
-FROM mhart/alpine-node:6.2.1
+FROM mhart/alpine-node:6.7.0
 # get the slow/big stuff done early so the cache is rarely invalidated
 
 # git is a bower dependency
@@ -7,7 +7,7 @@ FROM mhart/alpine-node:6.2.1
 RUN apk add git bash --update-cache
 WORKDIR /opt
 ADD ./package.json  /opt/package.json
-RUN npm install
+RUN npm install --ignore-scripts
 ADD ./bower.json  /opt/bower.json
 RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
 
