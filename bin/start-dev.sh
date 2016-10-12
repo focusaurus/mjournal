@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.." || exit 10
 source ./bin/lib/strict-mode.sh
 PATH=$(npm bin):$PATH
-node-dev --debug=9091 . | tee -a logs/mjournal.log
+node-dev --debug=9091 --inspect . | tee -a logs/mjournal.log
