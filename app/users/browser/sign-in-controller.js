@@ -1,3 +1,5 @@
+'use strict'
+
 var _ = require('lodash')
 
 function signInController ($scope, $http, $window, $quickDialog) {

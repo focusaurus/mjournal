@@ -1,3 +1,5 @@
+'use strict'
+
 /*
 Based on https://github.com/akatov/angular-contenteditable but simplified
 to not care about HTML

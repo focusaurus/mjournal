@@ -1,3 +1,5 @@
+'use strict'
+
 const _ = require('lodash')
 const bcrypt = require('bcryptjs')
 const db = require('../../db')

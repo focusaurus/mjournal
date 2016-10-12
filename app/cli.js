@@ -1,3 +1,5 @@
+'use strict'
+
 const signInOp = require('./users/operations/sign-in')
 const promptly = require('promptly')
 const ware = require('ware')

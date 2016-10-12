@@ -1,3 +1,5 @@
+'use strict'
+
 const redeemKey = require('./operations/redeem-key')
 
 function byKey (req, res, next) {

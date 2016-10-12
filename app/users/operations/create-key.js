@@ -1,3 +1,5 @@
+'use strict'
+
 const async = require('async')
 const opMW = require('../../operations/middleware')
 const db = require('../../db')

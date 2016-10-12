@@ -1,3 +1,5 @@
+'use strict'
+
 function reSignInInterceptor ($q, $timeout, $quickDialog, sessionTtl) {
   var expiredPromise
   function dialog () {

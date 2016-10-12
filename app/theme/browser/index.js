@@ -1,3 +1,5 @@
+'use strict'
+
 require('angular')
 
 module.exports = 'mjournal.theme'

@@ -1,3 +1,5 @@
+'use strict'
+
 var theme = require('../../theme')
 
 function settingsMenu ($scope, user) {

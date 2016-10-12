@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+'use strict'
+
 const config = require('config3')
 
 if (config.MJ_PG_DATABASE !== 'mjournal_test') {

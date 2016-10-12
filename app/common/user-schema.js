@@ -1,3 +1,5 @@
+'use strict'
+
 var joi = require('joi')
 
 var userSchema = joi.object().strict(false).keys({

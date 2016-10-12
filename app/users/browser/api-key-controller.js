@@ -1,3 +1,5 @@
+'use strict'
+
 function apiKey ($scope, $http) {
   $scope.getKey = function getKey () {
     $http.post('/api/users/key').then(function (res) {

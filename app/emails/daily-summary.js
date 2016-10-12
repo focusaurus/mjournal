@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+'use strict'
+
 const _ = require('lodash')
 const config = require('config3')
 const log = require('../log')

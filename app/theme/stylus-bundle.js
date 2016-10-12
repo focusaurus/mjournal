@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+'use strict'
+
 const autoprefixer = require('autoprefixer-stylus')
 const config = require('config3')
 const errors = require('httperrors')

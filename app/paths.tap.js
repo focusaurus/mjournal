@@ -1,4 +1,5 @@
 'use strict'
+
 const paths = require('./paths')
 const tap = require('tap')
 

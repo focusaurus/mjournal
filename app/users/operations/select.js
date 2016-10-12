@@ -1,3 +1,5 @@
+'use strict'
+
 const db = require('../../db')
 const clientFields = require('./client-fields')
 

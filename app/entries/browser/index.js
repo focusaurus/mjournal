@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = 'mjournal.entries'
 /* global angular */
 require('angular')

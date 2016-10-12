@@ -1,3 +1,5 @@
+'use strict'
+
 var _ = require('lodash')
 var byKey = require('./users/by-key')
 var compression = require('compression')

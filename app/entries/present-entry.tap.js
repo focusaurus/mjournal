@@ -1,4 +1,5 @@
 'use strict'
+
 const tap = require('tap')
 
 const presentEntry = require('./present-entry')

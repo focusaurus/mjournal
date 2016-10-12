@@ -1,3 +1,5 @@
+'use strict'
+
 const dailySummary = require('./daily-summary')
 const moment = require('moment')
 

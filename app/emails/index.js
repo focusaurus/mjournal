@@ -1,3 +1,5 @@
+'use strict'
+
 const config = require('config3')
 const log = require('../log')
 const nodemailer = require('nodemailer')

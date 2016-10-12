@@ -1,3 +1,5 @@
+'use strict'
+
 function themeController ($scope, usersService, user) {
   $scope.user = user
   $scope.$watch('user.theme', function (name) {

@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = 'mjournal.settings'
 require('angular')
 require('angular-ui-bootstrap-dropdown')

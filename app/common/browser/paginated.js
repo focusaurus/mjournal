@@ -1,3 +1,5 @@
+'use strict'
+
 function recompute (page, list) {
   if (!Array.isArray(list)) {
     page.disablePrevious = true

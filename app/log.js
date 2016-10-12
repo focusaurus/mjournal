@@ -1,3 +1,5 @@
+'use strict'
+
 const bole = require('bole')
 const config = require('config3')
 

@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = 'mjournal.users'
 require('angular')
 require('angular-resource')

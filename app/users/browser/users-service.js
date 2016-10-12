@@ -1,3 +1,5 @@
+'use strict'
+
 var methods = {
   update: {
     method: 'PUT'

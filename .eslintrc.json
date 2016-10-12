@@ -1,10 +1,14 @@
 {
   "extends": [
-    "standard", "eslint:recommended"
+    "standard",
+    "eslint:recommended"
   ],
+  "parserOptions": {
+    "sourceType": "script"
+  },
   "rules": {
     "block-scoped-var": "error",
-    "consistent-this": ["error", "self"],
+    "consistent-this": [ "error", "self" ],
     "func-style": ["error", "declaration"],
     "max-len": ["warn", 80, 2],
     "max-nested-callbacks": ["error", 4],
@@ -16,7 +20,8 @@
     "no-sync": "error",
     "no-ternary": "error",
     "no-undefined": "error",
-    "no-warning-comments": ["error", {"terms": ["@bug"]}],
+    "no-warning-comments": "error",
+    "strict": "warn",
     "valid-jsdoc": "error"
   }
 }

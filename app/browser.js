@@ -1,3 +1,5 @@
+'use strict'
+
 require('angular')
 require('angular-loading-bar')
 

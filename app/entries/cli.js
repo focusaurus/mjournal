@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* eslint no-process-exit:0 */
-/*eslint no-console:0*/
+'use strict'
+
 const _ = require('lodash')
 const cli = require('../cli')
 const readline = require('readline')

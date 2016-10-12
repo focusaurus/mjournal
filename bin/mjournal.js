@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
-/* eslint-disable no-process-exit */
+'use strict'
+
 const _ = require('lodash')
 const program = require('commander')
 const request = require('superagent')

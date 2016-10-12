@@ -1,4 +1,5 @@
 'use strict'
+
 const _ = require('lodash')
 const ops = require('.')
 const signUp = require('../../users/operations/sign-up')

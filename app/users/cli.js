@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+'use strict'
+
 const cli = require('../cli')
 const program = require('commander')
 const operations = require('./operations')

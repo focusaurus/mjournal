@@ -1,3 +1,5 @@
+'use strict'
+
 const db = require('../../db')
 
 function redeemKey (options, callback) {

@@ -1,3 +1,5 @@
+'use strict'
+
 const log = require('../log')
 
 /*eslint no-unused-vars:0*/

@@ -1,4 +1,5 @@
 'use strict'
+
 const log = require('./log')
 
 function sendResult (res) {

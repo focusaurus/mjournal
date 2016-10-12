@@ -1,3 +1,5 @@
+'use strict'
+
 var methods = {
   get: {
     method: 'GET',

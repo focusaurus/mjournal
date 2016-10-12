@@ -1,3 +1,5 @@
+'use strict'
+
 var async = require('async')
 var clientFields = require('../client-fields')
 var db = require('../../db')
