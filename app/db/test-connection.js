@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict'
 
+const config = require('config3')
 const knex = require('knex')
 
-const config = require('config3')
 const appDb = knex({
   client: 'pg',
   connection: {
@@ -25,17 +25,18 @@ const adminDb = knex({
   }
 })
 
-appDb.raw('select 1')
-  .then(() => {
-    console.log('connected to app db',
-      `${config.MJ_PG_USER}@${config.MJ_PG_HOST}`)
-  }
-)
-  .catch(console.error)
 adminDb.raw('select 1')
-  .then(() => {
-    console.log('connected to admin db',
-      `${config.MJ_PG_ADMIN_USER}@${config.MJ_PG_HOST}`)
-  }
-)
-  .catch(console.error)
+.then(() => {
+  console.log('connected to admin db',
+    `${config.MJ_PG_ADMIN_USER}@${config.MJ_PG_HOST}`)
+  return appDb.raw('select 1')
+})
+.then(() => {
+  console.log('connected to app db',
+    `${config.MJ_PG_USER}@${config.MJ_PG_HOST}`)
+  process.exit()
+})
+.catch((error) => {
+  console.error('Connection error: ', error)
+  process.exit(10)
+})

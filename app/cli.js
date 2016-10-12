@@ -11,7 +11,6 @@ function exit (error) {
       code = error.status / 10
     }
     console.error(message)
-    /*eslint no-process-exit:0*/
     process.exit(code)
   }
   process.exit()
