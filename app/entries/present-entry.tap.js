@@ -1,7 +1,7 @@
 'use strict'
 const tap = require('tap')
 
-var presentEntry = require('./present-entry')
+const presentEntry = require('./present-entry')
 
 tap.same(presentEntry(null), null, 'should handle null')
 tap.same(presentEntry({}).tags, [], 'should handle empty object')
@@ -10,7 +10,7 @@ tap.same(
   ['one'],
   'should remove duplicate tags')
 
-var entry = {
+const entry = {
   tags: 'zebra raccoon rabbit mouse rabbit BIRD'
 }
 tap.same(presentEntry(entry).tags, [

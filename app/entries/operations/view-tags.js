@@ -1,8 +1,8 @@
-var _ = require('lodash')
-var async = require('async')
-var db = require('../../db')
-var log = require('../../log')
-var opMW = require('../../operations/middleware')
+const _ = require('lodash')
+const async = require('async')
+const db = require('../../db')
+const log = require('../../log')
+const opMW = require('../../operations/middleware')
 
 function initDbOp (run, next) {
   run.dbOp = db('entries').distinct('tags').select()
@@ -22,7 +22,7 @@ function execute (run, next) {
       next(error)
       return
     }
-    var set = _.map(rows, function (row) {
+    let set = _.map(rows, function (row) {
       return row.tags.split(' ')
     })
     set = _.flatten(set)
@@ -35,8 +35,8 @@ function execute (run, next) {
 }
 
 function view (options, callback) {
-  var run = {options: options}
-  var stack = [
+  const run = {options: options}
+  const stack = [
     opMW.requireUser,
     initDbOp,
     opMW.whereUser,

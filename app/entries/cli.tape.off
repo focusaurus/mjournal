@@ -1,10 +1,10 @@
-var cli = require('./cli')
-var sinon = require('sinon')
-var ware = require('ware')
-var test = require('tape-catch')
+const cli = require('./cli')
+const sinon = require('sinon')
+const ware = require('ware')
+const test = require('tape-catch')
 
 test('app/entries/cli tagsOption should add a tags option', function (assert) {
-  var mockStack = {
+  const mockStack = {
     command: {
       option: sinon.spy()
     }
@@ -15,7 +15,7 @@ test('app/entries/cli tagsOption should add a tags option', function (assert) {
 })
 
 test('app/entries/cli bodyOption should add a body option', function (assert) {
-  var mockStack = ware()
+  const mockStack = ware()
   mockStack.command = {
     option: sinon.spy()
   }

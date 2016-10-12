@@ -1,5 +1,5 @@
-var config = require('config3')
-var settings = {
+const config = require('config3')
+const settings = {
   client: 'postgresql',
   connection: {
     database: config.MJ_PG_DATABASE,

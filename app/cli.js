@@ -1,9 +1,9 @@
-var signInOp = require('./users/operations/sign-in')
-var promptly = require('promptly')
-var ware = require('ware')
+const signInOp = require('./users/operations/sign-in')
+const promptly = require('promptly')
+const ware = require('ware')
 
 function exit (error) {
-  var code, message
+  let code, message
   if (error) {
     message = error.message || error.name
     if (error.status !== null) {
@@ -25,7 +25,7 @@ function exitIfError (error) {
 function signInMW (stack) {
   stack.command.option('-u, --user <email>')
   stack.use(function signInInner (options, next) {
-    var signInOptions = {
+    const signInOptions = {
       email: options.user || process.env.MJ_USER,
       password: options.password || process.env.MJ_PASSWORD
     }
@@ -65,7 +65,7 @@ function paginate (stack) {
 }
 
 function command (program, name, description) {
-  var stack = ware()
+  const stack = ware()
   stack.command = program
     .command(name)
     .description(description)

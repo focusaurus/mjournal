@@ -1,5 +1,5 @@
-var bole = require('bole')
-var config = require('config3')
+const bole = require('bole')
+const config = require('config3')
 
 bole.output({
   level: 'debug',

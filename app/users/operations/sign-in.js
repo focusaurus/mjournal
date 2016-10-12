@@ -1,21 +1,21 @@
-var _ = require('lodash')
-var bcrypt = require('bcryptjs')
-var db = require('../../db')
-var errors = require('httperrors')
-var log = require('../../log')
-var userSchema = require('../schemas').SIGN_IN
-var clientFields = require('./client-fields')
+const _ = require('lodash')
+const bcrypt = require('bcryptjs')
+const db = require('../../db')
+const errors = require('httperrors')
+const log = require('../../log')
+const userSchema = require('../schemas').SIGN_IN
+const clientFields = require('./client-fields')
 
-var signInFields = _.clone(clientFields)
+const signInFields = _.clone(clientFields)
 signInFields.push('bcryptedPassword')
 
 function signIn (options, callback) {
-  var valid = userSchema.validate(options)
+  const valid = userSchema.validate(options)
   if (valid.error) {
     callback(new errors.BadRequest(valid.error.message))
     return
   }
-  var defaultError = new errors.Forbidden(
+  const defaultError = new errors.Forbidden(
     'Please check your email/password and try again'
   )
   function denied (error) {
@@ -25,7 +25,7 @@ function signIn (options, callback) {
     callback(error || defaultError)
   }
   options.email = options.email.toLowerCase().trim()
-  var query = db('users').select(signInFields)
+  const query = db('users').select(signInFields)
     .where({
       email: options.email
     }).limit(1)
@@ -34,7 +34,7 @@ function signIn (options, callback) {
       callback(error)
       return
     }
-    var row = rows[0]
+    const row = rows[0]
     if (!row) {
       denied()
       return
@@ -49,7 +49,7 @@ function signIn (options, callback) {
           denied()
           return
         }
-        var user = _.pick(row, clientFields)
+        const user = _.pick(row, clientFields)
         callback(null, user)
       })
   })

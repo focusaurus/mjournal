@@ -1,11 +1,11 @@
-var _ = require('lodash')
+const _ = require('lodash')
 function presentEntry (row) {
   if (!row) {
     return row
   }
-  var entry = _.clone(row)
+  const entry = _.clone(row)
   entry.tags = []
-  var tagString = (row.tags || '').trim()
+  const tagString = (row.tags || '').trim()
   if (!tagString) {
     return entry
   }

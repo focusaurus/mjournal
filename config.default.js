@@ -1,3 +1,6 @@
+'use strict'
+
+const fs = require('fs')
 const joi = require('joi')
 const pack = require('./package')
 const url = require('url')
@@ -54,7 +57,17 @@ if (result.error) {
   // export each configuration key from this commonjs module
   // using joi coerced values
   Object.assign(exports, result.value)
-  exports.MJ_LOG_STREAM = process.stdout
+  switch (process.env.MJ_LOG_STREAM) {
+    case 'stderr':
+      exports.MJ_LOG_STREAM = process.stderr
+      break
+    case 'stdout':
+    case '-':
+      exports.MJ_LOG_STREAM = process.stdout
+      break
+    default:
+      exports.MJ_LOG_STREAM = fs.createWriteStream(process.env.MJ_LOG_STREAM)
+  }
   // docker support
   exports.MJ_PG_HOST = exports.MJOURNAL_DB_PORT_5432_TCP_ADDR ||
     exports.MJ_PG_HOST
@@ -82,10 +95,4 @@ if (result.error) {
     exports.MJ_PG_ADMIN_PASSWORD = exports.MJ_PG_ADMIN_PASSWORD ||
       exports.MJ_PG_PASSWORD
   }
-}
-
-switch (process.env.NODE_ENV) {
-  case 'test':
-    exports.MJ_LOG_STREAM = require('dev-null')()
-    break
 }

@@ -1,20 +1,20 @@
 #!/usr/bin/env node
+const config = require('config3')
 
-if (process.env.NODE_ENV !== 'test') {
+if (config.MJ_PG_DATABASE !== 'mjournal_test') {
   console.error('Refusing to wipe non-test DB.' +
     ' Edit this wipe.js script if you seriously want to wipe a dev/prod DB')
-  /* eslint no-process-exit:0 */
   process.exit(10)
 }
 // enable the next line to see logging during the wipe
-// var config = require('config3'); config.MJ_LOG_STREAM = process.stdout
+// const config = require('config3'); config.MJ_LOG_STREAM = process.stdout
 
-var async = require('async')
-var log = require('../log')
-var path = require('path')
-var setup = require('./setup')
+const async = require('async')
+const log = require('../log')
+const path = require('path')
+const setup = require('./setup')
 
-var WIPE_DDL = path.join(__dirname, 'wipe.ddl')
+const WIPE_DDL = path.join(__dirname, 'wipe.ddl')
 
 log.info('wiping test database')
 async.series([

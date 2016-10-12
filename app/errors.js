@@ -1,4 +1,4 @@
-var log = require('./log')
+const log = require('./log')
 
 function canWithstand (error) {
   /* eslint-disable no-fallthrough */
@@ -33,7 +33,7 @@ function onUncaughtException (error) {
   if (canWithstand(error)) {
     return
   }
-  var fatal = 'Uncaught exception: process will exit'
+  const fatal = 'Uncaught exception: process will exit'
   // In case log is not writeable, etc
   console.error(fatal, error)
   log.error(error, fatal)

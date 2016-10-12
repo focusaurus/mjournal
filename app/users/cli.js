@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-var cli = require('../cli')
-var program = require('commander')
-var operations = require('./operations')
-var promptly = require('promptly')
+const cli = require('../cli')
+const program = require('commander')
+const operations = require('./operations')
+const promptly = require('promptly')
 
 function signUp (email) {
   const prompt = 'password for ' + email + ': '
@@ -32,7 +32,7 @@ program.description('operate on user records')
 program.command('sign-up <email>')
   .description('register a new user account').action(signUp)
 
-var keyStack = cli.command(
+const keyStack = cli.command(
   program, 'create-key', 'create an authentication key for CLI/API access')
 cli.signInMW(keyStack).use(keyMW)
 

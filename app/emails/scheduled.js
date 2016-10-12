@@ -1,9 +1,9 @@
-var dailySummary = require('./daily-summary')
-var moment = require('moment')
+const dailySummary = require('./daily-summary')
+const moment = require('moment')
 
 function delay () {
-  var now = moment.utc()
-  var next = now.clone().add(1, 'day').startOf('day')
+  const now = moment.utc()
+  const next = now.clone().add(1, 'day').startOf('day')
   // for debugging, this runs every 20s
   // next = now.clone().add(20, "seconds")
   return next.diff(now)

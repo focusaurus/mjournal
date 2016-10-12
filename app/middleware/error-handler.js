@@ -1,4 +1,4 @@
-var log = require('../log')
+const log = require('../log')
 
 /*eslint no-unused-vars:0*/
 function errorHandler (error, req, res, next) {

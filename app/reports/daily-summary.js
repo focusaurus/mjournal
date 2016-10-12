@@ -1,7 +1,7 @@
-var _ = require('lodash')
-var async = require('async')
-var db = require('../db')
-var moment = require('moment')
+const _ = require('lodash')
+const async = require('async')
+const db = require('../db')
+const moment = require('moment')
 
 function count (table, callback) {
   db(table).count().exec(function (error, result) {
@@ -41,9 +41,9 @@ function updatedBetween (table, start, end, callback) {
 
 function dailySummary (callback) {
   // Yesterday midnight UTC
-  var start = moment.utc().subtract(1, 'day').startOf('day')
-  var end = start.clone().endOf('day')
-  var work = {
+  const start = moment.utc().subtract(1, 'day').startOf('day')
+  const end = start.clone().endOf('day')
+  const work = {
     totalUsers: count.bind(null, 'users'),
     totalEntries: count.bind(null, 'entries'),
     usersCreated: createdBetween.bind(null, 'users', start, end),

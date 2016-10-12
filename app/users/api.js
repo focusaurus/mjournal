@@ -1,8 +1,10 @@
-var _ = require('lodash')
-var express = require('express')
-var json = require('body-parser').json()
-var log = require('../log')
-var operations = require('./operations')
+'use strict'
+
+const _ = require('lodash')
+const json = require('body-parser').json()
+const log = require('../log')
+const operations = require('./operations')
+const router = require('express').Router()
 
 function respond (res) {
   return function _respond (error, user) {
@@ -10,7 +12,7 @@ function respond (res) {
       res.status(error.status || 403).send(error)
       return
     }
-    var session = res.req.session
+    const session = res.req.session
     session.user = res.req.user = user
     session.save(function (error2) {
       if (error2) {
@@ -24,13 +26,13 @@ function respond (res) {
 
 function signIn (req, res) {
   log.debug({email: req.body.email}, 'sign-in attempt')
-  var options = _.pick(req.body, 'email', 'password')
+  const options = _.pick(req.body, 'email', 'password')
   operations.signIn(options, respond(res))
 }
 
 function signUp (req, res) {
   log.debug({email: req.body.email}, 'sign-up attempt')
-  var options = _.pick(req.body, 'email', 'password')
+  const options = _.pick(req.body, 'email', 'password')
   res.status(201)
   operations.signUp(options, respond(res))
 }
@@ -47,7 +49,7 @@ function signOut (req, res) {
 
 function createKey (req, res, next) {
   log.debug({user: req.user}, 'creating key')
-  var options = {
+  const options = {
     user: req.user
   }
   res.status(201)
@@ -62,7 +64,7 @@ function createKey (req, res, next) {
 
 function update (req, res, next) {
   log.debug({user: req.user}, 'updating user')
-  var options = {
+  const options = {
     user: req.user
   }
   _.extend(options, _.pick(req.body, 'theme', 'email'))
@@ -76,11 +78,10 @@ function update (req, res, next) {
   })
 }
 
-var app = express()
-app.post('/sign-in', json, signIn)
-app.post('/sign-up', json, signUp)
-app.get('/sign-out', signOut)
-app.post('/key', createKey)
-app.put('/', json, update)
+router.post('/sign-in', json, signIn)
+router.post('/sign-up', json, signUp)
+router.get('/sign-out', signOut)
+router.post('/key', createKey)
+router.put('/', json, update)
 
-module.exports = app
+module.exports = router

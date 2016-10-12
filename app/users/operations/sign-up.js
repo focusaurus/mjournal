@@ -1,9 +1,9 @@
-var _ = require('lodash')
-var bcrypt = require('bcryptjs')
-var db = require('../../db')
-var log = require('../../log')
-var errors = require('httperrors')
-var userSchema = require('../schemas').SIGN_IN
+const _ = require('lodash')
+const bcrypt = require('bcryptjs')
+const db = require('../../db')
+const log = require('../../log')
+const errors = require('httperrors')
+const userSchema = require('../schemas').SIGN_IN
 
 function hashPassword (cleartext, callback) {
   bcrypt.genSalt(10, function (error, salt) {
@@ -15,14 +15,14 @@ function hashPassword (cleartext, callback) {
 }
 
 function run (options, callback) {
-  var valid = userSchema.validate(options)
+  const valid = userSchema.validate(options)
   if (valid.error) {
     setImmediate(function () {
       callback(new errors.BadRequest(valid.error.message))
     })
     return
   }
-  var user = _.pick(options, 'email')
+  const user = _.pick(options, 'email')
   hashPassword(options.password, function (error, bcryptedPassword) {
     if (error) {
       callback(error)
@@ -30,13 +30,13 @@ function run (options, callback) {
     }
     user.bcryptedPassword = bcryptedPassword
     user.email = user.email.toLowerCase()
-    var dbOp = db('users').insert(user).returning('id')
+    const dbOp = db('users').insert(user).returning('id')
     log.debug({
       user: user
     }, 'creating user')
     dbOp.exec(function (error2, rows) {
       if (error2 && /unique/i.test(error2.message)) {
-        var upError = new errors.Conflict('That email is already registered')
+        const upError = new errors.Conflict('That email is already registered')
         callback(upError)
         return
       }

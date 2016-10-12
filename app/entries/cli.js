@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /* eslint no-process-exit:0 */
 /*eslint no-console:0*/
-var _ = require('lodash')
-var cli = require('../cli')
-var readline = require('readline')
-var entryOps = require('./operations')
-var program = require('commander')
+const _ = require('lodash')
+const cli = require('../cli')
+const readline = require('readline')
+const entryOps = require('./operations')
+const program = require('commander')
 
 function bodyOption (stack) {
   stack.command.option(
@@ -13,7 +13,7 @@ function bodyOption (stack) {
     "Content for the journal entry. Pass 'stdin' to provide on stdin"
   )
   stack.use(function (options, next) {
-    var input, lines
+    let input, lines
     if (options.body === 'stdin') {
       input = readline.createInterface({
         input: process.stdin,
@@ -42,7 +42,7 @@ function tagsOption (stack) {
 
 function viewAction (options) {
   options.textSearch = options.search
-  var opOptions = _.pick(options, 'user', 'page', 'textSearch')
+  const opOptions = _.pick(options, 'user', 'page', 'textSearch')
   entryOps.view(opOptions, function (error, entries) {
     if (error) {
       cli.exit(error)
@@ -58,12 +58,12 @@ function viewAction (options) {
   })
 }
 
-var viewStack = cli.command(program, 'view', 'view entries for a user')
+const viewStack = cli.command(program, 'view', 'view entries for a user')
 cli.signInMW(viewStack)
 cli.paginate(viewStack).use(viewAction)
 
 function createAction (options) {
-  var opOptions = _.pick(options, 'user', 'body', 'tags')
+  const opOptions = _.pick(options, 'user', 'body', 'tags')
   entryOps.create(opOptions, function (error, entry) {
     if (error) {
       cli.exit(error)
@@ -73,14 +73,14 @@ function createAction (options) {
   })
 }
 
-var createStack = cli.command(
+const createStack = cli.command(
   program, 'create', 'create a new journal entry')
 cli.signInMW(createStack)
 bodyOption(createStack)
 tagsOption(createStack).use(createAction)
 
 function updateAction (commandOptions) {
-  var options = _.pick(commandOptions, 'user', 'body', 'tags')
+  const options = _.pick(commandOptions, 'user', 'body', 'tags')
   options.id = commandOptions.entryId
   entryOps.update(options, function (error) {
     if (error) {
@@ -91,7 +91,7 @@ function updateAction (commandOptions) {
   })
 }
 
-var updateStack = cli.command(
+const updateStack = cli.command(
   program,
   'update',
   'update an existing entry')

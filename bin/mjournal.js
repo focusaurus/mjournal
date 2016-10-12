@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 /* eslint-disable no-process-exit */
-var _ = require('lodash')
-var program = require('commander')
-var request = require('superagent')
-var stdin = require('stdin')
-var BASE = process.env.MJOURNAL_API_URL || 'https://mjournal.peterlyons.com'
+const _ = require('lodash')
+const program = require('commander')
+const request = require('superagent')
+const stdin = require('stdin')
+let BASE = process.env.MJOURNAL_API_URL || 'https://mjournal.peterlyons.com'
 BASE = BASE + '/api'
 
 program.usage('--key <key> <command> [options]')
@@ -17,9 +17,9 @@ function http (method, path) {
 }
 
 function exitIfError (error, response) {
-  var oops = error || (response && response.error)
+  const oops = error || (response && response.error)
   if (oops) {
-    var code = oops.code || oops.status
+    const code = oops.code || oops.status
     switch (code) {
       case 'ECONNREFUSED':
         console.error('Could not connect to mjournal server')
@@ -33,7 +33,7 @@ function exitIfError (error, response) {
       default:
         console.error(oops)
     }
-    var exitCode = 10
+    let exitCode = 10
     if (oops.status) {
       exitCode = oops.status - 400
     }
@@ -72,7 +72,7 @@ function printEntries (error, response) {
 }
 
 function viewAction (options) {
-  var opOptions = _.pick(options, 'before', 'after')
+  const opOptions = _.pick(options, 'before', 'after')
   opOptions.textSearch = options.search
   http('get', '/entries')
     .query(opOptions)
@@ -95,7 +95,7 @@ program.command('view')
 ).action(viewAction)
 
 function postEntry (options) {
-  var entry = _.pick(options, 'body', 'tags')
+  const entry = _.pick(options, 'body', 'tags')
   http('post', '/entries')
     .send(entry)
     .end(function (error, response) {
@@ -124,14 +124,14 @@ function createAction (options) {
   }
 }
 
-var createCommand = program.command('create')
+const createCommand = program.command('create')
   .description('create a new journal entry')
   .action(createAction)
 bodyOption(createCommand)
 tagsOption(createCommand)
 
 function updateAction (options) {
-  var opOptions = _.pick(options, 'body', 'tags')
+  const opOptions = _.pick(options, 'body', 'tags')
   http('put', '/entries/' + options.entryId)
     .send(opOptions)
     .end(function (error, response) {
@@ -140,7 +140,7 @@ function updateAction (options) {
     })
 }
 
-var updateCommand = program.command('update')
+const updateCommand = program.command('update')
   .option('-e, --entryId <entryId>')
   .description('update an existing entry. Provide new entry body via stdin')
   .action(updateAction)

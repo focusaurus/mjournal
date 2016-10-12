@@ -1,9 +1,11 @@
-var backoff = require('backoff')
-var config = require('config3')
-var errors = require('../errors')
-var knex = require('knex')
-var log = require('../log')
-var db = module.exports = knex({
+'use strict'
+
+const backoff = require('backoff')
+const config = require('config3')
+const errors = require('../errors')
+const knex = require('knex')
+const log = require('../log')
+const db = module.exports = knex({
   client: 'pg',
   connection: {
     database: config.MJ_PG_DATABASE,
@@ -18,7 +20,7 @@ function forceReconnect (callback) {
   db.raw('select now()').then(callback)
 }
 
-var call = backoff.call(forceReconnect, function (error) {
+const call = backoff.call(forceReconnect, function (error) {
   if (error) {
     log.info({retries: call.getNumRetries()}, 'backoff.call errored')
     return

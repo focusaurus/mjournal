@@ -1,4 +1,4 @@
-var db = require('../db')
+const db = require('../db')
 
 function dbDown (req, res, next) {
   function down () {

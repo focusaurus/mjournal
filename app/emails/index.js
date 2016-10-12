@@ -3,7 +3,7 @@ const log = require('../log')
 const nodemailer = require('nodemailer')
 const xoauth2 = require('xoauth2')
 
-var transport
+let transport
 const BOGUS_RESULT = {
   'accepted': [],
   'rejected': [],

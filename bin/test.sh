@@ -6,7 +6,8 @@ cd "$(dirname "$0")/.." || exit 10
 source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
-export NODE_ENV=test
+export MJ_PG_DATABASE=mjournal_test
+export MJ_LOG_STREAM=/dev/null
 args=""
 if [[ "${1}" == "--debug" ]]; then
   args="--timeout=0 --debug-brk=9093 --node-arg=--inspect"

@@ -1,4 +1,4 @@
-var path = require('path')
+const path = require('path')
 
 function full () {
   return path.normalize(path.join.apply(path, arguments))

@@ -1,21 +1,21 @@
-var redeemKey = require('./operations/redeem-key')
+const redeemKey = require('./operations/redeem-key')
 
 function byKey (req, res, next) {
   if (req.user) {
     next()
     return
   }
-  var auth = req.get('Authorization')
+  const auth = req.get('Authorization')
   if (!auth) {
     next()
     return
   }
-  var prefix = 'key '
+  const prefix = 'key '
   if (auth.slice(0, prefix.length) !== prefix) {
     next()
     return
   }
-  var key = auth.slice(prefix.length)
+  const key = auth.slice(prefix.length)
   redeemKey({key: key}, function (error, user) {
     if (error) {
       next(error)

@@ -1,7 +1,7 @@
-var async = require('async')
-var opMW = require('../../operations/middleware')
-var db = require('../../db')
-var token = require('rand-token').generator({source: 'crypto'})
+const async = require('async')
+const opMW = require('../../operations/middleware')
+const db = require('../../db')
+const token = require('rand-token').generator({source: 'crypto'})
 
 function generate (run, callback) {
   try {
@@ -27,7 +27,7 @@ function invalidate (run, callback) {
 }
 
 function createKey (options, callback) {
-  var run = {options: options}
+  const run = {options: options}
   async.applyEachSeries(
     [
       opMW.requireUser,

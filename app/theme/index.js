@@ -1,10 +1,10 @@
-var _ = require('lodash')
+const _ = require('lodash')
 
-var themes = [
+const themes = [
   {name: 'moleskine', displayName: 'Moleskine'},
   {name: 'hoth', displayName: 'Hoth'}
 ]
-var defaultTheme = themes[0]
+const defaultTheme = themes[0]
 function isSelected (user, theme) {
   if (user.theme) {
     return theme.name === user.theme

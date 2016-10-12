@@ -24,16 +24,15 @@ const adminDb = knex({
     user: config.MJ_PG_ADMIN_USER
   }
 })
-
+const adminUrl = `postgres://${config.MJ_PG_ADMIN_USER}@${config.MJ_PG_HOST}:${config.MJ_PG_PORT}/${config.MJ_PG_ADMIN_DATABASE}` // eslint-disable-line max-len
+const appUrl = `postgres://${config.MJ_PG_USER}@${config.MJ_PG_HOST}:${config.MJ_PG_PORT}/${config.MJ_PG_DATABASE}` // eslint-disable-line max-len
 adminDb.raw('select 1')
 .then(() => {
-  console.log('connected to admin db',
-    `${config.MJ_PG_ADMIN_USER}@${config.MJ_PG_HOST}`)
+  console.log(`connected to admin db ${adminUrl}`)
   return appDb.raw('select 1')
 })
 .then(() => {
-  console.log('connected to app db',
-    `${config.MJ_PG_USER}@${config.MJ_PG_HOST}`)
+  console.log(`connected to app db ${appUrl}`)
   process.exit()
 })
 .catch((error) => {

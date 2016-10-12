@@ -1,4 +1,5 @@
-var log = require('./log')
+'use strict'
+const log = require('./log')
 
 function sendResult (res) {
   return function (error, result) {

@@ -18,14 +18,14 @@ if (main && config._error) {
   process.exit(33) // eslint-disable-line no-process-exit
 }
 
-var _ = require('lodash')
+const _ = require('lodash')
 log.debug({
   env: process.env.NODE_ENV,
   db: _.pick(config, 'MJ_PG_HOST', 'MJ_PG_DATABASE')
 },
   '%s server process starting', config.MJ_APP_NAME)
-var app = require('.')
-var server
+const app = require('.')
+let server
 
 function immediateExit () {
   log.error('2nd SIGINT received. Exiting now.')
@@ -50,7 +50,7 @@ function gracefulExit (error) {
   })
 
   // Max 10s to clean up before forced exit
-  var exitTimeout = setTimeout(function exitTimeout () {
+  const exitTimeout = setTimeout(function exitTimeout () {
     log.debug('server exiting abruptly. Connections did not complete quickly.')
     process.exit(10)
   }, 10 * 1000)
@@ -67,7 +67,7 @@ process.once('SIGINT', gracefulExit) // CTRL-C in terminal, pm2
 process.on('SIGTERM', gracefulExit) // docker
 
 require('./emails/scheduled').run()
-var setup = require('./db/setup')
+const setup = require('./db/setup')
 setup.init(function (error) {
   if (error) {
     log.error(error, 'Error ensuring database is ready. Process will exit.')

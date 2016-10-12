@@ -1,17 +1,17 @@
-var _ = require('lodash')
-var async = require('async')
-var config = require('config3')
+const _ = require('lodash')
+const async = require('async')
+const config = require('config3')
 // eslint bug thinks "crypto" is a global from the browser
 // https://github.com/eslint/eslint/issues/1059
-var crypt = require('crypto')
-var fs = require('fs')
-var knex = require('knex')
-var log = require('../log')
-var path = require('path')
-var util = require('util')
+const crypt = require('crypto')
+const fs = require('fs')
+const knex = require('knex')
+const log = require('../log')
+const path = require('path')
+const util = require('util')
 
-var db = require('./index')
-var postgres = knex({
+const db = require('./index')
+const postgres = knex({
   client: 'pg',
   connection: {
     database: config.MJ_PG_ADMIN_DATABASE,
@@ -21,7 +21,7 @@ var postgres = knex({
     user: config.MJ_PG_ADMIN_USER
   }
 })
-var ALREADY = [
+const ALREADY = [
   '3D000',
   '42501', // permission denied to create role (heroku)
   '42710', // role already exists
@@ -57,21 +57,21 @@ function runFile (ddlPath, callback) {
       callback(error)
       return
     }
-    var statements = ddl.split(';')
+    const statements = ddl.split(';')
     async.eachSeries(statements, async.apply(runDdl, db), callback)
   })
 }
 
 function ensureDatabase (callback) {
   // http://stackoverflow.com/a/17431573/266795
-  var passwordMd5Hex = 'md5' + crypt.createHash('md5')
+  const passwordMd5Hex = 'md5' + crypt.createHash('md5')
     .update(config.MJ_PG_PASSWORD + config.MJ_PG_USER).digest('hex')
-  var createRole = util.format(
+  const createRole = util.format(
     "create role %s login encrypted password '%s'",
     config.MJ_PG_USER,
     passwordMd5Hex
   )
-  var createDatabase = util.format(
+  const createDatabase = util.format(
     'create database "%s" owner %s', config.MJ_PG_DATABASE, config.MJ_PG_USER)
   async.eachSeries(
     [createRole, createDatabase],
@@ -92,7 +92,7 @@ function ensureDatabase (callback) {
 }
 
 function ensureSchema (callback) {
-  var ddlPaths = [
+  const ddlPaths = [
     path.join(__dirname, '../users/users.ddl'),
     path.join(__dirname, '../entries/entries.ddl')
   ]

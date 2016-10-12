@@ -5,14 +5,14 @@ const signUp = require('../../users/operations/sign-up')
 const tap = require('tap')
 tap.tearDown(process.exit)
 
-var users = []
-var entries = []
+const users = []
+const entries = []
 
 function createUser (callback) {
-  var email = 'test/entries/operations/create' +
+  const email = 'test/entries/operations/create' +
     (users.length + 1) +
     '@example.com'
-  var inUser = {
+  const inUser = {
     email: email,
     password: 'password'
   }
@@ -25,7 +25,7 @@ function createUser (callback) {
 tap.test('should create an entry', function (test) {
   createUser(function (error, user) {
     test.error(error)
-    var options = {
+    const options = {
       user: user,
       body: 'test body',
       tags: 'e1t1 e1t2'
@@ -93,13 +93,13 @@ tap.test(' should view the user\'s tags', function (test) {
 })
 
 tap.test('should update an entry', function (test) {
-  var entry = entries[0]
-  var options = {
+  const entry = entries[0]
+  const options = {
     id: entries[0].id,
     user: users[0],
     body: 'test body 2'
   }
-  var oldUpdated = entry.updated
+  const oldUpdated = entry.updated
   ops.update(options, function (error, outEntry) {
     test.error(error)
     test.same(outEntry.body, options.body)
@@ -113,7 +113,7 @@ tap.test('should update an entry', function (test) {
 tap.test('should create a 2nd entry with 2nd user', function (test) {
   createUser(function (error, user) {
     test.error(error)
-    var options = {
+    const options = {
       user: user,
       body: 'test body2',
       tags: 'e2t1 e2t2'
@@ -132,7 +132,7 @@ tap.test('should create a 2nd entry with 2nd user', function (test) {
 })
 
 tap.test(' should not update someone else\'s entry', function (test) {
-  var options = {
+  const options = {
     id: entries[0].id,
     user: users[1],
     body: 'test body 3 hax0rz'
@@ -145,7 +145,7 @@ tap.test(' should not update someone else\'s entry', function (test) {
 })
 
 tap.test(' should not delete someone else\'s entry', function (test) {
-  var options = {
+  const options = {
     id: entries[0].id,
     user: users[1]
   }
@@ -156,7 +156,7 @@ tap.test(' should not delete someone else\'s entry', function (test) {
 })
 
 tap.test('should delete an entry', function (test) {
-  var options = {
+  const options = {
     id: entries[0].id,
     user: users[0]
   }

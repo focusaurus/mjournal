@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-var _ = require('lodash')
-var config = require('config3')
-var log = require('../log')
-var emails = require('./')
-var mustache = require('mustache')
-var dailySummary = require('../reports/daily-summary')
+const _ = require('lodash')
+const config = require('config3')
+const log = require('../log')
+const emails = require('./')
+const mustache = require('mustache')
+const dailySummary = require('../reports/daily-summary')
 
-var BODY = [
+const BODY = [
   'Entries Created Today: {{entriesCreated}}',
   'Entries Updated Today: {{entriesUpdated}}',
   'Total Entries: {{totalEntries}}',
@@ -27,7 +27,7 @@ function build (callback) {
       return
     }
     _.extend(result, _.pick(config, 'MJ_APP_NAME'))
-    var email = {
+    const email = {
       to: config.MJ_EMAIL_TO,
       from: config.MJ_EMAIL_FROM,
       subject: mustache.render(SUBJECT, result),

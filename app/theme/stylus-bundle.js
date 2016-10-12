@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-var autoprefixer = require('autoprefixer-stylus')
-var config = require('config3')
-var errors = require('httperrors')
-var fs = require('fs')
-var join = require('path').join
-var paths = require('../paths')
-var rupture = require('rupture')
-var stylus = require('stylus')
-var theme = require('../theme')
+const autoprefixer = require('autoprefixer-stylus')
+const config = require('config3')
+const errors = require('httperrors')
+const fs = require('fs')
+const join = require('path').join
+const paths = require('../paths')
+const rupture = require('rupture')
+const stylus = require('stylus')
+const theme = require('../theme')
 
 function render (name, callback) {
   name = name || theme.defaultTheme.name
@@ -15,7 +15,7 @@ function render (name, callback) {
     callback(new errors.NotFound('No theme named ' + name))
     return
   }
-  var stylPath = join(paths.app, 'theme', name, 'app.styl')
+  const stylPath = join(paths.app, 'theme', name, 'app.styl')
   fs.readFile(stylPath, 'utf8', function (error, stylusText) {
     if (error) {
       return callback(error)
