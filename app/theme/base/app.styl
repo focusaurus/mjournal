@@ -44,6 +44,16 @@ button
 .error
   font-size 16px
 
+.smallText
+  display inline
+  +above("m")
+    display none
+
+.fullText
+  display none
+  +above("m")
+    display inline
+
 @require "theme/base/toolbar.component"
 @require "settings/dropdown.component"
 @require "settings/settings"
