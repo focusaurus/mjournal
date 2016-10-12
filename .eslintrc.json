@@ -12,7 +12,7 @@
     "no-else-return": "error",
     "no-eq-null": "error",
     "no-nested-ternary": "error",
-    "no-process-exit": "error",
+    "no-process-exit": "off",
     "no-sync": "error",
     "no-ternary": "error",
     "no-undefined": "error",
