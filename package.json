@@ -9,7 +9,7 @@
   "scripts": {
     "start": "./app/server.js",
     "test": "./bin/test.sh",
-    "lint": "eslint --format node_modules/eslint-tap/tap.js app bin",
+    "lint": "./bin/lint.sh",
     "postinstall": "./bin/build-ci.sh"
   },
   "browser": {
