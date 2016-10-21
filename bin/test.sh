@@ -4,13 +4,14 @@
 
 cd "$(dirname "$0")/.." || exit 10
 source ./bin/lib/strict-mode.sh
+IFS=" "
 
 PATH=$(npm bin):$PATH
 export MJ_PG_DATABASE=mjournal_test
 export MJ_LOG_STREAM=/dev/null
-args=""
+debug=''
 if [[ "${1}" == "--debug" ]]; then
-  args="--timeout=0 --debug-brk=9093 --node-arg=--inspect"
+  debug="--timeout=0 --debug-brk=9093 --node-arg=--inspect"
   shift
 fi
 tests="$*"
@@ -20,5 +21,4 @@ fi
 echo -n "wiping test database…"
 app/db/wipe.js
 echo ✓
-IFS=" "
-tap ${args} ${tests}
+tap ${TAP_ARGS} ${debug} ${tests}

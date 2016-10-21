@@ -1,9 +1,11 @@
+.nyc_output
+.vagrant
+Dockerfile
 bower_components
+config.local.js*
+coverage
+docker-compose-mjournal.*
+logs/*.log
 node
 node_modules
-config.local.js*
-logs/*.log
-Dockerfile
-docker-compose-mjournal.*
 wwwroot/*.js
-.vagrant

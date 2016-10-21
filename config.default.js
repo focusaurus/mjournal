@@ -84,10 +84,10 @@ if (result.error) {
   if (exports.DATABASE_URL) {
     const parsed = url.parse(exports.DATABASE_URL)
     const auth = parsed.auth.split(':')
-    exports.MJ_PG_HOST = parsed.domain
+    exports.MJ_PG_HOST = parsed.hostname
     exports.MJ_PG_PORT = parsed.port || 5432
     exports.MJ_PG_USER = auth[0]
-    exports.MJ_PG_PASSORD = auth[1]
+    exports.MJ_PG_PASSWORD = auth[1]
     exports.MJ_PG_DATABASE = parsed.path.slice(1) // remove leading slash
 
     // heroku gives your main app user db admin rights
