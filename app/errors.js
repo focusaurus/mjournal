@@ -33,12 +33,12 @@ function middleware (error, req, res, next) {
 
 function onUncaughtException (error) {
   if (canWithstand(error)) {
-    return
+    return true
   }
-  const fatal = 'Uncaught exception: process will exit'
+  const message = 'Uncaught exception: process will exit'
   // In case log is not writeable, etc
-  console.error(fatal, error)
-  log.error(error, fatal)
+  console.error(message, error)
+  log.error(error, message)
   setTimeout(process.exit.bind(null, 66), 1000)
 }
 
