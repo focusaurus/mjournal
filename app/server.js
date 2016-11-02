@@ -80,7 +80,7 @@ setup.init(function (error) {
       setTimeout(process.exit.bind(null, 10), 1000)
     }
     log.info(
-      _.pick(config, 'ip', 'port'),
+      _.pick(config, 'MJ_IP', 'MJ_PORT'),
       '%s express app listening', config.MJ_APP_NAME
     )
   })

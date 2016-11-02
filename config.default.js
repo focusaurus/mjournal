@@ -40,7 +40,7 @@ const schema = joi.object().keys({
   MJ_PORT: port.default(9090),
   MJ_SESSION_SECRET: joi.string().default('HkpYsNTjVpXz6BthO8hN'),
   MJ_TLS_EMAIL: joi.string().email().default(''),
-  MJ_VERSION: pack.version,
+  MJ_VERSION: joi.string().default(pack.version),
   MJOURNAL_DB_PORT_5432_TCP_ADDR: joi.string().hostname(), // docker linking support
   MJOURNAL_DB_PORT_5432_TCP_PORT: port // docker linking support
 })
@@ -57,12 +57,13 @@ if (result.error) {
   // export each configuration key from this commonjs module
   // using joi coerced values
   Object.assign(exports, result.value)
-  switch (process.env.MJ_LOG_STREAM) {
+  switch (process.env.MJ_LOG_STREAM || '') {
     case 'stderr':
       exports.MJ_LOG_STREAM = process.stderr
       break
-    case 'stdout':
     case '-':
+    case '':
+    case 'stdout':
       exports.MJ_LOG_STREAM = process.stdout
       break
     default:
