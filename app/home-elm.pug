@@ -1,0 +1,6 @@
+extends layout-elm
+block body
+  div#elm-app-root
+block append scripts
+  script(src="/mjournal-elm.js?v=" + MJ_APP_VERSION)
+  script Elm.MJournal.embed(document.getElementById('elm-app-root'))

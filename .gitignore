@@ -9,3 +9,4 @@ logs/*.log
 node
 node_modules
 wwwroot/*.js
+/elm-stuff

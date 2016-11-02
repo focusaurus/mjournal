@@ -25,6 +25,10 @@ function home (req, res) {
   }
 }
 
+function homeElm (req, res) {
+  res.render('home-elm')
+}
+
 function appCSS (req, res, next) {
   stylusBundle(req.params[0], function (error, cssText) {
     if (error) {
@@ -90,6 +94,7 @@ app.use(function (req, res, next) {
 })
 app.use(byKey)
 app.get('/', require('./middleware/db-down'), themeMW, home)
+app.get('/elm', require('./middleware/db-down'), themeMW, homeElm)
 app.get('/docs', themeMW, function (req, res) {
   res.render('docs/docs')
 })
