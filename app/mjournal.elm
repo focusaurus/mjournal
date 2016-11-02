@@ -5,6 +5,8 @@ import Html.App
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import String
+import Regex exposing (contains, regex)
+
 
 type alias Model =
     { entries : List String
@@ -63,11 +65,11 @@ view model =
                     -- ng-model "password", class "ng-pristine ng-valid"
                     []
                 , input
-                    [ type' "submit", class "signIn", value "Sign In", disabled (not model.enableSignIn) ]
+                    [ type' "submit", class "signIn", value "Sign In", disabled (not (canSignIn model)) ]
                     -- ng-disabled "!(email && password)",
                     []
                 , input
-                    [ type' "submit", class "register", value "Register", disabled (not model.enableSignIn) ]
+                    [ type' "submit", class "register", value "Register", disabled (not (canSignIn model)) ]
                     -- ng-click "signIn($event, true)", ng-disabled "!(email && password)"
                     []
                 ]
@@ -105,18 +107,29 @@ view model =
 -- setSignInForm {signInForm} email =
 --     {signInForm | email = email}
 
-noEmpties : List String -> Bool
-noEmpties strings =
-    List.all (\x -> not (String.isEmpty x)) strings
+
+-- noEmpties : List String -> Bool
+-- noEmpties strings =
+--     List.all (\x -> not (String.isEmpty x)) strings
+
+
+canSignIn : Model -> Bool
+canSignIn model =
+    List.all identity
+        [ -- rules permitting sign in
+        contains (regex ".@.") model.signInEmail
+        , not (String.isEmpty model.signInPassword)
+        ]
+
 
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
         InputEmail newEmail ->
-            ( { model | signInEmail = newEmail, enableSignIn = (noEmpties [newEmail, model.signInPassword]) }, Cmd.none )
+            ( { model | signInEmail = newEmail }, Cmd.none )
 
         InputPassword newPassword ->
-            ( { model | signInPassword = newPassword, enableSignIn = (noEmpties [model.signInEmail, newPassword])  }, Cmd.none )
+            ( { model | signInPassword = newPassword }, Cmd.none )
 
         SignInStop ->
             ( model, Cmd.none )
