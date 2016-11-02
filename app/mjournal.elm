@@ -3,24 +3,27 @@ module MJournal exposing (..)
 import Html exposing (..)
 import Html.App
 import Html.Attributes exposing (..)
-
-
--- import Html.Events exposing (onClick)
+import Html.Events exposing (onInput)
 
 
 type alias Model =
     { entries : List String
+    , signInEmail : String
+    , signInPassword : String
     }
 
 
 initialModel : Model
 initialModel =
     { entries = []
+    , signInEmail = ""
+    , signInPassword = ""
     }
 
 
 type Message
-    = SignInStart
+    = InputEmail String
+    | InputPassword String
     | SignInStop
 
 
@@ -48,13 +51,13 @@ view model =
                     []
                     [ text "email" ]
                 , input
-                    [ type' "email" ]
+                    [ type' "email", placeholder "you@example.com", onInput InputEmail ]
                     []
                 , label
                     []
                     [ text "password" ]
                 , input
-                    [ type' "password" ]
+                    [ type' "password", onInput InputPassword ]
                     -- ng-model "password", class "ng-pristine ng-valid"
                     []
                 , input
@@ -91,9 +94,22 @@ view model =
         ]
 
 
+setSignInFormEmail : { b | email : a } -> c -> { b | email : c }
+setSignInFormEmail signInForm email =
+    { signInForm | email = email }
+
+
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
-    ( model, Cmd.none )
+    case message of
+        InputEmail newEmail ->
+            ( { model | signInEmail = newEmail }, Cmd.none )
+
+        InputPassword newPassword ->
+            ( { model | signInPassword = newPassword }, Cmd.none )
+
+        SignInStop ->
+            ( model, Cmd.none )
 
 
 main : Program Never
