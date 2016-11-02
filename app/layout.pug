@@ -6,7 +6,7 @@ html(ng-app=MJ_APP_NAME ng-cloak)
     link(href="/favicon.png" type="image/png" rel="icon")
     link(href="//fonts.googleapis.com/css?family=Alice"
       rel="stylesheet" type="text/css")
-    meta(name="x-app-version" value=appVersion)
+    meta(name="x-app-version" value=MJ_VERSION)
   body
     //- .adaptive
     h1.app-name
@@ -15,4 +15,4 @@ html(ng-app=MJ_APP_NAME ng-cloak)
     block body
     block scripts
       != sharify.script()
-      script(src="/mjournal.js?v=" + MJ_APP_VERSION)
+      script(src="/mjournal.js?v=" + MJ_VERSION)

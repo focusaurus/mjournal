@@ -58,7 +58,9 @@ tap.test(
   (test) => {
     testUtils.loadPage('/', function (error, dom) {
       test.error(error)
-      test.same(dom('meta[name="x-app-version"]').length, 1)
+      const meta = dom('meta[name="x-app-version"]')
+      test.same(meta.length, 1)
+      test.ok(meta[0].value)
       test.end()
     })
   })

@@ -41,7 +41,7 @@ function appCSS (req, res, next) {
 
 var PGStore = require('connect-pg-simple')(session)
 var app = express()
-_.extend(sharify.data, _.pick(config, 'MJ_APP_NAME', 'MJ_APP_VERSION'))
+_.extend(sharify.data, _.pick(config, 'MJ_APP_NAME', 'MJ_VERSION'))
 sharify.data.sessionTtl = ONE_DAY_MS
 _.extend(app.locals, sharify.data)
 app.set('view engine', 'pug')
