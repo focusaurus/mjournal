@@ -60,7 +60,7 @@ tap.test(
       test.error(error)
       const meta = dom('meta[name="x-app-version"]')
       test.same(meta.length, 1)
-      test.ok(meta[0].value)
+      test.ok(meta.first().attr('value'))
       test.end()
     })
   })
