@@ -4,20 +4,22 @@ import Html exposing (..)
 import Html.App
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
-
+import String
 
 type alias Model =
     { entries : List String
     , signInEmail : String
     , signInPassword : String
+    , enableSignIn : Bool
     }
 
 
-initialModel : Model
-initialModel =
+model : Model
+model =
     { entries = []
     , signInEmail = ""
     , signInPassword = ""
+    , enableSignIn = False
     }
 
 
@@ -61,11 +63,11 @@ view model =
                     -- ng-model "password", class "ng-pristine ng-valid"
                     []
                 , input
-                    [ type' "submit", class "signIn", value "Sign In", disabled True ]
+                    [ type' "submit", class "signIn", value "Sign In", disabled (not model.enableSignIn) ]
                     -- ng-disabled "!(email && password)",
                     []
                 , input
-                    [ type' "submit", class "register", value "Register", disabled True ]
+                    [ type' "submit", class "register", value "Register", disabled (not model.enableSignIn) ]
                     -- ng-click "signIn($event, true)", ng-disabled "!(email && password)"
                     []
                 ]
@@ -94,19 +96,27 @@ view model =
         ]
 
 
-setSignInFormEmail : { b | email : a } -> c -> { b | email : c }
-setSignInFormEmail signInForm email =
-    { signInForm | email = email }
 
+-- setSignInFormEmail : { b | email : a } -> c -> { b | email : c }
+-- setSignInFormEmail signInForm email =
+--     { signInForm | email = email }
+--
+--
+-- setSignInForm {signInForm} email =
+--     {signInForm | email = email}
+
+noEmpties : List String -> Bool
+noEmpties strings =
+    List.all (\x -> not (String.isEmpty x)) strings
 
 update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
         InputEmail newEmail ->
-            ( { model | signInEmail = newEmail }, Cmd.none )
+            ( { model | signInEmail = newEmail, enableSignIn = (noEmpties [newEmail, model.signInPassword]) }, Cmd.none )
 
         InputPassword newPassword ->
-            ( { model | signInPassword = newPassword }, Cmd.none )
+            ( { model | signInPassword = newPassword, enableSignIn = (noEmpties [model.signInEmail, newPassword])  }, Cmd.none )
 
         SignInStop ->
             ( model, Cmd.none )
@@ -115,7 +125,7 @@ update message model =
 main : Program Never
 main =
     Html.App.program
-        { init = ( initialModel, Cmd.none )
+        { init = ( model, Cmd.none )
         , view = view
         , update = update
         , subscriptions = (\model -> Sub.none)
