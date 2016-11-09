@@ -5,11 +5,15 @@ import Html.App
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Http
+
+
+-- import Json.Decode
+-- import Json.Decode.succeed
+
 import Json.Encode
-import Json.Decode
 import Regex exposing (contains, regex)
 import String
-import Task
+import Task exposing (Task)
 
 
 type alias Model =
@@ -34,21 +38,14 @@ type Message
     | InputPassword String
     | SignInStart
     | SignInSucceed Http.Response
-    | SignInFail Http.Error
+    | SignInFail Http.RawError
 
 
 view : Model -> Html Message
 view model =
     div []
-        [ h1
-            [ class "app-name" ]
-            [ a
-                [ href "/" ]
-                [ text "mjournal" ]
-            ]
-        , h2
-            [ class "app-tag" ]
-            [ text "minimalist journaling" ]
+        [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
+        , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
         , signInDiv model
         , aboutDiv
         ]
@@ -62,13 +59,21 @@ signInDiv model =
         , label [] [ text "email" ]
         , input [ type' "email", placeholder "you@example.com", onInput InputEmail ] []
         , label [] [ text "password" ]
-        , input [ type' "password", onInput InputPassword ]
+        , input [ type' "password", onInput InputPassword ] []
+        , input
+            [ type' "submit"
+            , class "signIn"
+            , value "Sign In"
+            , disabled (not (canSignIn model))
+            , onClick SignInStart
+            ]
             []
         , input
-            [ type' "submit", class "signIn", value "Sign In", disabled (not (canSignIn model)), onClick SignInStart ]
-            []
-        , input
-            [ type' "submit", class "register", value "Register", disabled (not (canSignIn model)) ]
+            [ type' "submit"
+            , class "register"
+            , value "Register"
+            , disabled (not (canSignIn model))
+            ]
             []
         ]
 
@@ -124,7 +129,7 @@ update : Message -> Model -> ( Model, Cmd Message )
 update message model =
     case message of
         SignInStart ->
-            ( model, Cmd.none )
+            ( model, signIn model.signInEmail model.signInPassword )
 
         -- ( model, signIn model.signInEmail model.signInPassword )
         InputEmail newEmail ->
@@ -133,34 +138,54 @@ update message model =
         InputPassword newPassword ->
             ( { model | signInPassword = newPassword }, Cmd.none )
 
-        SignInSucceed hey ->
+        SignInSucceed _ ->
             ( model, Cmd.none )
 
         SignInFail error ->
             ( model, Cmd.none )
 
 
-
--- signIn : String -> String -> Cmd Message
--- signIn email password =
---     let
---         jstring =
---             Json.Encode.string
---
---         bodyValue =
---             Json.Encode.object
---                 [ ( "email", jstring email )
---                 , ( "password", jstring password )
---                 ]
---
---         body =
---             Json.Encode.encode 0 bodyValue
---     in
---         Task.perform SignInFail SignInSucceed (Http.post Json.Decode.value "sign-in" (Http.string body))
+body : Http.Body
+body =
+    (Http.string """{"email":"foo@example.com","password":"bar"}""")
 
 
-unused email password =
-    Http.post Json.Decode.value "sign-in" (Http.string "{}")
+request : Http.Request
+request =
+    { verb = "POST"
+    , headers = [ ( "Content-Type", "application/json" ) ]
+    , url = "/api/users/sign-in"
+    , body = body
+    }
+
+
+postTask : Task Http.RawError Http.Response
+postTask =
+    -- Http.post decode "/api/users/sign-in" body
+    Http.send Http.defaultSettings request
+
+
+signIn : String -> String -> Cmd Message
+signIn email password =
+    let
+        jstring =
+            Json.Encode.string
+
+        bodyValue =
+            Json.Encode.object
+                [ ( "email", jstring email )
+                , ( "password", jstring password )
+                ]
+
+        body =
+            Json.Encode.encode 0 bodyValue
+    in
+        Task.perform SignInFail SignInSucceed postTask
+
+
+
+-- unused email password =
+--     Http.post Json.Decode.value "sign-in" (Http.string "{}")
 
 
 main : Program Never
