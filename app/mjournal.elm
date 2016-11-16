@@ -65,6 +65,26 @@ canSignIn model =
         ]
 
 
+
+-- filter "keydown" events for return key (code 13)
+
+
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+    on "keydown" <|
+        Json.Decode.map
+            (always msg)
+            (keyCode |> Json.Decode.andThen is13)
+
+
+is13 : Int -> Json.Decode.Decoder ()
+is13 code =
+    if code == 13 then
+        Json.Decode.succeed ()
+    else
+        Json.Decode.fail "not the right key code"
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
@@ -111,10 +131,15 @@ signInDiv model =
         [ class "sign-in" ]
         [ div [ class "error" ] [ text model.signInError ]
         , label [] [ text "email" ]
-        , input [ type_ "email", placeholder "you@example.com", onInput InputEmail ] []
+        , input
+            [ type_ "email"
+            , placeholder "you@example.com"
+            , onInput InputEmail
+            , onEnter SignIn
+            ]
+            []
         , label [] [ text "password" ]
-        , input [ type_ "password", onInput InputPassword ] []
-          -- , input [ type_ "password", onInput InputPassword,  onEnter SignIn] []
+        , input [ type_ "password", onInput InputPassword, onEnter SignIn ] []
         , input
             [ type_ "submit"
             , class "signIn"
