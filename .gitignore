@@ -10,3 +10,4 @@ node
 node_modules
 wwwroot/*.js
 /elm-stuff
+/local

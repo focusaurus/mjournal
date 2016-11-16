@@ -9,37 +9,6 @@ import Json.Encode
 import Regex
 
 
-view : Model -> Html Msg
-view model =
-    case model.pageState of
-        SignInPage ->
-            div []
-                [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
-                , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
-                , signInDiv model
-                , aboutDiv
-                ]
-
-        EntriesPage ->
-            div []
-                [ h1 [] [ text "Signed in. here are you entries" ]
-                , button [ onClick SignOut ] [ text "Sign Out" ]
-                ]
-
-
-type Msg
-    = InputEmail String
-    | InputPassword String
-    | SignIn
-    | SignInDone (Result Http.Error String)
-    | SignOut
-
-
-type PageState
-    = SignInPage
-    | EntriesPage
-
-
 type alias Model =
     { entries : List String
     , signInEmail : String
@@ -59,26 +28,17 @@ model =
     }
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update message model =
-    case message of
-        InputEmail newEmail ->
-            ( { model | signInEmail = newEmail }, Cmd.none )
+type Msg
+    = InputEmail String
+    | InputPassword String
+    | SignIn
+    | SignInDone (Result Http.Error String)
+    | SignOut
 
-        InputPassword newPassword ->
-            ( { model | signInPassword = newPassword }, Cmd.none )
 
-        SignIn ->
-            ( {model | signInError = "" }, signIn model.signInEmail model.signInPassword )
-
-        SignInDone (Ok x) ->
-            ( { model | pageState = EntriesPage }, Cmd.none )
-
-        SignInDone (Err _) ->
-            ( { model | signInError = "Check your information and try again" }, Cmd.none )
-
-        SignOut ->
-            ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
+type PageState
+    = SignInPage
+    | EntriesPage
 
 
 signIn : String -> String -> Cmd Msg
@@ -94,6 +54,55 @@ signIn email password =
             Http.jsonBody (bodyValue)
     in
         Http.send SignInDone (Http.post "/api/users/sign-in" body (Json.Decode.succeed "x"))
+
+
+canSignIn : Model -> Bool
+canSignIn model =
+    List.all identity
+        [ -- rules permitting sign in
+          Regex.contains (Regex.regex ".@.") model.signInEmail
+        , not (String.isEmpty model.signInPassword)
+        ]
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update message model =
+    case message of
+        InputEmail newEmail ->
+            ( { model | signInEmail = newEmail }, Cmd.none )
+
+        InputPassword newPassword ->
+            ( { model | signInPassword = newPassword }, Cmd.none )
+
+        SignIn ->
+            ( { model | signInError = "" }, signIn model.signInEmail model.signInPassword )
+
+        SignInDone (Ok x) ->
+            ( { model | pageState = EntriesPage }, Cmd.none )
+
+        SignInDone (Err _) ->
+            ( { model | signInError = "Check your information and try again" }, Cmd.none )
+
+        SignOut ->
+            ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
+
+
+view : Model -> Html Msg
+view model =
+    case model.pageState of
+        SignInPage ->
+            div []
+                [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
+                , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
+                , signInDiv model
+                , aboutDiv
+                ]
+
+        EntriesPage ->
+            div []
+                [ h1 [] [ text "Signed in. here are you entries" ]
+                , button [ onClick SignOut ] [ text "Sign Out" ]
+                ]
 
 
 signInDiv : Model -> Html Msg
@@ -146,15 +155,6 @@ aboutDiv =
                 []
                 [ text "Powerful full-text search lets you find entries quickly" ]
             ]
-        ]
-
-
-canSignIn : Model -> Bool
-canSignIn model =
-    List.all identity
-        [ -- rules permitting sign in
-          Regex.contains (Regex.regex ".@.") model.signInEmail
-        , not (String.isEmpty model.signInPassword)
         ]
 
 
