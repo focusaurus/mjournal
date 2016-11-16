@@ -100,8 +100,18 @@ update message model =
         SignInDone (Ok x) ->
             ( { model | pageState = EntriesPage }, Cmd.none )
 
-        SignInDone (Err _) ->
-            ( { model | signInError = "Check your information and try again" }, Cmd.none )
+        SignInDone (Err error) ->
+            case error of
+                Http.NetworkError ->
+                    ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
+                Http.Timeout ->
+                    ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
+                Http.BadStatus code ->
+                    ( { model | signInError = "Check your information and try again" }, Cmd.none )
+                Http.BadUrl message ->
+                    ( { model | signInError = "Unexpected BadUrl error. Sorry. " ++ message }, Cmd.none )
+                Http.BadPayload message _ ->
+                    ( { model | signInError = "Unexpected BadPayload error. Sorry. " ++ message }, Cmd.none )
 
         SignOut ->
             ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
