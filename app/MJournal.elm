@@ -1,11 +1,10 @@
 module MJournal exposing (..)
 
+import About exposing (about)
+import Core exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
-import Http
-import About exposing (about)
-import Core exposing (..)
 import SignIn
 
 
@@ -13,33 +12,19 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
         InputEmail newEmail ->
-            ( { model | signInEmail = newEmail }, Cmd.none )
+            ( { model | signInEmail = newEmail, signInError = "" }, Cmd.none )
 
         InputPassword newPassword ->
-            ( { model | signInPassword = newPassword }, Cmd.none )
+            ( { model | signInPassword = newPassword, signInError = "" }, Cmd.none )
 
         SignIn ->
             ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         SignInDone (Ok x) ->
-            ( { model | pageState = EntriesPage }, Cmd.none )
+            ( { model | pageState = EntriesPage, signInError = "" }, Cmd.none )
 
         SignInDone (Err error) ->
-            case error of
-                Http.NetworkError ->
-                    ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
-
-                Http.Timeout ->
-                    ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
-
-                Http.BadStatus code ->
-                    ( { model | signInError = "Check your information and try again" }, Cmd.none )
-
-                Http.BadUrl message ->
-                    ( { model | signInError = "Unexpected BadUrl error. Sorry. " ++ message }, Cmd.none )
-
-                Http.BadPayload message _ ->
-                    ( { model | signInError = "Unexpected BadPayload error. Sorry. " ++ message }, Cmd.none )
+            SignIn.signInDone error
 
         SignOut ->
             ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )

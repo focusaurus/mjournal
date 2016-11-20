@@ -1,4 +1,4 @@
-module SignIn exposing (signInDiv, signIn)
+module SignIn exposing (signInDiv, signIn, signInDone)
 
 import Core exposing (..)
 import Html.Attributes exposing (..)
@@ -10,11 +10,9 @@ import Json.Encode
 import Regex
 
 
--- filter "keydown" events for return key (code 13)
-
-
 onEnter : Msg -> Attribute Msg
 onEnter msg =
+    -- filter "keydown" events for return key (code 13)
     on "keydown" <|
         Json.Decode.map
             (always msg)
@@ -51,6 +49,25 @@ canSignIn model =
           Regex.contains (Regex.regex ".@.") model.signInEmail
         , not (String.isEmpty model.signInPassword)
         ]
+
+
+signInDone : Http.Error -> ( Model, Cmd Msg )
+signInDone error =
+    case error of
+        Http.NetworkError ->
+            ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
+
+        Http.Timeout ->
+            ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
+
+        Http.BadStatus code ->
+            ( { model | signInError = "Check your information and try again" }, Cmd.none )
+
+        Http.BadUrl message ->
+            ( { model | signInError = "Unexpected BadUrl error. Sorry. " ++ message }, Cmd.none )
+
+        Http.BadPayload message _ ->
+            ( { model | signInError = "Unexpected BadPayload error. Sorry. " ++ message }, Cmd.none )
 
 
 signInDiv : Model -> Html Msg
