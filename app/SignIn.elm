@@ -39,7 +39,7 @@ signIn email password =
         body =
             Http.jsonBody (bodyValue)
     in
-        Http.send SignInDone (Http.post "/api/users/sign-in" body (Json.Decode.succeed "x"))
+        Http.send SignInDone (Http.post "/api/users/sign-in" body (Json.Decode.succeed "{}"))
 
 
 canSignIn : Model -> Bool

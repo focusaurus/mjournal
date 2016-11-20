@@ -3,6 +3,7 @@ module MJournal exposing (..)
 import About exposing (about)
 import Core exposing (..)
 import Html exposing (..)
+import Entries exposing (getEntries)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import SignIn
@@ -21,13 +22,19 @@ update message model =
             ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         SignInDone (Ok x) ->
-            ( { model | pageState = EntriesPage, signInError = "" }, Cmd.none )
+            ( { model | pageState = EntriesPage, signInError = "" }, Entries.getEntries )
 
         SignInDone (Err error) ->
             SignIn.signInDone error
 
         SignOut ->
             ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
+
+        GetEntriesDone (Ok entries) ->
+            ( { model | entries = entries }, Cmd.none )
+
+        GetEntriesDone (Err error) ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -44,6 +51,7 @@ view model =
         EntriesPage ->
             div []
                 [ h1 [] [ text "Signed in. here are you entries" ]
+                , Entries.entriesList model
                 , button [ onClick SignOut ] [ text "Sign Out" ]
                 ]
 
