@@ -1,40 +1,35 @@
-module SignIn exposing (update, SignInMsg(..), Model, model, signInDiv)
+module SignIn exposing (signInDiv, signIn)
 
-import Html
+import Core exposing (..)
 import Html.Attributes exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import Http
 import Json.Decode
 import Json.Encode
 import Regex
--- import Msg.Msg as Msg
-
-type alias Model =
-    { email : String
-    , password : String
-    , error : String
-    }
 
 
-model : Model
-model =
-    { email = ""
-    , password = ""
-    , error = ""
-    }
+-- filter "keydown" events for return key (code 13)
 
 
-type SignInMsg
-    = InputEmail String
-    | InputPassword String
-    | SignIn
-    | SignInDone (Result Http.Error String)
-    | SignOut
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+    on "keydown" <|
+        Json.Decode.map
+            (always msg)
+            (keyCode |> Json.Decode.andThen is13)
 
 
-signIn : String -> String -> Cmd SignInMsg
+is13 : Int -> Json.Decode.Decoder ()
+is13 code =
+    if code == 13 then
+        Json.Decode.succeed ()
+    else
+        Json.Decode.fail "not the right key code"
+
+
+signIn : String -> String -> Cmd Msg
 signIn email password =
     let
         bodyValue =
@@ -53,73 +48,16 @@ canSignIn : Model -> Bool
 canSignIn model =
     List.all identity
         [ -- rules permitting sign in
-          Regex.contains (Regex.regex ".@.") model.email
-        , not (String.isEmpty model.password)
+          Regex.contains (Regex.regex ".@.") model.signInEmail
+        , not (String.isEmpty model.signInPassword)
         ]
 
 
-
--- filter "keydown" events for return key (code 13)
--- From: https://gist.github.com/pzingg/4262f479985ff2a325bf3d694413d6ee
-
-
-onEnter : SignInMsg -> Attribute SignInMsg
-onEnter msg =
-    on "keydown" <|
-        Json.Decode.map
-            (always msg)
-            (keyCode |> Json.Decode.andThen is13)
-
-
-is13 : Int -> Json.Decode.Decoder ()
-is13 code =
-    if code == 13 then
-        Json.Decode.succeed ()
-    else
-        Json.Decode.fail "not the right key code"
-
-
-update : SignInMsg -> Model -> ( Model, Cmd SignInMsg )
-update message model =
-    case message of
-        InputEmail newEmail ->
-            ( { model | email = newEmail }, Cmd.none )
-
-        InputPassword newPassword ->
-            ( { model | password = newPassword }, Cmd.none )
-
-        SignIn ->
-            ( { model | error = "" }, signIn model.email model.password )
-
-        SignInDone (Err error) ->
-            case error of
-                Http.NetworkError ->
-                    ( { model | error = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
-
-                Http.Timeout ->
-                    ( { model | error = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
-
-                Http.BadStatus code ->
-                    ( { model | error = "Check your information and try again" }, Cmd.none )
-
-                Http.BadUrl message ->
-                    ( { model | error = "Unexpected BadUrl error. Sorry. " ++ message }, Cmd.none )
-
-                Http.BadPayload message _ ->
-                    ( { model | error = "Unexpected BadPayload error. Sorry. " ++ message }, Cmd.none )
-
-        SignInDone (Ok _) ->
-            ( { model | error = "" }, Cmd.none )
-
-        SignOut ->
-            ( model, Cmd.none )
-
-
-signInDiv : Model -> Html SignInMsg
+signInDiv : Model -> Html Msg
 signInDiv model =
     div
         [ class "sign-in" ]
-        [ div [ class "error" ] [ text model.error ]
+        [ div [ class "error" ] [ text model.signInError ]
         , label [] [ text "email" ]
         , input
             [ type_ "email"
