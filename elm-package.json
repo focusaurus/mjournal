@@ -4,7 +4,7 @@
     "repository": "https://github.com/focusaurus/mjournal.git",
     "license": "MIT",
     "source-directories": [
-        "./app"
+        "app"
     ],
     "exposed-modules": [],
     "dependencies": {

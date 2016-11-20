@@ -3,16 +3,17 @@ module MJournal exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
--- import Http
+import Http
 import Json.Decode
--- import Json.Encode
--- import Regex
-import SignIn
-
+import Json.Encode
+import Regex
+import Msg exposing (..)
 
 type alias Model =
     { entries : List String
-    , signIn : SignIn.Model
+    , signInEmail : String
+    , signInPassword : String
+    , signInError : String
     , pageState : PageState
     }
 
@@ -20,17 +21,11 @@ type alias Model =
 model : Model
 model =
     { entries = []
-    , signIn = SignIn.model
+    , signInEmail = ""
+    , signInPassword = ""
+    , signInError = ""
     , pageState = SignInPage
     }
-
-
-type Msg
-    = InputEmail String
-    | InputPassword String
-    | SignIn.SignInMsg
-      -- | SignIn.SignInDone (Result Http.Error String)
-    | SignOut
 
 
 type PageState
@@ -38,9 +33,32 @@ type PageState
     | EntriesPage
 
 
+signIn : String -> String -> Cmd Msg
+signIn email password =
+    let
+        bodyValue =
+            Json.Encode.object
+                [ ( "email", Json.Encode.string email )
+                , ( "password", Json.Encode.string password )
+                ]
+
+        body =
+            Http.jsonBody (bodyValue)
+    in
+        Http.send SignInDone (Http.post "/api/users/sign-in" body (Json.Decode.succeed "x"))
+
+
+canSignIn : Model -> Bool
+canSignIn model =
+    List.all identity
+        [ -- rules permitting sign in
+          Regex.contains (Regex.regex ".@.") model.signInEmail
+        , not (String.isEmpty model.signInPassword)
+        ]
+
+
 
 -- filter "keydown" events for return key (code 13)
--- From: https://gist.github.com/pzingg/4262f479985ff2a325bf3d694413d6ee
 
 
 onEnter : Msg -> Attribute Msg
@@ -62,12 +80,33 @@ is13 code =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        SignIn.SignInMsg ->
-            let
-                ( newSignInModel, cmd ) =
-                    SignIn.update message model.signIn
-            in
-                ( { model | signIn = newSignInModel }, cmd )
+        InputEmail newEmail ->
+            ( { model | signInEmail = newEmail }, Cmd.none )
+
+        InputPassword newPassword ->
+            ( { model | signInPassword = newPassword }, Cmd.none )
+
+        SignIn ->
+            ( { model | signInError = "" }, signIn model.signInEmail model.signInPassword )
+
+        SignInDone (Ok x) ->
+            ( { model | pageState = EntriesPage }, Cmd.none )
+
+        SignInDone (Err error) ->
+            case error of
+                Http.NetworkError ->
+                    ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
+                Http.Timeout ->
+                    ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )
+                Http.BadStatus code ->
+                    ( { model | signInError = "Check your information and try again" }, Cmd.none )
+                Http.BadUrl message ->
+                    ( { model | signInError = "Unexpected BadUrl error. Sorry. " ++ message }, Cmd.none )
+                Http.BadPayload message _ ->
+                    ( { model | signInError = "Unexpected BadPayload error. Sorry. " ++ message }, Cmd.none )
+
+        SignOut ->
+            ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -77,7 +116,7 @@ view model =
             div []
                 [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
-                , SignIn.signInDiv model.signIn
+                , signInDiv model
                 , aboutDiv
                 ]
 
@@ -86,6 +125,39 @@ view model =
                 [ h1 [] [ text "Signed in. here are you entries" ]
                 , button [ onClick SignOut ] [ text "Sign Out" ]
                 ]
+
+
+signInDiv : Model -> Html Msg
+signInDiv model =
+    div
+        [ class "sign-in" ]
+        [ div [ class "error" ] [ text model.signInError ]
+        , label [] [ text "email" ]
+        , input
+            [ type_ "email"
+            , placeholder "you@example.com"
+            , onInput InputEmail
+            , onEnter SignIn
+            ]
+            []
+        , label [] [ text "password" ]
+        , input [ type_ "password", onInput InputPassword, onEnter SignIn ] []
+        , input
+            [ type_ "submit"
+            , class "signIn"
+            , value "Sign In"
+            , disabled (not (canSignIn model))
+            , onClick SignIn
+            ]
+            []
+        , input
+            [ type_ "submit"
+            , class "register"
+            , value "Register"
+            , disabled (not (canSignIn model))
+            ]
+            []
+        ]
 
 
 aboutDiv : Html a

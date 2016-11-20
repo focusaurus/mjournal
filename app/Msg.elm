@@ -1,4 +1,4 @@
-module Msg exposing (Msg)
+module Msg exposing (..)
 
 import Http
 
