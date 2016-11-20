@@ -3,6 +3,7 @@ module About exposing (about)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 
+
 about : Html a
 about =
     div
