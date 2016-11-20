@@ -8,6 +8,7 @@ import Json.Decode
 import Json.Encode
 import Regex
 import Msg exposing (..)
+import About exposing (about)
 
 type alias Model =
     { entries : List String
@@ -117,7 +118,7 @@ view model =
                 [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
                 , signInDiv model
-                , aboutDiv
+                , about
                 ]
 
         EntriesPage ->
@@ -157,31 +158,6 @@ signInDiv model =
             , disabled (not (canSignIn model))
             ]
             []
-        ]
-
-
-aboutDiv : Html a
-aboutDiv =
-    div
-        [ class "about" ]
-        [ h3
-            []
-            [ text "mjournal is a clean, organized journal for notes and thoughts" ]
-        , ul
-            []
-            [ li
-                []
-                [ text "uncluttered design lets you focus on your words" ]
-            , li
-                []
-                [ text "Entries are automatically timestamped and displayed chronologically" ]
-            , li
-                []
-                [ text "Use tags as a simple way to categorize related entries" ]
-            , li
-                []
-                [ text "Powerful full-text search lets you find entries quickly" ]
-            ]
         ]
 
 
