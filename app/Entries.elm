@@ -4,7 +4,7 @@ import Core exposing (..)
 import Http
 import Json.Decode as JD
 import Html exposing (..)
-
+import Html.Attributes exposing (..)
 
 getEntries : Cmd Msg
 getEntries =
@@ -15,9 +15,10 @@ getEntries =
 entriesDecoder : JD.Decoder (List Entry)
 entriesDecoder =
     JD.list
-        (JD.map2 Entry
+        (JD.map3 Entry
             (JD.field "id" JD.int)
             (JD.field "body" JD.string)
+            (JD.field "created" JD.string)
         )
 
 
@@ -28,4 +29,10 @@ entriesList model =
 
 entryTag : Entry -> Html Msg
 entryTag entry =
-    p [] [ text entry.body ]
+    div [ class "entry" ] [
+        div [ class "meta-row"] [
+            i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)"] []
+            , div [ class "created meta" ] [ text entry.created ]
+        ]
+        , p [] [ text entry.body ]
+    ]

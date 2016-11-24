@@ -33,6 +33,7 @@ coreModel =
 type alias Entry =
     { id : Int
     , body : String
+    , created: String
     }
 
 
