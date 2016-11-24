@@ -8,7 +8,7 @@ import Http
 import Json.Decode
 import Json.Encode
 import Regex
-
+import Debug
 
 onEnter : Msg -> Attribute Msg
 onEnter msg =
@@ -50,9 +50,8 @@ canSignIn model =
         , not (String.isEmpty model.signInPassword)
         ]
 
-
-signInDone : Http.Error -> ( Model, Cmd Msg )
-signInDone error =
+signInDone : Model -> Http.Error -> ( Model, Cmd Msg )
+signInDone model error =
     case error of
         Http.NetworkError ->
             ( { model | signInError = "Cannot reach server. Check your Internet connection and retry." }, Cmd.none )

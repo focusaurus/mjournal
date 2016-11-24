@@ -20,6 +20,15 @@ type alias Model =
     , pageState : PageState
     }
 
+coreModel : Model
+coreModel =
+    { entries = []
+    , signInEmail = ""
+    , signInPassword = ""
+    , signInError = ""
+    , pageState = SignInPage
+    }
+
 
 type alias Entry =
     { id : Int
@@ -30,13 +39,3 @@ type alias Entry =
 type PageState
     = SignInPage
     | EntriesPage
-
-
-model : Model
-model =
-    { entries = []
-    , signInEmail = ""
-    , signInPassword = ""
-    , signInError = ""
-    , pageState = SignInPage
-    }

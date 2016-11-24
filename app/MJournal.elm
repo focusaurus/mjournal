@@ -25,7 +25,7 @@ update message model =
             ( { model | pageState = EntriesPage, signInError = "" }, Entries.getEntries )
 
         SignInDone (Err error) ->
-            SignIn.signInDone error
+            SignIn.signInDone model error
 
         SignOut ->
             ( { model | pageState = SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
@@ -59,7 +59,7 @@ view model =
 main : Program Never Model Msg
 main =
     Html.program
-        { init = ( model, Cmd.none )
+        { init = ( coreModel, Cmd.none )
         , view = view
         , update = update
         , subscriptions = (\model -> Sub.none)
