@@ -1,16 +1,4 @@
-module Core exposing (..)
-
-import Http
-
-
-type Msg
-    = InputEmail String
-    | InputPassword String
-    | SignIn
-    | SignInDone (Result Http.Error String)
-    | SignOut
-    | GetEntriesDone (Result Http.Error (List Entry))
-
+module Model exposing (..)
 
 type alias Model =
     { entries : List Entry
@@ -20,8 +8,8 @@ type alias Model =
     , pageState : PageState
     }
 
-coreModel : Model
-coreModel =
+initModel : Model
+initModel =
     { entries = []
     , signInEmail = ""
     , signInPassword = ""

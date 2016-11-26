@@ -1,6 +1,7 @@
 module Entries exposing (getEntries, entriesList)
 
-import Core exposing (..)
+import Model exposing (Model, Entry)
+import Messages exposing (Msg(..))
 import Http
 import Json.Decode as JD
 import Html exposing (..)
