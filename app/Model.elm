@@ -1,5 +1,7 @@
 module Model exposing (..)
 
+import Date exposing (Date)
+
 
 type alias Model =
     { entries : List Entry
@@ -27,8 +29,8 @@ initModel =
 type alias Entry =
     { id : Int
     , body : String
-    , tags: List String
-    , created : String
+    , tags : List String
+    , created : Date
     }
 
 

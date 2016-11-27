@@ -1,9 +1,11 @@
 module Entries exposing (entriesList, getEntries, nextPage, previousPage)
 
+import Date.Extra
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
 import Json.Decode as JD
+import Json.Decode.Extra
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
@@ -62,7 +64,7 @@ entriesDecoder =
             (JD.field "id" JD.int)
             (JD.field "body" JD.string)
             (JD.field "tags" (JD.list JD.string))
-            (JD.field "created" JD.string)
+            (JD.field "created" Json.Decode.Extra.date)
         )
 
 
@@ -76,7 +78,7 @@ entryTag entry =
     div [ class "entry" ]
         [ div [ class "meta-row" ]
             [ i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)" ] []
-            , div [ class "created meta" ] [ text entry.created ]
+            , div [ class "created meta" ] [ text (Date.Extra.toFormattedString "MMM dd, yyyy hh:mm a" entry.created) ]
             ]
         , p [ class "body", contenteditable True ] [ text entry.body ]
         , tags entry
