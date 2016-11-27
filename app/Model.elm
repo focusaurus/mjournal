@@ -27,6 +27,7 @@ initModel =
 type alias Entry =
     { id : Int
     , body : String
+    , tags: List String
     , created : String
     }
 

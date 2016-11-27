@@ -7,6 +7,7 @@ import Json.Decode as JD
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
+import Tags exposing (tags)
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -16,6 +17,7 @@ getEntries query =
             Maybe.withDefault "" query
     in
         Http.send GetEntriesDone (Http.get ("/api/entries" ++ query_) entriesDecoder)
+
 
 nextPage : Model -> Cmd Msg
 nextPage model =
@@ -33,6 +35,7 @@ nextPage model =
                         ""
         in
             getEntries (Just query)
+
 
 previousPage : Model -> Cmd Msg
 previousPage model =
@@ -55,9 +58,10 @@ previousPage model =
 entriesDecoder : JD.Decoder (List Entry)
 entriesDecoder =
     JD.list
-        (JD.map3 Entry
+        (JD.map4 Entry
             (JD.field "id" JD.int)
             (JD.field "body" JD.string)
+            (JD.field "tags" (JD.list JD.string))
             (JD.field "created" JD.string)
         )
 
@@ -75,4 +79,5 @@ entryTag entry =
             , div [ class "created meta" ] [ text entry.created ]
             ]
         , p [ class "body", contenteditable True ] [ text entry.body ]
+        , tags entry
         ]
