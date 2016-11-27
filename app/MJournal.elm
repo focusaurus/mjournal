@@ -1,4 +1,4 @@
-module MJournal exposing (..)
+module MJournal exposing (main)
 
 import About exposing (about)
 import Model exposing (Model, initModel)
@@ -8,6 +8,7 @@ import Entries exposing (getEntries)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import SignIn
+import Pagination
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -23,7 +24,10 @@ update message model =
             ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         SignInDone (Ok x) ->
-            ( { model | pageState = Model.EntriesPage, signInError = "" }, Entries.getEntries )
+            ( { model | pageState = Model.EntriesPage, signInError = "" }, Entries.getEntries Nothing )
+
+        ClickNext ->
+            ( model, Entries.nextPage model )
 
         SignInDone (Err error) ->
             SignIn.signInDone model error
@@ -51,8 +55,18 @@ view model =
 
         Model.EntriesPage ->
             div []
-                [ h1 [] [ text "Signed in. here are you entries" ]
-                , Entries.entriesList model
+                [ h1 [ class "app-name" ]
+                    [ a [ href "/" ] [ text "mjournal" ]
+                    ]
+                , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
+                , div [ class "entries" ]
+                    [ Pagination.toolbar model
+                    ]
+                , div [ class "notebook" ]
+                    [ div [ class "page" ]
+                        [ Entries.entriesList model
+                        ]
+                    ]
                 , button [ onClick SignOut ] [ text "Sign Out" ]
                 ]
 
@@ -60,7 +74,7 @@ view model =
 main : Program Never Model Msg
 main =
     Html.program
-        { init = ( initModel, Cmd.none )
+        { init = ( initModel, SignIn.signIn initModel.signInEmail initModel.signInPassword )
         , view = view
         , update = update
         , subscriptions = (\model -> Sub.none)

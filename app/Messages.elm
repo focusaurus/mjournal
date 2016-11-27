@@ -1,7 +1,7 @@
 module Messages exposing (Msg(..))
 
-import Model exposing (Entry)
 import Http
+import Model exposing (Entry)
 
 
 type Msg
@@ -10,4 +10,5 @@ type Msg
     | SignIn
     | SignInDone (Result Http.Error String)
     | SignOut
+    | ClickNext
     | GetEntriesDone (Result Http.Error (List Entry))

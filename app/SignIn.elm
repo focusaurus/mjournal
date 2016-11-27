@@ -1,13 +1,13 @@
 module SignIn exposing (signInDiv, signIn, signInDone)
 
-import Messages exposing (Msg(..))
-import Model exposing (Model)
-import Html.Attributes exposing (..)
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import Http
 import Json.Decode
 import Json.Encode
+import Messages exposing (Msg(..))
+import Model exposing (Model)
 import Regex
 
 onEnter : Msg -> Attribute Msg
