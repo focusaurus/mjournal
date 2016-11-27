@@ -1,4 +1,4 @@
-module Entries exposing (entriesList, getEntries, nextPage)
+module Entries exposing (entriesList, getEntries, nextPage, previousPage)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -7,19 +7,6 @@ import Json.Decode as JD
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
-
-
--- getEntries : Maybe String -> Cmd Msg
--- getEntries query_ =
---     Http.send GetEntriesDone (Http.get ("/api/entries" ++ query_) entriesDecoder)
--- -- This compiles
--- getEntries : Maybe String -> Cmd Msg
--- getEntries query =
---     case query of
---         Just query ->
---             Http.send GetEntriesDone (Http.get ("/api/entries" ++ query) entriesDecoder)
---         Nothing ->
---             Http.send GetEntriesDone (Http.get ("/api/entries") entriesDecoder)
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -41,6 +28,23 @@ nextPage model =
                 case last of
                     Just last ->
                         "?after=" ++ toString (.id last)
+
+                    Nothing ->
+                        ""
+        in
+            getEntries (Just query)
+
+previousPage : Model -> Cmd Msg
+previousPage model =
+    let
+        first =
+            List.head model.entries
+    in
+        let
+            query =
+                case first of
+                    Just first ->
+                        "?before=" ++ toString (.id first)
 
                     Nothing ->
                         ""

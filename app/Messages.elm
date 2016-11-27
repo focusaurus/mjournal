@@ -11,4 +11,5 @@ type Msg
     | SignInDone (Result Http.Error String)
     | SignOut
     | ClickNext
+    | ClickPrevious
     | GetEntriesDone (Result Http.Error (List Entry))

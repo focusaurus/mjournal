@@ -1,34 +1,41 @@
 module Model exposing (..)
 
+
 type alias Model =
     { entries : List Entry
-    , signInEmail : String
-    , signInPassword : String
-    , signInError : String
+    , direction : Maybe Direction
+    , pageSize : Int
     , pageState : PageState
-    , pageSize: Int
-    , entryPage : Int
+    , signInEmail : String
+    , signInError : String
+    , signInPassword : String
     }
+
 
 initModel : Model
 initModel =
     { entries = []
-    , entryPage = 1
+    , direction = Nothing
     , pageSize = 50
-    , signInEmail = "1@example.com"
-    , signInPassword = "password"
-    , signInError = ""
     , pageState = SignInPage
+    , signInEmail = "1@example.com"
+    , signInError = ""
+    , signInPassword = "password"
     }
 
 
 type alias Entry =
     { id : Int
     , body : String
-    , created: String
+    , created : String
     }
 
 
 type PageState
     = SignInPage
     | EntriesPage
+
+
+type Direction
+    = Previous
+    | Next

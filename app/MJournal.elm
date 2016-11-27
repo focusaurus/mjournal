@@ -27,7 +27,10 @@ update message model =
             ( { model | pageState = Model.EntriesPage, signInError = "" }, Entries.getEntries Nothing )
 
         ClickNext ->
-            ( model, Entries.nextPage model )
+            ( { model | direction = Just Model.Next }, Entries.nextPage model )
+
+        ClickPrevious ->
+            ( { model | direction = Just Model.Previous }, Entries.previousPage model )
 
         SignInDone (Err error) ->
             SignIn.signInDone model error

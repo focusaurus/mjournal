@@ -6,14 +6,31 @@ import Html.Events exposing (onClick)
 import Messages exposing (Msg)
 import Model exposing (Model)
 
+
 enablePrevious : Model -> Bool
 enablePrevious model =
-    model.entryPage > 1
+    case model.direction of
+        Nothing ->
+            True
+
+        Just (Model.Previous) ->
+            List.length model.entries == model.pageSize
+
+        Just (Model.Next) ->
+            True
 
 
 enableNext : Model -> Bool
 enableNext model =
-    List.length model.entries == model.pageSize
+    case model.direction of
+        Nothing ->
+            False
+
+        Just (Model.Previous) ->
+            True
+
+        Just (Model.Next) ->
+            List.length model.entries == model.pageSize
 
 
 toolbar : Model -> Html Msg
@@ -21,7 +38,7 @@ toolbar model =
     div
         [ class "toolbar" ]
         [ button
-            [ class "previous", disabled (not (enablePrevious model)) ]
+            [ class "previous", disabled (not (enablePrevious model)), onClick Messages.ClickPrevious ]
             --ng - click "previous()", ng - disabled "disablePrevious", data - vivaldi - spatnav - clickable "1"
             [ span
                 [ class "smallText" ]
