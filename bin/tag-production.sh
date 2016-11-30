@@ -2,7 +2,7 @@
 # tag a docker image for production
 # Usage $0 <image-id>
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 10
 source ./bin/lib/strict-mode.sh
 
 PATH=$(npm bin):$PATH
