@@ -34,6 +34,11 @@ type alias Entry =
     }
 
 
+type alias Theme =
+    { name : String
+    }
+
+
 type PageState
     = SignInPage
     | EntriesPage
