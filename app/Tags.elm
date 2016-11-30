@@ -32,6 +32,23 @@ tags entry =
                 [ ul
                     [ class "tag-list" ]
                     (List.map tagItem entry.tags)
+                , input [ class "input ti-autosize", placeholder "Add a tag", tabindex 0, style [ ( "width", "69px" ) ] ]
+                    -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize "", style "width: 69px;" ]
+                    []
+                , span
+                    [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
+                    [ text "Add a tag" ]
                 ]
+            -- , node "auto-complete"
+            --     []
+            --     -- source "autoCompleteTags($query)", min-length "2" ]
+            --     [ div
+            --         [ class "autocomplete" ]
+            --         -- ng-hide", ng-show "suggestionList.visible" ]
+            --         [ ul
+            --             [ class "suggestion-list" ]
+            --             []
+            --         ]
+            --     ]
             ]
         ]
