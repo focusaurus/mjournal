@@ -1,15 +1,15 @@
 module MJournal exposing (main)
 
 import About exposing (about)
-import Model exposing (Model, initModel)
-import Messages exposing (Msg(..))
-import Html exposing (..)
 import Entries exposing (getEntries)
+import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
-import SignIn
+import Menu
+import Messages exposing (Msg(..))
+import Model exposing (Model, initModel)
 import Pagination
-
+import SignIn
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
@@ -62,6 +62,7 @@ view model =
                     [ a [ href "/" ] [ text "mjournal" ]
                     ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
+                , Menu.component
                 , div [ class "entries" ]
                     [ Pagination.toolbar model
                     ]
