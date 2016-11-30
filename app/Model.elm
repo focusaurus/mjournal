@@ -12,6 +12,7 @@ type alias Model =
     , signInEmail : String
     , signInError : String
     , signInPassword : String
+    , theme : Theme
     }
 
 
@@ -25,6 +26,7 @@ initModel =
     , signInEmail = "1@example.com"
     , signInError = ""
     , signInPassword = "password"
+    , theme = (Theme "moleskine")
     }
 
 

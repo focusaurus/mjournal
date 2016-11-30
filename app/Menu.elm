@@ -3,7 +3,7 @@ module Menu exposing (component)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onWithOptions)
-import Messages exposing (Msg, Msg(ToggleMenu), Msg(SignOut))
+import Messages exposing (Msg, Msg(ToggleMenu), Msg(SignOut), Msg(SetTheme))
 import Model exposing (Model, Theme)
 import Json.Decode as Json
 
@@ -16,17 +16,26 @@ stopPropagation =
         }
         (Json.map ToggleMenu <| Json.succeed "")
 
+-- document.getElementById('theme').href = '/mjournal-' + name + '.css'
+-- usersService.update({theme: name})
 
-themeLink : Theme -> Html Msg
-themeLink theme =
+
+themeLink : Theme -> Theme -> Html Msg
+themeLink current theme =
     a
         []
         -- ng-click "setTheme(theme.name)"
         [ i
-            [ class "icon-checkmark2" ]
+            [ onClick (SetTheme theme)
+            , classList
+                [ ( "icon-checkmark2", not (current == theme) )
+                , ( "icon-checkmark", current == theme )
+                ]
+            ]
             -- [ ng-class "{'icon-checkmark': theme.selected, 'icon-checkmark2': !theme.selected}", class "icon-checkmark2" ]
             [ text ("Theme: " ++ theme.name) ]
         ]
+
 
 
 -- menuState : Bool -> String
@@ -67,8 +76,8 @@ component model =
                             [ class "icon-exit" ]
                             [ text "Sign Out" ]
                         ]
-                    , themeLink (Theme "moleskine")
-                    , themeLink (Theme "hoth")
+                    , themeLink model.theme (Theme "moleskine")
+                    , themeLink model.theme (Theme "hoth")
                     , a
                         [ href "/docs", target "_self" ]
                         [ i

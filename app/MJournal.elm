@@ -7,7 +7,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import Menu
 import Messages exposing (Msg(..))
-import Model exposing (Model, initModel)
+import Model exposing (Model, initModel, Theme)
 import Pagination
 import SignIn
 
@@ -51,6 +51,8 @@ update message model =
         ToggleMenu _ ->
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
+        SetTheme theme ->
+          ( { model | theme = theme }, Cmd.none )
         -- NoOp _ ->
         --     ( model, Cmd.none )
 
