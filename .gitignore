@@ -1,13 +1,14 @@
 .nyc_output
 .vagrant
-Dockerfile
+/app/A.elm
+/elm-stuff
+/local
 bower_components
 config.local.js*
 coverage
 docker-compose-mjournal.*
+Dockerfile
 logs/*.log
 node
 node_modules
 wwwroot/*.js
-/elm-stuff
-/local
