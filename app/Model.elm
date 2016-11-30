@@ -6,6 +6,7 @@ import Date exposing (Date)
 type alias Model =
     { entries : List Entry
     , direction : Maybe Direction
+    , menuOpen : Bool
     , pageSize : Int
     , pageState : PageState
     , signInEmail : String
@@ -18,6 +19,7 @@ initModel : Model
 initModel =
     { entries = []
     , direction = Nothing
+    , menuOpen = False
     , pageSize = 50
     , pageState = SignInPage
     , signInEmail = "1@example.com"

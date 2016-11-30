@@ -5,11 +5,14 @@ import Model exposing (Entry)
 
 
 type Msg
-    = InputEmail String
+    = ClickNext
+    | ClickPrevious
+    | CloseMenu
+    | GetEntriesDone (Result Http.Error (List Entry))
+    | InputEmail String
     | InputPassword String
+    -- | NoOp String
     | SignIn
     | SignInDone (Result Http.Error String)
     | SignOut
-    | ClickNext
-    | ClickPrevious
-    | GetEntriesDone (Result Http.Error (List Entry))
+    | ToggleMenu String

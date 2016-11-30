@@ -11,6 +11,7 @@ import Model exposing (Model, initModel)
 import Pagination
 import SignIn
 
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
@@ -44,12 +45,21 @@ update message model =
         GetEntriesDone (Err error) ->
             ( model, Cmd.none )
 
+        CloseMenu ->
+            ( { model | menuOpen = False }, Cmd.none )
+
+        ToggleMenu _ ->
+            ( { model | menuOpen = not model.menuOpen }, Cmd.none )
+
+        -- NoOp _ ->
+        --     ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
     case model.pageState of
         Model.SignInPage ->
-            div []
+            div [ onClick CloseMenu ]
                 [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
                 , SignIn.signInDiv model
@@ -57,12 +67,12 @@ view model =
                 ]
 
         Model.EntriesPage ->
-            div []
+            div [ onClick CloseMenu ]
                 [ h1 [ class "app-name" ]
                     [ a [ href "/" ] [ text "mjournal" ]
                     ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
-                , Menu.component
+                , Menu.component model
                 , div [ class "entries" ]
                     [ Pagination.toolbar model
                     ]

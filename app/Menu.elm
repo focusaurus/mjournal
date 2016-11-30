@@ -2,8 +2,19 @@ module Menu exposing (component)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Messages exposing (Msg)
-import Model exposing (Theme)
+import Html.Events exposing (onClick, onWithOptions)
+import Messages exposing (Msg, Msg(ToggleMenu), Msg(SignOut))
+import Model exposing (Model, Theme)
+import Json.Decode as Json
+
+
+stopPropagation : Attribute Msg
+stopPropagation =
+    onWithOptions "click"
+        { stopPropagation = True
+        , preventDefault = True
+        }
+        (Json.map ToggleMenu <| Json.succeed "")
 
 
 themeLink : Theme -> Html Msg
@@ -18,29 +29,44 @@ themeLink theme =
         ]
 
 
-component : Html Msg
-component =
+-- menuState : Bool -> String
+-- menuState open =
+--     "dropdown"
+--         ++ (if open then
+--                 " open"
+--             else
+--                 ""
+--            )
+
+
+component : Model -> Html Msg
+component model =
     div
         [ class "menu-bar" ]
         [ nav
             [ class "settings-menu" ]
             [ span
-                [ class "dropdown" ]
+                [ classList
+                    [ ( "dropdown", True )
+                    , ( "open", model.menuOpen )
+                    ]
+                ]
+                -- [ class (menuState model.menuOpen) ]
                 -- , dropdown "" ]
                 [ a
-                    [ class "menu icon-menu" ]
+                    [ class "menu icon-menu", stopPropagation ]
                     --, dropdown-toggle "",  aria-haspopup "true", aria-expanded "false" ]
                     []
                 , nav
                     [ class "dropdown-menu" ]
                     --, role "menu" ]
                     [ a
-                        [ class "sign-out", href "/api/users/sign-out", target "_self" ]
+                        [ class "sign-out", onClick SignOut ]
+                        -- [ class "sign-out", href "/api/users/sign-out", target "_self" ]
                         [ i
                             [ class "icon-exit" ]
                             [ text "Sign Out" ]
                         ]
-                      -- , (List.map themeLink themes)
                     , themeLink (Theme "moleskine")
                     , themeLink (Theme "hoth")
                     , a
