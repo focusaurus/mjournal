@@ -15,4 +15,9 @@ IFS="$(printf "\n\t")"
 
 cd "$(dirname "$0")/.."
 PATH=$(npm bin):$PATH
-elm-make --output wwwroot/mjournal-elm.js app/MJournal.elm
+if [[ $# -eq 0 ]]; then
+  # Initial interactive launch. Start fswatch
+  fswatch -o app | xargs -n1 "$0"
+else
+  elm-make --output wwwroot/mjournal-elm.js app/MJournal.elm
+fi
