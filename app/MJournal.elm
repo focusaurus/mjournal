@@ -1,6 +1,7 @@
 module MJournal exposing (main)
 
 import About exposing (about)
+import ClickDocument exposing (clickDocument)
 import Entries exposing (getEntries)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -48,6 +49,9 @@ update message model =
             ( model, Cmd.none )
 
         CloseMenu ->
+            ( { model | menuOpen = False }, Cmd.none )
+
+        CloseMenuDocument x ->
             ( { model | menuOpen = False }, Cmd.none )
 
         ToggleMenu _ ->
@@ -119,11 +123,16 @@ init flags =
         ( mod, SignIn.signIn mod.signInEmail mod.signInPassword )
 
 
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    clickDocument CloseMenuDocument
+
+
 main : Program Flags Model Msg
 main =
     Html.programWithFlags
         { init = init
         , view = view
         , update = update
-        , subscriptions = (\model -> Sub.none)
+        , subscriptions = subscriptions
         }

@@ -8,3 +8,6 @@ block append scripts
     app.ports.setTheme.subscribe(function setTheme (name) {
       document.getElementById('theme').href = '/mjournal-' + name + '.css'
     })
+    document.addEventListener('click', function onClick (event) {
+      app.ports.clickDocument.send(false)
+    })

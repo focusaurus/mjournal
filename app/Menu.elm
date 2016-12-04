@@ -16,9 +16,6 @@ stopPropagation =
         }
         (Json.map ToggleMenu <| Json.succeed "")
 
--- document.getElementById('theme').href = '/mjournal-' + name + '.css'
--- usersService.update({theme: name})
-
 
 themeLink : Theme -> Theme -> Html Msg
 themeLink current theme =
@@ -35,17 +32,6 @@ themeLink current theme =
             -- [ ng-class "{'icon-checkmark': theme.selected, 'icon-checkmark2': !theme.selected}", class "icon-checkmark2" ]
             [ text ("Theme: " ++ theme.name) ]
         ]
-
-
-
--- menuState : Bool -> String
--- menuState open =
---     "dropdown"
---         ++ (if open then
---                 " open"
---             else
---                 ""
---            )
 
 
 component : Model -> Html Msg

@@ -8,6 +8,7 @@ type Msg
     = ClickNext
     | ClickPrevious
     | CloseMenu
+    | CloseMenuDocument Bool
     | GetEntriesDone (Result Http.Error (List Entry))
     | InputEmail String
     | InputPassword String
