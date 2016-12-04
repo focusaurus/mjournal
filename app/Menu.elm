@@ -3,7 +3,7 @@ module Menu exposing (component)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onWithOptions)
-import Messages exposing (Msg, Msg(ToggleMenu), Msg(SignOut), Msg(SetTheme))
+import Messages exposing (Msg(ToggleMenu, SignOut, SetTheme))
 import Model exposing (Model, Theme)
 import Json.Decode as Json
 

@@ -1,15 +1,14 @@
-module Theme exposing (..)
-
-import Model exposing (Theme)
-import Messages exposing (Msg(SetThemeDone))
-import Json.Encode as JE
+module Put exposing (main)
 
 import Http
+import Json.Encode as JE
 
-set : Theme -> Cmd Msg
-set theme =
+type Msg = SetThemeDone (Result Http.Error ())
+
+main : String -> Cmd Msg
+main hey =
   let
-    body = JE.object [("theme", (JE.string theme.name))]
+    body = JE.object [("theme", (JE.string hey))]
     options =
     { method = "PUT"
     , headers = []

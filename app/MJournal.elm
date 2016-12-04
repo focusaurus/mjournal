@@ -53,7 +53,10 @@ update message model =
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
         SetTheme theme ->
-          ( { model | theme = theme }, Theme.set theme.name )
+          ( { model | theme = theme }, Theme.set theme )
+
+        SetThemeDone _ ->
+          ( model, Cmd.none )
         -- NoOp _ ->
         --     ( model, Cmd.none )
 

@@ -5,6 +5,6 @@ block append scripts
   script(src="/mjournal-elm.js?v=" + MJ_VERSION)
   script.
     var app = Elm.MJournal.embed(document.getElementById('elm-app-root'))
-    app.ports.set.subscribe(function setTheme (name) {
-      document.getElementById('theme').href = '/mjournal-' + name + '.css'
-    })
+    //- app.ports.set.subscribe(function setTheme (name) {
+    //-   document.getElementById('theme').href = '/mjournal-' + name + '.css'
+    //- })

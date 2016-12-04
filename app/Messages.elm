@@ -12,6 +12,7 @@ type Msg
     | InputEmail String
     | InputPassword String
     | SetTheme Theme
+    | SetThemeDone (Result Http.Error ())
     | SignIn
     | SignInDone (Result Http.Error String)
     | SignOut
