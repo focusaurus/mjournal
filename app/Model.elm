@@ -16,17 +16,9 @@ type alias Model =
     }
 
 
-initModel : Model
-initModel =
-    { entries = []
-    , direction = Nothing
-    , menuOpen = False
-    , pageSize = 50
-    , pageState = SignInPage
-    , signInEmail = "1@example.com"
-    , signInError = ""
-    , signInPassword = "password"
-    , theme = (Theme "moleskine")
+type alias Flags =
+    { id : Maybe Int
+    , theme : Maybe String
     }
 
 

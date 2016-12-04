@@ -7,11 +7,12 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import Menu
 import Messages exposing (Msg(..))
-import Model exposing (Model, initModel, Theme)
+import Model exposing (Model, Theme, Flags)
 import Pagination
 import SignIn
 import Theme
 import ThemeDom
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
@@ -53,12 +54,15 @@ update message model =
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
         SetTheme theme ->
-          ( { model | theme = theme }, Theme.set theme )
+            ( { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-          ( model, ThemeDom.setTheme model.theme.name )
-        -- NoOp _ ->
-        --     ( model, Cmd.none )
+            ( model, ThemeDom.setTheme model.theme.name )
+
+
+
+-- NoOp _ ->
+--     ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -91,10 +95,34 @@ view model =
                 ]
 
 
-main : Program Never Model Msg
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    let
+        mod =
+            { entries = []
+            , direction = Nothing
+            , menuOpen = False
+            , pageSize = 50
+            , pageState =
+                case flags.id of
+                    Just id ->
+                        Model.EntriesPage
+
+                    Nothing ->
+                        Model.SignInPage
+            , signInEmail = "1@example.com"
+            , signInError = ""
+            , signInPassword = "password"
+            , theme = Theme (Maybe.withDefault "moleskine" flags.theme)
+            }
+    in
+        ( mod, SignIn.signIn mod.signInEmail mod.signInPassword )
+
+
+main : Program Flags Model Msg
 main =
-    Html.program
-        { init = ( initModel, SignIn.signIn initModel.signInEmail initModel.signInPassword )
+    Html.programWithFlags
+        { init = init
         , view = view
         , update = update
         , subscriptions = (\model -> Sub.none)
