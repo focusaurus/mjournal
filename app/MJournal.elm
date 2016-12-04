@@ -10,6 +10,7 @@ import Messages exposing (Msg(..))
 import Model exposing (Model, initModel, Theme)
 import Pagination
 import SignIn
+import Theme
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,7 +53,7 @@ update message model =
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
         SetTheme theme ->
-          ( { model | theme = theme }, Cmd.none )
+          ( { model | theme = theme }, Theme.set theme.name )
         -- NoOp _ ->
         --     ( model, Cmd.none )
 
