@@ -11,7 +11,7 @@ import Model exposing (Model, initModel, Theme)
 import Pagination
 import SignIn
 import Theme
-
+import ThemeDom
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
@@ -56,7 +56,7 @@ update message model =
           ( { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-          ( model, Cmd.none )
+          ( model, ThemeDom.setTheme model.theme.name )
         -- NoOp _ ->
         --     ( model, Cmd.none )
 
