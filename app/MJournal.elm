@@ -51,9 +51,6 @@ update message model =
         CloseMenu ->
             ( { model | menuOpen = False }, Cmd.none )
 
-        CloseMenuDocument x ->
-            ( { model | menuOpen = False }, Cmd.none )
-
         ToggleMenu _ ->
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
@@ -125,7 +122,7 @@ init flags =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    clickDocument CloseMenuDocument
+    clickDocument (\x -> CloseMenu)
 
 
 main : Program Flags Model Msg
