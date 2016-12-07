@@ -14,8 +14,8 @@ import Theme
 
 userDecoder =
     (JD.map2 Model.User
-        ( JD.field "id" JD.int )
-        ( JD.field "theme" Theme.themeDecoder)
+        (JD.field "id" JD.int)
+        (JD.field "theme" Theme.themeDecoder)
     )
 
 
@@ -87,7 +87,7 @@ signInDiv model =
         , label [] [ text "email" ]
         , input
             [ type_ "email"
-            , placeholder "you@example.com"
+            , autofocus True
             , onInput InputEmail
             , onEnter SignIn
             ]
