@@ -39,16 +39,16 @@ tags entry =
                     [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
                     [ text "Add a tag" ]
                 ]
-            -- , node "auto-complete"
-            --     []
-            --     -- source "autoCompleteTags($query)", min-length "2" ]
-            --     [ div
-            --         [ class "autocomplete" ]
-            --         -- ng-hide", ng-show "suggestionList.visible" ]
-            --         [ ul
-            --             [ class "suggestion-list" ]
-            --             []
-            --         ]
-            --     ]
+              -- , node "auto-complete"
+              --     []
+              --     -- source "autoCompleteTags($query)", min-length "2" ]
+              --     [ div
+              --         [ class "autocomplete" ]
+              --         -- ng-hide", ng-show "suggestionList.visible" ]
+              --         [ ul
+              --             [ class "suggestion-list" ]
+              --             []
+              --         ]
+              --     ]
             ]
         ]

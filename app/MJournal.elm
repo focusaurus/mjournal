@@ -34,9 +34,10 @@ update message model =
                 , signInError = ""
                 , theme = user.theme
               }
-            -- TODO combine tasks here, set theme in DOM and getEntries
-            -- , ThemeDom.setTheme (Theme.toString user.theme)
-            , Entries.getEntries Nothing
+              -- TODO combine tasks here, set theme in DOM and getEntries
+              -- , ThemeDom.setTheme (Theme.toString user.theme)
+            , Cmd.batch [ (ThemeDom.setTheme (Theme.toString user.theme)), (Entries.getEntries Nothing) ]
+              -- , Entries.getEntries Nothing
             )
 
         SignInDone (Err error) ->

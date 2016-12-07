@@ -36,7 +36,9 @@ type alias User =
     }
 
 
-type Theme = Moleskine | Hoth
+type Theme
+    = Moleskine
+    | Hoth
 
 
 type PageState
