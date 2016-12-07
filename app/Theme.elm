@@ -6,6 +6,7 @@ import Json.Decode as JD
 import Messages exposing (Msg(SetThemeDone))
 import Model exposing (Theme(Moleskine, Hoth))
 
+
 toString : Theme -> String
 toString theme =
     case theme of
@@ -37,22 +38,19 @@ set theme =
     in
         Http.send SetThemeDone (Http.request options)
 
+
 parse : String -> Theme
 parse toDecode =
     let
-        valueDe =
-            JD.decodeString JD.string toDecode
+        lower =
+            String.toLower toDecode
     in
-        case valueDe of
-            Ok name ->
-                if (String.toLower name) == "hoth" then
-                    Hoth
-                else
-                    Moleskine
+        if lower == "hoth" then
+            Hoth
+        else
+            Moleskine
 
-            Err msg ->
-                Moleskine
 
 themeDecoder : JD.Decoder Theme
 themeDecoder =
-  JD.string |> JD.map parse
+    JD.string |> JD.map parse
