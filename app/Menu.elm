@@ -3,9 +3,10 @@ module Menu exposing (component)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onWithOptions)
-import Messages exposing (Msg(ToggleMenu, SignOut, SetTheme))
-import Model exposing (Model, Theme)
+import Messages exposing (Msg(ToggleMenu, SetTheme))
+import Model exposing (Model, Theme(Moleskine, Hoth))
 import Json.Decode as Json
+import Theme
 
 
 stopPropagation : Attribute Msg
@@ -21,16 +22,14 @@ themeLink : Theme -> Theme -> Html Msg
 themeLink current theme =
     a
         []
-        -- ng-click "setTheme(theme.name)"
         [ i
             [ onClick (SetTheme theme)
             , classList
-                [ ( "icon-checkmark2", not (current == theme) )
-                , ( "icon-checkmark", current == theme )
+                [ ( "icon-checkmark", current == theme )
+                , ( "icon-checkmark2", not (current == theme) )
                 ]
             ]
-            -- [ ng-class "{'icon-checkmark': theme.selected, 'icon-checkmark2': !theme.selected}", class "icon-checkmark2" ]
-            [ text ("Theme: " ++ theme.name) ]
+            [ text ("Theme: " ++ (Theme.toString theme)) ]
         ]
 
 
@@ -56,14 +55,13 @@ component model =
                     [ class "dropdown-menu" ]
                     --, role "menu" ]
                     [ a
-                        [ class "sign-out", onClick SignOut ]
-                        -- [ class "sign-out", href "/api/users/sign-out", target "_self" ]
+                        [ class "sign-out", href "/api/users/sign-out" ]
                         [ i
                             [ class "icon-exit" ]
                             [ text "Sign Out" ]
                         ]
-                    , themeLink model.theme (Theme "moleskine")
-                    , themeLink model.theme (Theme "hoth")
+                    , themeLink model.theme Moleskine
+                    , themeLink model.theme Hoth
                     , a
                         [ href "/docs", target "_self" ]
                         [ i

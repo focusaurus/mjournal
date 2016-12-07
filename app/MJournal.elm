@@ -27,20 +27,26 @@ update message model =
         SignIn ->
             ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
-        SignInDone (Ok x) ->
-            ( { model | pageState = Model.EntriesPage, signInError = "" }, Entries.getEntries Nothing )
+        SignInDone (Ok user) ->
+            -- ( { model | pageState = Model.EntriesPage, signInError = "", theme = user.theme }, Entries.getEntries Nothing )
+            ( { model
+                | pageState = Model.EntriesPage
+                , signInError = ""
+                , theme = user.theme
+              }
+            -- TODO combine tasks here, set theme in DOM and getEntries
+            -- , ThemeDom.setTheme (Theme.toString user.theme)
+            , Entries.getEntries Nothing
+            )
+
+        SignInDone (Err error) ->
+            SignIn.signInDone model error
 
         ClickNext ->
             ( { model | direction = Just Model.Next }, Entries.nextPage model )
 
         ClickPrevious ->
             ( { model | direction = Just Model.Previous }, Entries.previousPage model )
-
-        SignInDone (Err error) ->
-            SignIn.signInDone model error
-
-        SignOut ->
-            ( { model | pageState = Model.SignInPage, signInEmail = "", signInPassword = "" }, Cmd.none )
 
         GetEntriesDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
@@ -58,7 +64,7 @@ update message model =
             ( { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-            ( model, ThemeDom.setTheme model.theme.name )
+            ( model, ThemeDom.setTheme (Theme.toString model.theme) )
 
 
 
@@ -92,13 +98,20 @@ view model =
                         [ Entries.entriesList model
                         ]
                     ]
-                , button [ onClick SignOut ] [ text "Sign Out" ]
                 ]
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     let
+        theme =
+            case flags.theme of
+                Just name ->
+                    Theme.parse name
+
+                Nothing ->
+                    Model.Moleskine
+
         mod =
             { entries = []
             , direction = Nothing
@@ -114,10 +127,19 @@ init flags =
             , signInEmail = "1@example.com"
             , signInError = ""
             , signInPassword = "password"
-            , theme = Theme (Maybe.withDefault "moleskine" flags.theme)
+            , theme = theme
             }
+
+        cmd =
+            case flags.id of
+                Just id ->
+                    Entries.getEntries Nothing
+
+                Nothing ->
+                    Cmd.none
     in
-        ( mod, SignIn.signIn mod.signInEmail mod.signInPassword )
+        -- ( mod, SignIn.signIn mod.signInEmail mod.signInPassword )
+        ( mod, cmd )
 
 
 subscriptions : Model -> Sub Msg

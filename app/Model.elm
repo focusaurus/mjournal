@@ -30,9 +30,13 @@ type alias Entry =
     }
 
 
-type alias Theme =
-    { name : String
+type alias User =
+    { id : Int
+    , theme : Theme
     }
+
+
+type Theme = Moleskine | Hoth
 
 
 type PageState

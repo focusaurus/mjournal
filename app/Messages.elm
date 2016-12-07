@@ -1,19 +1,18 @@
 module Messages exposing (Msg(..))
 
 import Http
-import Model exposing (Entry, Theme)
+import Model
 
 
 type Msg
     = ClickNext
     | ClickPrevious
     | CloseMenu
-    | GetEntriesDone (Result Http.Error (List Entry))
+    | GetEntriesDone (Result Http.Error (List Model.Entry))
     | InputEmail String
     | InputPassword String
-    | SetTheme Theme
+    | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())
     | SignIn
-    | SignInDone (Result Http.Error String)
-    | SignOut
+    | SignInDone (Result Http.Error Model.User)
     | ToggleMenu String

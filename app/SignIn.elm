@@ -4,42 +4,51 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
 import Http
-import Json.Decode
-import Json.Encode
+import Json.Decode as JD
+import Json.Encode as JE
 import Messages exposing (Msg(..))
 import Model exposing (Model)
 import Regex
+import Theme
+
+
+userDecoder =
+    (JD.map2 Model.User
+        ( JD.field "id" JD.int )
+        ( JD.field "theme" Theme.themeDecoder)
+    )
+
 
 onEnter : Msg -> Attribute Msg
 onEnter msg =
     -- filter "keydown" events for return key (code 13)
     on "keydown" <|
-        Json.Decode.map
+        JD.map
             (always msg)
-            (keyCode |> Json.Decode.andThen is13)
+            (keyCode |> JD.andThen is13)
 
 
-is13 : Int -> Json.Decode.Decoder ()
+is13 : Int -> JD.Decoder ()
 is13 code =
     if code == 13 then
-        Json.Decode.succeed ()
+        JD.succeed ()
     else
-        Json.Decode.fail "not the right key code"
+        JD.fail "not the right key code"
 
 
 signIn : String -> String -> Cmd Msg
 signIn email password =
     let
         bodyValue =
-            Json.Encode.object
-                [ ( "email", Json.Encode.string email )
-                , ( "password", Json.Encode.string password )
+            JE.object
+                [ ( "email", JE.string email )
+                , ( "password", JE.string password )
                 ]
 
         body =
             Http.jsonBody (bodyValue)
     in
-        Http.send SignInDone (Http.post "/api/users/sign-in" body (Json.Decode.succeed "{}"))
+        Http.send SignInDone (Http.post "/api/users/sign-in" body userDecoder)
 
 
 canSignIn : Model -> Bool
@@ -49,6 +58,7 @@ canSignIn model =
           Regex.contains (Regex.regex ".@.") model.signInEmail
         , not (String.isEmpty model.signInPassword)
         ]
+
 
 signInDone : Model -> Http.Error -> ( Model, Cmd Msg )
 signInDone model error =
