@@ -11,6 +11,7 @@ type Msg
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | InputEmail String
     | InputPassword String
+    | SaveEntry Model.Entry String
     | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())
     | SignIn

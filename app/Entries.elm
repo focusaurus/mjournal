@@ -1,8 +1,9 @@
-module Entries exposing (entriesList, getEntries, nextPage, previousPage)
+module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody)
 
 import Date.Extra
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onInput)
 import Http
 import Json.Decode as JD
 import Json.Decode.Extra
@@ -73,6 +74,22 @@ entriesList model =
     div [] (List.map entryTag model.entries)
 
 
+newBody : Entry -> String -> Entry -> Entry
+newBody editedEntry newBody entry =
+    if entry.id == editedEntry.id then
+        { entry | body = newBody }
+    else
+        entry
+
+editBody : Model -> Entry -> String -> Model
+editBody model entry body =
+    let
+        newEntries =
+            List.map (newBody entry body) model.entries
+    in
+        { model | entries = newEntries }
+
+
 entryTag : Entry -> Html Msg
 entryTag entry =
     div [ class "entry" ]
@@ -80,6 +97,6 @@ entryTag entry =
             [ i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)" ] []
             , div [ class "created meta" ] [ text (Date.Extra.toFormattedString "MMM dd, yyyy hh:mm a" entry.created) ]
             ]
-        , p [ class "body", contenteditable True ] [ text entry.body ]
+        , p [ class "body", contenteditable True, onInput (SaveEntry entry) ] [ text entry.body ]
         , tags entry
         ]

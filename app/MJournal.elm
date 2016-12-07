@@ -67,10 +67,18 @@ update message model =
         SetThemeDone _ ->
             ( model, ThemeDom.setTheme (Theme.toString model.theme) )
 
+        SaveEntry entry body ->
+            ( Entries.editBody model entry body, Cmd.none )
+
 
 
 -- NoOp _ ->
 --     ( model, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    clickDocument (\x -> CloseMenu)
 
 
 view : Model -> Html Msg
@@ -102,8 +110,27 @@ view model =
                 ]
 
 
-init : Flags -> ( Model, Cmd Msg )
-init flags =
+
+-- Use this version for elm-reactor
+-- init: ( Model, Cmd Msg)
+-- init =
+--   let flags = Flags Nothing Nothing
+--   in
+--     initFlags flags
+--
+-- main : Program Never Model Msg
+-- main =
+--     Html.program
+--         { init = init
+--         , view = view
+--         , update = update
+--         , subscriptions = subscriptions
+--         }
+-- Use this version for regular deploys
+
+
+initFlags : Flags -> ( Model, Cmd Msg )
+initFlags flags =
     let
         theme =
             case flags.theme of
@@ -143,15 +170,10 @@ init flags =
         ( mod, cmd )
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    clickDocument (\x -> CloseMenu)
-
-
 main : Program Flags Model Msg
 main =
     Html.programWithFlags
-        { init = init
+        { init = initFlags
         , view = view
         , update = update
         , subscriptions = subscriptions
