@@ -12,6 +12,7 @@ import Regex
 import Theme
 
 
+userDecoder : JD.Decoder Model.User
 userDecoder =
     (JD.map2 Model.User
         (JD.field "id" JD.int)
@@ -36,8 +37,8 @@ is13 code =
         JD.fail "not the right key code"
 
 
-signIn : String -> String -> Cmd Msg
-signIn email password =
+signIn_ : String -> String -> String -> Cmd Msg
+signIn_ endPoint email password =
     let
         bodyValue =
             JE.object
@@ -47,8 +48,21 @@ signIn email password =
 
         body =
             Http.jsonBody (bodyValue)
+
+        url =
+            "/api/users/" ++ endPoint
     in
-        Http.send SignInDone (Http.post "/api/users/sign-in" body userDecoder)
+        Http.send SignInDone (Http.post url body userDecoder)
+
+
+signIn : String -> String -> Cmd Msg
+signIn email password =
+    signIn_ "sign-in" email password
+
+
+register : String -> String -> Cmd Msg
+register email password =
+    signIn_ "sign-up" email password
 
 
 canSignIn : Model -> Bool
@@ -107,6 +121,7 @@ signInDiv model =
             , class "register"
             , value "Register"
             , disabled (not (canSignIn model))
+            , onClick Register
             ]
             []
         ]

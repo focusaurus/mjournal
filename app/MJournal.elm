@@ -2,6 +2,7 @@ module MJournal exposing (main)
 
 import About exposing (about)
 import ClickDocument exposing (clickDocument)
+import Debug
 import Entries exposing (getEntries)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -34,14 +35,14 @@ update message model =
                 , signInError = ""
                 , theme = user.theme
               }
-              -- TODO combine tasks here, set theme in DOM and getEntries
-              -- , ThemeDom.setTheme (Theme.toString user.theme)
             , Cmd.batch [ (ThemeDom.setTheme (Theme.toString user.theme)), (Entries.getEntries Nothing) ]
-              -- , Entries.getEntries Nothing
             )
 
         SignInDone (Err error) ->
             SignIn.signInDone model error
+
+        Register ->
+            ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         ClickNext ->
             ( { model | direction = Just Model.Next }, Entries.nextPage model )
@@ -68,7 +69,14 @@ update message model =
             ( model, ThemeDom.setTheme (Theme.toString model.theme) )
 
         SaveEntry entry body ->
-            ( Entries.editBody model entry body, Cmd.none )
+            let
+                newModel =
+                    Entries.editBody model entry body
+
+                x =
+                    (Debug.log "saving" body)
+            in
+                ( newModel, Cmd.none )
 
 
 

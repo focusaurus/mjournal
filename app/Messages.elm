@@ -15,5 +15,6 @@ type Msg
     | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())
     | SignIn
+    | Register
     | SignInDone (Result Http.Error Model.User)
     | ToggleMenu String

@@ -88,7 +88,10 @@ app.use(session({
 app.use(function (req, res, next) {
   res.locals.user = req.user = req.session.user
   if (req.user) {
-    res.locals.sharify.data.user = _.pick(req.user, 'id', 'theme')
+    res.locals.sharify.data.user = {
+      id: req.user.id,
+      theme: req.user.theme || "moleskine"
+    }
   }
   next()
 })
