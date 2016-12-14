@@ -1,4 +1,4 @@
-module SignIn exposing (signInDiv, signIn, signInDone)
+module SignIn exposing (signInDiv, signIn, signInDone, register)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

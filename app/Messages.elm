@@ -2,7 +2,7 @@ module Messages exposing (Msg(..))
 
 import Http
 import Model
-
+import Html
 
 type Msg
     = ClickNext

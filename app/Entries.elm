@@ -3,7 +3,7 @@ module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBo
 import Date.Extra
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, on)
 import Http
 import Json.Decode as JD
 import Json.Decode.Extra
@@ -81,6 +81,7 @@ newBody editedEntry newBody entry =
     else
         entry
 
+
 editBody : Model -> Entry -> String -> Model
 editBody model entry body =
     let
@@ -90,6 +91,16 @@ editBody model entry body =
         { model | entries = newEntries }
 
 
+targetText : JD.Decoder String
+targetText =
+    (JD.at [ "target", "textContent" ] JD.string)
+
+
+onBlurEditable : (String -> msg) -> Attribute msg
+onBlurEditable msg =
+    on "blur" (JD.map msg targetText)
+
+
 entryTag : Entry -> Html Msg
 entryTag entry =
     div [ class "entry" ]
@@ -97,6 +108,6 @@ entryTag entry =
             [ i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)" ] []
             , div [ class "created meta" ] [ text (Date.Extra.toFormattedString "MMM dd, yyyy hh:mm a" entry.created) ]
             ]
-        , p [ class "body", contenteditable True, onInput (SaveEntry entry) ] [ text entry.body ]
+        , p [ class "body", contenteditable True, onBlurEditable (SaveEntry entry) ] [ text entry.body ]
         , tags entry
         ]

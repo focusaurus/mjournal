@@ -13,6 +13,7 @@ function respond (res) {
       return
     }
     const session = res.req.session
+    user.theme = user.theme || "moleskine"
     session.user = res.req.user = user
     session.save(function (error2) {
       if (error2) {

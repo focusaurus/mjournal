@@ -42,7 +42,7 @@ update message model =
             SignIn.signInDone model error
 
         Register ->
-            ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
+            ( { model | signInError = "" }, SignIn.register model.signInEmail model.signInPassword )
 
         ClickNext ->
             ( { model | direction = Just Model.Next }, Entries.nextPage model )
@@ -73,7 +73,7 @@ update message model =
                 newModel =
                     Entries.editBody model entry body
 
-                x =
+                _ =
                     (Debug.log "saving" body)
             in
                 ( newModel, Cmd.none )
