@@ -65,6 +65,13 @@ update message model =
         CreateEntryDone (Err message) ->
             ( model, Cmd.none )
 
+        DeleteEntry1 entry ->
+            let
+                newModel =
+                    Entries.delete1 model entry
+            in
+                ( newModel, Cmd.none )
+
         GetEntriesDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
 
@@ -90,9 +97,6 @@ update message model =
             let
                 newModel =
                     Entries.editBody model entry body
-
-                _ =
-                    (Debug.log "saving" body)
             in
                 ( newModel, Entries.saveBody entry body )
 

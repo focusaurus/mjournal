@@ -1,4 +1,4 @@
-module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry)
+module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry, delete1)
 
 import Http
 import Json.Decode as JD
@@ -7,6 +7,7 @@ import Json.Encode as JE
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
+
 
 getEntries : Maybe String -> Cmd Msg
 getEntries query =
@@ -60,11 +61,12 @@ decodeList =
 
 decode : JD.Decoder Entry
 decode =
-    (JD.map4 Entry
+    (JD.map5 Entry
         (JD.field "id" JD.int)
         (JD.field "body" JD.string)
         (JD.field "tags" (JD.list JD.string))
         (JD.field "created" Json.Decode.Extra.date)
+        (JD.succeed False)
     )
 
 
@@ -114,15 +116,30 @@ saveBody entry newBody =
 
 
 createEntry : String -> Cmd Msg
-createEntry body_ =
+createEntry body =
     let
         bodyValue =
-            JE.object [ ( "body", JE.string body_ ) ]
+            JE.object [ ( "body", JE.string body ) ]
 
-        body =
+        httpBody =
             Http.jsonBody (bodyValue)
     in
-        if body_ == "" then
+        if body == "" then
             Cmd.none
         else
-            Http.send CreateEntryDone (Http.post "/api/entries" body decode)
+            Http.send CreateEntryDone (Http.post "/api/entries" httpBody decode)
+
+
+setConfirmingDelete : Entry -> Entry -> Entry
+setConfirmingDelete target entry =
+        { entry | confirmingDelete = entry.id == target.id }
+
+
+delete1 : Model -> Entry -> Model
+delete1 model entry =
+    let
+        newEntries =
+            List.map (setConfirmingDelete entry) model.entries
+        _ = Debug.log "delete1" entry.id
+    in
+        { model | entries = newEntries }

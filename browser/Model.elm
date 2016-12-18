@@ -28,6 +28,7 @@ type alias Entry =
     , body : String
     , tags : List String
     , created : Date
+    , confirmingDelete: Bool
     }
 
 

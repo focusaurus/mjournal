@@ -19,7 +19,17 @@ entryTag : Entry -> Html Msg
 entryTag entry =
     div [ class "entry" ]
         [ div [ class "meta-row" ]
-            [ i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)" ] []
+            [ i
+                [ classList
+                    [ ( "delete-entry", True )
+                    , ( "meta", True )
+                    , ( "icon-bin2", not entry.confirmingDelete )
+                    , ( "icon-warning", entry.confirmingDelete )
+                    ]
+                , title "delete entry (click twice)"
+                , onClick (DeleteEntry1 entry)
+                ]
+                []
             , div [ class "created meta" ] [ text (Date.Extra.toFormattedString "MMM dd, yyyy hh:mm a" entry.created) ]
             ]
         , p
