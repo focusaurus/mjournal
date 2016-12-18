@@ -1,4 +1,4 @@
-module Theme exposing (..)
+port module Theme exposing (..)
 
 import Http
 import Json.Encode as JE
@@ -6,6 +6,8 @@ import Json.Decode as JD
 import Messages exposing (Msg(SetThemeDone))
 import Model exposing (Theme(Moleskine, Hoth))
 
+
+port setTheme : String -> Cmd msg
 
 toString : Theme -> String
 toString theme =

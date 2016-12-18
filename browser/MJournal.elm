@@ -6,14 +6,13 @@ import Entries
 import EntriesView
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick, keyCode, on)
+import Html.Events exposing (onClick)
 import Menu
 import Messages exposing (Msg(..))
 import Model exposing (Model, Theme, Flags)
 import Pagination
 import SignIn
 import Theme
-import ThemeDom
 
 port clickDocument : (Bool -> msg) -> Sub msg
 
@@ -35,7 +34,7 @@ update message model =
                 , signInError = ""
                 , theme = user.theme
               }
-            , Cmd.batch [ (ThemeDom.setTheme (Theme.toString user.theme)), (Entries.getEntries Nothing) ]
+            , Cmd.batch [ (Theme.setTheme (Theme.toString user.theme)), (Entries.getEntries Nothing) ]
             )
 
         SignInDone (Err error) ->
@@ -80,7 +79,7 @@ update message model =
             ( { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-            ( model, ThemeDom.setTheme (Theme.toString model.theme) )
+            ( model, Theme.setTheme (Theme.toString model.theme) )
 
         SaveEntry entry body ->
             let
