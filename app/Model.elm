@@ -5,6 +5,7 @@ import Date exposing (Date)
 
 type alias Model =
     { entries : List Entry
+    , newEntryBody : String
     , direction : Maybe Direction
     , menuOpen : Bool
     , pageSize : Int

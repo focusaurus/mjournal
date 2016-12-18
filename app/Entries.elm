@@ -142,15 +142,15 @@ entryTag entry =
         ]
 
 
-newEntry : Html Msg
-newEntry =
+newEntry : Model -> Html Msg
+newEntry model =
     div [ class "new-entry" ]
         [ label
             [ class "new" ]
             [ text "Type a new entry below. SHIFT-ENTER to save." ]
         , p
             [ class "body new", {- ng - keyup "create($event)", -} contenteditable True, onShiftEnter CreateEntry ]
-            []
+            [ text model.newEntryBody ]
           {- , tags
              - input
                  [ {-ng - model "newEntryTags", replace - spaces - with - dashes "false", ng - keyup "create($event)", ng - click "clickTag($event)",-} ]
@@ -196,4 +196,7 @@ createEntry body_ =
         body =
             Http.jsonBody (bodyValue)
     in
-        Http.send CreateEntryDone (Http.post "/api/entries" body entryDecoder)
+        if body_ == "" then
+            Cmd.none
+        else
+            Http.send CreateEntryDone (Http.post "/api/entries" body entryDecoder)

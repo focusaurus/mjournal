@@ -54,7 +54,12 @@ update message model =
             ( model, Entries.createEntry body )
 
         CreateEntryDone (Ok entry) ->
-            ( { model | entries = List.append model.entries [ entry ] }, Cmd.none )
+            ( { model
+                | entries = List.append model.entries [ entry ]
+                , newEntryBody = ""
+              }
+            , Cmd.none
+            )
 
         CreateEntryDone (Err message) ->
             ( model, Cmd.none )
@@ -126,7 +131,7 @@ view model =
                     [ Pagination.toolbar model
                     ]
                 , div [ class "notebook" ]
-                    [ Entries.newEntry
+                    [ Entries.newEntry model
                     , div [ class "page" ]
                         [ Entries.entriesList model
                         ]
@@ -167,6 +172,7 @@ initFlags flags =
         mod =
             { entries = []
             , direction = Nothing
+            , newEntryBody = ""
             , menuOpen = False
             , pageSize = 50
             , pageState =
