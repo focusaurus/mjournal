@@ -14,7 +14,7 @@ getEntries query =
         query_ =
             Maybe.withDefault "" query
     in
-        Http.send GetEntriesDone (Http.get ("/api/entries" ++ query_) entriesDecoder)
+        Http.send GetEntriesDone (Http.get ("/api/entries" ++ query_) decodeList)
 
 
 nextPage : Model -> Cmd Msg
@@ -53,13 +53,13 @@ previousPage model =
             getEntries (Just query)
 
 
-entriesDecoder : JD.Decoder (List Entry)
-entriesDecoder =
-    JD.list entryDecoder
+decodeList : JD.Decoder (List Entry)
+decodeList =
+    JD.list decode
 
 
-entryDecoder : JD.Decoder Entry
-entryDecoder =
+decode : JD.Decoder Entry
+decode =
     (JD.map4 Entry
         (JD.field "id" JD.int)
         (JD.field "body" JD.string)
@@ -125,4 +125,4 @@ createEntry body_ =
         if body_ == "" then
             Cmd.none
         else
-            Http.send CreateEntryDone (Http.post "/api/entries" body entryDecoder)
+            Http.send CreateEntryDone (Http.post "/api/entries" body decode)
