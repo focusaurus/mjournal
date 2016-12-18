@@ -14,7 +14,9 @@ import Pagination
 import SignIn
 import Theme
 
+
 port clickDocument : (Bool -> msg) -> Sub msg
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
@@ -80,6 +82,9 @@ update message model =
 
         SetThemeDone _ ->
             ( model, Theme.setTheme (Theme.toString model.theme) )
+
+        SetNewEntryBody newBody ->
+            ( { model | newEntryBody = newBody }, Cmd.none )
 
         SaveEntry entry body ->
             let

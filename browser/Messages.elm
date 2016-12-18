@@ -8,6 +8,7 @@ type Msg
     | ClickPrevious
     | CloseMenu
     | CreateEntry String
+    | SetNewEntryBody String
     | CreateEntryDone (Result Http.Error Model.Entry)
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | InputEmail String

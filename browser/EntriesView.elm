@@ -4,6 +4,7 @@ import Date.Extra
 import Events exposing (onBlurEditable, onShiftEnter)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
 import Tags exposing (tags)
@@ -39,7 +40,11 @@ new model =
             [ class "new" ]
             [ text "Type a new entry below. SHIFT-ENTER to save." ]
         , p
-            [ class "body new", {- ng - keyup "create($event)", -} contenteditable True, onShiftEnter CreateEntry ]
+            [ class "body new"
+            , {- ng - keyup "create($event)", -} contenteditable True
+            , onShiftEnter CreateEntry
+            , onBlurEditable SetNewEntryBody
+            ]
             [ text model.newEntryBody ]
           {- , tags
              - input
@@ -72,6 +77,6 @@ new model =
                  ]
           -}
         , button
-            [{- ng - click "create(true)" -}]
+            [ {- ng - click "create(true)" -} onClick (CreateEntry model.newEntryBody) ]
             [ text "Save" ]
         ]
