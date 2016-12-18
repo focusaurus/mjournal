@@ -1,4 +1,4 @@
-module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry, delete1, delete2)
+module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry, delete1, delete2, search)
 
 import Http
 import Json.Decode as JD
@@ -132,7 +132,7 @@ createEntry body =
 
 setConfirmingDelete : Entry -> Entry -> Entry
 setConfirmingDelete target entry =
-        { entry | confirmingDelete = entry.id == target.id }
+    { entry | confirmingDelete = entry.id == target.id }
 
 
 delete1 : Model -> Entry -> Model
@@ -140,14 +140,13 @@ delete1 model entry =
     let
         newEntries =
             List.map (setConfirmingDelete entry) model.entries
-        _ = Debug.log "delete1" entry.id
     in
         { model | entries = newEntries }
 
-delete2 : Entry  -> Cmd Msg
+
+delete2 : Entry -> Cmd Msg
 delete2 entry =
     let
-
         options =
             { method = "DELETE"
             , headers = []
@@ -159,3 +158,9 @@ delete2 entry =
             }
     in
         Http.send DeleteEntryDone (Http.request options)
+
+
+search : String -> Cmd Msg
+search query =
+    Http.send SearchDone <|
+        Http.get ("/api/entries?textSearch=" ++ query) decodeList

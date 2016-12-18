@@ -13,6 +13,7 @@ type alias Model =
     , signInEmail : String
     , signInError : String
     , signInPassword : String
+    , query : String
     , theme : Theme
     }
 

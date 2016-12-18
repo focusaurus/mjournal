@@ -68,9 +68,9 @@ update message model =
             case entry.confirmingDelete of
                 True ->
                     let
-                    newModel =
-                        { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries}
-                        in
+                        newModel =
+                            { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries }
+                    in
                         ( newModel, Entries.delete2 entry )
 
                 False ->
@@ -85,6 +85,7 @@ update message model =
 
         DeleteEntryDone (Err message) ->
             ( model, Cmd.none )
+
         GetEntriesDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
 
@@ -117,6 +118,18 @@ update message model =
             ( model, Cmd.none )
 
         SaveBodyDone (Err _) ->
+            ( model, Cmd.none )
+
+        SetQuery query ->
+            ( { model | query = query }, Cmd.none )
+
+        Search ->
+            ( model, Entries.search model.query )
+
+        SearchDone (Ok entries) ->
+            ( { model | entries = entries }, Cmd.none )
+
+        SearchDone (Err message) ->
             ( model, Cmd.none )
 
 
@@ -203,6 +216,7 @@ initFlags flags =
 
                     Nothing ->
                         Model.SignInPage
+            , query = ""
             , signInEmail = "1@example.com"
             , signInError = ""
             , signInPassword = "password"

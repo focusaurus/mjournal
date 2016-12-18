@@ -1,11 +1,11 @@
 module Pagination exposing (toolbar)
 
+import Events exposing (onEnter)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Messages exposing (Msg)
 import Model exposing (Model)
-
 
 enablePrevious : Model -> Bool
 enablePrevious model =
@@ -50,7 +50,12 @@ toolbar model =
         , span
             [ class "search" ]
             [ input
-                [ type_ "text", placeholder " search entries..." ]
+                [ type_ "text"
+                , placeholder " search entries..."
+                ,value model.query
+                , onInput Messages.SetQuery
+                , onEnter Messages.Search
+                 ]
                 -- ng - model "textSearch", ng - keypress "searchKeypress($event)"]
                 []
             , button

@@ -51,7 +51,7 @@ new model =
             [ text "Type a new entry below. SHIFT-ENTER to save." ]
         , p
             [ class "body new"
-            , {- ng - keyup "create($event)", -} contenteditable True
+            , contenteditable True
             , onShiftEnter CreateEntry
             , onBlurEditable SetNewEntryBody
             ]
@@ -87,6 +87,6 @@ new model =
                  ]
           -}
         , button
-            [ {- ng - click "create(true)" -} onClick (CreateEntry model.newEntryBody) ]
+            [ onClick (CreateEntry model.newEntryBody) ]
             [ text "Save" ]
         ]

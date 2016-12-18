@@ -19,6 +19,9 @@ type Msg
     | SaveBodyDone (Result Http.Error ())
     | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())
+    | SetQuery String
+    | Search
+    | SearchDone (Result Http.Error (List Model.Entry))
     | SignIn
     | Register
     | SignInDone (Result Http.Error Model.User)
