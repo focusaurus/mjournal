@@ -1,4 +1,4 @@
-module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry, delete1)
+module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry, delete1, delete2)
 
 import Http
 import Json.Decode as JD
@@ -143,3 +143,19 @@ delete1 model entry =
         _ = Debug.log "delete1" entry.id
     in
         { model | entries = newEntries }
+
+delete2 : Entry  -> Cmd Msg
+delete2 entry =
+    let
+
+        options =
+            { method = "DELETE"
+            , headers = []
+            , url = "/api/entries/" ++ toString entry.id
+            , body = Http.emptyBody
+            , expect = Http.expectJson (JD.succeed ())
+            , timeout = Nothing
+            , withCredentials = False
+            }
+    in
+        Http.send DeleteEntryDone (Http.request options)

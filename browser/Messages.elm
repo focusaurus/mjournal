@@ -9,6 +9,7 @@ type Msg
     | CloseMenu
     | CreateEntry String
     | DeleteEntry1 Model.Entry
+    | DeleteEntryDone (Result Http.Error ())
     | SetNewEntryBody String
     | CreateEntryDone (Result Http.Error Model.Entry)
     | GetEntriesDone (Result Http.Error (List Model.Entry))

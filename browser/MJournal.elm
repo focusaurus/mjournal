@@ -1,7 +1,6 @@
 port module MJournal exposing (main)
 
 import About exposing (about)
-import Debug
 import Entries
 import EntriesView
 import Html exposing (..)
@@ -66,12 +65,26 @@ update message model =
             ( model, Cmd.none )
 
         DeleteEntry1 entry ->
-            let
-                newModel =
-                    Entries.delete1 model entry
-            in
-                ( newModel, Cmd.none )
+            case entry.confirmingDelete of
+                True ->
+                    let
+                    newModel =
+                        { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries}
+                        in
+                        ( newModel, Entries.delete2 entry )
 
+                False ->
+                    let
+                        newModel =
+                            Entries.delete1 model entry
+                    in
+                        ( newModel, Cmd.none )
+
+        DeleteEntryDone (Ok ()) ->
+            ( model, Cmd.none )
+
+        DeleteEntryDone (Err message) ->
+            ( model, Cmd.none )
         GetEntriesDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
 
