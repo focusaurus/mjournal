@@ -117,7 +117,8 @@ view model =
                     [ Pagination.toolbar model
                     ]
                 , div [ class "notebook" ]
-                    [ div [ class "page" ]
+                    [ Entries.newEntry
+                    , div [ class "page" ]
                         [ Entries.entriesList model
                         ]
                     ]
