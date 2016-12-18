@@ -35,6 +35,12 @@ type alias User =
     , theme : Theme
     }
 
+--
+-- type alias KeyModified =
+--     { code : Int
+--     , shiftKey : Bool
+--     }
+
 
 type Theme
     = Moleskine

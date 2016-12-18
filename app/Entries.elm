@@ -1,13 +1,13 @@
 module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody, saveBody)
 
 import Date.Extra
+import Events exposing (onBlurEditable, onShiftEnter)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, on)
 import Http
 import Json.Decode as JD
-import Json.Encode as JE
 import Json.Decode.Extra
+import Json.Encode as JE
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
@@ -100,33 +100,24 @@ saveBody entry newBody =
                 [ ( "id", JE.int (.id entry) )
                 , ( "body", JE.string newBody )
                 ]
+
         body =
             Http.jsonBody (bodyValue)
 
         url =
             "/api/entries/" ++ toString (.id entry)
-        options = { method = "PUT"
-        , headers = []
-        , url = url
-        , body = body
-        , expect = Http.expectJson (JD.succeed ())
-        , timeout = Nothing
-        , withCredentials = False
-        }
 
+        options =
+            { method = "PUT"
+            , headers = []
+            , url = url
+            , body = body
+            , expect = Http.expectJson (JD.succeed ())
+            , timeout = Nothing
+            , withCredentials = False
+            }
     in
         Http.send SaveBodyDone (Http.request options)
-
-
-targetText : JD.Decoder String
-targetText =
-    (JD.at [ "target", "textContent" ] JD.string)
-
-
-onBlurEditable : (String -> msg) -> Attribute msg
-onBlurEditable msg =
-    on "blur" (JD.map msg targetText)
-
 
 entryTag : Entry -> Html Msg
 entryTag entry =
@@ -135,6 +126,12 @@ entryTag entry =
             [ i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)" ] []
             , div [ class "created meta" ] [ text (Date.Extra.toFormattedString "MMM dd, yyyy hh:mm a" entry.created) ]
             ]
-        , p [ class "body", contenteditable True, onBlurEditable (SaveEntry entry) ] [ text entry.body ]
+        , p
+            [ class "body"
+            , contenteditable True
+            , onBlurEditable (SaveEntry entry)
+            , onShiftEnter (SaveEntry entry)
+            ]
+            [ text entry.body ]
         , tags entry
         ]

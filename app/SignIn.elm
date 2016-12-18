@@ -3,6 +3,7 @@ module SignIn exposing (signInDiv, signIn, signInDone, register)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
+import Events exposing (onEnter)
 import Http
 import Json.Decode as JD
 import Json.Encode as JE
@@ -18,23 +19,6 @@ userDecoder =
         (JD.field "id" JD.int)
         (JD.field "theme" Theme.themeDecoder)
     )
-
-
-onEnter : Msg -> Attribute Msg
-onEnter msg =
-    -- filter "keydown" events for return key (code 13)
-    on "keydown" <|
-        JD.map
-            (always msg)
-            (keyCode |> JD.andThen is13)
-
-
-is13 : Int -> JD.Decoder ()
-is13 code =
-    if code == 13 then
-        JD.succeed ()
-    else
-        JD.fail "not the right key code"
 
 
 signIn_ : String -> String -> String -> Cmd Msg
