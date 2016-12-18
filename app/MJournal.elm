@@ -50,6 +50,15 @@ update message model =
         ClickPrevious ->
             ( { model | direction = Just Model.Previous }, Entries.previousPage model )
 
+        CreateEntry body ->
+            ( model, Entries.createEntry body )
+
+        CreateEntryDone (Ok entry) ->
+            ( { model | entries = List.append model.entries [ entry ] }, Cmd.none )
+
+        CreateEntryDone (Err message) ->
+            ( model, Cmd.none )
+
         GetEntriesDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
 

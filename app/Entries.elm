@@ -1,4 +1,4 @@
-module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody, saveBody, newEntry)
+module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody, saveBody, newEntry, createEntry)
 
 import Date.Extra
 import Events exposing (onBlurEditable, onShiftEnter)
@@ -61,13 +61,17 @@ previousPage model =
 
 entriesDecoder : JD.Decoder (List Entry)
 entriesDecoder =
-    JD.list
-        (JD.map4 Entry
-            (JD.field "id" JD.int)
-            (JD.field "body" JD.string)
-            (JD.field "tags" (JD.list JD.string))
-            (JD.field "created" Json.Decode.Extra.date)
-        )
+    JD.list entryDecoder
+
+
+entryDecoder : JD.Decoder Entry
+entryDecoder =
+    (JD.map4 Entry
+        (JD.field "id" JD.int)
+        (JD.field "body" JD.string)
+        (JD.field "tags" (JD.list JD.string))
+        (JD.field "created" Json.Decode.Extra.date)
+    )
 
 
 entriesList : Model -> Html Msg
@@ -145,7 +149,7 @@ newEntry =
             [ class "new" ]
             [ text "Type a new entry below. SHIFT-ENTER to save." ]
         , p
-            [ class "body new", {- ng - keyup "create($event)", -} contenteditable True ]
+            [ class "body new", {- ng - keyup "create($event)", -} contenteditable True, onShiftEnter CreateEntry ]
             []
           {- , tags
              - input
@@ -181,3 +185,15 @@ newEntry =
             [{- ng - click "create(true)" -}]
             [ text "Save" ]
         ]
+
+
+createEntry : String -> Cmd Msg
+createEntry body_ =
+    let
+        bodyValue =
+            JE.object [ ( "body", JE.string body_ ) ]
+
+        body =
+            Http.jsonBody (bodyValue)
+    in
+        Http.send CreateEntryDone (Http.post "/api/entries" body entryDecoder)

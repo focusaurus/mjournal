@@ -7,6 +7,8 @@ type Msg
     = ClickNext
     | ClickPrevious
     | CloseMenu
+    | CreateEntry String
+    | CreateEntryDone (Result Http.Error Model.Entry)
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | InputEmail String
     | InputPassword String
