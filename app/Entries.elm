@@ -1,4 +1,4 @@
-module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody)
+module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody, saveBody)
 
 import Date.Extra
 import Html exposing (..)
@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, on)
 import Http
 import Json.Decode as JD
+import Json.Encode as JE
 import Json.Decode.Extra
 import List.Extra
 import Messages exposing (Msg(..))
@@ -89,6 +90,32 @@ editBody model entry body =
             List.map (newBody entry body) model.entries
     in
         { model | entries = newEntries }
+
+
+saveBody : Entry -> String -> Cmd Msg
+saveBody entry newBody =
+    let
+        bodyValue =
+            JE.object
+                [ ( "id", JE.int (.id entry) )
+                , ( "body", JE.string newBody )
+                ]
+        body =
+            Http.jsonBody (bodyValue)
+
+        url =
+            "/api/entries/" ++ toString (.id entry)
+        options = { method = "PUT"
+        , headers = []
+        , url = url
+        , body = body
+        , expect = Http.expectJson (JD.succeed ())
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+    in
+        Http.send SaveBodyDone (Http.request options)
 
 
 targetText : JD.Decoder String

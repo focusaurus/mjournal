@@ -1,6 +1,6 @@
 .nyc_output
 .vagrant
-/app/A.elm
+/app/LearnA.elm
 /elm-stuff
 /local
 bower_components

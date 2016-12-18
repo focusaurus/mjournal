@@ -2,7 +2,6 @@ module Messages exposing (Msg(..))
 
 import Http
 import Model
-import Html
 
 type Msg
     = ClickNext
@@ -12,6 +11,7 @@ type Msg
     | InputEmail String
     | InputPassword String
     | SaveEntry Model.Entry String
+    | SaveBodyDone (Result Http.Error ())
     | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())
     | SignIn

@@ -76,7 +76,13 @@ update message model =
                 _ =
                     (Debug.log "saving" body)
             in
-                ( newModel, Cmd.none )
+                ( newModel, Entries.saveBody entry body )
+
+        SaveBodyDone (Ok _) ->
+            ( model, Cmd.none )
+
+        SaveBodyDone (Err _) ->
+            ( model, Cmd.none )
 
 
 
