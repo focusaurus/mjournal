@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 PATH=$(npm bin):$PATH
 if [[ $# -eq 0 ]]; then
   # Initial interactive launch. Start fswatch
-  fswatch -o app | xargs -n1 "$0"
+  fswatch -o browser | xargs -n1 "$0"
 else
-  elm-make --output wwwroot/mjournal-elm.js app/MJournal.elm
+  elm-make --output wwwroot/mjournal-elm.js browser/MJournal.elm
 fi
