@@ -1,9 +1,5 @@
-module Entries exposing (entriesList, getEntries, nextPage, previousPage, editBody, saveBody, newEntry, createEntry)
+module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry)
 
-import Date.Extra
-import Events exposing (onBlurEditable, onShiftEnter)
-import Html exposing (..)
-import Html.Attributes exposing (..)
 import Http
 import Json.Decode as JD
 import Json.Decode.Extra
@@ -11,8 +7,6 @@ import Json.Encode as JE
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
-import Tags exposing (tags)
-
 
 getEntries : Maybe String -> Cmd Msg
 getEntries query =
@@ -74,11 +68,6 @@ entryDecoder =
     )
 
 
-entriesList : Model -> Html Msg
-entriesList model =
-    div [] (List.map entryTag model.entries)
-
-
 newBody : Entry -> String -> Entry -> Entry
 newBody editedEntry newBody entry =
     if entry.id == editedEntry.id then
@@ -122,69 +111,6 @@ saveBody entry newBody =
             }
     in
         Http.send SaveBodyDone (Http.request options)
-
-
-entryTag : Entry -> Html Msg
-entryTag entry =
-    div [ class "entry" ]
-        [ div [ class "meta-row" ]
-            [ i [ class "delete-entry meta icon-bin2", title "delete entry (click twice)" ] []
-            , div [ class "created meta" ] [ text (Date.Extra.toFormattedString "MMM dd, yyyy hh:mm a" entry.created) ]
-            ]
-        , p
-            [ class "body"
-            , contenteditable True
-            , onBlurEditable (SaveEntry entry)
-            , onShiftEnter (SaveEntry entry)
-            ]
-            [ text entry.body ]
-        , tags entry
-        ]
-
-
-newEntry : Model -> Html Msg
-newEntry model =
-    div [ class "new-entry" ]
-        [ label
-            [ class "new" ]
-            [ text "Type a new entry below. SHIFT-ENTER to save." ]
-        , p
-            [ class "body new", {- ng - keyup "create($event)", -} contenteditable True, onShiftEnter CreateEntry ]
-            [ text model.newEntryBody ]
-          {- , tags
-             - input
-                 [ {-ng - model "newEntryTags", replace - spaces - with - dashes "false", ng - keyup "create($event)", ng - click "clickTag($event)",-} ]
-                 [ div
-                     [ class "host", tabindex "-1"]
-                     [ div
-                         [ class "tags", ng - class "{focused: hasFocus}" ]
-                         [ ul
-                             [ class "tag-list" ]
-                             []
-                         , input
-                             [ class "input ng-pristine ng-valid", placeholder "Add a tag", tabindex "", ng - model "newTag.text", ng - change "newTagChange()", ng - trim "false", ng - class "{'invalid-tag': newTag.invalid}", ti - autosize "", style "width: 69px;" ]
-                             []
-                         , span
-                             [ class "input", style "visibility: hidden; width: auto; white-space: pre; display: none;" ]
-                             [ text "Add a tag" ]
-                         ]
-                     , auto
-                         - complete
-                             [ source "autoCompleteTags($query)", min - length "2", class "ng-scope ng-isolate-scope" ]
-                             [ div
-                                 [ class "autocomplete ng-hide", ng - show "suggestionList.visible" ]
-                                 [ ul
-                                     [ class "suggestion-list" ]
-                                     []
-                                 ]
-                             ]
-                     ]
-                 ]
-          -}
-        , button
-            [{- ng - click "create(true)" -}]
-            [ text "Save" ]
-        ]
 
 
 createEntry : String -> Cmd Msg

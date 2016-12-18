@@ -2,7 +2,8 @@ port module MJournal exposing (main)
 
 import About exposing (about)
 import Debug
-import Entries exposing (getEntries)
+import Entries
+import EntriesView
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, keyCode, on)
@@ -29,7 +30,6 @@ update message model =
             ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         SignInDone (Ok user) ->
-            -- ( { model | pageState = Model.EntriesPage, signInError = "", theme = user.theme }, Entries.getEntries Nothing )
             ( { model
                 | pageState = Model.EntriesPage
                 , signInError = ""
@@ -131,9 +131,9 @@ view model =
                     [ Pagination.toolbar model
                     ]
                 , div [ class "notebook" ]
-                    [ Entries.newEntry model
+                    [ EntriesView.new model
                     , div [ class "page" ]
-                        [ Entries.entriesList model
+                        [ EntriesView.list model
                         ]
                     ]
                 ]
