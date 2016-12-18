@@ -1,7 +1,6 @@
-module MJournal exposing (main)
+port module MJournal exposing (main)
 
 import About exposing (about)
-import ClickDocument exposing (clickDocument)
 import Debug
 import Entries exposing (getEntries)
 import Html exposing (..)
@@ -15,6 +14,7 @@ import SignIn
 import Theme
 import ThemeDom
 
+port clickDocument : (Bool -> msg) -> Sub msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
