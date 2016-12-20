@@ -78,8 +78,7 @@ function whereText (run, next) {
   var textSearch = run.options.textSearch && run.options.textSearch.trim()
   if (textSearch) {
     run.dbOp.whereRaw(
-      /*eslint quotes:0*/
-      '"entries"."textSearch" @@ to_tsquery(?)',
+      '"entries"."textSearch" @@ to_tsquery(?)', // eslint-disable-line quotes
       [textSearch]
     )
   }
