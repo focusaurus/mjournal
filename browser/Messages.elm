@@ -22,6 +22,7 @@ type Msg
     | SetQuery String
     | Search
     | SearchDone (Result Http.Error (List Model.Entry))
+    | ClearSearch
     | SignIn
     | Register
     | SignInDone (Result Http.Error Model.User)

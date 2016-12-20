@@ -132,6 +132,9 @@ update message model =
         SearchDone (Err message) ->
             ( model, Cmd.none )
 
+        ClearSearch ->
+            ( { model | query = "" }, Cmd.none )
+
 
 
 -- NoOp _ ->

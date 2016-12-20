@@ -7,6 +7,7 @@ import Html.Events exposing (onClick, onInput)
 import Messages exposing (Msg)
 import Model exposing (Model)
 
+
 enablePrevious : Model -> Bool
 enablePrevious model =
     case model.direction of
@@ -52,20 +53,25 @@ toolbar model =
             [ input
                 [ type_ "text"
                 , placeholder " search entries..."
-                ,value model.query
+                , value model.query
                 , onInput Messages.SetQuery
                 , onEnter Messages.Search
-                 ]
+                ]
                 -- ng - model "textSearch", ng - keypress "searchKeypress($event)"]
                 []
             , button
-                [ class "clearTextSearch hidden" ]
-                -- ng - class "{hidden: !textSearch}", ng - click "clearTextSearch()"]
+                [ onClick Messages.ClearSearch
+                , class "clearTextSearch"
+                , classList
+                    [ ( "hidden"
+                      , String.length model.query == 0
+                      )
+                    ]
+                ]
                 [ text "clear" ]
             ]
         , button
             [ class "next", disabled (not (enableNext model)), onClick Messages.ClickNext ]
-            -- ng - click "next()", ng - disabled "disableNext"]
             [ span
                 [ class "fullText" ]
                 [ text "Next Entries" ]
