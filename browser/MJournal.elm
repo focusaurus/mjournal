@@ -1,14 +1,15 @@
 port module MJournal exposing (main)
 
-import About exposing (about)
-import Entries
-import EntriesView
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Navigation
+import About exposing (about)
+import Entries
+import EntriesView
 import Menu
 import Messages exposing (Msg(..))
-import Model exposing (Model, Theme, Flags)
+import Model exposing (Model, Theme, Flags, Screen(..))
 import Pagination
 import SignIn
 import Theme
@@ -30,13 +31,23 @@ update message model =
             ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         SignInDone (Ok user) ->
-            ( { model
-                | pageState = Model.EntriesPage
-                , signInError = ""
-                , theme = user.theme
-              }
-            , Cmd.batch [ (Theme.setTheme (Theme.toString user.theme)), (Entries.getEntries Nothing) ]
-            )
+            let
+                oldPageState =
+                    model.pageState
+
+                newPageState =
+                    { oldPageState | screen = Model.EntriesScreen }
+            in
+                ( { model
+                    | pageState = newPageState
+                    , signInError = ""
+                    , theme = user.theme
+                  }
+                , Cmd.batch
+                    [ (Theme.setTheme (Theme.toString user.theme))
+                    , (Entries.getEntries Nothing)
+                    ]
+                )
 
         SignInDone (Err error) ->
             SignIn.signInDone model error
@@ -44,12 +55,17 @@ update message model =
         Register ->
             ( { model | signInError = "" }, SignIn.register model.signInEmail model.signInPassword )
 
-        ClickNext ->
-            ( { model | direction = Just Model.Next }, Entries.nextPage model )
+        NextPage ->
+            Entries.nextPage model
 
-        ClickPrevious ->
-            ( { model | direction = Just Model.Previous }, Entries.previousPage model )
+        PreviousPage ->
+            Entries.previousPage model
 
+        -- NextPage ->
+        --     ( { model | direction = Just Model.Next }, Entries.nextPage model )
+        --
+        -- PreviousPage ->
+        --     ( { model | direction = Just Model.Previous }, Entries.previousPage model )
         CreateEntry body ->
             ( model, Entries.createEntry body )
 
@@ -120,11 +136,11 @@ update message model =
         SaveBodyDone (Err _) ->
             ( model, Cmd.none )
 
-        SetQuery query ->
-            ( { model | query = query }, Cmd.none )
+        SetTextSearch textSearch ->
+            Pagination.setTextSearch model textSearch
 
         Search ->
-            ( model, Entries.search model.query )
+            ( model, Entries.search model.pageState.textSearch )
 
         SearchDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
@@ -133,7 +149,10 @@ update message model =
             ( model, Cmd.none )
 
         ClearSearch ->
-            ( { model | query = "" }, Cmd.none )
+            Pagination.clearTextSearch model
+
+        UrlChange location ->
+            ( model, Cmd.none )
 
 
 
@@ -148,8 +167,8 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    case model.pageState of
-        Model.SignInPage ->
+    case model.pageState.screen of
+        Model.SignInScreen ->
             div [ onClick CloseMenu ]
                 [ h1 [ class "app-name" ] [ a [ href "/" ] [ text "mjournal" ] ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
@@ -157,7 +176,7 @@ view model =
                 , about
                 ]
 
-        Model.EntriesPage ->
+        Model.EntriesScreen ->
             div [ onClick CloseMenu ]
                 [ h1 [ class "app-name" ]
                     [ a [ href "/" ] [ text "mjournal" ]
@@ -195,8 +214,8 @@ view model =
 -- Use this version for regular deploys
 
 
-initFlags : Flags -> ( Model, Cmd Msg )
-initFlags flags =
+initFlags : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+initFlags flags location =
     let
         theme =
             case flags.theme of
@@ -208,18 +227,9 @@ initFlags flags =
 
         mod =
             { entries = []
-            , direction = Nothing
             , newEntryBody = ""
             , menuOpen = False
-            , pageSize = 50
-            , pageState =
-                case flags.id of
-                    Just id ->
-                        Model.EntriesPage
-
-                    Nothing ->
-                        Model.SignInPage
-            , query = ""
+            , pageState = Pagination.init flags
             , signInEmail = "1@example.com"
             , signInError = ""
             , signInPassword = "password"
@@ -240,7 +250,7 @@ initFlags flags =
 
 main : Program Flags Model Msg
 main =
-    Html.programWithFlags
+    Navigation.programWithFlags UrlChange
         { init = initFlags
         , view = view
         , update = update

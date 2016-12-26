@@ -2,28 +2,30 @@ module Messages exposing (Msg(..))
 
 import Http
 import Model
+import Navigation
 
 type Msg
-    = ClickNext
-    | ClickPrevious
+    = ClearSearch
     | CloseMenu
     | CreateEntry String
+    | CreateEntryDone (Result Http.Error Model.Entry)
     | DeleteEntry1 Model.Entry
     | DeleteEntryDone (Result Http.Error ())
-    | SetNewEntryBody String
-    | CreateEntryDone (Result Http.Error Model.Entry)
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | InputEmail String
     | InputPassword String
-    | SaveEntry Model.Entry String
+    | NextPage
+    | PreviousPage
+    | Register
     | SaveBodyDone (Result Http.Error ())
-    | SetTheme Model.Theme
-    | SetThemeDone (Result Http.Error ())
-    | SetQuery String
+    | SaveEntry Model.Entry String
     | Search
     | SearchDone (Result Http.Error (List Model.Entry))
-    | ClearSearch
+    | SetNewEntryBody String
+    | SetTextSearch String
+    | SetTheme Model.Theme
+    | SetThemeDone (Result Http.Error ())
     | SignIn
-    | Register
     | SignInDone (Result Http.Error Model.User)
     | ToggleMenu String
+    | UrlChange Navigation.Location

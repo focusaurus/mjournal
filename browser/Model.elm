@@ -6,15 +6,21 @@ import Date exposing (Date)
 type alias Model =
     { entries : List Entry
     , newEntryBody : String
-    , direction : Maybe Direction
     , menuOpen : Bool
-    , pageSize : Int
     , pageState : PageState
     , signInEmail : String
     , signInError : String
     , signInPassword : String
-    , query : String
     , theme : Theme
+    }
+
+
+type alias PageState =
+    { after : Maybe Entry
+    , before : Maybe Entry
+    , pageSize: Int
+    , screen : Screen
+    , textSearch : String
     }
 
 
@@ -29,7 +35,7 @@ type alias Entry =
     , body : String
     , tags : List String
     , created : Date
-    , confirmingDelete: Bool
+    , confirmingDelete : Bool
     }
 
 
@@ -38,23 +44,12 @@ type alias User =
     , theme : Theme
     }
 
---
--- type alias KeyModified =
---     { code : Int
---     , shiftKey : Bool
---     }
-
 
 type Theme
     = Moleskine
     | Hoth
 
 
-type PageState
-    = SignInPage
-    | EntriesPage
-
-
-type Direction
-    = Previous
-    | Next
+type Screen
+    = SignInScreen
+    | EntriesScreen

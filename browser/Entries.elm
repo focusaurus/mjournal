@@ -7,22 +7,23 @@ import Json.Encode as JE
 import List.Extra
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
+import Navigation
+import Pagination
 
-
-encode pair =
-    Http.encodeUri (Tuple.first pair) ++ "=" ++ Http.encodeUri (Tuple.second pair)
-
-
-toQuery pairs =
-    List.filterMap identity pairs
-        |> List.map encode
-        |> String.join "&"
-        |> (\q ->
-                if String.isEmpty q then
-                    ""
-                else
-                    "?" ++ q
-           )
+-- encode pair =
+--     Http.encodeUri (Tuple.first pair) ++ "=" ++ Http.encodeUri (Tuple.second pair)
+--
+--
+-- toQuery pairs =
+--     List.filterMap identity pairs
+--         |> List.map encode
+--         |> String.join "&"
+--         |> (\q ->
+--                 if String.isEmpty q then
+--                     ""
+--                 else
+--                     "?" ++ q
+--            )
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -34,51 +35,31 @@ getEntries query =
         Http.send GetEntriesDone (Http.get ("/api/entries" ++ query_) decodeList)
 
 
-nextPage : Model -> Cmd Msg
+nextPage : Model -> (Model, Cmd Msg)
 nextPage model =
     let
-        last =
-            List.Extra.last model.entries
-
-        after =
-            case last of
-                Just last ->
-                    Just ( "after", toString last.id )
-
-                Nothing ->
-                    Nothing
-
-        textSearch =
-            searchQuery model
+        old = model.pageState
+        new =  { old | before = Nothing, after = List.Extra.last model.entries}
+        newModel = { model | pageState = new}
     in
-        getEntries (Just (toQuery [ after, textSearch ]))
+        (newModel, getEntries (Just (Pagination.location newModel)))
 
-previousPage : Model -> Cmd Msg
+previousPage : Model -> (Model, Cmd Msg)
 previousPage model =
     let
-        first =
-            List.head model.entries
-
-        before =
-            case first of
-                Just first ->
-                    Just ( "before", toString first.id )
-
-                Nothing ->
-                    Nothing
-
-        textSearch =
-            searchQuery model
+        old = model.pageState
+        new = { old | before = List.head model.entries, after = Nothing }
+        newModel = { model | pageState = new }
     in
-        getEntries (Just (toQuery [ before, textSearch ]))
+        (newModel, getEntries (Just (Pagination.location newModel)))
 
 
-searchQuery : Model -> Maybe (String, String)
-searchQuery model =
-    if String.isEmpty model.query then
-        Nothing
-    else
-        Just ( "textSearch", model.query )
+-- searchQuery : Model -> Maybe (String, String)
+-- searchQuery model =
+--     if String.isEmpty model.query then
+--         Nothing
+--     else
+--         Just ( "textSearch", model.query )
 
 
 decodeList : JD.Decoder (List Entry)
@@ -191,3 +172,7 @@ search : String -> Cmd Msg
 search query =
     Http.send SearchDone <|
         Http.get ("/api/entries?textSearch=" ++ query) decodeList
+
+search2 : Model -> Cmd Msg
+search2 model =
+    Navigation.newUrl (Pagination.location model)
