@@ -13,11 +13,11 @@ set -o posix      # more strict failures in subshells
 IFS="$(printf "\n\t")"
 # ---- End unofficial bash strict mode boilerplate
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../browser"
 PATH=$(npm bin):$PATH
+elm-make --output ../wwwroot/mjournal-elm.js MJournal.elm
 if [[ $# -eq 0 ]]; then
   # Initial interactive launch. Start fswatch
-  fswatch -o browser | xargs -n1 "$0"
-else
-  elm-make --output wwwroot/mjournal-elm.js browser/MJournal.elm
+  echo Will rebuild when source code files change
+  fswatch -o . | xargs -n1 "../bin/$(basename $0)"
 fi

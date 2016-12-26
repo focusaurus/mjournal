@@ -9,6 +9,22 @@ import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
 
 
+encode pair =
+    Http.encodeUri (Tuple.first pair) ++ "=" ++ Http.encodeUri (Tuple.second pair)
+
+
+toQuery pairs =
+    List.filterMap identity pairs
+        |> List.map encode
+        |> String.join "&"
+        |> (\q ->
+                if String.isEmpty q then
+                    ""
+                else
+                    "?" ++ q
+           )
+
+
 getEntries : Maybe String -> Cmd Msg
 getEntries query =
     let
@@ -23,35 +39,46 @@ nextPage model =
     let
         last =
             List.Extra.last model.entries
+
+        after =
+            case last of
+                Just last ->
+                    Just ( "after", toString last.id )
+
+                Nothing ->
+                    Nothing
+
+        textSearch =
+            searchQuery model
     in
-        let
-            query =
-                case last of
-                    Just last ->
-                        "?after=" ++ toString (.id last)
-
-                    Nothing ->
-                        ""
-        in
-            getEntries (Just query)
-
+        getEntries (Just (toQuery [ after, textSearch ]))
 
 previousPage : Model -> Cmd Msg
 previousPage model =
     let
         first =
             List.head model.entries
-    in
-        let
-            query =
-                case first of
-                    Just first ->
-                        "?before=" ++ toString (.id first)
 
-                    Nothing ->
-                        ""
-        in
-            getEntries (Just query)
+        before =
+            case first of
+                Just first ->
+                    Just ( "before", toString first.id )
+
+                Nothing ->
+                    Nothing
+
+        textSearch =
+            searchQuery model
+    in
+        getEntries (Just (toQuery [ before, textSearch ]))
+
+
+searchQuery : Model -> Maybe (String, String)
+searchQuery model =
+    if String.isEmpty model.query then
+        Nothing
+    else
+        Just ( "textSearch", model.query )
 
 
 decodeList : JD.Decoder (List Entry)

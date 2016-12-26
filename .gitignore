@@ -1,7 +1,7 @@
 .nyc_output
 .vagrant
 /browser/LearnA.elm
-/elm-stuff
+/browser/elm-stuff/
 /local
 bower_components
 config.local.js*
