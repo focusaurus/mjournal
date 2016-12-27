@@ -10,6 +10,7 @@ module Entries
         , delete2
         , search
         , search2
+        , search3
         , clearTextSearch
         , setTextSearch
         )
@@ -40,8 +41,16 @@ nextPage model =
         old =
             model.pageState
 
+        after =
+            case List.Extra.last model.entries of
+                Nothing ->
+                    Nothing
+
+                Just last ->
+                    Just last.id
+
         new =
-            { old | before = Nothing, after = List.Extra.last model.entries }
+            { old | before = Nothing, after = after }
 
         newModel =
             { model | pageState = new }
@@ -50,10 +59,7 @@ nextPage model =
             location newModel
     in
         ( newModel
-        , Cmd.batch
-            [ getEntries (Just location_)
-            , Navigation.newUrl ("/elm" ++ location_)
-            ]
+        , Navigation.newUrl (newModel.pageState.pathname ++ location_)
         )
 
 
@@ -63,20 +69,28 @@ previousPage model =
         old =
             model.pageState
 
+        before =
+            case List.head model.entries of
+                Nothing ->
+                    Nothing
+
+                Just head ->
+                    Just head.id
+
         new =
-            { old | before = List.head model.entries, after = Nothing }
+            { old | before = before, after = Nothing }
 
         newModel =
             { model | pageState = new }
 
         location_ =
             location newModel
+
+        _ =
+            Debug.log "previous location" before
     in
         ( newModel
-        , Cmd.batch
-            [ getEntries (Just location_)
-            , Navigation.newUrl ("/elm" ++ location_)
-            ]
+        , Navigation.newUrl (newModel.pageState.pathname ++ location_)
         )
 
 
@@ -189,7 +203,7 @@ delete2 entry =
 search : String -> Cmd Msg
 search query =
     Http.send SearchDone <|
-        Http.get ("/api/entries?textSearch=" ++ query) decodeList
+        Http.get ("/api/entries" ++ query) decodeList
 
 
 search2 : Model -> ( Model, Cmd Msg )
@@ -207,9 +221,14 @@ search2 model =
         ( newModel
         , Cmd.batch
             [ search newModel.pageState.textSearch
-            , Navigation.newUrl ("/elm" ++ location newModel)
+            , Navigation.newUrl (newModel.pageState.pathname ++ location newModel)
             ]
         )
+
+
+search3 : Maybe String -> Maybe Int -> Maybe Int -> Cmd Msg
+search3 textSearch after before =
+    search (Location.apiQuery textSearch after before)
 
 
 clearTextSearch : Model -> ( Model, Cmd Msg )
@@ -226,7 +245,7 @@ clearTextSearch model =
     in
         ( newModel
         , Cmd.batch
-            [ Navigation.newUrl ("/elm" ++ location newModel)
+            [ Navigation.newUrl (newModel.pageState.pathname ++ location newModel)
             , getEntries Nothing
             ]
         )

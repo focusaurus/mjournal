@@ -1,30 +1,24 @@
 module Pagination exposing (toolbar, init)
 
+import Events exposing (onEnter)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Http
 import List
-import Events exposing (onEnter)
+-- import Location
 import Messages exposing (Msg)
 import Model exposing (Model)
 import Navigation
-import Location exposing (location)
 
-init : Model.Flags -> Model.PageState
-init flags =
-    { after = Nothing
-    , before = Nothing
-    , pageSize = 50
-    , textSearch = ""
-    , screen =
-        case flags.id of
-            Just id ->
-                Model.EntriesScreen
-
-            Nothing ->
-                Model.SignInScreen
-    }
+init : Model.Flags -> Navigation.Location -> Model.PageState
+init flags location =
+        { after = Nothing
+        , before = Nothing
+        , pageSize = 50
+        , pathname = location.pathname
+        , textSearch = ""
+        , screen = Model.SignInScreen
+        }
 
 
 enablePrevious : Model -> Bool

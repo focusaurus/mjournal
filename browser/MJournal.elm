@@ -1,15 +1,16 @@
 port module MJournal exposing (main)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
-import Navigation
 import About exposing (about)
 import Entries
 import EntriesView
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+import Location
 import Menu
 import Messages exposing (Msg(..))
 import Model exposing (Model, Theme, Flags, Screen(..))
+import Navigation
 import Pagination
 import SignIn
 import Theme
@@ -36,7 +37,7 @@ update message model =
                     model.pageState
 
                 newPageState =
-                    { oldPageState | screen = Model.EntriesScreen }
+                    { oldPageState | screen = Model.EntriesScreen Nothing Nothing Nothing }
             in
                 ( { model
                     | pageState = newPageState
@@ -140,7 +141,18 @@ update message model =
             Entries.setTextSearch model textSearch
 
         Search ->
-            Entries.search2 model
+            let
+                oldPageState =
+                    model.pageState
+
+                newPageState =
+                    { oldPageState | after = Nothing, before = Nothing }
+
+                newModel =
+                    { model | pageState = newPageState }
+            in
+                ( newModel, Navigation.newUrl (Location.location newModel) )
+
         SearchDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
 
@@ -151,7 +163,22 @@ update message model =
             Entries.clearTextSearch model
 
         ChangeUrl location ->
-            ( model, Cmd.none )
+            let
+                newModel =
+                    { model | pageState = Location.parse2 model.pageState location }
+
+                _ =
+                    Debug.log "ChangeUrl newModel" newModel.pageState.textSearch
+
+                cmd =
+                    case newModel.pageState.screen of
+                        Model.EntriesScreen textSearch after before ->
+                            Entries.search3 textSearch after before
+
+                        Model.SignInScreen ->
+                            Cmd.none
+            in
+                ( newModel, cmd )
 
 
 
@@ -175,7 +202,7 @@ view model =
                 , about
                 ]
 
-        Model.EntriesScreen ->
+        Model.EntriesScreen textSearch after before ->
             div [ onClick CloseMenu ]
                 [ h1 [ class "app-name" ]
                     [ a [ href "/" ] [ text "mjournal" ]
@@ -213,6 +240,35 @@ view model =
 -- Use this version for regular deploys
 
 
+route : Model -> Navigation.Location -> ( Model, Cmd Msg )
+route model location =
+    let
+        oldPageState =
+            model.pageState
+
+        screen =
+            Location.parse location
+
+        newPageState =
+            { oldPageState | screen = screen }
+
+        newModel =
+            { model | pageState = newPageState }
+
+        _ =
+            Debug.log "route screen" screen
+
+        cmd =
+            case screen of
+                Model.EntriesScreen textSearch after before ->
+                    Entries.search3 textSearch after before
+
+                Model.SignInScreen ->
+                    Cmd.none
+    in
+        ( newModel, cmd )
+
+
 initFlags : Flags -> Navigation.Location -> ( Model, Cmd Msg )
 initFlags flags location =
     let
@@ -224,27 +280,31 @@ initFlags flags location =
                 Nothing ->
                     Model.Moleskine
 
-        mod =
+        pageState =
+            Location.parse2 (Pagination.init flags location) location
+
+        model =
             { entries = []
             , newEntryBody = ""
             , menuOpen = False
-            , pageState = Pagination.init flags
+            , pageState = pageState
             , signInEmail = "1@example.com"
             , signInError = ""
             , signInPassword = "password"
             , theme = theme
             }
 
-        cmd =
-            case flags.id of
-                Just id ->
-                    Entries.getEntries Nothing
-
-                Nothing ->
-                    Cmd.none
+        -- cmd =
+        --     case flags.id of
+        --         Just id ->
+        --             Entries.search3 mod.pageState.screen
+        --
+        --         Nothing ->
+        --             Cmd.none
     in
         -- ( mod, SignIn.signIn mod.signInEmail mod.signInPassword )
-        ( mod, cmd )
+        -- ( mod, cmd )
+        route model location
 
 
 main : Program Flags Model Msg

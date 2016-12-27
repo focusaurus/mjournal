@@ -16,9 +16,10 @@ type alias Model =
 
 
 type alias PageState =
-    { after : Maybe Entry
-    , before : Maybe Entry
+    { after : Maybe Int
+    , before : Maybe Int
     , pageSize: Int
+    , pathname: String
     , screen : Screen
     , textSearch : String
     }
@@ -52,4 +53,4 @@ type Theme
 
 type Screen
     = SignInScreen
-    | EntriesScreen
+    | EntriesScreen (Maybe String) (Maybe Int) (Maybe Int)
