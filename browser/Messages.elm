@@ -5,7 +5,7 @@ import Model
 import Navigation
 
 type Msg
-    = ClearSearch
+    = ClearTextSearch
     | CloseMenu
     | CreateEntry String
     | CreateEntryDone (Result Http.Error Model.Entry)
@@ -28,4 +28,4 @@ type Msg
     | SignIn
     | SignInDone (Result Http.Error Model.User)
     | ToggleMenu String
-    | UrlChange Navigation.Location
+    | ChangeUrl Navigation.Location

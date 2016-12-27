@@ -137,21 +137,20 @@ update message model =
             ( model, Cmd.none )
 
         SetTextSearch textSearch ->
-            Pagination.setTextSearch model textSearch
+            Entries.setTextSearch model textSearch
 
         Search ->
-            ( model, Entries.search model.pageState.textSearch )
-
+            Entries.search2 model
         SearchDone (Ok entries) ->
             ( { model | entries = entries }, Cmd.none )
 
         SearchDone (Err message) ->
             ( model, Cmd.none )
 
-        ClearSearch ->
-            Pagination.clearTextSearch model
+        ClearTextSearch ->
+            Entries.clearTextSearch model
 
-        UrlChange location ->
+        ChangeUrl location ->
             ( model, Cmd.none )
 
 
@@ -250,7 +249,7 @@ initFlags flags location =
 
 main : Program Flags Model Msg
 main =
-    Navigation.programWithFlags UrlChange
+    Navigation.programWithFlags ChangeUrl
         { init = initFlags
         , view = view
         , update = update

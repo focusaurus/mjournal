@@ -1,29 +1,28 @@
-module Entries exposing (getEntries, nextPage, previousPage, editBody, saveBody, createEntry, delete1, delete2, search)
+module Entries
+    exposing
+        ( getEntries
+        , nextPage
+        , previousPage
+        , editBody
+        , saveBody
+        , createEntry
+        , delete1
+        , delete2
+        , search
+        , search2
+        , clearTextSearch
+        , setTextSearch
+        )
 
 import Http
 import Json.Decode as JD
 import Json.Decode.Extra
 import Json.Encode as JE
 import List.Extra
+import Location exposing (location)
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
 import Navigation
-import Pagination
-
--- encode pair =
---     Http.encodeUri (Tuple.first pair) ++ "=" ++ Http.encodeUri (Tuple.second pair)
---
---
--- toQuery pairs =
---     List.filterMap identity pairs
---         |> List.map encode
---         |> String.join "&"
---         |> (\q ->
---                 if String.isEmpty q then
---                     ""
---                 else
---                     "?" ++ q
---            )
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -35,31 +34,50 @@ getEntries query =
         Http.send GetEntriesDone (Http.get ("/api/entries" ++ query_) decodeList)
 
 
-nextPage : Model -> (Model, Cmd Msg)
+nextPage : Model -> ( Model, Cmd Msg )
 nextPage model =
     let
-        old = model.pageState
-        new =  { old | before = Nothing, after = List.Extra.last model.entries}
-        newModel = { model | pageState = new}
-    in
-        (newModel, getEntries (Just (Pagination.location newModel)))
+        old =
+            model.pageState
 
-previousPage : Model -> (Model, Cmd Msg)
+        new =
+            { old | before = Nothing, after = List.Extra.last model.entries }
+
+        newModel =
+            { model | pageState = new }
+
+        location_ =
+            location newModel
+    in
+        ( newModel
+        , Cmd.batch
+            [ getEntries (Just location_)
+            , Navigation.newUrl ("/elm" ++ location_)
+            ]
+        )
+
+
+previousPage : Model -> ( Model, Cmd Msg )
 previousPage model =
     let
-        old = model.pageState
-        new = { old | before = List.head model.entries, after = Nothing }
-        newModel = { model | pageState = new }
+        old =
+            model.pageState
+
+        new =
+            { old | before = List.head model.entries, after = Nothing }
+
+        newModel =
+            { model | pageState = new }
+
+        location_ =
+            location newModel
     in
-        (newModel, getEntries (Just (Pagination.location newModel)))
-
-
--- searchQuery : Model -> Maybe (String, String)
--- searchQuery model =
---     if String.isEmpty model.query then
---         Nothing
---     else
---         Just ( "textSearch", model.query )
+        ( newModel
+        , Cmd.batch
+            [ getEntries (Just location_)
+            , Navigation.newUrl ("/elm" ++ location_)
+            ]
+        )
 
 
 decodeList : JD.Decoder (List Entry)
@@ -173,6 +191,57 @@ search query =
     Http.send SearchDone <|
         Http.get ("/api/entries?textSearch=" ++ query) decodeList
 
-search2 : Model -> Cmd Msg
+
+search2 : Model -> ( Model, Cmd Msg )
 search2 model =
-    Navigation.newUrl (Pagination.location model)
+    let
+        oldPageState =
+            model.pageState
+
+        newPageState =
+            { oldPageState | after = Nothing, before = Nothing }
+
+        newModel =
+            { model | pageState = newPageState }
+    in
+        ( newModel
+        , Cmd.batch
+            [ search newModel.pageState.textSearch
+            , Navigation.newUrl ("/elm" ++ location newModel)
+            ]
+        )
+
+
+clearTextSearch : Model -> ( Model, Cmd Msg )
+clearTextSearch model =
+    let
+        pageState =
+            model.pageState
+
+        newPageState =
+            { pageState | textSearch = "", after = Nothing, before = Nothing }
+
+        newModel =
+            { model | pageState = newPageState }
+    in
+        ( newModel
+        , Cmd.batch
+            [ Navigation.newUrl ("/elm" ++ location newModel)
+            , getEntries Nothing
+            ]
+        )
+
+
+setTextSearch : Model -> String -> ( Model, Cmd Msg )
+setTextSearch model textSearch =
+    let
+        pageState =
+            model.pageState
+
+        newPageState =
+            { pageState | textSearch = textSearch }
+
+        newModel =
+            { model | pageState = newPageState }
+    in
+        ( newModel, Cmd.none )

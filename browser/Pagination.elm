@@ -1,4 +1,4 @@
-module Pagination exposing (toolbar, location, init, clearTextSearch, setTextSearch)
+module Pagination exposing (toolbar, init)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,7 +8,8 @@ import List
 import Events exposing (onEnter)
 import Messages exposing (Msg)
 import Model exposing (Model)
-
+import Navigation
+import Location exposing (location)
 
 init : Model.Flags -> Model.PageState
 init flags =
@@ -24,88 +25,6 @@ init flags =
             Nothing ->
                 Model.SignInScreen
     }
-
-
-clearTextSearch model =
-    let
-        pageState =
-            model.pageState
-
-        newPageState =
-            { pageState | textSearch = "" }
-
-        newModel =
-            { model | pageState = newPageState }
-    in
-        ( newModel, Cmd.none )
-
-
-
--- TODO change location
-
-
-setTextSearch model textSearch =
-    let
-        pageState =
-            model.pageState
-
-        newPageState =
-            { pageState | textSearch = textSearch }
-
-        newModel =
-            { model | pageState = newPageState }
-    in
-        ( newModel, Cmd.none )
-
-
-
--- TODO change location
-
-
-encode : ( String, String ) -> String
-encode pair =
-    Http.encodeUri (Tuple.first pair) ++ "=" ++ Http.encodeUri (Tuple.second pair)
-
-
-toQuery : List (Maybe ( String, String )) -> String
-toQuery pairs =
-    List.filterMap identity pairs
-        |> List.map encode
-        |> String.join "&"
-        |> (\q ->
-                if String.isEmpty q then
-                    ""
-                else
-                    "?" ++ q
-           )
-
-
-location : Model -> String
-location model =
-    let
-        after =
-            case model.pageState.after of
-                Just after ->
-                    Just ( "after", toString after.id )
-
-                Nothing ->
-                    Nothing
-
-        before =
-            case model.pageState.before of
-                Just before ->
-                    Just ( "before", toString before.id )
-
-                Nothing ->
-                    Nothing
-
-        textSearch =
-            if String.isEmpty model.pageState.textSearch then
-                Nothing
-            else
-                Just ( "textSearch", model.pageState.textSearch )
-    in
-        toQuery [ after, before, textSearch ]
 
 
 enablePrevious : Model -> Bool
@@ -193,7 +112,7 @@ toolbar model =
                 -- ng - model "textSearch", ng - keypress "searchKeypress($event)"]
                 []
             , button
-                [ onClick Messages.ClearSearch
+                [ onClick Messages.ClearTextSearch
                 , class "clearTextSearch"
                 , classList
                     [ ( "hidden"
