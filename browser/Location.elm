@@ -1,4 +1,4 @@
-module Location exposing (location, route, parse, parse2, apiQuery)
+module Location exposing (location, route, parse, apiQuery)
 
 import Http
 import Model
@@ -15,13 +15,8 @@ route =
         ]
 
 
-parse : Navigation.Location -> Model.Screen
-parse location =
-    Maybe.withDefault Model.SignInScreen (Url.parsePath route location)
-
-
-parse2 : Model.PageState -> Navigation.Location -> Model.PageState
-parse2 pageState location =
+parse : Model.PageState -> Navigation.Location -> Model.PageState
+parse pageState location =
     let
         screen =
             Maybe.withDefault pageState.screen (Url.parsePath route location)

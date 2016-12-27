@@ -163,27 +163,7 @@ update message model =
             Entries.clearTextSearch model
 
         ChangeUrl location ->
-            let
-                newModel =
-                    { model | pageState = Location.parse2 model.pageState location }
-
-                _ =
-                    Debug.log "ChangeUrl newModel" newModel.pageState.textSearch
-
-                cmd =
-                    case newModel.pageState.screen of
-                        Model.EntriesScreen textSearch after before ->
-                            Entries.search3 textSearch after before
-
-                        Model.SignInScreen ->
-                            Cmd.none
-            in
-                ( newModel, cmd )
-
-
-
--- NoOp _ ->
---     ( model, Cmd.none )
+            route model location
 
 
 subscriptions : Model -> Sub Msg
@@ -243,25 +223,13 @@ view model =
 route : Model -> Navigation.Location -> ( Model, Cmd Msg )
 route model location =
     let
-        oldPageState =
-            model.pageState
-
-        screen =
-            Location.parse location
-
-        newPageState =
-            { oldPageState | screen = screen }
-
         newModel =
-            { model | pageState = newPageState }
-
-        _ =
-            Debug.log "route screen" screen
+            { model | pageState = Location.parse model.pageState location }
 
         cmd =
-            case screen of
+            case newModel.pageState.screen of
                 Model.EntriesScreen textSearch after before ->
-                    Entries.search3 textSearch after before
+                    Entries.search textSearch after before
 
                 Model.SignInScreen ->
                     Cmd.none
@@ -281,7 +249,7 @@ initFlags flags location =
                     Model.Moleskine
 
         pageState =
-            Location.parse2 (Pagination.init flags location) location
+            Location.parse (Pagination.init flags location) location
 
         model =
             { entries = []
@@ -294,16 +262,7 @@ initFlags flags location =
             , theme = theme
             }
 
-        -- cmd =
-        --     case flags.id of
-        --         Just id ->
-        --             Entries.search3 mod.pageState.screen
-        --
-        --         Nothing ->
-        --             Cmd.none
     in
-        -- ( mod, SignIn.signIn mod.signInEmail mod.signInPassword )
-        -- ( mod, cmd )
         route model location
 
 

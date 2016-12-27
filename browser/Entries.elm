@@ -9,8 +9,6 @@ module Entries
         , delete1
         , delete2
         , search
-        , search2
-        , search3
         , clearTextSearch
         , setTextSearch
         )
@@ -200,35 +198,15 @@ delete2 entry =
         Http.send DeleteEntryDone (Http.request options)
 
 
-search : String -> Cmd Msg
-search query =
+search_ : String -> Cmd Msg
+search_ query =
     Http.send SearchDone <|
         Http.get ("/api/entries" ++ query) decodeList
 
 
-search2 : Model -> ( Model, Cmd Msg )
-search2 model =
-    let
-        oldPageState =
-            model.pageState
-
-        newPageState =
-            { oldPageState | after = Nothing, before = Nothing }
-
-        newModel =
-            { model | pageState = newPageState }
-    in
-        ( newModel
-        , Cmd.batch
-            [ search newModel.pageState.textSearch
-            , Navigation.newUrl (newModel.pageState.pathname ++ location newModel)
-            ]
-        )
-
-
-search3 : Maybe String -> Maybe Int -> Maybe Int -> Cmd Msg
-search3 textSearch after before =
-    search (Location.apiQuery textSearch after before)
+search : Maybe String -> Maybe Int -> Maybe Int -> Cmd Msg
+search textSearch after before =
+    search_ (Location.apiQuery textSearch after before)
 
 
 clearTextSearch : Model -> ( Model, Cmd Msg )
