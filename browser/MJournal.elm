@@ -177,6 +177,14 @@ update message model =
         SaveTagsDone (Err _) ->
             ( model, Cmd.none )
 
+        DeleteTag entry tag ->
+            Entries.deleteTag model entry tag
+
+        DeleteTagDone (Ok _) ->
+            ( model, Cmd.none )
+
+        DeleteTagDone (Err _) ->
+            ( model, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

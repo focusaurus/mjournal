@@ -5,6 +5,7 @@ module Entries
         , createEntry
         , delete1
         , delete2
+        , deleteTag
         , editBody
         , editNewTag
         , getEntries
@@ -145,9 +146,17 @@ addTag model entry =
                 | newTag = ""
                 , tags = List.append entry.tags [ entry.newTag ]
             }
+    in
+        ( swapById model newEntry, saveTags newEntry )
 
-        _ =
-            Debug.log "addTag" newEntry.tags
+
+deleteTag : Model -> Entry -> String -> ( Model, Cmd Msg )
+deleteTag model entry tag =
+    let
+        newEntry =
+            { entry
+                | tags = List.filter (\t -> not (t == tag)) entry.tags
+            }
     in
         ( swapById model newEntry, saveTags newEntry )
 

@@ -3,13 +3,14 @@ module Tags exposing (tags)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import List
-import Messages exposing (Msg, Msg(AddTag), Msg(InputNewTag))
+import Messages
 import Model exposing (Entry)
 import Events exposing (onEnter)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onClick)
 
-tagItem : String -> Html Msg
-tagItem tag =
+
+tagItem : Entry -> String -> Html Messages.Msg
+tagItem entry tag =
     li
         [ class "tag-item" ]
         --, ng-repeat "tag in tagList.items track by track(tag)", ng-class "{ selected: tag == tagList.selected }" ]
@@ -17,13 +18,14 @@ tagItem tag =
             []
             [ text tag ]
         , a
-            [ class "remove-button" ]
-            --, ng-click "tagList.remove($index)" ]
+            [ class "remove-button"
+            , onClick (Messages.DeleteTag entry tag)
+            ]
             [ text "×" ]
         ]
 
 
-tags : Entry -> Html Msg
+tags : Entry -> Html Messages.Msg
 tags entry =
     node "tags-input"
         [ class " meta" ]
@@ -32,14 +34,14 @@ tags entry =
             [ div [ class "tags" ]
                 [ ul
                     [ class "tag-list" ]
-                    (List.map tagItem entry.tags)
+                    (List.map (tagItem entry) entry.tags)
                 , input
                     [ class "input ti-autosize"
                     , placeholder "Add a tag"
                     , tabindex 0
                     , style [ ( "width", "69px" ) ]
-                    , onEnter (AddTag entry)
-                    , onInput (InputNewTag entry)
+                    , onEnter (Messages.AddTag entry)
+                    , onInput (Messages.InputNewTag entry)
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
                     []
