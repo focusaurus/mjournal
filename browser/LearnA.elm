@@ -4,10 +4,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, onInput)
 import Json.Decode as JD
-
+import Events exposing (onEnter)
 
 type Msg
-    = ValueKeyCode String Int
+    = AddTag
     | NewTagInput String
 
 
@@ -30,20 +30,13 @@ onDown tagger =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        ValueKeyCode value keyCode ->
-            let
-                _ =
-                    Debug.log "ValueKeyCode" value ++ ": " ++ toString keyCode
-            in
-                if keyCode == 13 {- ENTER -} then
-                    ( { model
-                        | tags = List.append model.tags [ value ]
-                        , newTag = ""
-                      }
-                    , Cmd.none
-                    )
-                else
-                    ( { model | newTag = value }, Cmd.none )
+        AddTag ->
+            ( { model
+                | tags = List.append model.tags [ model.newTag ]
+                , newTag = ""
+              }
+            , Cmd.none
+            )
 
         NewTagInput newTag ->
             ( { model | newTag = newTag }, Cmd.none )
@@ -63,8 +56,8 @@ view model =
     div []
         [ h1 [] [ text "Learn Elm A" ]
         , input
-            [ onDown ValueKeyCode
-            -- , onInput NewTagInput
+            [ onEnter AddTag
+            , onInput NewTagInput
             , value model.newTag
             ]
             []
