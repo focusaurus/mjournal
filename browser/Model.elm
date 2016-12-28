@@ -37,6 +37,7 @@ type alias Entry =
     , tags : List String
     , created : Date
     , confirmingDelete : Bool
+    , newTag : String
     }
 
 

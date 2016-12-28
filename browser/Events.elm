@@ -1,7 +1,7 @@
 module Events exposing (onEnter, onBlurEditable, onShiftEnter)
 
 import Html exposing (Attribute)
-import Html.Events exposing (keyCode, on, onWithOptions)
+import Html.Events exposing (keyCode, on, onWithOptions, targetValue)
 import Json.Decode as JD
 import Messages exposing (Msg)
 
@@ -16,6 +16,14 @@ onEnter msg =
         JD.map
             (always msg)
             (keyCode |> JD.andThen isEnter)
+
+-- the event has a keyCode and target.value
+-- if keyCode is 13, decode to target.value,
+-- otherwise, fail to decode
+-- onEnterValue : Msg -> Attribute String
+-- onEnterValue tagger =
+--     on "keydown" <|
+--         isEnter
 
 
 isEnter : Int -> JD.Decoder ()

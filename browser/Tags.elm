@@ -3,9 +3,10 @@ module Tags exposing (tags)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import List
-import Messages exposing (Msg)
+import Messages exposing (Msg, Msg(AddTag), Msg(InputNewTag))
 import Model exposing (Entry)
-
+import Events exposing (onEnter)
+import Html.Events exposing (onInput)
 
 tagItem : String -> Html Msg
 tagItem tag =
@@ -32,8 +33,15 @@ tags entry =
                 [ ul
                     [ class "tag-list" ]
                     (List.map tagItem entry.tags)
-                , input [ class "input ti-autosize", placeholder "Add a tag", tabindex 0, style [ ( "width", "69px" ) ] ]
-                    -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize "", style "width: 69px;" ]
+                , input
+                    [ class "input ti-autosize"
+                    , placeholder "Add a tag"
+                    , tabindex 0
+                    , style [ ( "width", "69px" ) ]
+                    , onEnter (AddTag entry)
+                    , onInput (InputNewTag entry)
+                    ]
+                    -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
                     []
                 , span
                     [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]

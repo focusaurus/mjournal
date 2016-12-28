@@ -165,6 +165,18 @@ update message model =
         ChangeUrl location ->
             route model location
 
+        InputNewTag entry tag ->
+            ( Entries.editNewTag model entry tag, Cmd.none )
+
+        AddTag entry ->
+            Entries.addTag model entry
+
+        SaveTagsDone (Ok _) ->
+            ( model, Cmd.none )
+
+        SaveTagsDone (Err _) ->
+            ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -261,7 +273,6 @@ initFlags flags location =
             , signInPassword = "password"
             , theme = theme
             }
-
     in
         route model location
 

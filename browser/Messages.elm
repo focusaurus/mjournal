@@ -5,7 +5,8 @@ import Model
 import Navigation
 
 type Msg
-    = ClearTextSearch
+    = AddTag Model.Entry
+    | ClearTextSearch
     | CloseMenu
     | CreateEntry String
     | CreateEntryDone (Result Http.Error Model.Entry)
@@ -14,11 +15,13 @@ type Msg
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | InputEmail String
     | InputPassword String
+    | InputNewTag Model.Entry String
     | NextPage
     | PreviousPage
     | Register
     | SaveBodyDone (Result Http.Error ())
     | SaveEntry Model.Entry String
+    | SaveTagsDone (Result Http.Error ())
     | Search
     | SearchDone (Result Http.Error (List Model.Entry))
     | SetNewEntryBody String

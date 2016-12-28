@@ -1,15 +1,17 @@
 module Entries
     exposing
-        ( getEntries
-        , nextPage
-        , previousPage
-        , editBody
-        , saveBody
+        ( addTag
+        , clearTextSearch
         , createEntry
         , delete1
         , delete2
+        , editBody
+        , editNewTag
+        , getEntries
+        , nextPage
+        , previousPage
+        , saveBody
         , search
-        , clearTextSearch
         , setTextSearch
         )
 
@@ -99,12 +101,13 @@ decodeList =
 
 decode : JD.Decoder Entry
 decode =
-    (JD.map5 Entry
+    (JD.map6 Entry
         (JD.field "id" JD.int)
         (JD.field "body" JD.string)
         (JD.field "tags" (JD.list JD.string))
         (JD.field "created" Json.Decode.Extra.date)
         (JD.succeed False)
+        (JD.succeed "")
     )
 
 
@@ -119,8 +122,48 @@ newBody editedEntry newBody entry =
 editBody : Model -> Entry -> String -> Model
 editBody model entry body =
     let
+        newEntry =
+            { entry | body = body }
+    in
+        swapById model newEntry
+
+
+editNewTag : Model -> Entry -> String -> Model
+editNewTag model entry tag =
+    let
+        newEntry =
+            { entry | newTag = tag }
+    in
+        swapById model newEntry
+
+
+addTag : Model -> Entry -> ( Model, Cmd Msg )
+addTag model entry =
+    let
+        newEntry =
+            { entry
+                | newTag = ""
+                , tags = List.append entry.tags [ entry.newTag ]
+            }
+
+        _ =
+            Debug.log "addTag" newEntry.tags
+    in
+        ( swapById model newEntry, saveTags newEntry )
+
+
+swapById : Model -> Entry -> Model
+swapById model entry =
+    let
         newEntries =
-            List.map (newBody entry body) model.entries
+            List.map
+                (\existing ->
+                    if existing.id == entry.id then
+                        entry
+                    else
+                        existing
+                )
+                model.entries
     in
         { model | entries = newEntries }
 
@@ -151,6 +194,34 @@ saveBody entry newBody =
             }
     in
         Http.send SaveBodyDone (Http.request options)
+
+
+saveTags : Entry -> Cmd Msg
+saveTags entry =
+    let
+        bodyValue =
+            JE.object
+                [ ( "id", JE.int entry.id )
+                , ( "tags", JE.list (List.map JE.string entry.tags) )
+                ]
+
+        body =
+            Http.jsonBody (bodyValue)
+
+        url =
+            "/api/entries/" ++ toString entry.id
+
+        options =
+            { method = "PUT"
+            , headers = []
+            , url = url
+            , body = body
+            , expect = Http.expectJson (JD.succeed ())
+            , timeout = Nothing
+            , withCredentials = False
+            }
+    in
+        Http.send SaveTagsDone (Http.request options)
 
 
 createEntry : String -> Cmd Msg
