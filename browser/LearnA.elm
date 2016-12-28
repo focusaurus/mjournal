@@ -14,7 +14,6 @@ type alias Model =
     { tags : List String
     }
 
-
 onDown : (String -> Int -> Msg) -> Attribute Msg
 onDown tagger =
     on "keydown"
@@ -33,19 +32,25 @@ update message model =
                 _ =
                     Debug.log "ValueKeyCode" value ++ ": " ++ toString keyCode
             in
-                ( model, Cmd.none )
+                if keyCode == 13 {- ENTER -} then
+                    ( {model | tags = List.append model.tags [value]}, Cmd.none )
+                else
+                    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
 
+tagView tag =
+    p [] [ text  tag]
 
 view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "Learn Elm A" ]
         , input [ onDown ValueKeyCode ] []
+        , div [] (List.map tagView model.tags)
         ]
 
 
