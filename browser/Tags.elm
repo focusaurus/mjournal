@@ -45,9 +45,9 @@ tags entry =
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
                     []
-                , span
-                    [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
-                    [ text "Add a tag" ]
+                -- , span
+                --     [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
+                --     [ text "Add a tag" ]
                 ]
               -- , node "auto-complete"
               --     []
