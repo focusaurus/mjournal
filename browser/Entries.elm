@@ -140,14 +140,17 @@ editNewTag model entry tag =
 
 addTag : Model -> Entry -> ( Model, Cmd Msg )
 addTag model entry =
-    let
-        newEntry =
-            { entry
-                | newTag = ""
-                , tags = List.append entry.tags [ entry.newTag ]
-            }
-    in
-        ( swapById model newEntry, saveTags newEntry )
+    if String.isEmpty entry.newTag then
+        ( model, Cmd.none )
+    else
+        let
+            newEntry =
+                { entry
+                    | newTag = ""
+                    , tags = List.append entry.tags [ entry.newTag ]
+                }
+        in
+            ( swapById model newEntry, saveTags newEntry )
 
 
 deleteTag : Model -> Entry -> String -> ( Model, Cmd Msg )
