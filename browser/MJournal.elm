@@ -122,7 +122,11 @@ update message model =
             ( model, Theme.setTheme (Theme.toString model.theme) )
 
         SetNewEntryBody newBody ->
-            ( { model | newEntryBody = newBody }, Cmd.none )
+            let
+                _ =
+                    Debug.log "newBody" newBody
+            in
+                ( { model | newEntryBody = newBody }, Cmd.none )
 
         SaveEntry entry body ->
             let
@@ -186,6 +190,7 @@ update message model =
         DeleteTagDone (Err _) ->
             ( model, Cmd.none )
 
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     clickDocument (\x -> CloseMenu)
@@ -213,10 +218,10 @@ view model =
                     [ Pagination.toolbar model
                     ]
                 , div [ class "notebook" ]
-                    [ EntriesView.new model
-                    , div [ class "page" ]
+                    [ div [ class "page" ]
                         [ EntriesView.list model
                         ]
+                    , EntriesView.new model
                     ]
                 ]
 
