@@ -4,42 +4,36 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, onInput)
 import Json.Decode as JD
-import Events exposing (onEnter)
+
 
 type Msg
-    = AddTag
-    | NewTagInput String
+    = SetTextContent String
 
 
 type alias Model =
-    { tags : List String
-    , newTag : String
+    { textContent : String
     }
 
 
-onDown : (String -> Int -> Msg) -> Attribute Msg
-onDown tagger =
-    on "keydown"
-        (JD.map2
-            (\s i -> tagger s i)
-            (JD.at [ "target", "value" ] JD.string)
-            (JD.field "keyCode" JD.int)
-        )
+textContentDecoder : JD.Decoder String
+textContentDecoder =
+    JD.at [ "target", "textContent" ] JD.string
+
+
+onEdit : (String -> value) -> Attribute value
+onEdit tagger =
+    on "input" (JD.map tagger textContentDecoder)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        AddTag ->
-            ( { model
-                | tags = List.append model.tags [ model.newTag ]
-                , newTag = ""
-              }
-            , Cmd.none
-            )
-
-        NewTagInput newTag ->
-            ( { model | newTag = newTag }, Cmd.none )
+        SetTextContent textContent ->
+            let
+                _ =
+                    Debug.log "update textContent" (textContent ++ "foo\nbar\nbaz")
+            in
+                ( { model | textContent = textContent }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -47,27 +41,25 @@ subscriptions model =
     Sub.none
 
 
-tagView tag =
-    p [] [ text tag ]
-
-
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "Learn Elm A" ]
-        , input
-            [ onEnter AddTag
-            , onInput NewTagInput
-            , value model.newTag
+        [ h1 []
+            [ text "Content Editable Drops Newlines"
+            , p [] [ text "Edit the div below. Put some newlines. They will not be in the String in the model." ]
             ]
-            []
-        , div [] (List.map tagView model.tags)
+        , div
+            [ contenteditable True
+            , onEdit SetTextContent
+            ]
+            [ text "Edit this div including some newlines" ]
+        , div [ style [ ( "white-space", "pre" ) ] ] [ text model.textContent ]
         ]
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] "", Cmd.none )
+    ( Model "", Cmd.none )
 
 
 main : Program Never Model Msg
