@@ -1,4 +1,4 @@
-module Events exposing (onEnter, onBlurEditable, onShiftEnter)
+module Events exposing (onEnter, onBlurEditable, onShiftEnter, onEdit)
 
 import Html exposing (Attribute)
 import Html.Events exposing (keyCode, on, onWithOptions, targetValue)
@@ -74,3 +74,11 @@ targetText =
 onBlurEditable : (String -> msg) -> Attribute msg
 onBlurEditable tagger =
     on "blur" (JD.map tagger targetText)
+
+textContentDecoder : JD.Decoder String
+textContentDecoder =
+  JD.at ["target", "textContent"] JD.string
+
+onEdit : (String -> value) -> Attribute value
+onEdit tagger =
+    on "input" (JD.map tagger textContentDecoder)
