@@ -65,6 +65,8 @@
     "xoauth2": "1.1.0"
   },
   "devDependencies": {
+    "@glimpse/glimpse-node-agent": "0.15.2",
+    "@glimpse/glimpse-node-server": "0.15.2",
     "bower": "1.7.9",
     "chai": "3.5.0",
     "cheerio": "0.20.0",
