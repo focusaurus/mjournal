@@ -5,7 +5,7 @@ import Date exposing (Date)
 
 type alias Model =
     { entries : List Entry
-    , newEntryBody : String
+    , newEntry : Entry
     , menuOpen : Bool
     , pageState : PageState
     , signInEmail : String

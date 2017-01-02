@@ -67,13 +67,13 @@ update message model =
         --
         -- PreviousPage ->
         --     ( { model | direction = Just Model.Previous }, Entries.previousPage model )
-        CreateEntry body ->
-            ( model, Entries.createEntry body )
+        CreateEntry s ->
+            ( model, Entries.create model.newEntry )
 
         CreateEntryDone (Ok entry) ->
             ( { model
                 | entries = List.append model.entries [ entry ]
-                , newEntryBody = ""
+                , newEntry = Entries.new
               }
             , Cmd.none
             )
@@ -121,19 +121,29 @@ update message model =
         SetThemeDone _ ->
             ( model, Theme.setTheme (Theme.toString model.theme) )
 
-        SetNewEntryBody newBody ->
+        SetNewEntryBody andSave newBody ->
             let
                 _ =
                     Debug.log "newBody" newBody
-            in
-                ( { model | newEntryBody = newBody }, Cmd.none )
 
-        SaveEntry entry body ->
-            let
+                entry1 =
+                    model.newEntry
+
+                entry2 =
+                    { entry1 | body = newBody }
+
                 newModel =
-                    Entries.editBody model entry body
+                    { model | newEntry = entry2 }
             in
-                ( newModel, Entries.saveBody entry body )
+                ( newModel
+                , if andSave then
+                    Entries.create entry2
+                  else
+                    Cmd.none
+                )
+
+        SaveBody entry newBody ->
+            Entries.saveBody model entry newBody
 
         SaveBodyDone (Ok _) ->
             ( model, Cmd.none )
@@ -278,7 +288,7 @@ initFlags flags location =
 
         model =
             { entries = []
-            , newEntryBody = ""
+            , newEntry = Entries.new
             , menuOpen = False
             , pageState = pageState
             , signInEmail = "1@example.com"

@@ -8,7 +8,7 @@ type Msg
     = AddTag Model.Entry
     | ClearTextSearch
     | CloseMenu
-    | CreateEntry String
+    | CreateEntry (Maybe String)
     | CreateEntryDone (Result Http.Error Model.Entry)
     | DeleteEntry1 Model.Entry
     | DeleteEntryDone (Result Http.Error ())
@@ -21,12 +21,12 @@ type Msg
     | NextPage
     | PreviousPage
     | Register
+    | SaveBody Model.Entry String
     | SaveBodyDone (Result Http.Error ())
-    | SaveEntry Model.Entry String
     | SaveTagsDone (Result Http.Error ())
     | Search
     | SearchDone (Result Http.Error (List Model.Entry))
-    | SetNewEntryBody String
+    | SetNewEntryBody Bool String
     | SetTextSearch String
     | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())

@@ -1,10 +1,10 @@
 module EntriesView exposing (new, list)
 
 import Date.Extra
-import Events exposing (onBlurEditable, onShiftEnter)
+import Events exposing (onBlurEditable, onShiftEnter, onEdit)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput, onBlur)
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
 import Tags exposing (tags)
@@ -35,8 +35,8 @@ entryTag entry =
         , p
             [ class "body"
             , contenteditable True
-            , onBlurEditable (SaveEntry entry)
-            , onShiftEnter (SaveEntry entry)
+            , onBlurEditable (SaveBody entry)
+            , onShiftEnter (SaveBody entry)
             ]
             [ text entry.body ]
         , tags entry
@@ -45,17 +45,29 @@ entryTag entry =
 
 new : Model -> Html Msg
 new model =
-    div [ class "new-entry" ]
+    div [ class "entry" ]
         [ label
             [ class "new" ]
             [ text "Type a new entry below. SHIFT-ENTER to save." ]
+          -- , p
+          --     [ class "body new"
+          --     , onShiftEnter CreateEntry
+          --       -- , onBlurEditable SetNewEntryBody
+          --     , onBlur CreateEntry
+          --     , onInput SetNewEntryBody
+          --     , value model.newEntry.body
+          --     ]
+          --     []
+          --   [ text model.newEntryBody ]
         , p
             [ class "body new"
             , contenteditable True
-            , onShiftEnter CreateEntry
-            , onBlurEditable SetNewEntryBody
+            , onShiftEnter (SetNewEntryBody True)
+            , onBlurEditable (SetNewEntryBody False)
+              --   , onEdit SetNewEntryBody
             ]
-            [ text model.newEntryBody ]
+            []
+          -- [ text model.newEntryBody ]
           {- , tags
              - input
                  [ {-ng - model "newEntryTags", replace - spaces - with - dashes "false", ng - keyup "create($event)", ng - click "clickTag($event)",-} ]
@@ -87,6 +99,6 @@ new model =
                  ]
           -}
         , button
-            [ onClick (CreateEntry model.newEntryBody) ]
+            [ onClick (CreateEntry Nothing) ]
             [ text "Save" ]
         ]

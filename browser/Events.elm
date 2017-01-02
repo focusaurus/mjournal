@@ -63,17 +63,12 @@ onShiftEnter tagger =
             (\c s t -> (tagger t))
             (keyCode |> JD.andThen isEnter)
             (shiftKey |> JD.andThen isShift)
-            targetText
-
-
-targetText : JD.Decoder String
-targetText =
-    (JD.at [ "target", "textContent" ] JD.string)
+            textContentDecoder
 
 
 onBlurEditable : (String -> msg) -> Attribute msg
 onBlurEditable tagger =
-    on "blur" (JD.map tagger targetText)
+    on "blur" (JD.map tagger textContentDecoder)
 
 textContentDecoder : JD.Decoder String
 textContentDecoder =

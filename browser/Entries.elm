@@ -2,7 +2,7 @@ module Entries
     exposing
         ( addTag
         , clearTextSearch
-        , createEntry
+        , create
         , delete1
         , delete2
         , deleteTag
@@ -10,6 +10,7 @@ module Entries
         , editNewTag
         , getEntries
         , nextPage
+        , new
         , previousPage
         , saveBody
         , search
@@ -25,6 +26,7 @@ import Location exposing (location)
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
 import Navigation
+import Date
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -180,20 +182,26 @@ swapById model entry =
         { model | entries = newEntries }
 
 
-saveBody : Entry -> String -> Cmd Msg
-saveBody entry newBody =
+saveBody : Model -> Entry -> String -> (Model, Cmd Msg)
+saveBody model entry newBody =
     let
+        newEntry =
+            { entry | body = newBody }
+
+        newModel =
+            swapById model newEntry
+
         bodyValue =
             JE.object
-                [ ( "id", JE.int (.id entry) )
-                , ( "body", JE.string newBody )
+                [ ( "id", JE.int newEntry.id )
+                , ( "body", JE.string newEntry.body )
                 ]
 
         body =
             Http.jsonBody (bodyValue)
 
         url =
-            "/api/entries/" ++ toString (.id entry)
+            "/api/entries/" ++ toString newEntry.id
 
         options =
             { method = "PUT"
@@ -205,7 +213,7 @@ saveBody entry newBody =
             , withCredentials = False
             }
     in
-        Http.send SaveBodyDone (Http.request options)
+        ( newModel, Http.send SaveBodyDone (Http.request options) )
 
 
 saveTags : Entry -> Cmd Msg
@@ -236,16 +244,17 @@ saveTags entry =
         Http.send SaveTagsDone (Http.request options)
 
 
-createEntry : String -> Cmd Msg
-createEntry body =
+create : Entry -> Cmd Msg
+create entry =
     let
         bodyValue =
-            JE.object [ ( "body", JE.string body ) ]
+            JE.object [ ( "body", JE.string entry.body ) ]
 
+        -- todo tags
         httpBody =
             Http.jsonBody (bodyValue)
     in
-        if body == "" then
+        if entry.body == "" then
             Cmd.none
         else
             Http.send CreateEntryDone (Http.post "/api/entries" httpBody decode)
@@ -325,3 +334,8 @@ setTextSearch model textSearch =
             { model | pageState = newPageState }
     in
         ( newModel, Cmd.none )
+
+
+new : Model.Entry
+new =
+    Model.Entry -1 "" [] (Date.fromTime 0) False ""
