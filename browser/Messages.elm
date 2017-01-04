@@ -6,6 +6,7 @@ import Navigation
 
 type Msg
     = AddTag Model.Entry
+    | ClearNewEntryBody
     | ClearTextSearch
     | CloseMenu
     | CreateEntry (Maybe String)

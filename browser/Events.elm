@@ -8,7 +8,6 @@ import Messages exposing (Msg)
 
 -- import Model exposing (KeyModified)
 
-
 onEnter : Msg -> Attribute Msg
 onEnter msg =
     -- filter "keydown" events for return key (code 13)
@@ -16,6 +15,8 @@ onEnter msg =
         JD.map
             (always msg)
             (keyCode |> JD.andThen isEnter)
+
+
 
 -- the event has a keyCode and target.value
 -- if keyCode is 13, decode to target.value,
@@ -63,17 +64,24 @@ onShiftEnter tagger =
             (\c s t -> (tagger t))
             (keyCode |> JD.andThen isEnter)
             (shiftKey |> JD.andThen isShift)
-            textContentDecoder
+            innerTextDecoder
 
 
 onBlurEditable : (String -> msg) -> Attribute msg
 onBlurEditable tagger =
-    on "blur" (JD.map tagger textContentDecoder)
+    on "blur" (JD.map tagger innerTextDecoder)
 
-textContentDecoder : JD.Decoder String
-textContentDecoder =
-  JD.at ["target", "textContent"] JD.string
+
+-- textContentDecoder : JD.Decoder String
+-- textContentDecoder =
+--     JD.at [ "target", "textContent" ] JD.string
+
+
+innerTextDecoder : JD.Decoder String
+innerTextDecoder =
+    JD.at [ "target", "innerText" ] JD.string
+
 
 onEdit : (String -> value) -> Attribute value
 onEdit tagger =
-    on "input" (JD.map tagger textContentDecoder)
+    on "input" (JD.map tagger innerTextDecoder)

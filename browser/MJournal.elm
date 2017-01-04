@@ -1,4 +1,4 @@
-port module MJournal exposing (main)
+module MJournal exposing (main)
 
 import About exposing (about)
 import Entries
@@ -12,11 +12,9 @@ import Messages exposing (Msg(..))
 import Model exposing (Model, Theme, Flags, Screen(..))
 import Navigation
 import Pagination
+import Ports
 import SignIn
 import Theme
-
-
-port clickDocument : (Bool -> msg) -> Sub msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,7 +43,7 @@ update message model =
                     , theme = user.theme
                   }
                 , Cmd.batch
-                    [ (Theme.setTheme (Theme.toString user.theme))
+                    [ (Ports.setTheme (Theme.toString user.theme))
                     , (Entries.getEntries Nothing)
                     ]
                 )
@@ -119,7 +117,10 @@ update message model =
             ( { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-            ( model, Theme.setTheme (Theme.toString model.theme) )
+            ( model, Ports.setTheme (Theme.toString model.theme) )
+
+        ClearNewEntryBody ->
+            ( model, Ports.clearNewEntryBody () )
 
         SetNewEntryBody newBody ->
             let
@@ -145,10 +146,17 @@ update message model =
                 newModel =
                     { model | newEntry = Entries.new }
             in
-                ( newModel, Entries.create entry2 )
+                ( newModel
+                , Cmd.batch
+                    [ (Entries.create entry2)
+                    , (Ports.clearNewEntryBody ())
+                    ]
+                )
 
         SaveBody entry newBody ->
-            Entries.saveBody model entry newBody
+            ( model
+            , Entries.saveBody entry newBody
+            )
 
         SaveBodyDone (Ok _) ->
             ( model, Cmd.none )
@@ -208,7 +216,7 @@ update message model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    clickDocument (\x -> CloseMenu)
+    Ports.clickDocument (\x -> CloseMenu)
 
 
 view : Model -> Html Msg

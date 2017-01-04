@@ -62,9 +62,9 @@ new model =
         , p
             [ class "body new"
             , contenteditable True
-            , onShiftEnter SetNewEntryBodyAndSave
             , onBlurEditable SetNewEntryBody
-              --   , onEdit SetNewEntryBody
+            , onShiftEnter SetNewEntryBodyAndSave
+              -- , onEdit SetNewEntryBody
             ]
             [ text model.newEntry.body ]
           {- , tags

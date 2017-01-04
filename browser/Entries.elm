@@ -182,14 +182,11 @@ swapById model entry =
         { model | entries = newEntries }
 
 
-saveBody : Model -> Entry -> String -> (Model, Cmd Msg)
-saveBody model entry newBody =
+saveBody : Entry -> String -> Cmd Msg
+saveBody entry newBody =
     let
         newEntry =
             { entry | body = newBody }
-
-        newModel =
-            swapById model newEntry
 
         bodyValue =
             JE.object
@@ -213,7 +210,7 @@ saveBody model entry newBody =
             , withCredentials = False
             }
     in
-        ( newModel, Http.send SaveBodyDone (Http.request options) )
+        Http.send SaveBodyDone (Http.request options)
 
 
 saveTags : Entry -> Cmd Msg

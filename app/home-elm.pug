@@ -9,6 +9,12 @@ block append scripts
     app.ports.setTheme.subscribe(function setTheme (name) {
       document.getElementById('theme').href = '/mjournal-' + name + '.css'
     })
+    app.ports.clearNewEntryBody.subscribe(function clearNewEntryBody (_) {
+      var elem = document.querySelector('.entry .body.new')
+      if (elem) {
+        elem.innerText = ''
+      }
+    })
     document.addEventListener('click', function onClick (event) {
       app.ports.clickDocument.send(false)
     })
