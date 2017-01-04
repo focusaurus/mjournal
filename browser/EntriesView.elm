@@ -62,12 +62,11 @@ new model =
         , p
             [ class "body new"
             , contenteditable True
-            , onShiftEnter (SetNewEntryBody True)
-            , onBlurEditable (SetNewEntryBody False)
+            , onShiftEnter SetNewEntryBodyAndSave
+            , onBlurEditable SetNewEntryBody
               --   , onEdit SetNewEntryBody
             ]
-            []
-          -- [ text model.newEntryBody ]
+            [ text model.newEntry.body ]
           {- , tags
              - input
                  [ {-ng - model "newEntryTags", replace - spaces - with - dashes "false", ng - keyup "create($event)", ng - click "clickTag($event)",-} ]

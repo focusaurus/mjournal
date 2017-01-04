@@ -121,11 +121,8 @@ update message model =
         SetThemeDone _ ->
             ( model, Theme.setTheme (Theme.toString model.theme) )
 
-        SetNewEntryBody andSave newBody ->
+        SetNewEntryBody newBody ->
             let
-                _ =
-                    Debug.log "newBody" newBody
-
                 entry1 =
                     model.newEntry
 
@@ -135,12 +132,20 @@ update message model =
                 newModel =
                     { model | newEntry = entry2 }
             in
-                ( newModel
-                , if andSave then
-                    Entries.create entry2
-                  else
-                    Cmd.none
-                )
+                ( newModel, Cmd.none )
+
+        SetNewEntryBodyAndSave newBody ->
+            let
+                entry1 =
+                    model.newEntry
+
+                entry2 =
+                    { entry1 | body = newBody }
+
+                newModel =
+                    { model | newEntry = Entries.new }
+            in
+                ( newModel, Entries.create entry2 )
 
         SaveBody entry newBody ->
             Entries.saveBody model entry newBody

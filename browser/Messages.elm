@@ -26,7 +26,8 @@ type Msg
     | SaveTagsDone (Result Http.Error ())
     | Search
     | SearchDone (Result Http.Error (List Model.Entry))
-    | SetNewEntryBody Bool String
+    | SetNewEntryBody String
+    | SetNewEntryBodyAndSave String
     | SetTextSearch String
     | SetTheme Model.Theme
     | SetThemeDone (Result Http.Error ())
