@@ -148,6 +148,7 @@ addTag model entry =
         ( model, Cmd.none )
     else
         let
+            -- _ = Debug.log "AddTag" entry.newTag
             newEntry =
                 { entry
                     | newTag = ""
@@ -170,18 +171,21 @@ deleteTag model entry tag =
 
 swapById : Model -> Entry -> Model
 swapById model entry =
-    let
-        newEntries =
-            List.map
-                (\existing ->
-                    if existing.id == entry.id then
-                        entry
-                    else
-                        existing
-                )
-                model.entries
-    in
-        { model | entries = newEntries }
+    if entry.id < 0 then
+        { model | newEntry = entry }
+    else
+        let
+            newEntries =
+                List.map
+                    (\existing ->
+                        if existing.id == entry.id then
+                            entry
+                        else
+                            existing
+                    )
+                    model.entries
+        in
+            { model | entries = newEntries }
 
 
 saveBody : Entry -> String -> Cmd Msg
@@ -217,37 +221,43 @@ saveBody entry newBody =
 
 saveTags : Entry -> Cmd Msg
 saveTags entry =
-    let
-        bodyValue =
-            JE.object
-                [ ( "id", JE.int entry.id )
-                , ( "tags", JE.list (List.map JE.string entry.tags) )
-                ]
+    if entry.id < 0 then
+        Cmd.none
+    else
+        let
+            bodyValue =
+                JE.object
+                    [ ( "id", JE.int entry.id )
+                    , ( "tags", JE.list (List.map JE.string entry.tags) )
+                    ]
 
-        body =
-            Http.jsonBody (bodyValue)
+            body =
+                Http.jsonBody (bodyValue)
 
-        url =
-            "/api/entries/" ++ toString entry.id
+            url =
+                "/api/entries/" ++ toString entry.id
 
-        options =
-            { method = "PUT"
-            , headers = []
-            , url = url
-            , body = body
-            , expect = Http.expectJson (JD.succeed ())
-            , timeout = Nothing
-            , withCredentials = False
-            }
-    in
-        Http.send SaveTagsDone (Http.request options)
+            options =
+                { method = "PUT"
+                , headers = []
+                , url = url
+                , body = body
+                , expect = Http.expectJson (JD.succeed ())
+                , timeout = Nothing
+                , withCredentials = False
+                }
+        in
+            Http.send SaveTagsDone (Http.request options)
 
 
 create : Entry -> Cmd Msg
 create entry =
     let
         bodyValue =
-            JE.object [ ( "body", JE.string entry.body ) ]
+            JE.object
+                [ ( "body", JE.string entry.body )
+                , ( "tags", JE.list (List.map JE.string entry.tags) )
+                ]
 
         -- todo tags
         httpBody =
@@ -367,4 +377,4 @@ setNewEntryBodyAndSave model newBody =
         newModel =
             { model | newEntry = new }
     in
-        ( newModel , create entry2 )
+        ( newModel, create entry2 )
