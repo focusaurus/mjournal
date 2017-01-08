@@ -73,7 +73,7 @@ update message model =
                 | entries = List.append model.entries [ entry ]
                 , newEntry = Entries.new
               }
-            , Cmd.none
+            , Ports.clearNewEntryBody ()
             )
 
         CreateEntryDone (Err message) ->
@@ -132,6 +132,7 @@ update message model =
 
                 newModel =
                     { model | newEntry = entry2 }
+
             in
                 ( newModel, Cmd.none )
 
@@ -147,10 +148,7 @@ update message model =
                     { model | newEntry = Entries.new }
             in
                 ( newModel
-                , Cmd.batch
-                    [ (Entries.create entry2)
-                    , (Ports.clearNewEntryBody ())
-                    ]
+                , Entries.create entry2
                 )
 
         SaveBody entry newBody ->
