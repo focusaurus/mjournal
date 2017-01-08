@@ -67,6 +67,7 @@ new model =
               -- , onEdit SetNewEntryBody
             ]
             []
+          , tags model.newEntry
             -- [ text model.newEntry.body ]
           {- , tags
              - input

@@ -42,6 +42,7 @@ tags entry =
                     , style [ ( "width", "69px" ) ]
                     , onEnter (Messages.AddTag entry)
                     , onInput (Messages.InputNewTag entry)
+                    , value entry.newTag
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
                     []
