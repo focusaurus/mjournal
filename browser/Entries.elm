@@ -90,9 +90,6 @@ previousPage model =
 
         location_ =
             location newModel
-
-        _ =
-            Debug.log "previous location" before
     in
         ( newModel
         , Navigation.newUrl (newModel.pageState.pathname ++ location_)

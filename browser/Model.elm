@@ -8,6 +8,7 @@ type alias Model =
     , newEntry : Entry
     , menuOpen : Bool
     , pageState : PageState
+    , requestCount : Int
     , signInEmail : String
     , signInError : String
     , signInPassword : String

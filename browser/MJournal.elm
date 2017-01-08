@@ -19,6 +19,9 @@ import Theme
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
+    -- let
+    --     _ = Debug.log "hey" message
+    -- in
     case message of
         InputEmail newEmail ->
             ( { model | signInEmail = newEmail, signInError = "" }, Cmd.none )
@@ -27,7 +30,7 @@ update message model =
             ( { model | signInPassword = newPassword, signInError = "" }, Cmd.none )
 
         SignIn ->
-            ( { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
+            ( up { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
 
         SignInDone (Ok user) ->
             let
@@ -37,11 +40,12 @@ update message model =
                 newPageState =
                     { oldPageState | screen = Model.EntriesScreen Nothing Nothing Nothing }
             in
-                ( { model
-                    | pageState = newPageState
-                    , signInError = ""
-                    , theme = user.theme
-                  }
+                ( down
+                    { model
+                        | pageState = newPageState
+                        , signInError = ""
+                        , theme = user.theme
+                    }
                 , Cmd.batch
                     [ (Ports.setTheme (Theme.toString user.theme))
                     , (Entries.getEntries Nothing)
@@ -49,10 +53,10 @@ update message model =
                 )
 
         SignInDone (Err error) ->
-            SignIn.signInDone model error
+            SignIn.signInDone (down model) error
 
         Register ->
-            ( { model | signInError = "" }, SignIn.register model.signInEmail model.signInPassword )
+            ( up { model | signInError = "" }, SignIn.register model.signInEmail model.signInPassword )
 
         NextPage ->
             Entries.nextPage model
@@ -60,24 +64,20 @@ update message model =
         PreviousPage ->
             Entries.previousPage model
 
-        -- NextPage ->
-        --     ( { model | direction = Just Model.Next }, Entries.nextPage model )
-        --
-        -- PreviousPage ->
-        --     ( { model | direction = Just Model.Previous }, Entries.previousPage model )
         CreateEntry s ->
-            ( model, Entries.create model.newEntry )
+            ( up model, Entries.create model.newEntry )
 
         CreateEntryDone (Ok entry) ->
-            ( { model
-                | entries = List.append model.entries [ entry ]
-                , newEntry = Entries.new
-              }
+            ( down
+                { model
+                    | entries = List.append model.entries [ entry ]
+                    , newEntry = Entries.new
+                }
             , Ports.clearNewEntryBody ()
             )
 
         CreateEntryDone (Err message) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         DeleteEntry1 entry ->
             case entry.confirmingDelete of
@@ -86,7 +86,7 @@ update message model =
                         newModel =
                             { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries }
                     in
-                        ( newModel, Entries.delete2 entry )
+                        ( up newModel, Entries.delete2 entry )
 
                 False ->
                     let
@@ -96,16 +96,16 @@ update message model =
                         ( newModel, Cmd.none )
 
         DeleteEntryDone (Ok ()) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         DeleteEntryDone (Err message) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         GetEntriesDone (Ok entries) ->
-            ( { model | entries = entries }, Cmd.none )
+            ( down { model | entries = entries }, Cmd.none )
 
         GetEntriesDone (Err error) ->
-            ( model, Cmd.none )
+            ( up model, Cmd.none )
 
         CloseMenu ->
             ( { model | menuOpen = False }, Cmd.none )
@@ -114,10 +114,10 @@ update message model =
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
         SetTheme theme ->
-            ( { model | theme = theme }, Theme.set theme )
+            ( up { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-            ( model, Ports.setTheme (Theme.toString model.theme) )
+            ( down model, Ports.setTheme (Theme.toString model.theme) )
 
         ClearNewEntryBody ->
             ( model, Ports.clearNewEntryBody () )
@@ -132,23 +132,22 @@ update message model =
 
                 newModel =
                     { model | newEntry = entry2 }
-
             in
                 ( newModel, Cmd.none )
 
         SetNewEntryBodyAndSave newBody ->
-            Entries.setNewEntryBodyAndSave model newBody
+            Entries.setNewEntryBodyAndSave (up model) newBody
 
         SaveBody entry newBody ->
-            ( model
+            ( up model
             , Entries.saveBody entry newBody
             )
 
         SaveBodyDone (Ok _) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         SaveBodyDone (Err _) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         SetTextSearch textSearch ->
             Entries.setTextSearch model textSearch
@@ -167,13 +166,13 @@ update message model =
                 ( newModel, Navigation.newUrl (Location.location newModel) )
 
         SearchDone (Ok entries) ->
-            ( { model | entries = entries }, Cmd.none )
+            ( down { model | entries = entries }, Cmd.none )
 
         SearchDone (Err message) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         ClearTextSearch ->
-            Entries.clearTextSearch model
+            Entries.clearTextSearch (up model)
 
         ChangeUrl location ->
             route model location
@@ -182,22 +181,22 @@ update message model =
             ( Entries.editNewTag model entry tag, Cmd.none )
 
         AddTag entry ->
-            Entries.addTag model entry
+            Entries.addTag (up model) entry
 
         SaveTagsDone (Ok _) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         SaveTagsDone (Err _) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         DeleteTag entry tag ->
-            Entries.deleteTag model entry tag
+            Entries.deleteTag (up model) entry tag
 
         DeleteTagDone (Ok _) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
         DeleteTagDone (Err _) ->
-            ( model, Cmd.none )
+            ( down model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -232,6 +231,12 @@ view model =
                         ]
                     , EntriesView.new model
                     ]
+                , div
+                    [ id "loading-bar-spinner" ]
+                    [ div
+                        [ classList [ ( "spinner-icon", model.requestCount > 0 ) ] ]
+                        []
+                    ]
                 ]
 
 
@@ -254,21 +259,29 @@ view model =
 -- Use this version for regular deploys
 
 
+up model =
+    { model | requestCount = model.requestCount + 1 }
+
+
+down model =
+    { model | requestCount = model.requestCount - 1 }
+
+
 route : Model -> Navigation.Location -> ( Model, Cmd Msg )
 route model location =
     let
+        pageState =
+            Location.parse model.pageState location
+
         newModel =
-            { model | pageState = Location.parse model.pageState location }
-
-        cmd =
-            case newModel.pageState.screen of
-                Model.EntriesScreen textSearch after before ->
-                    Entries.search textSearch after before
-
-                Model.SignInScreen ->
-                    Cmd.none
+            { model | pageState = pageState }
     in
-        ( newModel, cmd )
+        case newModel.pageState.screen of
+            Model.EntriesScreen textSearch after before ->
+                ( up newModel, Entries.search textSearch after before )
+
+            Model.SignInScreen ->
+                ( newModel, Cmd.none )
 
 
 initFlags : Flags -> Navigation.Location -> ( Model, Cmd Msg )
@@ -290,6 +303,7 @@ initFlags flags location =
             , newEntry = Entries.new
             , menuOpen = False
             , pageState = pageState
+            , requestCount = 0
             , signInEmail = "1@example.com"
             , signInError = ""
             , signInPassword = "password"
