@@ -21,10 +21,9 @@ stopPropagation =
 themeLink : Theme -> Theme -> Html Msg
 themeLink current theme =
     a
-        []
+        [ onClick (SetTheme theme) ]
         [ i
-            [ onClick (SetTheme theme)
-            , classList
+            [ classList
                 [ ( "icon-checkmark", current == theme )
                 , ( "icon-checkmark2", not (current == theme) )
                 ]
