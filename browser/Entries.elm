@@ -14,6 +14,8 @@ module Entries
         , previousPage
         , saveBody
         , search
+        , setNewEntryBody
+        , setNewEntryBodyAndSave
         , setTextSearch
         )
 
@@ -336,3 +338,33 @@ setTextSearch model textSearch =
 new : Model.Entry
 new =
     Model.Entry -1 "" [] (Date.fromTime 0) False ""
+
+
+setNewEntryBody : Model -> String -> ( Model, Cmd Msg )
+setNewEntryBody model newBody =
+    let
+        entry1 =
+            model.newEntry
+
+        entry2 =
+            { entry1 | body = newBody }
+
+        newModel =
+            { model | newEntry = entry2 }
+    in
+        ( newModel, Cmd.none )
+
+
+setNewEntryBodyAndSave : Model -> String -> ( Model, Cmd Msg )
+setNewEntryBodyAndSave model newBody =
+    let
+        entry1 =
+            model.newEntry
+
+        entry2 =
+            { entry1 | body = newBody }
+
+        newModel =
+            { model | newEntry = new }
+    in
+        ( newModel , create entry2 )

@@ -137,19 +137,7 @@ update message model =
                 ( newModel, Cmd.none )
 
         SetNewEntryBodyAndSave newBody ->
-            let
-                entry1 =
-                    model.newEntry
-
-                entry2 =
-                    { entry1 | body = newBody }
-
-                newModel =
-                    { model | newEntry = Entries.new }
-            in
-                ( newModel
-                , Entries.create entry2
-                )
+            Entries.setNewEntryBodyAndSave model newBody
 
         SaveBody entry newBody ->
             ( model
