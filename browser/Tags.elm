@@ -4,8 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import List
 import Messages
-import Model exposing (Entry)
-import Events exposing (onEnter)
+import Model exposing (Entry, TagSuggestion)
+import Events exposing (onEnter, onDownArrow, onUpArrow)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
@@ -46,9 +46,9 @@ tagItem entry tag =
         ]
 
 
-suggestionTag : String -> Html msg
+suggestionTag : TagSuggestion -> Html msg
 suggestionTag tag =
-    li [ class "suggestion-item" ] [ text tag ]
+    li [ class "suggestion-item" ] [ text tag.text ]
 
 
 tags : Entry -> Html Messages.Msg
@@ -68,6 +68,8 @@ tags entry =
                     , style [ ( "width", "69px" ) ]
                     , onEnter (Messages.AddTag entry)
                     , onInput (Messages.InputNewTag entry)
+                    , onDownArrow (Messages.NextTagSuggestion entry)
+                    , onUpArrow (Messages.PreviousTagSuggestion entry)
                     , value entry.newTag
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""

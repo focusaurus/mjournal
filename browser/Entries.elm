@@ -26,7 +26,7 @@ import Json.Encode as JE
 import List.Extra
 import Location exposing (location)
 import Messages exposing (Msg(..))
-import Model exposing (Model, Entry)
+import Model exposing (Model, Entry, TagSuggestion)
 import Navigation
 import Date
 
@@ -142,8 +142,13 @@ matchTag partialTag fullTag =
 editNewTag : Model -> Entry -> String -> Model
 editNewTag model entry tag =
     let
+        onlyMatches =
+            List.filter (matchTag tag) model.tags
+        noneSelected =
+            List.map (\ t -> TagSuggestion t False ) onlyMatches
         newEntry =
-            { entry | newTag = tag, tagSuggestions = List.filter (matchTag tag) model.tags }
+            { entry | newTag = tag, tagSuggestions = noneSelected }
+        _ = Debug.log "noneSelected" noneSelected
     in
         swapById model newEntry
 

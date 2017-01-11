@@ -12,7 +12,7 @@ type alias Model =
     , signInEmail : String
     , signInError : String
     , signInPassword : String
-    , tags: List String
+    , tags : List String
     , theme : Theme
     }
 
@@ -20,8 +20,8 @@ type alias Model =
 type alias PageState =
     { after : Maybe Int
     , before : Maybe Int
-    , pageSize: Int
-    , pathname: String
+    , pageSize : Int
+    , pathname : String
     , screen : Screen
     , textSearch : String
     }
@@ -40,7 +40,13 @@ type alias Entry =
     , created : Date
     , confirmingDelete : Bool
     , newTag : String
-    , tagSuggestions : List String
+    , tagSuggestions : List TagSuggestion
+    }
+
+
+type alias TagSuggestion =
+    { text : String
+    , selected : Bool
     }
 
 

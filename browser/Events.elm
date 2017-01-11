@@ -1,4 +1,12 @@
-module Events exposing (onEnter, onBlurEditable, onShiftEnter, onEdit)
+module Events
+    exposing
+        ( onBlurEditable
+        , onDownArrow
+        , onEdit
+        , onEnter
+        , onShiftEnter
+        , onUpArrow
+        )
 
 import Html exposing (Attribute)
 import Html.Events exposing (keyCode, on, onWithOptions, targetValue)
@@ -8,13 +16,36 @@ import Messages exposing (Msg)
 
 -- import Model exposing (KeyModified)
 
-onEnter : Msg -> Attribute Msg
-onEnter msg =
-    -- filter "keydown" events for return key (code 13)
+
+keyCodes =
+    { enter = 13
+    , down = 40
+    , up = 38
+    }
+
+
+onKeyCode : Int -> Msg -> Attribute Msg
+onKeyCode code msg =
+    -- filter "keydown" events for a specific key code
     on "keydown" <|
         JD.map
             (always msg)
-            (keyCode |> JD.andThen isEnter)
+            (keyCode |> JD.andThen (isKeyCode code))
+
+
+onEnter : Msg -> Attribute Msg
+onEnter =
+    onKeyCode keyCodes.enter
+
+
+onDownArrow : Msg -> Attribute Msg
+onDownArrow =
+    onKeyCode keyCodes.down
+
+
+onUpArrow : Msg -> Attribute Msg
+onUpArrow =
+    onKeyCode keyCodes.up
 
 
 
@@ -27,9 +58,9 @@ onEnter msg =
 --         isEnter
 
 
-isEnter : Int -> JD.Decoder ()
-isEnter code =
-    if code == 13 then
+isKeyCode : Int -> Int -> JD.Decoder ()
+isKeyCode want code =
+    if code == want then
         JD.succeed ()
     else
         JD.fail "not the right key code"
@@ -62,7 +93,7 @@ onShiftEnter tagger =
     onWithOptions "keydown" { preventDefault = True, stopPropagation = False } <|
         JD.map3
             (\c s t -> (tagger t))
-            (keyCode |> JD.andThen isEnter)
+            (keyCode |> JD.andThen (isKeyCode keyCodes.enter))
             (shiftKey |> JD.andThen isShift)
             innerTextDecoder
 
@@ -70,11 +101,6 @@ onShiftEnter tagger =
 onBlurEditable : (String -> msg) -> Attribute msg
 onBlurEditable tagger =
     on "blur" (JD.map tagger innerTextDecoder)
-
-
--- textContentDecoder : JD.Decoder String
--- textContentDecoder =
---     JD.at [ "target", "textContent" ] JD.string
 
 
 innerTextDecoder : JD.Decoder String

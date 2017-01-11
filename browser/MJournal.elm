@@ -205,6 +205,11 @@ update message model =
         DeleteTagDone (Err _) ->
             ( down model, Cmd.none )
 
+        NextTagSuggestion entry ->
+            ( model, Cmd.none )
+
+        PreviousTagSuggestion entry ->
+            ( model, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

@@ -22,6 +22,8 @@ type Msg
     | InputNewTag Model.Entry String
     | NextPage
     | PreviousPage
+    | NextTagSuggestion Model.Entry
+    | PreviousTagSuggestion Model.Entry
     | Register
     | SaveBody Model.Entry String
     | SaveBodyDone (Result Http.Error ())
