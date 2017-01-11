@@ -12,6 +12,7 @@ type alias Model =
     , signInEmail : String
     , signInError : String
     , signInPassword : String
+    , tags: List String
     , theme : Theme
     }
 
@@ -39,6 +40,7 @@ type alias Entry =
     , created : Date
     , confirmingDelete : Bool
     , newTag : String
+    , tagSuggestions : List String
     }
 
 

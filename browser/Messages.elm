@@ -16,6 +16,7 @@ type Msg
     | DeleteTag Model.Entry String
     | DeleteTagDone (Result Http.Error ())
     | GetEntriesDone (Result Http.Error (List Model.Entry))
+    | GetTagsDone (Result Http.Error (List String))
     | InputEmail String
     | InputPassword String
     | InputNewTag Model.Entry String

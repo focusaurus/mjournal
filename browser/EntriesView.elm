@@ -67,8 +67,8 @@ new model =
               -- , onEdit SetNewEntryBody
             ]
             []
-          , tags model.newEntry
-            -- [ text model.newEntry.body ]
+        , tags model.newEntry
+          -- [ text model.newEntry.body ]
           {- , tags
              - input
                  [ {-ng - model "newEntryTags", replace - spaces - with - dashes "false", ng - keyup "create($event)", ng - click "clickTag($event)",-} ]

@@ -103,13 +103,14 @@ decodeList =
 
 decode : JD.Decoder Entry
 decode =
-    (JD.map6 Entry
+    (JD.map7 Entry
         (JD.field "id" JD.int)
         (JD.field "body" JD.string)
         (JD.field "tags" (JD.list JD.string))
         (JD.field "created" Json.Decode.Extra.date)
         (JD.succeed False)
         (JD.succeed "")
+        (JD.succeed [])
     )
 
 
@@ -130,11 +131,19 @@ editBody model entry body =
         swapById model newEntry
 
 
+matchTag : String -> String -> Bool
+matchTag partialTag fullTag =
+    if String.length partialTag < 1 then
+        False
+    else
+        String.startsWith (String.toLower partialTag) (String.toLower fullTag)
+
+
 editNewTag : Model -> Entry -> String -> Model
 editNewTag model entry tag =
     let
         newEntry =
-            { entry | newTag = tag }
+            { entry | newTag = tag, tagSuggestions = List.filter (matchTag tag) model.tags }
     in
         swapById model newEntry
 
@@ -344,7 +353,7 @@ setTextSearch model textSearch =
 
 new : Model.Entry
 new =
-    Model.Entry -1 "" [] (Date.fromTime 0) False ""
+    Model.Entry -1 "" [] (Date.fromTime 0) False "" []
 
 
 setNewEntryBody : Model -> String -> ( Model, Cmd Msg )

@@ -1,4 +1,4 @@
-module Tags exposing (tags)
+module Tags exposing (tags, get)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -7,6 +7,27 @@ import Messages
 import Model exposing (Entry)
 import Events exposing (onEnter)
 import Html.Events exposing (onInput, onClick)
+import Http
+import Json.Decode as JD
+
+
+get : Model.Model -> Cmd Messages.Msg
+get model =
+    if List.length model.tags > 0 then
+        Cmd.none
+    else
+        Http.send Messages.GetTagsDone <|
+            Http.get ("/api/entries/tags") decodeList
+
+
+decodeList : JD.Decoder (List String)
+decodeList =
+    JD.list decode
+
+
+decode : JD.Decoder String
+decode =
+    JD.field "text" JD.string
 
 
 tagItem : Entry -> String -> Html Messages.Msg
@@ -23,6 +44,11 @@ tagItem entry tag =
             ]
             [ text "×" ]
         ]
+
+
+suggestionTag : String -> Html msg
+suggestionTag tag =
+    li [ class "suggestion-item" ] [ text tag ]
 
 
 tags : Entry -> Html Messages.Msg
@@ -46,20 +72,23 @@ tags entry =
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
                     []
-                -- , span
-                --     [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
-                --     [ text "Add a tag" ]
+                  -- , span
+                  --     [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
+                  --     [ text "Add a tag" ]
                 ]
-              -- , node "auto-complete"
-              --     []
-              --     -- source "autoCompleteTags($query)", min-length "2" ]
-              --     [ div
-              --         [ class "autocomplete" ]
-              --         -- ng-hide", ng-show "suggestionList.visible" ]
-              --         [ ul
-              --             [ class "suggestion-list" ]
-              --             []
-              --         ]
-              --     ]
+            , if List.length entry.tagSuggestions > 0 then
+                node "auto-complete"
+                    []
+                    -- source "autoCompleteTags($query)", min-length "2" ]
+                    [ div
+                        [ class "autocomplete" ]
+                        -- ng-hide", ng-show "suggestionList.visible" ]
+                        [ ul
+                            [ class "suggestion-list" ]
+                            (List.map suggestionTag entry.tagSuggestions)
+                        ]
+                    ]
+              else
+                text ""
             ]
         ]

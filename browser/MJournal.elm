@@ -15,6 +15,7 @@ import Pagination
 import Ports
 import SignIn
 import Theme
+import Tags
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -107,6 +108,12 @@ update message model =
         GetEntriesDone (Err error) ->
             ( up model, Cmd.none )
 
+        GetTagsDone (Ok tags) ->
+            ( down { model | tags = tags }, Cmd.none )
+
+        GetTagsDone (Err error) ->
+            ( up model, Cmd.none )
+
         CloseMenu ->
             ( { model | menuOpen = False }, Cmd.none )
 
@@ -178,7 +185,7 @@ update message model =
             route model location
 
         InputNewTag entry tag ->
-            ( Entries.editNewTag model entry tag, Cmd.none )
+            ( Entries.editNewTag model entry tag, Tags.get model )
 
         AddTag entry ->
             Entries.addTag (up model) entry
@@ -258,11 +265,12 @@ view model =
 --         }
 -- Use this version for regular deploys
 
-
+up : Model -> Model
 up model =
     { model | requestCount = model.requestCount + 1 }
 
 
+down : Model -> Model
 down model =
     { model | requestCount = model.requestCount - 1 }
 
@@ -308,6 +316,7 @@ initFlags flags location =
             , signInError = ""
             , signInPassword = "password"
             , theme = theme
+            , tags = []
             }
     in
         route model location
