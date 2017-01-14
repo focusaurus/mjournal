@@ -207,7 +207,7 @@ update message model =
             ( down model, Cmd.none )
 
         NextTagSuggestion entry ->
-            ( model, Cmd.none )
+            ( Entries.nextTagSuggestion model entry, Cmd.none )
 
         PreviousTagSuggestion entry ->
             ( model, Cmd.none )

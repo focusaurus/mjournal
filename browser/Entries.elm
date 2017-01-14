@@ -11,6 +11,7 @@ module Entries
         , editNewTag
         , getEntries
         , nextPage
+        , nextTagSuggestion
         , new
         , previousPage
         , saveBody
@@ -30,6 +31,27 @@ import Messages exposing (Msg(..))
 import Model exposing (Model, Entry, TagSuggestion)
 import Navigation
 import Date
+
+
+nextTagSuggestion : Model.Model -> Model.Entry -> Model.Model
+nextTagSuggestion model entry =
+    let
+        max =
+            List.length entry.tagSuggestions - 1
+
+        index =
+            if entry.selectedSuggestionIndex >= max then
+                max
+            else
+                entry.selectedSuggestionIndex + 1
+        tags = List.indexedMap (\ (i t) -> i t ) entry.tagSuggestions
+        entry2 =
+            { entry |
+                selectedSuggestionIndex = index
+                , tagSuggestions = List.map (\ ts -> {ts | selected = index}) entry.tagSuggestions
+            }
+    in
+        swapById model entry2
 
 
 addSuggestedTag : Model -> Entry -> String -> ( Model, Cmd Msg )
@@ -117,7 +139,7 @@ decodeList =
 
 decode : JD.Decoder Entry
 decode =
-    (JD.map7 Entry
+    (JD.map8 Entry
         (JD.field "id" JD.int)
         (JD.field "body" JD.string)
         (JD.field "tags" (JD.list JD.string))
@@ -125,6 +147,7 @@ decode =
         (JD.succeed False)
         (JD.succeed "")
         (JD.succeed [])
+        (JD.succeed 0)
     )
 
 
@@ -376,7 +399,7 @@ setTextSearch model textSearch =
 
 new : Model.Entry
 new =
-    Model.Entry -1 "" [] (Date.fromTime 0) False "" []
+    Model.Entry -1 "" [] (Date.fromTime 0) False "" [] 0
 
 
 setNewEntryBody : Model -> String -> ( Model, Cmd Msg )

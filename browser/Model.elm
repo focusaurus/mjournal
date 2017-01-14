@@ -41,6 +41,7 @@ type alias Entry =
     , confirmingDelete : Bool
     , newTag : String
     , tagSuggestions : List TagSuggestion
+    , selectedSuggestionIndex : Int
     }
 
 
