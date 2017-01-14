@@ -1,6 +1,7 @@
 module Entries
     exposing
-        ( addTag
+        ( addSuggestedTag
+        , addTag
         , clearTextSearch
         , create
         , delete1
@@ -29,6 +30,19 @@ import Messages exposing (Msg(..))
 import Model exposing (Model, Entry, TagSuggestion)
 import Navigation
 import Date
+
+
+addSuggestedTag : Model -> Entry -> String -> ( Model, Cmd Msg )
+addSuggestedTag model entry tag =
+    let
+        entry2 =
+            { entry
+                | tags = List.append entry.tags [ tag ]
+                , newTag = ""
+                , tagSuggestions = []
+            }
+    in
+        ( swapById model entry2, saveTags entry2 )
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -144,11 +158,15 @@ editNewTag model entry tag =
     let
         onlyMatches =
             List.filter (matchTag tag) model.tags
+
         noneSelected =
-            List.map (\ t -> TagSuggestion t False ) onlyMatches
+            List.map (\t -> TagSuggestion t False) onlyMatches
+
         newEntry =
             { entry | newTag = tag, tagSuggestions = noneSelected }
-        _ = Debug.log "noneSelected" noneSelected
+
+        _ =
+            Debug.log "noneSelected" noneSelected
     in
         swapById model newEntry
 

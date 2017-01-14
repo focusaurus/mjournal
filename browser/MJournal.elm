@@ -3,6 +3,7 @@ module MJournal exposing (main)
 import About exposing (about)
 import Entries
 import EntriesView
+import Tags
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -211,6 +212,10 @@ update message model =
         PreviousTagSuggestion entry ->
             ( model, Cmd.none )
 
+        AddSuggestedTag entry tag ->
+            Entries.addSuggestedTag model entry tag.text
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Ports.clickDocument (\x -> CloseMenu)
@@ -269,6 +274,7 @@ view model =
 --         , subscriptions = subscriptions
 --         }
 -- Use this version for regular deploys
+
 
 up : Model -> Model
 up model =

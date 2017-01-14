@@ -5,7 +5,8 @@ import Model
 import Navigation
 
 type Msg
-    = AddTag Model.Entry
+    = AddSuggestedTag Model.Entry Model.TagSuggestion
+    | AddTag Model.Entry
     | ClearNewEntryBody
     | ClearTextSearch
     | CloseMenu

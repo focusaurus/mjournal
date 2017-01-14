@@ -46,9 +46,13 @@ tagItem entry tag =
         ]
 
 
-suggestionTag : TagSuggestion -> Html msg
-suggestionTag tag =
-    li [ class "suggestion-item" ] [ text tag.text ]
+suggestionTag : Model.Entry -> TagSuggestion -> Html Messages.Msg
+suggestionTag entry tag =
+    li
+        [ class "suggestion-item"
+        , onClick (Messages.AddSuggestedTag entry tag)
+        ]
+        [ text tag.text ]
 
 
 tags : Entry -> Html Messages.Msg
@@ -87,7 +91,7 @@ tags entry =
                         -- ng-hide", ng-show "suggestionList.visible" ]
                         [ ul
                             [ class "suggestion-list" ]
-                            (List.map suggestionTag entry.tagSuggestions)
+                            (List.map (suggestionTag entry) entry.tagSuggestions)
                         ]
                     ]
               else
