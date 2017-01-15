@@ -252,15 +252,15 @@ addTag entry =
             ( entry2, saveTags entry2 )
 
 
-deleteTag : Model -> Entry -> String -> ( Model, Cmd Msg )
-deleteTag model entry tag =
+deleteTag : Entry -> String -> ( Entry, Cmd Msg )
+deleteTag entry tag =
     let
         newEntry =
             { entry
                 | tags = List.filter (\t -> not (t == tag)) entry.tags
             }
     in
-        ( swapById model newEntry, saveTags newEntry )
+        ( newEntry, saveTags newEntry )
 
 
 swapById : Model -> Entry -> Model

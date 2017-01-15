@@ -206,7 +206,10 @@ update message model =
             ( down model, Cmd.none )
 
         DeleteTag entry tag ->
-            Entries.deleteTag (up model) entry tag
+            let
+                (entry2, cmd) = Entries.deleteTag entry tag
+            in
+                (up (Model.swapEntry model entry2), cmd)
 
         DeleteTagDone (Ok _) ->
             ( down model, Cmd.none )
