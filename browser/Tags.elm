@@ -3,8 +3,11 @@ module Tags
         ( tags
         , get
         , selectedSuggestion
+        , editNewTag
+        , addSuggestedTag
         , nextSuggestion
         , previousSuggestion
+        , keyDown
         , unselect
         )
 
@@ -13,10 +16,47 @@ import Html.Attributes exposing (..)
 import List
 import Messages
 import Model exposing (Entry, TagSuggestion)
-import Events exposing (onEnter, onDownArrow, onUpArrow, onKeyDown)
+import Events exposing (onEnter, onDownArrow, onUpArrow, onKeyDown, keyCodes)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
+
+
+keyDown entry keyCode =
+    if keyCode == keyCodes.up then
+        ( previousSuggestion entry, Cmd.none )
+    else if keyCode == keyCodes.down then
+        ( nextSuggestion entry, Cmd.none )
+    else if keyCode == keyCodes.escape then
+        ( unselect entry, Cmd.none )
+    else
+        ( entry, Cmd.none )
+
+
+addSuggestedTag : Entry -> String -> Entry
+addSuggestedTag entry tag =
+    { entry
+        | tags = List.append entry.tags [ tag ]
+        , newTag = ""
+        , tagSuggestions = []
+    }
+
+
+matchTag : String -> String -> Bool
+matchTag partialTag fullTag =
+    if String.length partialTag < 1 then
+        False
+    else
+        String.startsWith (String.toLower partialTag) (String.toLower fullTag)
+
+
+editNewTag : Entry -> List String -> String -> Entry
+editNewTag entry tags tag =
+    { entry
+        | newTag = tag
+        , tagSuggestions = List.filter (matchTag tag) tags
+        , selectedSuggestionIndex = -1
+    }
 
 
 unselect : Model.Entry -> Model.Entry

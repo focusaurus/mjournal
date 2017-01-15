@@ -7,7 +7,6 @@ module Entries
         , delete1
         , delete2
         , deleteTag
-        , editNewTag
         , getEntries
         , nextPage
         , new
@@ -35,34 +34,19 @@ import Tags
 
 tagKeyDown : Entry -> Int -> ( Entry, Cmd Msg )
 tagKeyDown entry keyCode =
-    let
-        _ =
-            Debug.log "debug" keyCode
-    in
-        if keyCode == keyCodes.enter then
-            if entry.selectedSuggestionIndex >= 0 then
-                addSuggestedTag entry (Tags.selectedSuggestion entry)
-            else
-                addTag entry
-        else if keyCode == keyCodes.up then
-            ( Tags.previousSuggestion entry, Cmd.none )
-        else if keyCode == keyCodes.down then
-            ( Tags.nextSuggestion entry, Cmd.none )
-        else if keyCode == keyCodes.escape then
-            ( Tags.unselect entry, Cmd.none )
+    if keyCode == keyCodes.enter then
+        if entry.selectedSuggestionIndex >= 0 then
+            addSuggestedTag entry (Tags.selectedSuggestion entry)
         else
-            ( entry, Cmd.none )
+            addTag entry
+    else
+        Tags.keyDown entry keyCode
 
 
 addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
 addSuggestedTag entry tag =
     let
-        entry2 =
-            { entry
-                | tags = List.append entry.tags [ tag ]
-                , newTag = ""
-                , tagSuggestions = []
-            }
+        entry2 = Tags.addSuggestedTag entry tag
     in
         ( entry2, saveTags entry2 )
 
@@ -157,23 +141,6 @@ newBody editedEntry newBody entry =
         { entry | body = newBody }
     else
         entry
-
-
-matchTag : String -> String -> Bool
-matchTag partialTag fullTag =
-    if String.length partialTag < 1 then
-        False
-    else
-        String.startsWith (String.toLower partialTag) (String.toLower fullTag)
-
-
-editNewTag : Entry -> List String -> String -> Entry
-editNewTag entry tags tag =
-    { entry
-        | newTag = tag
-        , tagSuggestions = List.filter (matchTag tag) tags
-        , selectedSuggestionIndex = -1
-    }
 
 
 addTag : Entry -> ( Entry, Cmd Msg )

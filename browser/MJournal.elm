@@ -188,7 +188,7 @@ update message model =
         InputNewTag entry tag ->
             let
                 entry2 =
-                    Entries.editNewTag entry model.tags tag
+                    Tags.editNewTag entry model.tags tag
             in
                 ( swapEntry model entry2, Tags.get model )
 
