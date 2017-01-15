@@ -65,22 +65,3 @@ type Theme
 type Screen
     = SignInScreen
     | EntriesScreen (Maybe String) (Maybe Int) (Maybe Int)
-
-
-swapEntry : Model -> Entry -> Model
-swapEntry model entry =
-    if entry.id < 0 then
-        { model | newEntry = entry }
-    else
-        let
-            newEntries =
-                List.map
-                    (\existing ->
-                        if existing.id == entry.id then
-                            entry
-                        else
-                            existing
-                    )
-                    model.entries
-        in
-            { model | entries = newEntries }

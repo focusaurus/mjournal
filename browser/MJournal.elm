@@ -190,14 +190,14 @@ update message model =
                 entry2 =
                     Entries.editNewTag entry model.tags tag
             in
-                ( Model.swapEntry model entry2, Tags.get model )
+                ( swapEntry model entry2, Tags.get model )
 
         AddTag entry ->
             let
                 ( entry2, cmd ) =
                     Entries.addTag entry
             in
-                ( Model.swapEntry model entry2, cmd )
+                ( swapEntry model entry2, cmd )
 
         SaveTagsDone (Ok _) ->
             ( down model, Cmd.none )
@@ -209,7 +209,7 @@ update message model =
             let
                 (entry2, cmd) = Entries.deleteTag entry tag
             in
-                (up (Model.swapEntry model entry2), cmd)
+                (up (swapEntry model entry2), cmd)
 
         DeleteTagDone (Ok _) ->
             ( down model, Cmd.none )
@@ -218,17 +218,17 @@ update message model =
             ( down model, Cmd.none )
 
         NextTagSuggestion entry ->
-            ( Model.swapEntry model (Tags.nextSuggestion entry), Cmd.none )
+            ( swapEntry model (Tags.nextSuggestion entry), Cmd.none )
 
         PreviousTagSuggestion entry ->
-            ( Model.swapEntry model (Tags.previousSuggestion entry), Cmd.none )
+            ( swapEntry model (Tags.previousSuggestion entry), Cmd.none )
 
         AddSuggestedTag entry tag ->
             let
                 ( entry2, cmd ) =
                     Entries.addSuggestedTag entry tag
             in
-                ( up (Model.swapEntry model entry), cmd )
+                ( up (swapEntry model entry), cmd )
 
         TagKeyDown entry keyCode ->
             -- TODO figure out how to conditionally increment requestCount here
@@ -236,7 +236,7 @@ update message model =
                 ( entry2, cmd ) =
                     Entries.tagKeyDown entry keyCode
             in
-                ( Model.swapEntry model entry2, cmd )
+                ( swapEntry model entry2, cmd )
 
 
 subscriptions : Model -> Sub Msg
@@ -298,6 +298,24 @@ view model =
 --         }
 -- Use this version for regular deploys
 
+
+swapEntry : Model -> Model.Entry -> Model
+swapEntry model entry =
+    if entry.id < 0 then
+        { model | newEntry = entry }
+    else
+        let
+            newEntries =
+                List.map
+                    (\existing ->
+                        if existing.id == entry.id then
+                            entry
+                        else
+                            existing
+                    )
+                    model.entries
+        in
+            { model | entries = newEntries }
 
 up : Model -> Model
 up model =

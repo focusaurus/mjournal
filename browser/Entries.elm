@@ -7,7 +7,6 @@ module Entries
         , delete1
         , delete2
         , deleteTag
-          -- , editBody
         , editNewTag
         , getEntries
         , nextPage
@@ -54,59 +53,6 @@ tagKeyDown entry keyCode =
             ( Tags.unselect entry, Cmd.none )
         else
             ( entry, Cmd.none )
-
-
-
--- nextTagSuggestion : Model.Model -> Model.Entry -> ( Model.Model, Cmd Msg )
--- nextTagSuggestion model entry =
---     let
---         max =
---             List.length entry.tagSuggestions - 1
---
---         index =
---             if entry.selectedSuggestionIndex >= max then
---                 max
---             else
---                 entry.selectedSuggestionIndex + 1
---
---         entry2 =
---             { entry | selectedSuggestionIndex = index }
---
---         _ =
---             Debug.log "nextTagSuggestion" entry2
---     in
---         ( swapById model entry2, Cmd.none )
--- previousTagSuggestion : Model.Model -> Model.Entry -> ( Model.Model, Cmd Msg )
--- previousTagSuggestion model entry =
---     let
---         index =
---             if entry.selectedSuggestionIndex < 1 then
---                 0
---             else
---                 entry.selectedSuggestionIndex - 1
---
---         entry2 =
---             { entry | selectedSuggestionIndex = index }
---     in
---         ( swapById model entry2, Cmd.none )
--- let
---     max =
---         List.length entry.tagSuggestions - 1
---
---     index =
---         if entry.selectedSuggestionIndex >= max then
---             max
---         else
---             entry.selectedSuggestionIndex + 1
---     tags = List.indexedMap (\ (i t) -> i t ) entry.tagSuggestions
---     entry2 =
---         { entry |
---             selectedSuggestionIndex = index
---             , tagSuggestions = List.map (\ ts -> {ts | selected = index}) entry.tagSuggestions
---         }
--- in
---     swapById model entry2
-
 
 addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
 addSuggestedTag entry tag =
@@ -214,11 +160,6 @@ newBody editedEntry newBody entry =
 
 
 
--- editBody : Entry -> String -> Entry
--- editBody entry body =
---     { entry | body = body }
-
-
 matchTag : String -> String -> Bool
 matchTag partialTag fullTag =
     if String.length partialTag < 1 then
@@ -261,26 +202,6 @@ deleteTag entry tag =
             }
     in
         ( newEntry, saveTags newEntry )
-
-
-swapById : Model -> Entry -> Model
-swapById model entry =
-    if entry.id < 0 then
-        { model | newEntry = entry }
-    else
-        let
-            newEntries =
-                List.map
-                    (\existing ->
-                        if existing.id == entry.id then
-                            entry
-                        else
-                            existing
-                    )
-                    model.entries
-        in
-            { model | entries = newEntries }
-
 
 saveBody : Entry -> String -> Cmd Msg
 saveBody entry newBody =
