@@ -54,6 +54,7 @@
     "rand-token": "0.2.1",
     "rupture": "0.6.2",
     "sharify": "0.1.6",
+    "slugify": "1.1.0",
     "split": "1.0.0",
     "stdin": "0.0.1",
     "stylus": "0.54.5",

@@ -236,7 +236,7 @@ update message model =
                         | tags = Set.union model.tags (Set.fromList entry2.tags)
                     }
             in
-                ( swapEntry model2 entry2, cmd )
+                ( swapEntry model2 entry2, Cmd.batch [cmd, Tag.get model] )
 
 
 subscriptions : Model -> Sub Msg

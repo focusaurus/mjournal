@@ -8,6 +8,8 @@ var errors = require('httperrors')
 var log = require('../../log')
 var opMW = require('../../operations/middleware')
 var presentEntry = require('../present-entry')
+var slugify = require('slugify')
+
 
 function select (where, run, next) {
   db('entries').select(clientFields)
@@ -34,7 +36,7 @@ function execute (run, next) {
     }
   })
   if (Array.isArray(set.tags)) {
-    set.tags = set.tags.join(' ')
+    set.tags = set.tags.map((t) => slugify(t)).join(' ')
   }
   var where = {
     id: run.options.id

@@ -98,7 +98,8 @@ tap.test('should update an entry', function (test) {
   const options = {
     id: entries[0].id,
     user: users[0],
-    body: 'test body 2'
+    body: 'test body 2',
+    tags: ['pea soup', 'flea soup']
   }
   const oldUpdated = entry.updated
   ops.update(options, function (error, outEntry) {
@@ -106,6 +107,8 @@ tap.test('should update an entry', function (test) {
     test.same(outEntry.body, options.body)
     test.ok(outEntry.updated)
     test.ok(outEntry.created)
+    test.same(outEntry.tags[0], 'pea-soup', 'should slugify')
+    test.same(outEntry.tags[1], 'flea-soup', 'should slugify')
     test.notEqual(oldUpdated, outEntry.updated)
     test.end()
   })

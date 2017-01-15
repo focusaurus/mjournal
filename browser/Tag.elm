@@ -117,19 +117,19 @@ previousSuggestion entry =
 get : Model.Model -> Cmd Messages.Msg
 get model =
     if Set.isEmpty model.tags then
-        Cmd.none
-    else
         Http.send Messages.GetTagsDone <|
-            Http.get ("/api/entries/tags") decodeList
+            Http.get ("/api/entries/tags") decodeTags
+    else
+        Cmd.none
 
 
-decodeList : JD.Decoder (List String)
-decodeList =
-    JD.list decode
+decodeTags : JD.Decoder (List String)
+decodeTags =
+    JD.list decodeTag
 
 
-decode : JD.Decoder String
-decode =
+decodeTag : JD.Decoder String
+decodeTag =
     JD.field "text" JD.string
 
 
