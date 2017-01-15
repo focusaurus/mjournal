@@ -149,14 +149,9 @@ addTag entry =
         ( entry, Cmd.none )
     else
         let
-            entry2 =
-                { entry
-                    | newTag = ""
-                    , tags = List.append entry.tags [ entry.newTag ]
-                    , tagSuggestions = []
-                }
+            entry2 = Tags.addTag entry
         in
-            ( entry2, saveTags entry2 )
+            ( entry2 , saveTags entry2 )
 
 
 deleteTag : Entry -> String -> ( Entry, Cmd Msg )

@@ -2,6 +2,7 @@ module Tags
     exposing
         ( tags
         , get
+        , addTag
         , selectedSuggestion
         , editNewTag
         , addSuggestedTag
@@ -20,6 +21,14 @@ import Events exposing (onEnter, onDownArrow, onUpArrow, onKeyDown, keyCodes)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
+
+
+addTag entry =
+    { entry
+        | newTag = ""
+        , tags = List.append entry.tags [ entry.newTag ]
+        , tagSuggestions = []
+    }
 
 
 keyDown entry keyCode =
