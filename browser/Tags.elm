@@ -1,11 +1,11 @@
-module Tags exposing (tags, get)
+module Tags exposing (tags, get, selectedSuggestion)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import List
 import Messages
 import Model exposing (Entry, TagSuggestion)
-import Events exposing (onEnter, onDownArrow, onUpArrow)
+import Events exposing (onEnter, onDownArrow, onUpArrow, onKeyDown)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
@@ -46,13 +46,63 @@ tagItem entry tag =
         ]
 
 
-suggestionTag : Model.Entry -> TagSuggestion -> Html Messages.Msg
-suggestionTag entry tag =
-    li
-        [ class "suggestion-item"
-        , onClick (Messages.AddSuggestedTag entry tag)
-        ]
-        [ text tag.text ]
+isSelected : Int -> Int -> String -> ( Bool, String )
+isSelected selectedIndex index tag =
+    ( selectedIndex == index, tag )
+
+
+suggestionHtml : Model.Entry -> ( Bool, String ) -> Html Messages.Msg
+suggestionHtml entry boolTag =
+    let
+        selected =
+            Tuple.first boolTag
+
+        tag =
+            Tuple.second boolTag
+    in
+        li
+            [ class "suggestion-item"
+            , classList [ ( "selected", selected ) ]
+            , onClick (Messages.AddSuggestedTag entry tag)
+            ]
+            [ text tag ]
+
+
+
+-- suggestionHtml entry tag =
+--     li
+--         [ class "suggestion-item"
+--         , onClick (Messages.AddSuggestedTag entry tag)
+--         ]
+--         [ text tag.text ]
+
+
+suggestionsHtml : Model.Entry -> Html Messages.Msg
+suggestionsHtml entry =
+    let
+        boolTag =
+            tagIndexedMap entry
+    in
+        ul
+            [ class "suggestion-list" ]
+            (List.map (suggestionHtml entry) boolTag)
+
+
+tagIndexedMap entry =
+    List.indexedMap (isSelected entry.selectedSuggestionIndex) entry.tagSuggestions
+
+
+selectedSuggestion entry =
+    let
+        selectedTuple =
+            List.filter (\t -> Tuple.first t) (tagIndexedMap entry)
+    in
+        case List.head selectedTuple of
+            Nothing ->
+                ""
+
+            Just tuple ->
+                Tuple.second tuple
 
 
 tags : Entry -> Html Messages.Msg
@@ -70,10 +120,11 @@ tags entry =
                     , placeholder "Add a tag"
                     , tabindex 0
                     , style [ ( "width", "69px" ) ]
-                    , onEnter (Messages.AddTag entry)
+                    , onKeyDown (Messages.TagKeyDown entry)
+                      -- , onEnter (Messages.AddTag entry)
                     , onInput (Messages.InputNewTag entry)
-                    , onDownArrow (Messages.NextTagSuggestion entry)
-                    , onUpArrow (Messages.PreviousTagSuggestion entry)
+                      -- , onDownArrow (Messages.NextTagSuggestion entry)
+                      -- , onUpArrow (Messages.PreviousTagSuggestion entry)
                     , value entry.newTag
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
@@ -89,9 +140,7 @@ tags entry =
                     [ div
                         [ class "autocomplete" ]
                         -- ng-hide", ng-show "suggestionList.visible" ]
-                        [ ul
-                            [ class "suggestion-list" ]
-                            (List.map (suggestionTag entry) entry.tagSuggestions)
+                        [ suggestionsHtml entry
                         ]
                     ]
               else

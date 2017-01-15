@@ -207,13 +207,23 @@ update message model =
             ( down model, Cmd.none )
 
         NextTagSuggestion entry ->
-            ( Entries.nextTagSuggestion model entry, Cmd.none )
+            let
+                _ = Debug.log "nextTagSuggestion" entry
+            in
+
+            Entries.nextTagSuggestion model entry
 
         PreviousTagSuggestion entry ->
-            ( model, Cmd.none )
+            let
+                _ = Debug.log "previousTagSuggestion" code
+            in
+
+            Entries.previousTagSuggestion model entry
 
         AddSuggestedTag entry tag ->
-            Entries.addSuggestedTag model entry tag.text
+            Entries.addSuggestedTag model entry tag
+        TagKeyDown entry keyCode ->
+            Entries.tagKeyDown model entry keyCode
 
 
 subscriptions : Model -> Sub Msg

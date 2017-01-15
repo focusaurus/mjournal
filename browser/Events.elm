@@ -5,7 +5,9 @@ module Events
         , onEdit
         , onEnter
         , onShiftEnter
+        , onKeyDown
         , onUpArrow
+        , keyCodes
         )
 
 import Html exposing (Attribute)
@@ -16,7 +18,7 @@ import Messages exposing (Msg)
 
 -- import Model exposing (KeyModified)
 
-
+keyCodes : {enter : Int, down : Int, up: Int}
 keyCodes =
     { enter = 13
     , down = 40
@@ -47,6 +49,12 @@ onUpArrow : Msg -> Attribute Msg
 onUpArrow =
     onKeyCode keyCodes.up
 
+
+onKeyDown msg =
+    on "keydown" <|
+        JD.map msg keyCode
+            -- (always msg)
+            -- (keyCode)
 
 
 -- the event has a keyCode and target.value

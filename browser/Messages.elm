@@ -5,7 +5,7 @@ import Model
 import Navigation
 
 type Msg
-    = AddSuggestedTag Model.Entry Model.TagSuggestion
+    = AddSuggestedTag Model.Entry String
     | AddTag Model.Entry
     | ClearNewEntryBody
     | ClearTextSearch
@@ -38,5 +38,6 @@ type Msg
     | SetThemeDone (Result Http.Error ())
     | SignIn
     | SignInDone (Result Http.Error Model.User)
+    | TagKeyDown Model.Entry Int
     | ToggleMenu String
     | ChangeUrl Navigation.Location

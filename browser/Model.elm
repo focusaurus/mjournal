@@ -40,7 +40,7 @@ type alias Entry =
     , created : Date
     , confirmingDelete : Bool
     , newTag : String
-    , tagSuggestions : List TagSuggestion
+    , tagSuggestions : List String
     , selectedSuggestionIndex : Int
     }
 
