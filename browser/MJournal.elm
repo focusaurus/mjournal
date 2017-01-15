@@ -1,9 +1,9 @@
 module MJournal exposing (main)
 
 import About exposing (about)
-import Entries
+import Entry
 import EntriesView
-import Tags
+import Tag
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -16,7 +16,7 @@ import Pagination
 import Ports
 import SignIn
 import Theme
-import Tags
+import Tag
 import Set
 
 
@@ -51,7 +51,7 @@ update message model =
                     }
                 , Cmd.batch
                     [ (Ports.setTheme (Theme.toString user.theme))
-                    , (Entries.getEntries Nothing)
+                    , (Entry.getEntries Nothing)
                     ]
                 )
 
@@ -62,19 +62,19 @@ update message model =
             ( up { model | signInError = "" }, SignIn.register model.signInEmail model.signInPassword )
 
         NextPage ->
-            Entries.nextPage model
+            Entry.nextPage model
 
         PreviousPage ->
-            Entries.previousPage model
+            Entry.previousPage model
 
         CreateEntry s ->
-            ( up model, Entries.create model.newEntry )
+            ( up model, Entry.create model.newEntry )
 
         CreateEntryDone (Ok entry) ->
             ( down
                 { model
                     | entries = List.append model.entries [ entry ]
-                    , newEntry = Entries.new
+                    , newEntry = Entry.new
                 }
             , Ports.clearNewEntryBody ()
             )
@@ -89,10 +89,10 @@ update message model =
                         newModel =
                             { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries }
                     in
-                        ( up newModel, Entries.delete2 entry )
+                        ( up newModel, Entry.delete2 entry )
 
                 False ->
-                    ( swapEntry model (Entries.delete1 entry), Cmd.none )
+                    ( swapEntry model (Entry.delete1 entry), Cmd.none )
 
         DeleteEntryDone (Ok ()) ->
             ( down model, Cmd.none )
@@ -143,13 +143,13 @@ update message model =
         SetNewEntryBodyAndSave newBody ->
             let
                 ( newEntry, cmd ) =
-                    Entries.setNewEntryBodyAndSave model.newEntry newBody
+                    Entry.setNewEntryBodyAndSave model.newEntry newBody
             in
                 ( up { model | newEntry = newEntry }, cmd )
 
         SaveBody entry newBody ->
             ( up model
-            , Entries.saveBody entry newBody
+            , Entry.saveBody entry newBody
             )
 
         SaveBodyDone (Ok _) ->
@@ -159,7 +159,7 @@ update message model =
             ( down model, Cmd.none )
 
         SetTextSearch textSearch ->
-            Entries.setTextSearch model textSearch
+            Entry.setTextSearch model textSearch
 
         Search ->
             let
@@ -181,7 +181,7 @@ update message model =
             ( down model, Cmd.none )
 
         ClearTextSearch ->
-            Entries.clearTextSearch (up model)
+            Entry.clearTextSearch (up model)
 
         ChangeUrl location ->
             route model location
@@ -189,9 +189,9 @@ update message model =
         InputNewTag entry tag ->
             let
                 entry2 =
-                    Tags.editNewTag entry model.tags tag
+                    Tag.editNewTag entry model.tags tag
             in
-                ( swapEntry model entry2, Tags.get model )
+                ( swapEntry model entry2, Tag.get model )
 
         SaveTagsDone (Ok _) ->
             ( down model, Cmd.none )
@@ -202,7 +202,7 @@ update message model =
         DeleteTag entry tag ->
             let
                 ( entry2, cmd ) =
-                    Entries.deleteTag entry tag
+                    Entry.deleteTag entry tag
             in
                 ( up (swapEntry model entry2), cmd )
 
@@ -213,15 +213,15 @@ update message model =
             ( down model, Cmd.none )
 
         NextTagSuggestion entry ->
-            ( swapEntry model (Tags.nextSuggestion entry), Cmd.none )
+            ( swapEntry model (Tag.nextSuggestion entry), Cmd.none )
 
         PreviousTagSuggestion entry ->
-            ( swapEntry model (Tags.previousSuggestion entry), Cmd.none )
+            ( swapEntry model (Tag.previousSuggestion entry), Cmd.none )
 
         AddSuggestedTag entry tag ->
             let
                 ( entry2, cmd ) =
-                    Entries.addSuggestedTag entry tag
+                    Entry.addSuggestedTag entry tag
             in
                 ( up (swapEntry model entry), cmd )
 
@@ -229,7 +229,7 @@ update message model =
             -- TODO figure out how to conditionally increment requestCount here
             let
                 ( entry2, cmd ) =
-                    Entries.tagKeyDown entry keyCode
+                    Entry.tagKeyDown entry keyCode
 
                 model2 =
                     { model
@@ -339,7 +339,7 @@ route model location =
     in
         case newModel.pageState.screen of
             Model.EntriesScreen textSearch after before ->
-                ( up newModel, Entries.search textSearch after before )
+                ( up newModel, Entry.search textSearch after before )
 
             Model.SignInScreen ->
                 ( newModel, Cmd.none )
@@ -361,7 +361,7 @@ initFlags flags location =
 
         model =
             { entries = []
-            , newEntry = Entries.new
+            , newEntry = Entry.new
             , menuOpen = False
             , pageState = pageState
             , requestCount = 0

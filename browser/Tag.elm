@@ -1,4 +1,4 @@
-module Tags
+module Tag
     exposing
         ( addSuggestedTag
         , addTag

@@ -1,4 +1,4 @@
-module Entries
+module Entry
     exposing
         ( addSuggestedTag
         , addTag
@@ -29,25 +29,25 @@ import Model exposing (Model, Entry, TagSuggestion)
 import Navigation
 import Date
 import Events exposing (keyCodes)
-import Tags
+import Tag
 
 
 tagKeyDown : Entry -> Int -> ( Entry, Cmd Msg )
 tagKeyDown entry keyCode =
     if keyCode == keyCodes.enter then
         if entry.selectedSuggestionIndex >= 0 then
-            addSuggestedTag entry (Tags.selectedSuggestion entry)
+            addSuggestedTag entry (Tag.selectedSuggestion entry)
         else
             addTag entry
     else
-        Tags.keyDown entry keyCode
+        Tag.keyDown entry keyCode
 
 
 addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
 addSuggestedTag entry tag =
     let
         entry2 =
-            Tags.addSuggestedTag entry tag
+            Tag.addSuggestedTag entry tag
     in
         ( entry2, saveTags entry2 )
 
@@ -151,7 +151,7 @@ addTag entry =
     else
         let
             entry2 =
-                Tags.addTag entry
+                Tag.addTag entry
         in
             ( entry2, saveTags entry2 )
 
@@ -160,7 +160,7 @@ deleteTag : Entry -> String -> ( Entry, Cmd Msg )
 deleteTag entry tag =
     let
         entry2 =
-            Tags.deleteTag entry tag
+            Tag.deleteTag entry tag
     in
         ( entry2, saveTags entry2 )
 

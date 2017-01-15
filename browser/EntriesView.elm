@@ -7,7 +7,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onBlur)
 import Messages exposing (Msg(..))
 import Model exposing (Model, Entry)
-import Tags exposing (tags)
+import Tag exposing (tags)
 
 
 list : Model -> Html Msg
