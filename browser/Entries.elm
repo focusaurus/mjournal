@@ -7,7 +7,7 @@ module Entries
         , delete1
         , delete2
         , deleteTag
-        , editBody
+          -- , editBody
         , editNewTag
         , getEntries
         , nextPage
@@ -213,13 +213,10 @@ newBody editedEntry newBody entry =
         entry
 
 
-editBody : Model -> Entry -> String -> Model
-editBody model entry body =
-    let
-        newEntry =
-            { entry | body = body }
-    in
-        swapById model newEntry
+
+-- editBody : Entry -> String -> Entry
+-- editBody entry body =
+--     { entry | body = body }
 
 
 matchTag : String -> String -> Bool
@@ -230,20 +227,13 @@ matchTag partialTag fullTag =
         String.startsWith (String.toLower partialTag) (String.toLower fullTag)
 
 
-editNewTag : Model -> Entry -> String -> Model
-editNewTag model entry tag =
-    let
-        onlyMatches =
-            List.filter (matchTag tag) model.tags
-
-        newEntry =
-            { entry
-                | newTag = tag
-                , tagSuggestions = onlyMatches
-                , selectedSuggestionIndex = -1
-            }
-    in
-        swapById model newEntry
+editNewTag : Entry -> List String -> String -> Entry
+editNewTag entry tags tag =
+    { entry
+        | newTag = tag
+        , tagSuggestions = List.filter (matchTag tag) tags
+        , selectedSuggestionIndex = -1
+    }
 
 
 addTag : Entry -> ( Entry, Cmd Msg )

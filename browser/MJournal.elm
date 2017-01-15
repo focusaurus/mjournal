@@ -186,7 +186,11 @@ update message model =
             route model location
 
         InputNewTag entry tag ->
-            ( Entries.editNewTag model entry tag, Tags.get model )
+            let
+                entry2 =
+                    Entries.editNewTag entry model.tags tag
+            in
+                ( Model.swapEntry model entry2, Tags.get model )
 
         AddTag entry ->
             let
