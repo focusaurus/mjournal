@@ -9,6 +9,7 @@ module Tags
         , nextSuggestion
         , previousSuggestion
         , keyDown
+        , deleteTag
         , unselect
         )
 
@@ -22,7 +23,7 @@ import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
 
-
+addTag : Entry -> Entry
 addTag entry =
     { entry
         | newTag = ""
@@ -30,7 +31,13 @@ addTag entry =
         , tagSuggestions = []
     }
 
+deleteTag : Entry -> String -> Entry
+deleteTag entry tag =
+    { entry
+        | tags = List.filter (\t -> not (t == tag)) entry.tags
+    }
 
+keyDown : Entry -> Int -> ( Entry, Cmd Messages.Msg )
 keyDown entry keyCode =
     if keyCode == keyCodes.up then
         ( previousSuggestion entry, Cmd.none )

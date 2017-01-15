@@ -157,12 +157,10 @@ addTag entry =
 deleteTag : Entry -> String -> ( Entry, Cmd Msg )
 deleteTag entry tag =
     let
-        newEntry =
-            { entry
-                | tags = List.filter (\t -> not (t == tag)) entry.tags
-            }
+        entry2 = Tags.deleteTag entry tag
+
     in
-        ( newEntry, saveTags newEntry )
+        ( entry2, saveTags entry2 )
 
 
 saveBody : Entry -> String -> Cmd Msg
