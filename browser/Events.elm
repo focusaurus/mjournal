@@ -18,11 +18,12 @@ import Messages exposing (Msg)
 
 -- import Model exposing (KeyModified)
 
-keyCodes : {enter : Int, down : Int, up: Int}
+keyCodes : {enter : Int, down : Int, up: Int, escape: Int}
 keyCodes =
     { enter = 13
     , down = 40
     , up = 38
+    , escape = 27
     }
 
 

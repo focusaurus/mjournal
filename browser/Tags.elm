@@ -1,4 +1,12 @@
-module Tags exposing (tags, get, selectedSuggestion)
+module Tags
+    exposing
+        ( tags
+        , get
+        , selectedSuggestion
+        , nextSuggestion
+        , previousSuggestion
+        , unselect
+        )
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -9,6 +17,38 @@ import Events exposing (onEnter, onDownArrow, onUpArrow, onKeyDown)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
+
+
+unselect : Model.Entry -> Model.Entry
+unselect entry =
+    { entry | selectedSuggestionIndex = -1 }
+
+
+nextSuggestion : Model.Entry -> Model.Entry
+nextSuggestion entry =
+    let
+        max =
+            List.length entry.tagSuggestions - 1
+
+        index =
+            if entry.selectedSuggestionIndex >= max then
+                max
+            else
+                entry.selectedSuggestionIndex + 1
+    in
+        { entry | selectedSuggestionIndex = index }
+
+
+previousSuggestion : Model.Entry -> Model.Entry
+previousSuggestion entry =
+    let
+        index =
+            if entry.selectedSuggestionIndex < 1 then
+                0
+            else
+                entry.selectedSuggestionIndex - 1
+    in
+        { entry | selectedSuggestionIndex = index }
 
 
 get : Model.Model -> Cmd Messages.Msg

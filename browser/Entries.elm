@@ -11,10 +11,8 @@ module Entries
         , editNewTag
         , getEntries
         , nextPage
-        , nextTagSuggestion
         , new
         , previousPage
-        , previousTagSuggestion
         , saveBody
         , search
         , setNewEntryBody
@@ -36,62 +34,61 @@ import Date
 import Events exposing (keyCodes)
 import Tags
 
-tagKeyDown : Model -> Entry -> Int -> ( Model, Cmd Msg )
-tagKeyDown model entry keyCode =
+
+tagKeyDown : Entry -> Int -> ( Entry, Cmd Msg )
+tagKeyDown entry keyCode =
     let
         _ =
             Debug.log "debug" keyCode
     in
         if keyCode == keyCodes.enter then
             if entry.selectedSuggestionIndex >= 0 then
-                addSuggestedTag model entry (Tags.selectedSuggestion entry)
+                addSuggestedTag entry (Tags.selectedSuggestion entry)
             else
-                addTag model entry
+                addTag entry
         else if keyCode == keyCodes.up then
-            previousTagSuggestion model entry
+            ( Tags.previousSuggestion entry, Cmd.none )
         else if keyCode == keyCodes.down then
-            nextTagSuggestion model entry
+            ( Tags.nextSuggestion entry, Cmd.none )
+        else if keyCode == keyCodes.escape then
+            ( Tags.unselect entry, Cmd.none )
         else
-            ( model, Cmd.none )
-
-
-nextTagSuggestion : Model.Model -> Model.Entry -> ( Model.Model, Cmd Msg )
-nextTagSuggestion model entry =
-    let
-        max =
-            List.length entry.tagSuggestions - 1
-
-        index =
-            if entry.selectedSuggestionIndex >= max then
-                max
-            else
-                entry.selectedSuggestionIndex + 1
-
-        entry2 =
-            { entry | selectedSuggestionIndex = index }
-
-        _ =
-            Debug.log "nextTagSuggestion" entry2
-    in
-        ( swapById model entry2, Cmd.none )
-
-
-previousTagSuggestion : Model.Model -> Model.Entry -> ( Model.Model, Cmd Msg )
-previousTagSuggestion model entry =
-    let
-        index =
-            if entry.selectedSuggestionIndex < 1 then
-                0
-            else
-                entry.selectedSuggestionIndex - 1
-
-        entry2 =
-            { entry | selectedSuggestionIndex = index }
-    in
-        ( swapById model entry2, Cmd.none )
+            ( entry, Cmd.none )
 
 
 
+-- nextTagSuggestion : Model.Model -> Model.Entry -> ( Model.Model, Cmd Msg )
+-- nextTagSuggestion model entry =
+--     let
+--         max =
+--             List.length entry.tagSuggestions - 1
+--
+--         index =
+--             if entry.selectedSuggestionIndex >= max then
+--                 max
+--             else
+--                 entry.selectedSuggestionIndex + 1
+--
+--         entry2 =
+--             { entry | selectedSuggestionIndex = index }
+--
+--         _ =
+--             Debug.log "nextTagSuggestion" entry2
+--     in
+--         ( swapById model entry2, Cmd.none )
+-- previousTagSuggestion : Model.Model -> Model.Entry -> ( Model.Model, Cmd Msg )
+-- previousTagSuggestion model entry =
+--     let
+--         index =
+--             if entry.selectedSuggestionIndex < 1 then
+--                 0
+--             else
+--                 entry.selectedSuggestionIndex - 1
+--
+--         entry2 =
+--             { entry | selectedSuggestionIndex = index }
+--     in
+--         ( swapById model entry2, Cmd.none )
 -- let
 --     max =
 --         List.length entry.tagSuggestions - 1
@@ -111,8 +108,8 @@ previousTagSuggestion model entry =
 --     swapById model entry2
 
 
-addSuggestedTag : Model -> Entry -> String -> ( Model, Cmd Msg )
-addSuggestedTag model entry tag =
+addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
+addSuggestedTag entry tag =
     let
         entry2 =
             { entry
@@ -121,7 +118,7 @@ addSuggestedTag model entry tag =
                 , tagSuggestions = []
             }
     in
-        ( swapById model entry2, saveTags entry2 )
+        ( entry2, saveTags entry2 )
 
 
 getEntries : Maybe String -> Cmd Msg
@@ -249,21 +246,20 @@ editNewTag model entry tag =
         swapById model newEntry
 
 
-addTag : Model -> Entry -> ( Model, Cmd Msg )
-addTag model entry =
+addTag : Entry -> ( Entry, Cmd Msg )
+addTag entry =
     if String.isEmpty entry.newTag then
-        ( model, Cmd.none )
+        ( entry, Cmd.none )
     else
         let
-            -- _ = Debug.log "AddTag" entry.newTag
-            newEntry =
+            entry2 =
                 { entry
                     | newTag = ""
                     , tags = List.append entry.tags [ entry.newTag ]
                     , tagSuggestions = []
                 }
         in
-            ( swapById model newEntry, saveTags newEntry )
+            ( entry2, saveTags entry2 )
 
 
 deleteTag : Model -> Entry -> String -> ( Model, Cmd Msg )

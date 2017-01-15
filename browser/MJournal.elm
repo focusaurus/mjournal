@@ -189,7 +189,11 @@ update message model =
             ( Entries.editNewTag model entry tag, Tags.get model )
 
         AddTag entry ->
-            Entries.addTag (up model) entry
+            let
+                ( entry2, cmd ) =
+                    Entries.addTag entry
+            in
+                ( Model.swapEntry model entry2, cmd )
 
         SaveTagsDone (Ok _) ->
             ( down model, Cmd.none )
@@ -207,23 +211,25 @@ update message model =
             ( down model, Cmd.none )
 
         NextTagSuggestion entry ->
-            let
-                _ = Debug.log "nextTagSuggestion" entry
-            in
-
-            Entries.nextTagSuggestion model entry
+            ( Model.swapEntry model (Tags.nextSuggestion entry), Cmd.none )
 
         PreviousTagSuggestion entry ->
-            let
-                _ = Debug.log "previousTagSuggestion" code
-            in
-
-            Entries.previousTagSuggestion model entry
+            ( Model.swapEntry model (Tags.previousSuggestion entry), Cmd.none )
 
         AddSuggestedTag entry tag ->
-            Entries.addSuggestedTag model entry tag
+            let
+                ( entry2, cmd ) =
+                    Entries.addSuggestedTag entry tag
+            in
+                ( up (Model.swapEntry model entry), cmd )
+
         TagKeyDown entry keyCode ->
-            Entries.tagKeyDown model entry keyCode
+            -- TODO figure out how to conditionally increment requestCount here
+            let
+                ( entry2, cmd ) =
+                    Entries.tagKeyDown entry keyCode
+            in
+                ( Model.swapEntry model entry2, cmd )
 
 
 subscriptions : Model -> Sub Msg
