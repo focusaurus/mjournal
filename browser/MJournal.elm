@@ -91,11 +91,7 @@ update message model =
                         ( up newModel, Entries.delete2 entry )
 
                 False ->
-                    let
-                        newModel =
-                            Entries.delete1 model entry
-                    in
-                        ( newModel, Cmd.none )
+                    ( swapEntry model (Entries.delete1 entry), Cmd.none )
 
         DeleteEntryDone (Ok ()) ->
             ( down model, Cmd.none )

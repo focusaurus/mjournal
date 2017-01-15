@@ -284,19 +284,9 @@ create entry =
             Http.send CreateEntryDone (Http.post "/api/entries" httpBody decode)
 
 
-setConfirmingDelete : Entry -> Entry -> Entry
-setConfirmingDelete target entry =
-    { entry | confirmingDelete = entry.id == target.id }
-
-
-delete1 : Model -> Entry -> Model
-delete1 model entry =
-    let
-        newEntries =
-            List.map (setConfirmingDelete entry) model.entries
-    in
-        { model | entries = newEntries }
-
+delete1 :Entry -> Entry
+delete1 entry =
+    { entry | confirmingDelete = True }
 
 delete2 : Entry -> Cmd Msg
 delete2 entry =
