@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import Date exposing (Date)
-
+import Set exposing (Set)
 
 type alias Model =
     { entries : List Entry
@@ -12,7 +12,7 @@ type alias Model =
     , signInEmail : String
     , signInError : String
     , signInPassword : String
-    , tags : List String
+    , tags : Set String
     , theme : Theme
     }
 

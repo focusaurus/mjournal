@@ -8,8 +8,8 @@ module Entries
         , delete2
         , deleteTag
         , getEntries
-        , nextPage
         , new
+        , nextPage
         , previousPage
         , saveBody
         , search
@@ -46,7 +46,8 @@ tagKeyDown entry keyCode =
 addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
 addSuggestedTag entry tag =
     let
-        entry2 = Tags.addSuggestedTag entry tag
+        entry2 =
+            Tags.addSuggestedTag entry tag
     in
         ( entry2, saveTags entry2 )
 
@@ -149,16 +150,17 @@ addTag entry =
         ( entry, Cmd.none )
     else
         let
-            entry2 = Tags.addTag entry
+            entry2 =
+                Tags.addTag entry
         in
-            ( entry2 , saveTags entry2 )
+            ( entry2, saveTags entry2 )
 
 
 deleteTag : Entry -> String -> ( Entry, Cmd Msg )
 deleteTag entry tag =
     let
-        entry2 = Tags.deleteTag entry tag
-
+        entry2 =
+            Tags.deleteTag entry tag
     in
         ( entry2, saveTags entry2 )
 

@@ -17,6 +17,7 @@ import Ports
 import SignIn
 import Theme
 import Tags
+import Set
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -106,7 +107,7 @@ update message model =
             ( up model, Cmd.none )
 
         GetTagsDone (Ok tags) ->
-            ( down { model | tags = tags }, Cmd.none )
+            ( down { model | tags = Set.fromList tags }, Cmd.none )
 
         GetTagsDone (Err error) ->
             ( up model, Cmd.none )
@@ -192,13 +193,6 @@ update message model =
             in
                 ( swapEntry model entry2, Tags.get model )
 
-        AddTag entry ->
-            let
-                ( entry2, cmd ) =
-                    Entries.addTag entry
-            in
-                ( swapEntry model entry2, cmd )
-
         SaveTagsDone (Ok _) ->
             ( down model, Cmd.none )
 
@@ -236,8 +230,13 @@ update message model =
             let
                 ( entry2, cmd ) =
                     Entries.tagKeyDown entry keyCode
+
+                model2 =
+                    { model
+                        | tags = Set.union model.tags (Set.fromList entry2.tags)
+                    }
             in
-                ( swapEntry model entry2, cmd )
+                ( swapEntry model2 entry2, cmd )
 
 
 subscriptions : Model -> Sub Msg
@@ -370,7 +369,7 @@ initFlags flags location =
             , signInError = ""
             , signInPassword = "password"
             , theme = theme
-            , tags = []
+            , tags = Set.empty
             }
     in
         route model location

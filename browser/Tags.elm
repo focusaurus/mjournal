@@ -1,15 +1,15 @@
 module Tags
     exposing
-        ( tags
-        , get
+        ( addSuggestedTag
         , addTag
-        , selectedSuggestion
+        , deleteTag
         , editNewTag
-        , addSuggestedTag
+        , get
+        , keyDown
         , nextSuggestion
         , previousSuggestion
-        , keyDown
-        , deleteTag
+        , selectedSuggestion
+        , tags
         , unselect
         )
 
@@ -22,6 +22,7 @@ import Events exposing (onEnter, onDownArrow, onUpArrow, onKeyDown, keyCodes)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Decode as JD
+import Set
 
 addTag : Entry -> Entry
 addTag entry =
@@ -31,11 +32,13 @@ addTag entry =
         , tagSuggestions = []
     }
 
+
 deleteTag : Entry -> String -> Entry
 deleteTag entry tag =
     { entry
         | tags = List.filter (\t -> not (t == tag)) entry.tags
     }
+
 
 keyDown : Entry -> Int -> ( Entry, Cmd Messages.Msg )
 keyDown entry keyCode =
@@ -66,11 +69,15 @@ matchTag partialTag fullTag =
         String.startsWith (String.toLower partialTag) (String.toLower fullTag)
 
 
-editNewTag : Entry -> List String -> String -> Entry
+editNewTag : Entry -> Set.Set String -> String -> Entry
 editNewTag entry tags tag =
+    let
+        matchingSet = Set.filter (matchTag tag) tags
+        inEntry = Set.fromList (entry.tags)
+    in
     { entry
         | newTag = tag
-        , tagSuggestions = List.filter (matchTag tag) tags
+        , tagSuggestions = Set.toList (Set.diff matchingSet inEntry)
         , selectedSuggestionIndex = -1
     }
 
@@ -109,7 +116,7 @@ previousSuggestion entry =
 
 get : Model.Model -> Cmd Messages.Msg
 get model =
-    if List.length model.tags > 0 then
+    if Set.isEmpty model.tags then
         Cmd.none
     else
         Http.send Messages.GetTagsDone <|
@@ -217,10 +224,7 @@ tags entry =
                     , tabindex 0
                     , style [ ( "width", "69px" ) ]
                     , onKeyDown (Messages.TagKeyDown entry)
-                      -- , onEnter (Messages.AddTag entry)
                     , onInput (Messages.InputNewTag entry)
-                      -- , onDownArrow (Messages.NextTagSuggestion entry)
-                      -- , onUpArrow (Messages.PreviousTagSuggestion entry)
                     , value entry.newTag
                     ]
                     -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
