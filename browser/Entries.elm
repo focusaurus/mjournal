@@ -14,7 +14,6 @@ module Entries
         , previousPage
         , saveBody
         , search
-        , setNewEntryBody
         , setNewEntryBodyAndSave
         , setTextSearch
         , tagKeyDown
@@ -53,6 +52,7 @@ tagKeyDown entry keyCode =
             ( Tags.unselect entry, Cmd.none )
         else
             ( entry, Cmd.none )
+
 
 addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
 addSuggestedTag entry tag =
@@ -159,7 +159,6 @@ newBody editedEntry newBody entry =
         entry
 
 
-
 matchTag : String -> String -> Bool
 matchTag partialTag fullTag =
     if String.length partialTag < 1 then
@@ -202,6 +201,7 @@ deleteTag entry tag =
             }
     in
         ( newEntry, saveTags newEntry )
+
 
 saveBody : Entry -> String -> Cmd Msg
 saveBody entry newBody =
@@ -284,9 +284,10 @@ create entry =
             Http.send CreateEntryDone (Http.post "/api/entries" httpBody decode)
 
 
-delete1 :Entry -> Entry
+delete1 : Entry -> Entry
 delete1 entry =
     { entry | confirmingDelete = True }
+
 
 delete2 : Entry -> Cmd Msg
 delete2 entry =
@@ -355,31 +356,10 @@ new =
     Model.Entry -1 "" [] (Date.fromTime 0) False "" [] 0
 
 
-setNewEntryBody : Model -> String -> ( Model, Cmd Msg )
-setNewEntryBody model newBody =
+setNewEntryBodyAndSave : Entry -> String -> ( Entry, Cmd Msg )
+setNewEntryBodyAndSave entry newBody =
     let
-        entry1 =
-            model.newEntry
-
         entry2 =
-            { entry1 | body = newBody }
-
-        newModel =
-            { model | newEntry = entry2 }
+            { entry | body = newBody }
     in
-        ( newModel, Cmd.none )
-
-
-setNewEntryBodyAndSave : Model -> String -> ( Model, Cmd Msg )
-setNewEntryBodyAndSave model newBody =
-    let
-        entry1 =
-            model.newEntry
-
-        entry2 =
-            { entry1 | body = newBody }
-
-        newModel =
-            { model | newEntry = new }
-    in
-        ( newModel, create entry2 )
+        ( entry2, create entry2 )

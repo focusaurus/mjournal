@@ -140,7 +140,11 @@ update message model =
                 ( newModel, Cmd.none )
 
         SetNewEntryBodyAndSave newBody ->
-            Entries.setNewEntryBodyAndSave (up model) newBody
+            let
+                ( newEntry, cmd ) =
+                    Entries.setNewEntryBodyAndSave model.newEntry newBody
+            in
+                ( up { model | newEntry = newEntry }, cmd )
 
         SaveBody entry newBody ->
             ( up model
@@ -203,9 +207,10 @@ update message model =
 
         DeleteTag entry tag ->
             let
-                (entry2, cmd) = Entries.deleteTag entry tag
+                ( entry2, cmd ) =
+                    Entries.deleteTag entry tag
             in
-                (up (swapEntry model entry2), cmd)
+                ( up (swapEntry model entry2), cmd )
 
         DeleteTagDone (Ok _) ->
             ( down model, Cmd.none )
@@ -312,6 +317,7 @@ swapEntry model entry =
                     model.entries
         in
             { model | entries = newEntries }
+
 
 up : Model -> Model
 up model =
