@@ -27,13 +27,20 @@ update message model =
     -- in
     case message of
         InputEmail newEmail ->
-            ( { model | signInEmail = newEmail, signInError = "" }, Cmd.none )
+            ( { model | signInEmail = newEmail, signInError = "" }
+            , Cmd.none
+            )
 
         InputPassword newPassword ->
-            ( { model | signInPassword = newPassword, signInError = "" }, Cmd.none )
+            ( { model | signInPassword = newPassword, signInError = "" }
+            , Cmd.none
+            )
 
         SignIn ->
-            ( up { model | signInError = "" }, SignIn.signIn model.signInEmail model.signInPassword )
+            ( { model | signInError = "" }
+                |> up
+            , SignIn.signIn model.signInEmail model.signInPassword
+            )
 
         SignInDone (Ok user) ->
             let
@@ -43,12 +50,13 @@ update message model =
                 newPageState =
                     { oldPageState | screen = Model.EntriesScreen Nothing Nothing Nothing }
             in
-                ( down
-                    { model
-                        | pageState = newPageState
-                        , signInError = ""
-                        , theme = user.theme
-                    }
+                ( { model
+                    | pageState = newPageState
+                    , signInError = ""
+                    , theme = user.theme
+                  }
+                    |> down
+                    |> errorOff
                 , Cmd.batch
                     [ (Ports.setTheme (Theme.toString user.theme))
                     , (Entry.getEntries Nothing)
@@ -56,10 +64,12 @@ update message model =
                 )
 
         SignInDone (Err error) ->
-            SignIn.signInDone (down model) error
+            SignIn.signInDone (model |> down |> errorOff) error
 
         Register ->
-            ( up { model | signInError = "" }, SignIn.register model.signInEmail model.signInPassword )
+            ( { model | signInError = "" } |> up
+            , SignIn.register model.signInEmail model.signInPassword
+            )
 
         NextPage ->
             Entry.nextPage model
@@ -71,16 +81,17 @@ update message model =
             ( up model, Entry.create model.newEntry )
 
         CreateEntryDone (Ok entry) ->
-            ( down
-                { model
-                    | entries = List.append model.entries [ entry ]
-                    , newEntry = Entry.new
-                }
+            ( { model
+                | entries = List.append model.entries [ entry ]
+                , newEntry = Entry.new
+              }
+                |> down
+                |> errorOff
             , Ports.clearNewEntryBody ()
             )
 
         CreateEntryDone (Err message) ->
-            ( model |> down |> errorOff, Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         DeleteEntry1 entry ->
             case entry.confirmingDelete of
@@ -95,21 +106,23 @@ update message model =
                     ( swapEntry model (Entry.delete1 entry), Cmd.none )
 
         DeleteEntryDone (Ok _) ->
-            let _ = Debug.log "DeleteEntryDone OK" 42 in
             ( model |> down |> errorOff, Cmd.none )
 
         DeleteEntryDone (Err _) ->
-            let _ = Debug.log "DeleteEntryDone Err" 42 in
-            ( model |> down |> errorOn , Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         GetEntriesDone (Ok entries) ->
-            ( down { model | entries = entries }, Cmd.none )
+            ( { model | entries = entries } |> down |> errorOff, Cmd.none )
 
         GetEntriesDone (Err error) ->
-            ( up model, Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         GetTagsDone (Ok tags) ->
-            ( down { model | tags = Set.fromList tags }, Cmd.none )
+            ( { model | tags = Set.fromList tags }
+                |> down
+                |> errorOff
+            , Cmd.none
+            )
 
         GetTagsDone (Err error) ->
             ( up model, Cmd.none )
@@ -124,7 +137,7 @@ update message model =
             ( up { model | theme = theme }, Theme.set theme )
 
         SetThemeDone _ ->
-            ( down model, Ports.setTheme (Theme.toString model.theme) )
+            ( model |> down |> errorOff, Ports.setTheme (Theme.toString model.theme) )
 
         ClearNewEntryBody ->
             ( model, Ports.clearNewEntryBody () )
@@ -155,10 +168,10 @@ update message model =
             )
 
         SaveBodyDone (Ok _) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOff, Cmd.none )
 
         SaveBodyDone (Err _) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         SetTextSearch textSearch ->
             Entry.setTextSearch model textSearch
@@ -177,10 +190,10 @@ update message model =
                 ( newModel, Navigation.newUrl (Location.location newModel) )
 
         SearchDone (Ok entries) ->
-            ( down { model | entries = entries }, Cmd.none )
+            ( { model | entries = entries } |> down |> errorOff, Cmd.none )
 
         SearchDone (Err message) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         ClearTextSearch ->
             Entry.clearTextSearch (up model)
@@ -196,10 +209,10 @@ update message model =
                 ( swapEntry model entry2, Tag.get model )
 
         SaveTagsDone (Ok _) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOff, Cmd.none )
 
         SaveTagsDone (Err _) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         DeleteTag entry tag ->
             let
@@ -209,10 +222,10 @@ update message model =
                 ( up (swapEntry model entry2), cmd )
 
         DeleteTagDone (Ok _) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOff, Cmd.none )
 
         DeleteTagDone (Err _) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOn, Cmd.none )
 
         NextTagSuggestion entry ->
             ( swapEntry model (Tag.nextSuggestion entry), Cmd.none )
@@ -331,6 +344,7 @@ errorOn model =
     { model
         | errorMessage = Just "Unable to save your changes. Reload the page and try again."
     }
+
 
 errorOff : Model -> Model
 errorOff model =
