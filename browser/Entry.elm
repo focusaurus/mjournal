@@ -259,7 +259,7 @@ delete2 entry =
             , headers = []
             , url = "/api/entries/" ++ toString entry.id
             , body = Http.emptyBody
-            , expect = Http.expectJson (JD.succeed ())
+            , expect = Http.expectString
             , timeout = Nothing
             , withCredentials = False
             }

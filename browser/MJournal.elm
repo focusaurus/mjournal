@@ -80,7 +80,7 @@ update message model =
             )
 
         CreateEntryDone (Err message) ->
-            ( down model, Cmd.none )
+            ( model |> down |> errorOff, Cmd.none )
 
         DeleteEntry1 entry ->
             case entry.confirmingDelete of
@@ -94,11 +94,13 @@ update message model =
                 False ->
                     ( swapEntry model (Entry.delete1 entry), Cmd.none )
 
-        DeleteEntryDone (Ok ()) ->
-            ( down model, Cmd.none )
+        DeleteEntryDone (Ok _) ->
+            let _ = Debug.log "DeleteEntryDone OK" 42 in
+            ( model |> down |> errorOff, Cmd.none )
 
-        DeleteEntryDone (Err message) ->
-            ( down model, Cmd.none )
+        DeleteEntryDone (Err _) ->
+            let _ = Debug.log "DeleteEntryDone Err" 42 in
+            ( model |> down |> errorOn , Cmd.none )
 
         GetEntriesDone (Ok entries) ->
             ( down { model | entries = entries }, Cmd.none )
@@ -236,7 +238,7 @@ update message model =
                         | tags = Set.union model.tags (Set.fromList entry2.tags)
                     }
             in
-                ( swapEntry model2 entry2, Cmd.batch [cmd, Tag.get model] )
+                ( swapEntry model2 entry2, Cmd.batch [ cmd, Tag.get model ] )
 
 
 subscriptions : Model -> Sub Msg
@@ -257,7 +259,13 @@ view model =
 
         Model.EntriesScreen textSearch after before ->
             div [ onClick CloseMenu ]
-                [ h1 [ class "app-name" ]
+                [ case model.errorMessage of
+                    Nothing ->
+                        text ""
+
+                    Just errorMessage ->
+                        i [ class "error fixed-error icon-warning", title errorMessage ] []
+                , h1 [ class "app-name" ]
                     [ a [ href "/" ] [ text "mjournal" ]
                     ]
                 , h2 [ class "app-tag" ] [ text "minimalist journaling" ]
@@ -318,6 +326,19 @@ swapEntry model entry =
             { model | entries = newEntries }
 
 
+errorOn : Model -> Model
+errorOn model =
+    { model
+        | errorMessage = Just "Unable to save your changes. Reload the page and try again."
+    }
+
+errorOff : Model -> Model
+errorOff model =
+    { model
+        | errorMessage = Nothing
+    }
+
+
 up : Model -> Model
 up model =
     { model | requestCount = model.requestCount + 1 }
@@ -370,6 +391,7 @@ initFlags flags location =
             , signInPassword = "password"
             , theme = theme
             , tags = Set.empty
+            , errorMessage = Nothing
             }
     in
         route model location

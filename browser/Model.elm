@@ -14,6 +14,7 @@ type alias Model =
     , signInPassword : String
     , tags : Set String
     , theme : Theme
+    , errorMessage : Maybe String
     }
 
 

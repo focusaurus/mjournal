@@ -12,7 +12,7 @@ type Msg
     | CreateEntry (Maybe String)
     | CreateEntryDone (Result Http.Error Model.Entry)
     | DeleteEntry1 Model.Entry
-    | DeleteEntryDone (Result Http.Error ())
+    | DeleteEntryDone (Result Http.Error String)
     | DeleteTag Model.Entry String
     | DeleteTagDone (Result Http.Error ())
     | GetEntriesDone (Result Http.Error (List Model.Entry))
