@@ -1,4 +1,4 @@
-module Lab.ContentEditable exposing (main)
+module Lab.WebDataPagination exposing (main)
 
 import Html exposing (..)
 import RemoteData as RD
@@ -56,14 +56,14 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
         LoadMore ->
-            ( model
+            ( { model | nextJokes = RD.Loading }
             , Http.get "http://api.icndb.com/jokes/random/10" decodeJokes
                 |> RD.sendRequest
                 |> Cmd.map JokesDone
             )
 
         JokesDone jokes ->
-            ( { model | jokes = jokes }, Cmd.none )
+            ( { model | jokes = jokes, nextJokes = RD.NotAsked }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -75,6 +75,11 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "WebData Pagination" ]
+        , case model.nextJokes of
+            RD.Loading ->
+                div [] [ text "Loading!" ]
+            _ ->
+                div [] [ text "" ]
         , case model.jokes of
             RD.NotAsked ->
                 div [] [ text "Not Asked" ]
