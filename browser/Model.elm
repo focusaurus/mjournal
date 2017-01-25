@@ -25,6 +25,7 @@ type alias PageState =
     , pathname : String
     , screen : Screen
     , textSearch : String
+    , userId : Maybe Int
     }
 
 

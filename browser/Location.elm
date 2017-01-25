@@ -19,27 +19,29 @@ parse : Model.PageState -> Navigation.Location -> Model.PageState
 parse pageState location =
     let
         screen =
-            Maybe.withDefault pageState.screen (Url.parsePath route location)
+            case pageState.userId of
+                Nothing ->
+                    Model.SignInScreen
 
-        state =
-            case screen of
-                Model.EntriesScreen textSearch after before ->
-                    { pageState
-                        | textSearch = Maybe.withDefault "" textSearch
-                        , after = after
-                        , before = before
-                        , screen = screen
-                    }
-
-                Model.SignInScreen ->
-                    { pageState
-                        | textSearch = ""
-                        , after = Nothing
-                        , before = Nothing
-                        , screen = screen
-                    }
+                Just id ->
+                    Maybe.withDefault pageState.screen (Url.parsePath route location)
     in
-        state
+        case screen of
+            Model.EntriesScreen textSearch after before ->
+                { pageState
+                    | textSearch = Maybe.withDefault "" textSearch
+                    , after = after
+                    , before = before
+                    , screen = screen
+                }
+
+            Model.SignInScreen ->
+                { pageState
+                    | textSearch = ""
+                    , after = Nothing
+                    , before = Nothing
+                    , screen = screen
+                }
 
 
 encode : ( String, String ) -> String

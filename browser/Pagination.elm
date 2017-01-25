@@ -5,19 +5,33 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import List
+
+
 -- import Location
+
 import Messages exposing (Msg)
 import Model exposing (Model)
 import Navigation
 
+
 init : Model.Flags -> Navigation.Location -> Model.PageState
 init flags location =
+    let
+        screen = case flags.id of
+                Nothing ->
+                    Model.SignInScreen
+
+                Just id ->
+                    Model.EntriesScreen Nothing Nothing Nothing
+        _ = Debug.log "pagination init" screen
+    in
         { after = Nothing
         , before = Nothing
         , pageSize = 50
         , pathname = location.pathname
         , textSearch = ""
-        , screen = Model.SignInScreen
+        , screen = screen
+        , userId = flags.id
         }
 
 

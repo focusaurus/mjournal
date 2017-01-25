@@ -404,7 +404,6 @@ initFlags flags location =
 
         pageState =
             Location.parse (Pagination.init flags location) location
-
         model =
             { entries = []
             , newEntry = Entry.new
