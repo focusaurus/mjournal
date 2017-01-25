@@ -1,4 +1,4 @@
-module SignIn exposing (signInDiv, signIn, signInDone, register)
+module SignIn exposing (signInDiv, signIn, signInDone, register, reSignInDiv)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -108,4 +108,57 @@ signInDiv model =
             , onClick Register
             ]
             []
+        ]
+
+
+reSignInDiv : Model.Model -> Html Msg
+reSignInDiv model =
+    node "quick-dialog"
+        []
+        [ div
+            [ class "quick-dialog" ]
+            --, ng-show "dialog.isVisible" ]
+            [ span
+                [ class "quick-dialog__close", onClick CloseReSignIn ]
+                [ text "x" ]
+            , div
+                [ class "quick-dialog__content" ]
+                [ div
+                    [ class "sign-in " ]
+                    [ h2
+                        []
+                        [ text "Please sign in again" ]
+                    , div
+                        [ class "error" ]
+                        --, ng-bind "error" ]
+                        []
+                    , label
+                        []
+                        [ text "email" ]
+                    , input
+                        [ type_ "email"
+                        , autofocus True
+                        , onInput InputEmail
+                        , onEnter SignIn
+                        ]
+                        -- ng-model "email" ]
+                        []
+                    , label
+                        []
+                        [ text "password" ]
+                    , input
+                        [ type_ "password", onInput InputPassword, onEnter SignIn ]
+                        -- ng-model "password" ]
+                        []
+                    , input
+                        [ class "signIn"
+                        , value "Sign In"
+                        , type_ "submit"
+                        , disabled (not (canSignIn model))
+                        , onClick SignIn
+                        ]
+                        []
+                    ]
+                ]
+            ]
         ]

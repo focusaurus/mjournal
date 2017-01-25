@@ -6,6 +6,7 @@ import Entry
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Http
 import Location
 import Menu
 import Messages exposing (Msg(..))
@@ -23,12 +24,9 @@ import Task
 import Theme
 import Time
 
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
-    -- let
-    --     _ = Debug.log "hey" message
-    -- in
+    let _ = Debug.log "update: " message in
     case message of
         InputEmail newEmail ->
             ( { model | signInEmail = newEmail, signInError = "" }
@@ -41,7 +39,11 @@ update message model =
             )
 
         SignIn ->
-            ( { model | signInError = "" }
+            ( { model
+                | signInError = ""
+                , signInEmail = ""
+                , signInPassword = ""
+              }
             , SignIn.signIn model.signInEmail model.signInPassword
             )
 
@@ -56,6 +58,7 @@ update message model =
                 ( { model
                     | pageState = newPageState
                     , signInError = ""
+                    , showReSignIn = False
                     , theme = user.theme
                   }
                     |> Spinner.down
@@ -73,6 +76,9 @@ update message model =
             ( { model | signInError = "" }
             , SignIn.register model.signInEmail model.signInPassword
             )
+
+        CloseReSignIn ->
+            ( { model | showReSignIn = False }, Cmd.none )
 
         NextPage ->
             Entry.nextPage model
@@ -128,7 +134,7 @@ update message model =
             ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
 
         GetEntriesDone (Err error) ->
-            ( model |> Spinner.down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
         GetTagsDone (Ok tags) ->
             ( { model | tags = Set.fromList tags }
@@ -224,8 +230,8 @@ update message model =
         SaveTagsDone (Ok _) ->
             ( model |> Spinner.down |> errorOff, Cmd.none )
 
-        SaveTagsDone (Err _) ->
-            ( model |> Spinner.down |> errorOn, Cmd.none )
+        SaveTagsDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
         DeleteTag entry tag ->
             let
@@ -319,6 +325,10 @@ view model =
                         [ classList [ ( "spinner-icon", model.requestCount > 0 ) ] ]
                         []
                     ]
+                , if model.showReSignIn then
+                    SignIn.reSignInDiv model
+                  else
+                    text ""
                 ]
 
 
@@ -359,6 +369,19 @@ swapEntry model entry =
         in
             { model | entries = newEntries }
 
+
+checkAuth : Http.Error -> Model -> Model
+checkAuth error model =
+    let _ = Debug.log "checkAuth" error in
+    case error of
+        Http.BadStatus bs ->
+            case bs.status.code of
+                401 ->
+                    {model | showReSignIn = True}
+                _ ->
+                    model
+        _ ->
+            model
 
 errorOn : Model -> Model
 errorOn model =
@@ -404,18 +427,20 @@ initFlags flags location =
 
         pageState =
             Location.parse (Pagination.init flags location) location
+
         model =
             { entries = []
             , newEntry = Entry.new
             , menuOpen = False
             , pageState = pageState
             , requestCount = 0
-            , signInEmail = "1@example.com"
+            , signInEmail = ""
             , signInError = ""
-            , signInPassword = "password"
+            , signInPassword = ""
             , theme = theme
             , tags = Set.empty
             , errorMessage = Nothing
+            , showReSignIn = False
             }
     in
         route model location

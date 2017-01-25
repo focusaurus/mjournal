@@ -11,6 +11,7 @@ type Msg
     | ClearNewEntryBody
     | ClearTextSearch
     | CloseMenu
+    | CloseReSignIn
     | CreateEntry (Maybe String)
     | CreateEntryDone (Result Http.Error Model.Entry)
     | DeleteEntry1 Model.Entry

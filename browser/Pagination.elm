@@ -23,7 +23,6 @@ init flags location =
 
                 Just id ->
                     Model.EntriesScreen Nothing Nothing Nothing
-        _ = Debug.log "pagination init" screen
     in
         { after = Nothing
         , before = Nothing

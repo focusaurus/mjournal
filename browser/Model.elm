@@ -15,6 +15,7 @@ type alias Model =
     , tags : Set String
     , theme : Theme
     , errorMessage : Maybe String
+    , showReSignIn : Bool
     }
 
 
