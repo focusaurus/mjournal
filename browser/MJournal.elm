@@ -1,9 +1,8 @@
 module MJournal exposing (main)
 
 import About exposing (about)
-import Entry
 import EntriesView
-import Tag
+import Entry
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -14,10 +13,15 @@ import Model exposing (Model, Theme, Flags, Screen(..))
 import Navigation
 import Pagination
 import Ports
-import SignIn
-import Theme
-import Tag
+import Process
 import Set
+import SignIn
+import Spinner
+import Tag
+import Tag
+import Task
+import Theme
+import Time
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -38,7 +42,6 @@ update message model =
 
         SignIn ->
             ( { model | signInError = "" }
-                |> up
             , SignIn.signIn model.signInEmail model.signInPassword
             )
 
@@ -55,7 +58,7 @@ update message model =
                     , signInError = ""
                     , theme = user.theme
                   }
-                    |> down
+                    |> Spinner.down
                     |> errorOff
                 , Cmd.batch
                     [ (Ports.setTheme (Theme.toString user.theme))
@@ -64,10 +67,10 @@ update message model =
                 )
 
         SignInDone (Err error) ->
-            SignIn.signInDone (model |> down |> errorOff) error
+            SignIn.signInDone (model |> Spinner.down |> errorOff) error
 
         Register ->
-            ( { model | signInError = "" } |> up
+            ( { model | signInError = "" }
             , SignIn.register model.signInEmail model.signInPassword
             )
 
@@ -78,54 +81,64 @@ update message model =
             Entry.previousPage model
 
         CreateEntry s ->
-            ( up model, Entry.create model.newEntry )
+            ( model |> Spinner.up, Entry.create model.newEntry )
 
         CreateEntryDone (Ok entry) ->
             ( { model
                 | entries = List.append model.entries [ entry ]
                 , newEntry = Entry.new
               }
-                |> down
+                |> Spinner.down
                 |> errorOff
             , Ports.clearNewEntryBody ()
             )
 
         CreateEntryDone (Err message) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
 
         DeleteEntry1 entry ->
             case entry.confirmingDelete of
                 True ->
                     let
-                        newModel =
+                        model2 =
                             { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries }
                     in
-                        ( up newModel, Entry.delete2 entry )
+                        ( model2 |> Spinner.up, Entry.delete2 entry )
 
                 False ->
-                    ( swapEntry model (Entry.delete1 entry), Cmd.none )
+                    ( swapEntry model (Entry.delete1 entry)
+                    , Process.sleep (Time.second * 2)
+                        |> Task.perform (always (TimeoutDeleteEntry entry))
+                    )
 
         DeleteEntryDone (Ok _) ->
-            ( model |> down |> errorOff, Cmd.none )
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
         DeleteEntryDone (Err _) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
+
+        TimeoutDeleteEntry entry ->
+            ( { model
+                | entries = List.map (\e -> { e | confirmingDelete = False }) model.entries
+              }
+            , Cmd.none
+            )
 
         GetEntriesDone (Ok entries) ->
-            ( { model | entries = entries } |> down |> errorOff, Cmd.none )
+            ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
 
         GetEntriesDone (Err error) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
 
         GetTagsDone (Ok tags) ->
             ( { model | tags = Set.fromList tags }
-                |> down
+                |> Spinner.down
                 |> errorOff
             , Cmd.none
             )
 
         GetTagsDone (Err error) ->
-            ( up model, Cmd.none )
+            ( model |> Spinner.down, Cmd.none )
 
         CloseMenu ->
             ( { model | menuOpen = False }, Cmd.none )
@@ -134,10 +147,10 @@ update message model =
             ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
         SetTheme theme ->
-            ( up { model | theme = theme }, Theme.set theme )
+            ( { model | theme = theme } |> Spinner.up, Theme.set theme )
 
         SetThemeDone _ ->
-            ( model |> down |> errorOff, Ports.setTheme (Theme.toString model.theme) )
+            ( model |> Spinner.down |> errorOff, Ports.setTheme (Theme.toString model.theme) )
 
         ClearNewEntryBody ->
             ( model, Ports.clearNewEntryBody () )
@@ -160,18 +173,18 @@ update message model =
                 ( newEntry, cmd ) =
                     Entry.setNewEntryBodyAndSave model.newEntry newBody
             in
-                ( up { model | newEntry = newEntry }, cmd )
+                ( { model | newEntry = newEntry } |> Spinner.up, cmd )
 
         SaveBody entry newBody ->
-            ( up model
+            ( model |> Spinner.up
             , Entry.saveBody entry newBody
             )
 
         SaveBodyDone (Ok _) ->
-            ( model |> down |> errorOff, Cmd.none )
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
         SaveBodyDone (Err _) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
 
         SetTextSearch textSearch ->
             Entry.setTextSearch model textSearch
@@ -190,13 +203,13 @@ update message model =
                 ( newModel, Navigation.newUrl (Location.location newModel) )
 
         SearchDone (Ok entries) ->
-            ( { model | entries = entries } |> down |> errorOff, Cmd.none )
+            ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
 
         SearchDone (Err message) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
 
         ClearTextSearch ->
-            Entry.clearTextSearch (up model)
+            Entry.clearTextSearch (Spinner.up model)
 
         ChangeUrl location ->
             route model location
@@ -209,23 +222,23 @@ update message model =
                 ( swapEntry model entry2, Tag.get model )
 
         SaveTagsDone (Ok _) ->
-            ( model |> down |> errorOff, Cmd.none )
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
         SaveTagsDone (Err _) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
 
         DeleteTag entry tag ->
             let
                 ( entry2, cmd ) =
                     Entry.deleteTag entry tag
             in
-                ( up (swapEntry model entry2), cmd )
+                ( swapEntry model entry2 |> Spinner.up, cmd )
 
         DeleteTagDone (Ok _) ->
-            ( model |> down |> errorOff, Cmd.none )
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
         DeleteTagDone (Err _) ->
-            ( model |> down |> errorOn, Cmd.none )
+            ( model |> Spinner.down |> errorOn, Cmd.none )
 
         NextTagSuggestion entry ->
             ( swapEntry model (Tag.nextSuggestion entry), Cmd.none )
@@ -238,20 +251,28 @@ update message model =
                 ( entry2, cmd ) =
                     Entry.addSuggestedTag entry tag
             in
-                ( up (swapEntry model entry), cmd )
+                ( swapEntry model entry2 |> Spinner.up, cmd )
 
         TagKeyDown entry keyCode ->
-            -- TODO figure out how to conditionally increment requestCount here
             let
-                ( entry2, cmd ) =
+                ( entry2, saveEntryCmd ) =
                     Entry.tagKeyDown entry keyCode
 
                 model2 =
                     { model
                         | tags = Set.union model.tags (Set.fromList entry2.tags)
                     }
+
+                getTagsCmd =
+                    Tag.get model
+
+                realCmds =
+                    List.filter (\c -> not (c == Cmd.none)) [ saveEntryCmd, getTagsCmd ]
+
+                model3 =
+                    { model2 | requestCount = model2.requestCount + (List.length realCmds) }
             in
-                ( swapEntry model2 entry2, Cmd.batch [ cmd, Tag.get model ] )
+                ( swapEntry model3 entry2, Cmd.batch realCmds )
 
 
 subscriptions : Model -> Sub Msg
@@ -353,31 +374,21 @@ errorOff model =
     }
 
 
-up : Model -> Model
-up model =
-    { model | requestCount = model.requestCount + 1 }
-
-
-down : Model -> Model
-down model =
-    { model | requestCount = model.requestCount - 1 }
-
-
 route : Model -> Navigation.Location -> ( Model, Cmd Msg )
 route model location =
     let
         pageState =
             Location.parse model.pageState location
 
-        newModel =
+        model2 =
             { model | pageState = pageState }
     in
-        case newModel.pageState.screen of
+        case model2.pageState.screen of
             Model.EntriesScreen textSearch after before ->
-                ( up newModel, Entry.search textSearch after before )
+                ( model2 |> Spinner.up, Entry.search textSearch after before )
 
             Model.SignInScreen ->
-                ( newModel, Cmd.none )
+                ( model2, Cmd.none )
 
 
 initFlags : Flags -> Navigation.Location -> ( Model, Cmd Msg )

@@ -73,6 +73,7 @@
     "eslint-plugin-promise": "3.3.0",
     "eslint-plugin-standard": "2.0.1",
     "eslint-tap": "1.1.0",
+    "json": "9.0.4",
     "node-dev": "3.1.3",
     "sinon": "1.17.6",
     "supertest": "2.0.1",

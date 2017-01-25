@@ -40,16 +40,16 @@ deleteTag entry tag =
     }
 
 
-keyDown : Entry -> Int -> ( Entry, Cmd Messages.Msg )
+keyDown : Entry -> Int -> Entry
 keyDown entry keyCode =
     if keyCode == keyCodes.up then
-        ( previousSuggestion entry, Cmd.none )
+        previousSuggestion entry
     else if keyCode == keyCodes.down then
-        ( nextSuggestion entry, Cmd.none )
+        nextSuggestion entry
     else if keyCode == keyCodes.escape then
-        ( unselect entry, Cmd.none )
+        unselect entry
     else
-        ( entry, Cmd.none )
+        entry
 
 
 addSuggestedTag : Entry -> String -> Entry

@@ -6,6 +6,7 @@ import Navigation
 
 type Msg
     = AddSuggestedTag Model.Entry String
+    | ChangeUrl Navigation.Location
     | ClearNewEntryBody
     | ClearTextSearch
     | CloseMenu
@@ -18,11 +19,11 @@ type Msg
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | GetTagsDone (Result Http.Error (List String))
     | InputEmail String
-    | InputPassword String
     | InputNewTag Model.Entry String
+    | InputPassword String
     | NextPage
-    | PreviousPage
     | NextTagSuggestion Model.Entry
+    | PreviousPage
     | PreviousTagSuggestion Model.Entry
     | Register
     | SaveBody Model.Entry String
@@ -38,5 +39,5 @@ type Msg
     | SignIn
     | SignInDone (Result Http.Error Model.User)
     | TagKeyDown Model.Entry Int
+    | TimeoutDeleteEntry Model.Entry
     | ToggleMenu String
-    | ChangeUrl Navigation.Location

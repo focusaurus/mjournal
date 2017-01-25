@@ -40,7 +40,7 @@ tagKeyDown entry keyCode =
         else
             addTag entry
     else
-        Tag.keyDown entry keyCode
+        ( Tag.keyDown entry keyCode, Cmd.none )
 
 
 addSuggestedTag : Entry -> String -> ( Entry, Cmd Msg )
@@ -315,7 +315,15 @@ setTextSearch model textSearch =
 
 new : Model.Entry
 new =
-    Model.Entry -1 "" [] (Date.fromTime 0) False "" [] 0
+    { id = -1
+    , body = ""
+    , tags = []
+    , created = (Date.fromTime 0)
+    , confirmingDelete = False
+    , newTag = ""
+    , tagSuggestions = []
+    , selectedSuggestionIndex = 0
+    }
 
 
 setNewEntryBodyAndSave : Entry -> String -> ( Entry, Cmd Msg )
