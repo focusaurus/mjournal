@@ -58,18 +58,22 @@ update message model =
 
                     newPageState =
                         { oldPageState | screen = Model.EntriesScreen Nothing Nothing Nothing }
+
+                    model2 =
+                        { model
+                            | pageState = newPageState
+                            , signInError = ""
+                            , showReSignIn = False
+                            , theme = user.theme
+                        }
+                            |> Spinner.down
+                            |> errorOff
                 in
-                    ( { model
-                        | pageState = newPageState
-                        , signInError = ""
-                        , showReSignIn = False
-                        , theme = user.theme
-                      }
-                        |> Spinner.down
-                        |> errorOff
+                    ( model2
                     , Cmd.batch
-                        [ (Ports.setTheme (Theme.toString user.theme))
-                        , (Entry.getEntries Nothing)
+                        [ Ports.setTheme (Theme.toString user.theme)
+                          -- , (Entry.search Nothing Nothing Nothing)
+                        , Navigation.newUrl (Location.location model2)
                         ]
                     )
 
@@ -218,8 +222,8 @@ update message model =
             SearchDone (Ok entries) ->
                 ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
 
-            SearchDone (Err message) ->
-                ( model |> Spinner.down |> errorOn, Cmd.none )
+            SearchDone (Err error) ->
+                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
             ClearTextSearch ->
                 Entry.clearTextSearch (Spinner.up model)
