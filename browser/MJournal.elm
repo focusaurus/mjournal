@@ -180,10 +180,10 @@ update message model =
                     entry2 =
                         { entry1 | body = newBody }
 
-                    newModel =
+                    model2 =
                         { model | newEntry = entry2 }
                 in
-                    ( newModel, Cmd.none )
+                    ( model2, Cmd.none )
 
             SetNewEntryBodyAndSave newBody ->
                 let
@@ -214,10 +214,10 @@ update message model =
                     newPageState =
                         { oldPageState | after = Nothing, before = Nothing }
 
-                    newModel =
+                    model2 =
                         { model | pageState = newPageState }
                 in
-                    ( newModel, Navigation.newUrl (Location.location newModel) )
+                    ( model2, Navigation.newUrl (Location.location model2) )
 
             SearchDone (Ok entries) ->
                 ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )

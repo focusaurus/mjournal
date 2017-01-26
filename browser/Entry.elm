@@ -78,14 +78,14 @@ nextPage model =
         new =
             { old | before = Nothing, after = after }
 
-        newModel =
+        model2 =
             { model | pageState = new }
 
         location_ =
-            location newModel
+            location model2
     in
-        ( newModel
-        , Navigation.newUrl (newModel.pageState.pathname ++ location_)
+        ( model2
+        , Navigation.newUrl (model2.pageState.pathname ++ location_)
         )
 
 
@@ -106,14 +106,14 @@ previousPage model =
         new =
             { old | before = before, after = Nothing }
 
-        newModel =
+        model2 =
             { model | pageState = new }
 
         location_ =
-            location newModel
+            location model2
     in
-        ( newModel
-        , Navigation.newUrl (newModel.pageState.pathname ++ location_)
+        ( model2
+        , Navigation.newUrl (model2.pageState.pathname ++ location_)
         )
 
 
@@ -168,20 +168,20 @@ deleteTag entry tag =
 saveBody : Entry -> String -> Cmd Msg
 saveBody entry newBody =
     let
-        newEntry =
+        entry2 =
             { entry | body = newBody }
 
         bodyValue =
             JE.object
-                [ ( "id", JE.int newEntry.id )
-                , ( "body", JE.string newEntry.body )
+                [ ( "id", JE.int entry2.id )
+                , ( "body", JE.string entry2.body )
                 ]
 
         body =
             Http.jsonBody (bodyValue)
 
         url =
-            "/api/entries/" ++ toString newEntry.id
+            "/api/entries/" ++ toString entry2.id
 
         options =
             { method = "PUT"
@@ -287,12 +287,12 @@ clearTextSearch model =
         newPageState =
             { pageState | textSearch = "", after = Nothing, before = Nothing }
 
-        newModel =
+        model2 =
             { model | pageState = newPageState }
     in
-        ( newModel
+        ( model2
         , Cmd.batch
-            [ Navigation.newUrl (newModel.pageState.pathname ++ location newModel)
+            [ Navigation.newUrl (model2.pageState.pathname ++ location model2)
             , getEntries Nothing
             ]
         )
@@ -307,10 +307,10 @@ setTextSearch model textSearch =
         newPageState =
             { pageState | textSearch = textSearch }
 
-        newModel =
+        model2 =
             { model | pageState = newPageState }
     in
-        ( newModel, Cmd.none )
+        ( model2, Cmd.none )
 
 
 new : Model.Entry
