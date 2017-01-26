@@ -24,6 +24,7 @@ import Http
 import Json.Decode as JD
 import Set
 
+
 addTag : Entry -> Entry
 addTag entry =
     { entry
@@ -72,14 +73,17 @@ matchTag partialTag fullTag =
 editNewTag : Entry -> Set.Set String -> String -> Entry
 editNewTag entry tags tag =
     let
-        matchingSet = Set.filter (matchTag tag) tags
-        inEntry = Set.fromList (entry.tags)
+        matchingSet =
+            Set.filter (matchTag tag) tags
+
+        inEntry =
+            Set.fromList (entry.tags)
     in
-    { entry
-        | newTag = tag
-        , tagSuggestions = Set.toList (Set.diff matchingSet inEntry)
-        , selectedSuggestionIndex = -1
-    }
+        { entry
+            | newTag = tag
+            , tagSuggestions = Set.toList (Set.diff matchingSet inEntry)
+            , selectedSuggestionIndex = -1
+        }
 
 
 unselect : Model.Entry -> Model.Entry

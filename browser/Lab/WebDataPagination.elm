@@ -78,6 +78,7 @@ view model =
         , case model.nextJokes of
             RD.Loading ->
                 div [] [ text "Loading!" ]
+
             _ ->
                 div [] [ text "" ]
         , case model.jokes of

@@ -17,7 +17,8 @@ import Navigation
 init : Model.Flags -> Navigation.Location -> Model.PageState
 init flags location =
     let
-        screen = case flags.id of
+        screen =
+            case flags.id of
                 Nothing ->
                     Model.SignInScreen
 

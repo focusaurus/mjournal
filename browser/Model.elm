@@ -3,6 +3,7 @@ module Model exposing (..)
 import Date exposing (Date)
 import Set exposing (Set)
 
+
 type alias Model =
     { entries : List Entry
     , newEntry : Entry

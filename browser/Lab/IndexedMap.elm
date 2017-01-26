@@ -76,6 +76,7 @@ update message model =
             in
                 ( { model | selectedIndex = index }, Cmd.none )
 
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none

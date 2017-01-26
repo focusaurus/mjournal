@@ -37,10 +37,13 @@ isShift shiftKey =
     else
         JD.fail "Not shift key"
 
+
+
 --
 -- textContentDecoder : JD.Decoder String
 -- textContentDecoder =
 --     JD.at [ "target", "textContent" ] JD.string
+
 
 onShiftEnter : (String -> Msg) -> Attribute Msg
 onShiftEnter tagger =
@@ -50,6 +53,7 @@ onShiftEnter tagger =
             (keyCode |> JD.andThen isEnter)
             (shiftKey |> JD.andThen isShift)
             innerTextDecoder
+
 
 innerTextDecoder : JD.Decoder String
 innerTextDecoder =

@@ -20,8 +20,8 @@ type Msg
     | DeleteTagDone (Result Http.Error ())
     | GetEntriesDone (Result Http.Error (List Model.Entry))
     | GetTagsDone (Result Http.Error (List String))
-    -- | HttpRequestWrapper Msg
-    -- | IncreaseRequestCounter
+      -- | HttpRequestWrapper Msg
+      -- | IncreaseRequestCounter
     | InputEmail String
     | InputNewTag Model.Entry String
     | InputPassword String
