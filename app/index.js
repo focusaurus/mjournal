@@ -101,7 +101,7 @@ app.get('/elm', require('./middleware/db-down'), themeMW, homeElm)
 app.get('/docs', themeMW, function (req, res) {
   res.render('docs/docs')
 })
-// app.use('/api', require('./middleware/dev-delay')) // fixme
+// app.use('/api', require('./middleware/dev-delay'))
 app.use('/api/users', require('./users/api'))
 app.use('/api/entries', require('./entries/api'))
 app.use(errors.middleware)
