@@ -65,35 +65,6 @@ enableNext model =
             True
 
 
-
---
---
--- enablePrevious : Model -> Bool
--- enablePrevious model =
---     case model.direction of
---         Nothing ->
---             True
---
---         Just (Model.Previous) ->
---             List.length model.entries == model.pageSize
---
---         Just (Model.Next) ->
---             True
---
---
--- enableNext : Model -> Bool
--- enableNext model =
---     case model.direction of
---         Nothing ->
---             False
---
---         Just (Model.Previous) ->
---             True
---
---         Just (Model.Next) ->
---             List.length model.entries == model.pageSize
-
-
 toolbar : Model -> Html Msg
 toolbar model =
     div

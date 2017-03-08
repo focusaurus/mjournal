@@ -34,7 +34,7 @@ function run (options, callback) {
     user.email = user.email.toLowerCase()
     const dbOp = db('users').insert(user).returning('id')
     log.debug({
-      user: user
+      email: user.email
     }, 'creating user')
     dbOp.exec(function (error2, rows) {
       if (error2 && /unique/i.test(error2.message)) {
