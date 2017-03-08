@@ -27,7 +27,7 @@ setup_docker() {
   usermod -aG docker plyons 2> /dev/null || true
 }
 
-setup_tls() {
+setup_tls_old() {
   local certbot='/usr/local/bin/certbot-auto'
   if [[ ! -x "${certbot}" ]]; then
     curl --silent --location --fail 'https://dl.eff.org/certbot-auto' --output "${certbot}"
@@ -41,6 +41,17 @@ setup_tls() {
   cat <<EOF > "${renew_cron}"
 #!/usr/bin/env bash
 certbot-auto renew --quiet --standalone --pre-hook "service nginx stop" --post-hook "service nginx start"
+EOF
+  chmod 755 "${renew_cron}"
+  chown root:root "${renew_cron}"
+}
+
+setup_tls() {
+  local renew_cron="/etc/cron.daily/reload-nginx"
+  cat <<EOF > "${renew_cron}"
+#!/usr/bin/env bash
+service nginx reload > /dev/null
+# Pick up any renewed TLS certificate files
 EOF
   chmod 755 "${renew_cron}"
   chown root:root "${renew_cron}"

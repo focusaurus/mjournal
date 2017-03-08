@@ -9,18 +9,20 @@ upstream express-{{MJ_DOMAIN}} {
 #Redirect http to https
 server {
   listen 80;
-  server_name {{MJ_DOMAIN}} www.{{MJ_DOMAIN}};
+  server_name {{MJ_DOMAIN}};
   rewrite ^(.*) https://{{MJ_DOMAIN}}$1 permanent;
 }
 
 # HTTPS server
 server {
   listen 443;
+  server_name {{MJ_DOMAIN}};
   ssl on;
   charset utf-8;
-  ssl_certificate /etc/letsencrypt/live/{{MJ_DOMAIN}}/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/{{MJ_DOMAIN}}/privkey.pem;
+  ssl_certificate /home/acme/.acme.sh/{{MJ_DOMAIN}}_ecc/fullchain.cer;
+  ssl_certificate_key /home/acme/.acme.sh/{{MJ_DOMAIN}}_ecc/{{MJ_DOMAIN}}.key;
   ssl_dhparam sites-available/{{MJ_DOMAIN}}.dhparam.pem;
+
   #https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_Ciphersuite
   ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK';
   ssl_session_timeout 5m;
@@ -54,5 +56,9 @@ server {
 
     # http://bogomips.org/unicorn.git/tree/examples/nginx.conf?id=v3.3.1#n127
     try_files down.html @app;
+  }
+
+  location /.well-known/acme-challenge/ {
+    alias /var/www/letsencrypt/.well-known/acme-challenge/;
   }
 }
