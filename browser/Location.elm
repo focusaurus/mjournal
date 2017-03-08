@@ -66,20 +66,10 @@ location : Model.Model -> String
 location model =
     let
         after =
-            case model.pageState.after of
-                Just after ->
-                    Just ( "after", toString after )
-
-                Nothing ->
-                    Nothing
+            Maybe.map (\after -> ( "after", toString after )) model.pageState.after
 
         before =
-            case model.pageState.before of
-                Just before ->
-                    Just ( "before", toString before )
-
-                Nothing ->
-                    Nothing
+            Maybe.map (\before -> ( "before", toString before )) model.pageState.before
 
         textSearch =
             if String.isEmpty model.pageState.textSearch then
@@ -94,20 +84,10 @@ apiQuery : Maybe String -> Maybe Int -> Maybe Int -> String
 apiQuery textSearch after before =
     let
         afterTuple =
-            case after of
-                Just after ->
-                    Just ( "after", toString after )
-
-                Nothing ->
-                    Nothing
+            Maybe.map (\after -> ("after", toString after )) after
 
         beforeTuple =
-            case before of
-                Just before ->
-                    Just ( "before", toString before )
-
-                Nothing ->
-                    Nothing
+            Maybe.map (\before -> ("before", toString before )) before
 
         ts =
             Maybe.withDefault "" textSearch

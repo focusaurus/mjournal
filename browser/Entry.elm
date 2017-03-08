@@ -68,12 +68,7 @@ nextPage model =
             model.pageState
 
         after =
-            case List.Extra.last model.entries of
-                Nothing ->
-                    Nothing
-
-                Just last ->
-                    Just last.id
+            Maybe.map .id (List.Extra.last model.entries)
 
         new =
             { old | before = Nothing, after = after }
@@ -96,12 +91,7 @@ previousPage model =
             model.pageState
 
         before =
-            case List.head model.entries of
-                Nothing ->
-                    Nothing
-
-                Just head ->
-                    Just head.id
+            Maybe.map .id (List.head model.entries)
 
         new =
             { old | before = before, after = Nothing }
