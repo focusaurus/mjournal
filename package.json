@@ -12,15 +12,6 @@
     "lint": "./bin/lint.sh",
     "postinstall": "./bin/build-ci.sh"
   },
-  "browser": {
-    "angular": "./bower_components/angular/angular.js",
-    "angular-resource": "./bower_components/angular-resource/angular-resource.js",
-    "ng-scroll-to": "./bower_components/ngScrollTo/ng-scrollto.js",
-    "ng-tags-input": "./bower_components/ng-tags-input/ng-tags-input.js",
-    "angular-loading-bar": "./bower_components/angular-loading-bar/build/loading-bar.js",
-    "angular-ui-bootstrap-dropdown": "./bower_components/angular-ui-bootstrap/src/dropdown/dropdown.js",
-    "angular-quick-dialog": "./bower_components/angular-quick-dialog/angular-quick-dialog.min.js"
-  },
   "dependencies": {
     "async": "2.1.2",
     "autoprefixer-stylus": "0.11.0",
@@ -28,14 +19,13 @@
     "bcryptjs": "2.3.0",
     "body-parser": "1.15.2",
     "bole": "3.0.1",
-    "bower": "1.7.9",
-    "browserify": "13.1.1",
     "commander": "2.9.0",
     "compression": "1.6.2",
     "config3": "1.0.3",
     "connect-pg-simple": "3.1.0",
     "cookie-parser": "1.4.3",
     "dev-null": "0.1.1",
+    "elm": "0.18.0",
     "express": "4.14.0",
     "express-session": "1.14.1",
     "httperrors": "2.1.0",
@@ -64,10 +54,8 @@
     "xoauth2": "1.2.0"
   },
   "devDependencies": {
-    "bower": "1.7.9",
     "chai": "3.5.0",
     "cheerio": "0.22.0",
-    "elm": "0.18.0",
     "eslint": "3.8.1",
     "eslint-config-standard": "6.2.0",
     "eslint-plugin-promise": "3.3.0",
@@ -78,8 +66,7 @@
     "sinon": "1.17.6",
     "supertest": "2.0.1",
     "supertest-session": "2.0.1",
-    "tap": "7.1.2",
-    "watchify": "3.7.0"
+    "tap": "7.1.2"
   },
   "license": "MIT"
 }

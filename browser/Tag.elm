@@ -141,7 +141,6 @@ tagItem : Entry -> String -> Html Messages.Msg
 tagItem entry tag =
     li
         [ class "tag-item" ]
-        --, ng-repeat "tag in tagList.items track by track(tag)", ng-class "{ selected: tag == tagList.selected }" ]
         [ span
             []
             [ text tag ]
@@ -175,15 +174,6 @@ suggestionHtml entry boolTag =
             [ text tag ]
 
 
-
--- suggestionHtml entry tag =
---     li
---         [ class "suggestion-item"
---         , onClick (Messages.AddSuggestedTag entry tag)
---         ]
---         [ text tag.text ]
-
-
 suggestionsHtml : Model.Entry -> Html Messages.Msg
 suggestionsHtml entry =
     let
@@ -195,10 +185,12 @@ suggestionsHtml entry =
             (List.map (suggestionHtml entry) boolTag)
 
 
+tagIndexedMap : Model.Entry -> List ( Bool, String )
 tagIndexedMap entry =
     List.indexedMap (isSelected entry.selectedSuggestionIndex) entry.tagSuggestions
 
 
+selectedSuggestion : Model.Entry -> String
 selectedSuggestion entry =
     let
         selectedTuple =
@@ -231,19 +223,13 @@ tags entry =
                     , onInput (Messages.InputNewTag entry)
                     , value entry.newTag
                     ]
-                    -- ng-class "{'invalid-tag': newTag.invalid}", ti-autosize ""
                     []
-                  -- , span
-                  --     [ class "input", style [ ( "visibility", "hidden" ), ( "width", "auto" ), ( "white-space", "pre" ), ( "display", "none" ) ] ]
-                  --     [ text "Add a tag" ]
                 ]
             , if List.length entry.tagSuggestions > 0 then
                 node "auto-complete"
                     []
-                    -- source "autoCompleteTags($query)", min-length "2" ]
                     [ div
                         [ class "autocomplete" ]
-                        -- ng-hide", ng-show "suggestionList.visible" ]
                         [ suggestionsHtml entry
                         ]
                     ]

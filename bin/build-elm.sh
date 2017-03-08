@@ -15,9 +15,17 @@ IFS="$(printf "\n\t")"
 
 cd "$(dirname "$0")/../browser"
 PATH=$(npm bin):$PATH
-elm-make --output ../wwwroot/mjournal.js MJournal.elm
+out="../wwwroot/mjournal.js"
+api_key="../wwwroot/api-key.js"
+elm-make --output "${out}" MJournal.elm
+elm-make --output "${api_key}" ApiKey.elm
 if [[ $# -eq 0 ]]; then
   # Initial interactive launch. Start fswatch
   echo Will rebuild when source code files change
   fswatch -o . | xargs -n1 "../bin/$(basename $0)"
+else
+  echo -n uglify…
+  uglifyjs --compress --screw-ie8 "${out}" --output "${out}" 2> /dev/null
+  uglifyjs --compress --screw-ie8 "${api-key}" --output "${api-key}" 2> /dev/null
+  echo ✓
 fi

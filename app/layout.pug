@@ -1,6 +1,6 @@
 doctype html
-html(ng-app=MJ_APP_NAME ng-cloak)
-  head(ng-controller="theme")
+html
+  head
     title mjournal - minimalist journaling
     link#theme(rel="stylesheet" href=css)
     link(href="/favicon.png" type="image/png" rel="icon")
@@ -8,11 +8,6 @@ html(ng-app=MJ_APP_NAME ng-cloak)
       rel="stylesheet" type="text/css")
     meta(name="x-app-version" value=MJ_VERSION)
   body
-    //- .adaptive
-    h1.app-name
-      a(href="/")= MJ_APP_NAME
-    h2.app-tag minimalist journaling
     block body
     block scripts
       != sharify.script()
-      script(src="/mjournal.js?v=" + MJ_VERSION)

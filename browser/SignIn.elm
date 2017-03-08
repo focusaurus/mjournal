@@ -117,7 +117,6 @@ reSignInDiv model =
         []
         [ div
             [ class "quick-dialog" ]
-            --, ng-show "dialog.isVisible" ]
             [ span
                 [ class "quick-dialog__close", onClick CloseReSignIn ]
                 [ text "x" ]
@@ -130,7 +129,6 @@ reSignInDiv model =
                         [ text "Please sign in again" ]
                     , div
                         [ class "error" ]
-                        --, ng-bind "error" ]
                         []
                     , label
                         []
@@ -141,14 +139,12 @@ reSignInDiv model =
                         , onInput InputEmail
                         , onEnter SignIn
                         ]
-                        -- ng-model "email" ]
                         []
                     , label
                         []
                         [ text "password" ]
                     , input
                         [ type_ "password", onInput InputPassword, onEnter SignIn ]
-                        -- ng-model "password" ]
                         []
                     , input
                         [ class "signIn"
