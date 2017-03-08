@@ -115,7 +115,7 @@ update message model =
                     True ->
                         let
                             model2 =
-                                { model | entries = List.filter (\e -> not (e.id == entry.id)) model.entries }
+                                { model | entries = List.filter (\e -> e.id /= entry.id) model.entries }
                         in
                             ( model2 |> Spinner.up, Entry.delete2 entry )
 
@@ -284,7 +284,7 @@ update message model =
                         Tag.get model
 
                     realCmds =
-                        List.filter (\c -> not (c == Cmd.none)) [ saveEntryCmd, getTagsCmd ]
+                        List.filter (\c -> c /= Cmd.none) [ saveEntryCmd, getTagsCmd ]
 
                     model3 =
                         { model2 | requestCount = model2.requestCount + (List.length realCmds) }

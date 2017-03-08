@@ -25,7 +25,7 @@ themeLink current theme =
         [ i
             [ classList
                 [ ( "icon-checkmark", current == theme )
-                , ( "icon-checkmark2", not (current == theme) )
+                , ( "icon-checkmark2", current /= theme )
                 ]
             ]
             [ text ("Theme: " ++ (Theme.toString theme)) ]

@@ -37,7 +37,7 @@ addTag entry =
 deleteTag : Entry -> String -> Entry
 deleteTag entry tag =
     { entry
-        | tags = List.filter (\t -> not (t == tag)) entry.tags
+        | tags = List.filter (\t -> t /= tag) entry.tags
     }
 
 
