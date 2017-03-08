@@ -57,7 +57,10 @@ update message model =
                         model.pageState
 
                     newPageState =
-                        { oldPageState | screen = Model.EntriesScreen Nothing Nothing Nothing }
+                        { oldPageState
+                            | screen = Model.EntriesScreen Nothing Nothing Nothing
+                            , userId = Just user.id
+                        }
 
                     model2 =
                         { model
@@ -72,8 +75,8 @@ update message model =
                     ( model2
                     , Cmd.batch
                         [ Ports.setTheme (Theme.toString user.theme)
-                          -- , (Entry.search Nothing Nothing Nothing)
-                        , Navigation.newUrl (Location.location model2)
+                        , Entry.search Nothing Nothing Nothing
+                          -- , Navigation.newUrl (Location.location model2)
                         ]
                     )
 
@@ -417,11 +420,16 @@ errorOff model =
 route : Model -> Navigation.Location -> ( Model, Cmd Msg )
 route model location =
     let
+        _ =
+            Debug.log "route pageState before" model.pageState
         pageState =
             Location.parse model.pageState location
 
         model2 =
             { model | pageState = pageState }
+        _ =
+            Debug.log "route pageState after" model2.pageState
+
     in
         case model2.pageState.screen of
             Model.EntriesScreen textSearch after before ->

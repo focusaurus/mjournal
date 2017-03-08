@@ -18,15 +18,7 @@ var themeMW = require('./middleware/theme')
 const ONE_DAY_MS = 1000 * 60 * 60 * 24 * 1
 
 function home (req, res) {
-  if (req.user) {
-    res.render('home')
-  } else {
-    res.render('users/sign-in')
-  }
-}
-
-function homeElm (req, res) {
-  res.render('home-elm')
+  res.render('home')
 }
 
 function appCSS (req, res, next) {
@@ -97,7 +89,6 @@ app.use(function (req, res, next) {
 })
 app.use(byKey)
 app.get('/', require('./middleware/db-down'), themeMW, home)
-app.get('/elm', require('./middleware/db-down'), themeMW, homeElm)
 app.get('/docs', themeMW, function (req, res) {
   res.render('docs/docs')
 })

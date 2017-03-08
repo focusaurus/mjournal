@@ -1,23 +1,20 @@
-extends layout
+extends layout-elm
 block body
-  div(ng-controller="entries")
-    div.menu-bar
-      include settings/menu.pug
-    include entries/entries.pug
-    quick-dialog(dialog-name="reSignIn")
-      form(
-        class="sign-in"
-        ng-submit="signIn($event)"
-        ng-controller="signIn"
-        ng-init="re=true")
-        h2 Please sign in again
-        div.error(ng-bind="error")
-        label email
-        input(type="email" ng-model="email")
-        label password
-        input(type="password" ng-model="password")
-        input.signIn(
-          type="submit"
-          value="Sign In"
-          ng-disabled="!(email && password)"
-        )
+  div#elm-app-root
+block append scripts
+  script(src="/mjournal.js?v=" + MJ_VERSION)
+  script.
+    var nobody = {id: null, theme: null}
+    var app = Elm.MJournal.embed(document.getElementById('elm-app-root'), __sharifyData.user || nobody)
+    app.ports.setTheme.subscribe(function setTheme (name) {
+      document.getElementById('theme').href = '/mjournal-' + name + '.css'
+    })
+    app.ports.clearNewEntryBody.subscribe(function clearNewEntryBody (_) {
+      var elem = document.querySelector('.entry .body.new')
+      if (elem) {
+        elem.innerText = ''
+      }
+    })
+    document.addEventListener('click', function onClick (event) {
+      app.ports.clickDocument.send(false)
+    })

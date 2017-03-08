@@ -15,7 +15,7 @@ IFS="$(printf "\n\t")"
 
 cd "$(dirname "$0")/../browser"
 PATH=$(npm bin):$PATH
-elm-make --output ../wwwroot/mjournal-elm.js MJournal.elm
+elm-make --output ../wwwroot/mjournal.js MJournal.elm
 if [[ $# -eq 0 ]]; then
   # Initial interactive launch. Start fswatch
   echo Will rebuild when source code files change

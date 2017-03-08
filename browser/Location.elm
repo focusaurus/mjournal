@@ -9,9 +9,8 @@ import Navigation
 route : Url.Parser (Model.Screen -> a) a
 route =
     Url.oneOf
-        [ -- Url.map Home top
-          Url.map Model.EntriesScreen (Url.s "elm" <?> Url.stringParam "textSearch" <?> Url.intParam "after" <?> Url.intParam "before")
-          -- , Url.map BlogPost (s "blog" </> int)
+        [
+          Url.map Model.EntriesScreen (Url.s "" <?> Url.stringParam "textSearch" <?> Url.intParam "after" <?> Url.intParam "before")
         ]
 
 
@@ -25,6 +24,7 @@ parse pageState location =
 
                 Just id ->
                     Maybe.withDefault pageState.screen (Url.parsePath route location)
+        _ = Debug.log "Location.parse" pageState
     in
         case screen of
             Model.EntriesScreen textSearch after before ->
