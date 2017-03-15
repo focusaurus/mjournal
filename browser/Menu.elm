@@ -50,22 +50,26 @@ component model =
                     [ class "menu icon-menu", stopPropagation ]
                     --, dropdown-toggle "",  aria-haspopup "true", aria-expanded "false" ]
                     []
-                , nav
+                , menu
                     [ class "dropdown-menu" ]
                     --, role "menu" ]
-                    [ a
-                        [ class "sign-out", href "/api/users/sign-out" ]
-                        [ i
-                            [ class "icon-exit" ]
-                            [ text "Sign Out" ]
+                    [ menuitem []
+                        [ a
+                            [ class "sign-out", href "/api/users/sign-out" ]
+                            [ i
+                                [ class "icon-exit" ]
+                                [ text "Sign Out" ]
+                            ]
                         ]
-                    , themeLink model.theme Moleskine
-                    , themeLink model.theme Hoth
-                    , a
-                        [ href "/docs", target "_self" ]
-                        [ i
-                            [ class "icon-lifebuoy" ]
-                            [ text "Documentation" ]
+                    , menuitem [] [ themeLink model.theme Moleskine ]
+                    , menuitem [] [ themeLink model.theme Hoth ]
+                    , menuitem []
+                        [ a
+                            [ href "/docs", target "_self" ]
+                            [ i
+                                [ class "icon-lifebuoy" ]
+                                [ text "Documentation" ]
+                            ]
                         ]
                     ]
                 ]
