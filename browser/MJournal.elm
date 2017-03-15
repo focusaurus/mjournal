@@ -331,7 +331,10 @@ view model =
                     [ div [ class "page" ]
                         [ EntriesView.list model
                         ]
-                    , EntriesView.new model
+                    , label
+                        [ class "new" ]
+                        [ text "Type a new entry below. SHIFT-ENTER to save." ]
+                    , div [ class "page" ] [ EntriesView.new model ]
                     ]
                 , div
                     [ id "loading-bar-spinner" ]
@@ -422,14 +425,15 @@ route model location =
     let
         _ =
             Debug.log "route pageState before" model.pageState
+
         pageState =
             Location.parse model.pageState location
 
         model2 =
             { model | pageState = pageState }
+
         _ =
             Debug.log "route pageState after" model2.pageState
-
     in
         case model2.pageState.screen of
             Model.EntriesScreen textSearch after before ->

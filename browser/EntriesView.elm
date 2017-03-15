@@ -46,9 +46,7 @@ entryTag entry =
 new : Model -> Html Msg
 new model =
     div [ class "entry" ]
-        [ label
-            [ class "new" ]
-            [ text "Type a new entry below. SHIFT-ENTER to save." ]
+        [
           -- , p
           --     [ class "body new"
           --     , onShiftEnter CreateEntry
@@ -59,7 +57,7 @@ new model =
           --     ]
           --     []
           --   [ text model.newEntryBody ]
-        , p
+        p
             [ class "body new"
             , contenteditable True
             , onBlurEditable SetNewEntryBody
