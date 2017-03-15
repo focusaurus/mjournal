@@ -1,0 +1,50 @@
+.quick-dialog {
+    overflow: hidden;
+    min-height: 30%;
+    width: 30%;
+
+    position: fixed;
+    left: 35%;
+    top: 15%;
+
+    background: white;
+    border-radius: 5px;
+    color: black;
+
+    z-index: 90;
+}
+
+.quick-dialog__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: black;
+    opacity: .7;
+
+    z-index: 80;
+}
+
+.quick-dialog__close {
+    color: #888;
+    cursor: pointer;
+    font-family: sans-serif;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.quick-dialog__close:hover {   
+    color: black;
+}
+
+@media only screen and (max-width: 767px) {
+    .quick-dialog {
+        left: 5%;
+        width: 90%;
+    }
+
+}
+
+

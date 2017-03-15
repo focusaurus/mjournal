@@ -24,7 +24,6 @@ function render (name, callback) {
     }
     stylus(stylusText)
       .include(paths.app)
-      .include(paths.bower)
       .include(paths.wwwroot)
       .use(rupture())
       .use(autoprefixer())
