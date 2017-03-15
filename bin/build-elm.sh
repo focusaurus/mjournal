@@ -17,8 +17,8 @@ cd "$(dirname "$0")/../browser"
 PATH=$(npm bin):$PATH
 out="../wwwroot/mjournal.js"
 api_key="../wwwroot/api-key.js"
-elm-make --output "${out}" MJournal.elm
-elm-make --output "${api_key}" ApiKey.elm
+elm-make --yes --output "${out}" MJournal.elm
+elm-make --yes --output "${api_key}" ApiKey.elm
 if [[ $# -eq 0 ]]; then
   # Initial interactive launch. Start fswatch
   echo Will rebuild when source code files change

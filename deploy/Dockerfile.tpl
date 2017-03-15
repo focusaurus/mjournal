@@ -5,22 +5,23 @@ FROM mhart/alpine-node:6.7.0
 # git is a bower dependency
 # bash is used for some scripts in ./bin which also run in the container build
 RUN apk add git bash --update-cache
-WORKDIR /opt
-ADD ./package.json  /opt/package.json
-RUN npm install --ignore-scripts
-ADD ./bower.json  /opt/bower.json
-RUN ./node_modules/.bin/bower --allow-root --config.analytics=false install
+ENV BASE "/opt/{{MJ_APP_NAME}}"
+WORKDIR "${BASE}"
+ADD bin "${BASE}/bin"
+ADD browser "${BASE}/browser"
+ADD wwwroot "${BASE}/wwwroot"
+RUN chmod +x ./bin/*.*
+ADD package.json "${BASE}/"
+RUN npm install
 
 # OK, all the slow stuff has been run and hopefully cached
-ADD app /opt/app
-ADD wwwroot /opt/wwwroot
-ADD migrations /opt/migrations
-ADD knexfile.js config.default.js /opt/
-ADD bin/build-browserify.sh /opt/bin/build-browserify.sh
-RUN bash ./bin/build-browserify.sh \
-  && npm prune --production
+ADD app "${BASE}/app"
+ADD migrations "${BASE}/migrations"
+ADD config.default.js "${BASE}"
+ADD knexfile.js "${BASE}"
+RUN npm prune --production
 
 ENV NODE_ENV production
 EXPOSE {{MJ_PORT}}
 USER nobody
-CMD ["/opt/app/server.js"]
+CMD ["node", "."]

@@ -1,6 +1,8 @@
-.git
 bower_components
 build
 config.local.js*
 logs/*.log
 node_modules
+coverage
+.*
+local
