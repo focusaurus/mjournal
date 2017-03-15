@@ -5,5 +5,4 @@ cd "$(dirname "$0")/.." || exit
 source ./bin/lib/strict-mode.sh
 PATH=$(npm bin):$PATH
 
-bower --allow-root --config.analytics=false install
-./bin/build-browserify.sh
+./bin/build-elm.sh ci

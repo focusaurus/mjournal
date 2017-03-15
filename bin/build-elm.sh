@@ -25,7 +25,9 @@ if [[ $# -eq 0 ]]; then
   fswatch -o . | xargs -n1 "../bin/$(basename $0)"
 else
   echo -n uglify…
-  uglifyjs --compress --screw-ie8 "${out}" --output "${out}" 2> /dev/null
-  uglifyjs --compress --screw-ie8 "${api-key}" --output "${api-key}" 2> /dev/null
+  for file in "${out}" "${api_key}"
+  do
+    uglifyjs --compress --screw-ie8 "${file}" --output "${file}" 2>&1 | grep -v WARN: || true
+  done
   echo ✓
 fi
