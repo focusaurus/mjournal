@@ -33,7 +33,6 @@ names.forEach(function(themeName) {
       .expect(/loading-bar/)
       // rupture media queries for +above("s")
       .expect(/media only screen and \(min-width: 400px\)/)
-      .expect(/p\.body\.new/)
       .expect("Content-Type", "text/css; charset=utf-8")
       .end((error, res) => {
         tap.error(error);
