@@ -3,7 +3,6 @@
 // You only need to specify the values you need to change from the defaults.
 
 /* eslint-disable max-len */
-exports.MJ_DEBUG_BROWSERIFY = true
 exports.MJ_DEBUG_CSS = true
 exports.MJ_EMAIL_CLIENT_ID = 'Get this from google'
 exports.MJ_EMAIL_CLIENT_SECRET = 'some gook from google'

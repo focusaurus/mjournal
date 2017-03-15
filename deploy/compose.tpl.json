@@ -12,7 +12,7 @@
       "network_mode": "bridge",
       "ports": ["127.0.0.1:{{MJ_PORT}}:{{MJ_PORT}}"],
       "restart": "unless-stopped",
-      "volumes": ["{{MJ_APP_NAME}}_config:/etc/{{MJ_APP_NAME}}"]
+      "volumes": ["/var/local/{{MJ_APP_NAME}}:/etc/{{MJ_APP_NAME}}"]
     },
     "{{MJ_APP_NAME}}_db": {
       "container_name": "{{MJ_APP_NAME}}_db",
@@ -27,7 +27,6 @@
   },
   "version": "2",
   "volumes": {
-    "{{MJ_APP_NAME}}_data": null,
-    "{{MJ_APP_NAME}}_config": null
+    "{{MJ_APP_NAME}}_data": null
   }
 }

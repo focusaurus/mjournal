@@ -14,7 +14,6 @@ const schema = joi.object().keys({
   DATABASE_POSTGRESQL_USERNAME: joi.string(), // semaphore CI
   DATABASE_URL: joi.string().uri(), // heroku
   MJ_APP_NAME: joi.string().token().default(appName),
-  MJ_DEBUG_BROWSERIFY: joi.boolean().default(false),
   MJ_DEBUG_CSS: joi.boolean().default(false),
   MJ_DOCKER_HUB_USER: joi.string().default('focusaurus'),
   MJ_DOCKER_REGISTRY: joi.string().uri().valid('').default(''), // https://dub.docker.com default
