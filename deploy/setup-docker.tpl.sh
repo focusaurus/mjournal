@@ -100,6 +100,7 @@ setup_app_config() {
 }
 
 start_containers() {
+  docker-compose -f "/tmp/docker-compose-${app_name}.json" pull > /dev/null
   docker-compose -f "/tmp/docker-compose-${app_name}.json" up -d --no-build > /dev/null
 }
 

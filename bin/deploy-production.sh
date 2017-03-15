@@ -22,6 +22,7 @@ readonly tag="$(config3 MJ_DOCKER_HUB_USER)/$(config3 MJ_APP_NAME):production"
 docker tag "${build}" "${tag}"
 docker push "${tag}"
 export MJ_DOMAIN='mjournal.peterlyons.com'
+export MJ_ENV='production'
 export MJ_TLS_EMAIL='pete@peterlyons.com'
 export NODE_ENV='production'
 ./deploy/docker-server.sh "${MJ_DOMAIN}"

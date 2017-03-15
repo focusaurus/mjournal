@@ -7,7 +7,7 @@
         "MJ_PG_ADMIN_PASSWORD": "{{MJ_PG_ADMIN_PASSWORD}}",
         "MJ_PG_PASSWORD": "{{MJ_PG_PASSWORD}}"
       },
-      "image": "{{MJ_DOCKER_HUB_USER}}/{{MJ_APP_NAME}}:stage",
+      "image": "{{MJ_DOCKER_HUB_USER}}/{{MJ_APP_NAME}}:{{MJ_ENV}}",
       "links": ["{{MJ_APP_NAME}}_db" ],
       "network_mode": "bridge",
       "ports": ["127.0.0.1:{{MJ_PORT}}:{{MJ_PORT}}"],

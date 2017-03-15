@@ -18,6 +18,7 @@ main() {
   template "./deploy/setup-docker.tpl.sh" "/tmp/setup-docker-${app_name}.sh"
   echo 'Everything is prepared and ready to go.'
   echo 'ENTER to go live (brief downtime). CTRL-c to abort.'
+  # shellcheck disable=SC2034
   read -n 1 confirm
   echo "running docker setup script on ${server_hostname}"
   ssh -t "${server_hostname}" sudo /bin/bash "/tmp/setup-docker-${app_name}.sh"
