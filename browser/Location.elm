@@ -9,8 +9,7 @@ import Navigation
 route : Url.Parser (Model.Screen -> a) a
 route =
     Url.oneOf
-        [
-          Url.map Model.EntriesScreen (Url.s "" <?> Url.stringParam "textSearch" <?> Url.intParam "after" <?> Url.intParam "before")
+        [ Url.map Model.EntriesScreen (Url.s "" <?> Url.stringParam "textSearch" <?> Url.intParam "after" <?> Url.intParam "before")
         ]
 
 
@@ -24,7 +23,8 @@ parse pageState location =
 
                 Just id ->
                     Maybe.withDefault pageState.screen (Url.parsePath route location)
-        _ = Debug.log "Location.parse" pageState
+
+        -- _ = Debug.log "Location.parse" pageState
     in
         case screen of
             Model.EntriesScreen textSearch after before ->
@@ -84,10 +84,10 @@ apiQuery : Maybe String -> Maybe Int -> Maybe Int -> String
 apiQuery textSearch after before =
     let
         afterTuple =
-            Maybe.map (\after -> ("after", toString after )) after
+            Maybe.map (\after -> ( "after", toString after )) after
 
         beforeTuple =
-            Maybe.map (\before -> ("before", toString before )) before
+            Maybe.map (\before -> ( "before", toString before )) before
 
         ts =
             Maybe.withDefault "" textSearch

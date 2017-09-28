@@ -1,3 +1,4 @@
+"use strict";
 const config = require('config3')
 const settings = {
   client: 'postgresql',

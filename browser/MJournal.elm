@@ -27,272 +27,273 @@ import Time
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
-    let
-        _ =
-            Debug.log "update: " message
-    in
-        case message of
-            InputEmail newEmail ->
-                ( { model | signInEmail = newEmail, signInError = "" }
-                , Cmd.none
+    -- let
+    --     _ =
+    --         Debug.log "update: " message
+    -- in
+    case message of
+        InputEmail newEmail ->
+            ( { model | signInEmail = newEmail, signInError = "" }
+            , Cmd.none
+            )
+
+        InputPassword newPassword ->
+            ( { model | signInPassword = newPassword, signInError = "" }
+            , Cmd.none
+            )
+
+        SignIn ->
+            ( { model
+                | signInError = ""
+                , signInEmail = ""
+                , signInPassword = ""
+              }
+            , SignIn.signIn model.signInEmail model.signInPassword
+            )
+
+        SignInDone (Ok user) ->
+            let
+                oldPageState =
+                    model.pageState
+
+                newPageState =
+                    { oldPageState
+                        | screen = Model.EntriesScreen Nothing Nothing Nothing
+                        , userId = Just user.id
+                    }
+
+                model2 =
+                    { model
+                        | pageState = newPageState
+                        , signInError = ""
+                        , showReSignIn = False
+                        , theme = user.theme
+                    }
+                        |> Spinner.down
+                        |> errorOff
+            in
+                ( model2
+                , Cmd.batch
+                    [ Ports.setTheme (Theme.toString user.theme)
+                    , Entry.search Nothing Nothing Nothing
+
+                    -- , Navigation.newUrl (Location.location model2)
+                    ]
                 )
 
-            InputPassword newPassword ->
-                ( { model | signInPassword = newPassword, signInError = "" }
-                , Cmd.none
-                )
+        SignInDone (Err error) ->
+            SignIn.signInDone (model |> Spinner.down |> errorOff) error
 
-            SignIn ->
-                ( { model
-                    | signInError = ""
-                    , signInEmail = ""
-                    , signInPassword = ""
-                  }
-                , SignIn.signIn model.signInEmail model.signInPassword
-                )
+        Register ->
+            ( { model | signInError = "" }
+            , SignIn.register model.signInEmail model.signInPassword
+            )
 
-            SignInDone (Ok user) ->
-                let
-                    oldPageState =
-                        model.pageState
+        CloseReSignIn ->
+            ( { model | showReSignIn = False }, Cmd.none )
 
-                    newPageState =
-                        { oldPageState
-                            | screen = Model.EntriesScreen Nothing Nothing Nothing
-                            , userId = Just user.id
-                        }
+        NextPage ->
+            Entry.nextPage model
 
-                    model2 =
-                        { model
-                            | pageState = newPageState
-                            , signInError = ""
-                            , showReSignIn = False
-                            , theme = user.theme
-                        }
-                            |> Spinner.down
-                            |> errorOff
-                in
-                    ( model2
-                    , Cmd.batch
-                        [ Ports.setTheme (Theme.toString user.theme)
-                        , Entry.search Nothing Nothing Nothing
-                          -- , Navigation.newUrl (Location.location model2)
-                        ]
+        PreviousPage ->
+            Entry.previousPage model
+
+        CreateEntry s ->
+            ( model |> Spinner.up, Entry.create model.newEntry )
+
+        CreateEntryDone (Ok entry) ->
+            ( { model
+                | entries = List.append model.entries [ entry ]
+                , newEntry = Entry.new
+              }
+                |> Spinner.down
+                |> errorOff
+            , Ports.clearNewEntryBody ()
+            )
+
+        CreateEntryDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+
+        DeleteEntry1 entry ->
+            case entry.confirmingDelete of
+                True ->
+                    let
+                        model2 =
+                            { model | entries = List.filter (\e -> e.id /= entry.id) model.entries }
+                    in
+                        ( model2 |> Spinner.up, Entry.delete2 entry )
+
+                False ->
+                    ( swapEntry model (Entry.delete1 entry)
+                    , Process.sleep (Time.second * 2)
+                        |> Task.perform (always (TimeoutDeleteEntry entry))
                     )
 
-            SignInDone (Err error) ->
-                SignIn.signInDone (model |> Spinner.down |> errorOff) error
+        DeleteEntryDone (Ok _) ->
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
-            Register ->
-                ( { model | signInError = "" }
-                , SignIn.register model.signInEmail model.signInPassword
-                )
+        DeleteEntryDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
-            CloseReSignIn ->
-                ( { model | showReSignIn = False }, Cmd.none )
+        TimeoutDeleteEntry entry ->
+            ( { model
+                | entries = List.map (\e -> { e | confirmingDelete = False }) model.entries
+              }
+            , Cmd.none
+            )
 
-            NextPage ->
-                Entry.nextPage model
+        GetEntriesDone (Ok entries) ->
+            ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
 
-            PreviousPage ->
-                Entry.previousPage model
+        GetEntriesDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
-            CreateEntry s ->
-                ( model |> Spinner.up, Entry.create model.newEntry )
+        GetTagsDone (Ok tags) ->
+            ( { model | tags = Set.fromList tags }
+                |> Spinner.down
+                |> errorOff
+            , Cmd.none
+            )
 
-            CreateEntryDone (Ok entry) ->
-                ( { model
-                    | entries = List.append model.entries [ entry ]
-                    , newEntry = Entry.new
-                  }
-                    |> Spinner.down
-                    |> errorOff
-                , Ports.clearNewEntryBody ()
-                )
+        GetTagsDone (Err error) ->
+            ( model |> Spinner.down |> checkAuth error, Cmd.none )
 
-            CreateEntryDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+        CloseMenu ->
+            ( { model | menuOpen = False }, Cmd.none )
 
-            DeleteEntry1 entry ->
-                case entry.confirmingDelete of
-                    True ->
-                        let
-                            model2 =
-                                { model | entries = List.filter (\e -> e.id /= entry.id) model.entries }
-                        in
-                            ( model2 |> Spinner.up, Entry.delete2 entry )
+        ToggleMenu _ ->
+            ( { model | menuOpen = not model.menuOpen }, Cmd.none )
 
-                    False ->
-                        ( swapEntry model (Entry.delete1 entry)
-                        , Process.sleep (Time.second * 2)
-                            |> Task.perform (always (TimeoutDeleteEntry entry))
-                        )
+        SetTheme theme ->
+            ( { model | theme = theme } |> Spinner.up, Theme.set theme )
 
-            DeleteEntryDone (Ok _) ->
-                ( model |> Spinner.down |> errorOff, Cmd.none )
+        SetThemeDone (Ok _) ->
+            ( model |> Spinner.down |> errorOff, Ports.setTheme (Theme.toString model.theme) )
 
-            DeleteEntryDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+        SetThemeDone (Err error) ->
+            ( model |> Spinner.down |> errorOff |> checkAuth error, Ports.setTheme (Theme.toString model.theme) )
 
-            TimeoutDeleteEntry entry ->
-                ( { model
-                    | entries = List.map (\e -> { e | confirmingDelete = False }) model.entries
-                  }
-                , Cmd.none
-                )
+        ClearNewEntryBody ->
+            ( model, Ports.clearNewEntryBody () )
 
-            GetEntriesDone (Ok entries) ->
-                ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
+        SetNewEntryBody newBody ->
+            let
+                entry1 =
+                    model.newEntry
 
-            GetEntriesDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+                entry2 =
+                    { entry1 | body = newBody }
 
-            GetTagsDone (Ok tags) ->
-                ( { model | tags = Set.fromList tags }
-                    |> Spinner.down
-                    |> errorOff
-                , Cmd.none
-                )
+                model2 =
+                    { model | newEntry = entry2 }
+            in
+                ( model2, Cmd.none )
 
-            GetTagsDone (Err error) ->
-                ( model |> Spinner.down |> checkAuth error, Cmd.none )
+        SetNewEntryBodyAndSave newBody ->
+            let
+                ( newEntry, cmd ) =
+                    Entry.setNewEntryBodyAndSave model.newEntry newBody
+            in
+                ( { model | newEntry = newEntry } |> Spinner.up, cmd )
 
-            CloseMenu ->
-                ( { model | menuOpen = False }, Cmd.none )
+        SaveBody entry newBody ->
+            ( model |> Spinner.up
+            , Entry.saveBody entry newBody
+            )
 
-            ToggleMenu _ ->
-                ( { model | menuOpen = not model.menuOpen }, Cmd.none )
+        SaveBodyDone (Ok _) ->
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
-            SetTheme theme ->
-                ( { model | theme = theme } |> Spinner.up, Theme.set theme )
+        SaveBodyDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
-            SetThemeDone (Ok _) ->
-                ( model |> Spinner.down |> errorOff, Ports.setTheme (Theme.toString model.theme) )
+        SetTextSearch textSearch ->
+            Entry.setTextSearch model textSearch
 
-            SetThemeDone (Err error) ->
-                ( model |> Spinner.down |> errorOff |> checkAuth error, Ports.setTheme (Theme.toString model.theme) )
+        Search ->
+            let
+                oldPageState =
+                    model.pageState
 
-            ClearNewEntryBody ->
-                ( model, Ports.clearNewEntryBody () )
+                newPageState =
+                    { oldPageState | after = Nothing, before = Nothing }
 
-            SetNewEntryBody newBody ->
-                let
-                    entry1 =
-                        model.newEntry
+                model2 =
+                    { model | pageState = newPageState }
+            in
+                ( model2, Navigation.newUrl (Location.location model2) )
 
-                    entry2 =
-                        { entry1 | body = newBody }
+        SearchDone (Ok entries) ->
+            ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
 
-                    model2 =
-                        { model | newEntry = entry2 }
-                in
-                    ( model2, Cmd.none )
+        SearchDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
-            SetNewEntryBodyAndSave newBody ->
-                let
-                    ( newEntry, cmd ) =
-                        Entry.setNewEntryBodyAndSave model.newEntry newBody
-                in
-                    ( { model | newEntry = newEntry } |> Spinner.up, cmd )
+        ClearTextSearch ->
+            Entry.clearTextSearch (Spinner.up model)
 
-            SaveBody entry newBody ->
-                ( model |> Spinner.up
-                , Entry.saveBody entry newBody
-                )
+        ChangeUrl location ->
+            route model location
 
-            SaveBodyDone (Ok _) ->
-                ( model |> Spinner.down |> errorOff, Cmd.none )
+        InputNewTag entry tag ->
+            let
+                entry2 =
+                    Tag.editNewTag entry model.tags tag
+            in
+                ( swapEntry model entry2, Tag.get model )
 
-            SaveBodyDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+        SaveTagsDone (Ok _) ->
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
-            SetTextSearch textSearch ->
-                Entry.setTextSearch model textSearch
+        SaveTagsDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
-            Search ->
-                let
-                    oldPageState =
-                        model.pageState
+        DeleteTag entry tag ->
+            let
+                ( entry2, cmd ) =
+                    Entry.deleteTag entry tag
+            in
+                ( swapEntry model entry2 |> Spinner.up, cmd )
 
-                    newPageState =
-                        { oldPageState | after = Nothing, before = Nothing }
+        DeleteTagDone (Ok _) ->
+            ( model |> Spinner.down |> errorOff, Cmd.none )
 
-                    model2 =
-                        { model | pageState = newPageState }
-                in
-                    ( model2, Navigation.newUrl (Location.location model2) )
+        DeleteTagDone (Err error) ->
+            ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
 
-            SearchDone (Ok entries) ->
-                ( { model | entries = entries } |> Spinner.down |> errorOff, Cmd.none )
+        NextTagSuggestion entry ->
+            ( swapEntry model (Tag.nextSuggestion entry), Cmd.none )
 
-            SearchDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+        PreviousTagSuggestion entry ->
+            ( swapEntry model (Tag.previousSuggestion entry), Cmd.none )
 
-            ClearTextSearch ->
-                Entry.clearTextSearch (Spinner.up model)
+        AddSuggestedTag entry tag ->
+            let
+                ( entry2, cmd ) =
+                    Entry.addSuggestedTag entry tag
+            in
+                ( swapEntry model entry2 |> Spinner.up, cmd )
 
-            ChangeUrl location ->
-                route model location
+        TagKeyDown entry keyCode ->
+            let
+                ( entry2, saveEntryCmd ) =
+                    Entry.tagKeyDown entry keyCode
 
-            InputNewTag entry tag ->
-                let
-                    entry2 =
-                        Tag.editNewTag entry model.tags tag
-                in
-                    ( swapEntry model entry2, Tag.get model )
+                model2 =
+                    { model
+                        | tags = Set.union model.tags (Set.fromList entry2.tags)
+                    }
 
-            SaveTagsDone (Ok _) ->
-                ( model |> Spinner.down |> errorOff, Cmd.none )
+                getTagsCmd =
+                    Tag.get model
 
-            SaveTagsDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
+                realCmds =
+                    List.filter (\c -> c /= Cmd.none) [ saveEntryCmd, getTagsCmd ]
 
-            DeleteTag entry tag ->
-                let
-                    ( entry2, cmd ) =
-                        Entry.deleteTag entry tag
-                in
-                    ( swapEntry model entry2 |> Spinner.up, cmd )
-
-            DeleteTagDone (Ok _) ->
-                ( model |> Spinner.down |> errorOff, Cmd.none )
-
-            DeleteTagDone (Err error) ->
-                ( model |> Spinner.down |> errorOn |> checkAuth error, Cmd.none )
-
-            NextTagSuggestion entry ->
-                ( swapEntry model (Tag.nextSuggestion entry), Cmd.none )
-
-            PreviousTagSuggestion entry ->
-                ( swapEntry model (Tag.previousSuggestion entry), Cmd.none )
-
-            AddSuggestedTag entry tag ->
-                let
-                    ( entry2, cmd ) =
-                        Entry.addSuggestedTag entry tag
-                in
-                    ( swapEntry model entry2 |> Spinner.up, cmd )
-
-            TagKeyDown entry keyCode ->
-                let
-                    ( entry2, saveEntryCmd ) =
-                        Entry.tagKeyDown entry keyCode
-
-                    model2 =
-                        { model
-                            | tags = Set.union model.tags (Set.fromList entry2.tags)
-                        }
-
-                    getTagsCmd =
-                        Tag.get model
-
-                    realCmds =
-                        List.filter (\c -> c /= Cmd.none) [ saveEntryCmd, getTagsCmd ]
-
-                    model3 =
-                        { model2 | requestCount = model2.requestCount + (List.length realCmds) }
-                in
-                    ( swapEntry model3 entry2, Cmd.batch realCmds )
+                model3 =
+                    { model2 | requestCount = model2.requestCount + (List.length realCmds) }
+            in
+                ( swapEntry model3 entry2, Cmd.batch realCmds )
 
 
 subscriptions : Model -> Sub Msg
@@ -389,21 +390,21 @@ swapEntry model entry =
 
 checkAuth : Http.Error -> Model -> Model
 checkAuth error model =
-    let
-        _ =
-            Debug.log "checkAuth" error
-    in
-        case error of
-            Http.BadStatus bs ->
-                case bs.status.code of
-                    401 ->
-                        { model | showReSignIn = True }
+    -- let
+    --     _ =
+    --         Debug.log "checkAuth" error
+    -- in
+    case error of
+        Http.BadStatus bs ->
+            case bs.status.code of
+                401 ->
+                    { model | showReSignIn = True }
 
-                    _ ->
-                        model
+                _ ->
+                    model
 
-            _ ->
-                model
+        _ ->
+            model
 
 
 errorOn : Model -> Model
@@ -423,17 +424,16 @@ errorOff model =
 route : Model -> Navigation.Location -> ( Model, Cmd Msg )
 route model location =
     let
-        _ =
-            Debug.log "route pageState before" model.pageState
-
+        -- _ =
+        --     Debug.log "route pageState before" model.pageState
         pageState =
             Location.parse model.pageState location
 
         model2 =
             { model | pageState = pageState }
 
-        _ =
-            Debug.log "route pageState after" model2.pageState
+        -- _ =
+        --     Debug.log "route pageState after" model2.pageState
     in
         case model2.pageState.screen of
             Model.EntriesScreen textSearch after before ->

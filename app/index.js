@@ -35,6 +35,13 @@ function appCSS (req, res, next) {
   })
 }
 
+var pool = new pg.Pool({
+  database: config.MJ_PG_DATABASE,
+  host: config.MJ_PG_HOST,
+  password: config.MJ_PG_PASSWORD,
+  port: config.MJ_PG_PORT,
+  user: config.MJ_PG_USER
+})
 var PGStore = require('connect-pg-simple')(session)
 var app = express()
 _.extend(sharify.data, _.pick(config, 'MJ_APP_NAME', 'MJ_VERSION'))
@@ -57,16 +64,7 @@ app.use(express.static(paths.wwwroot))
 app.use(express.static(paths.browser))
 app.use(cookieParser())
 app.use(session({
-  store: new PGStore({
-    conString: {
-      database: config.MJ_PG_DATABASE,
-      host: config.MJ_PG_HOST,
-      password: config.MJ_PG_PASSWORD,
-      port: config.MJ_PG_PORT,
-      user: config.MJ_PG_USER
-    },
-    pg: pg
-  }),
+  store: new PGStore({pool}),
   secret: config.MJ_SESSION_SECRET,
   cookie: {
     httpOnly: true,
@@ -82,7 +80,7 @@ app.use(function (req, res, next) {
   if (req.user) {
     res.locals.sharify.data.user = {
       id: req.user.id,
-      theme: req.user.theme || "moleskine"
+      theme: req.user.theme || 'moleskine'
     }
   }
   next()

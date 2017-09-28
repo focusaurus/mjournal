@@ -74,11 +74,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
         SetText text ->
-            let
-                _ =
-                    Debug.log "SetText" text
-            in
-                ( { model | dbText = text }, Cmd.none )
+            -- let
+            --     _ =
+            --         Debug.log "SetText" text
+            -- in
+            ( { model | dbText = text }, Cmd.none )
 
         Clear ->
             ( { model | dbText = "" }, Cmd.none )
@@ -98,7 +98,8 @@ view model =
             ]
         , div
             [ contenteditable True
-              -- , onEdit SetText
+
+            -- , onEdit SetText
             , onBlurEditable SetText
             , onShiftEnter SetText
             ]

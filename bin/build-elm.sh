@@ -23,11 +23,12 @@ if [[ $# -eq 0 ]]; then
   # Initial interactive launch. Start fswatch
   echo Will rebuild when source code files change
   fswatch -o . | xargs -n1 "../bin/$(basename $0)"
-else
-  echo -n uglify…
-  for file in "${out}" "${api_key}"
-  do
-    uglifyjs --compress --screw-ie8 "${file}" --output "${file}" 2>&1 | grep -v WARN: || true
-  done
-  echo ✓
+# else
+  # echo -n uglifyjs…
+  # for file in "${out}" "${api_key}"
+  # do
+    # uglifyjs --compress "${file}" --output "${file}" 2>&1 | grep -v WARN: || true
+    # uglifyjs "${file}" --output "${file}"
+  # done
+  # echo ✓
 fi
