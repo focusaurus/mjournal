@@ -96,4 +96,7 @@ if (result.error) {
     exports.MJ_PG_ADMIN_PASSWORD = exports.MJ_PG_ADMIN_PASSWORD ||
       exports.MJ_PG_PASSWORD
   }
+  if (process.env.PORT) {
+    exports.MJ_PORT = Number(process.env.PORT) || exports.MJ_PORT
+  }
 }
