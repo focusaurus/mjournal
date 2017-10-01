@@ -19,7 +19,6 @@ if [[ -z "${MJ_PG_ADMIN_PASSWORD}" || -z "${MJ_PG_PASSWORD}" ]]; then
 fi
 
 readonly tag="$(config3 MJ_DOCKER_HUB_USER)/$(config3 MJ_APP_NAME):production"
-docker tag "${build}" "${tag}"
 docker push "${tag}"
 export MJ_DOMAIN='mjournal.peterlyons.com'
 export MJ_ENV='production'

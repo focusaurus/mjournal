@@ -135,10 +135,10 @@ We integrate with the host OS (Ubuntu x64) on stage and production for the follo
 - Test in a browser
   - `open "https://stage-mj.peterlyons.com"`
 - If the app is working, tag for prod and release
-  - `./bin/tag-production.sh <container_id_from_above>`
+  - `./bin/tag-production.sh <image-id-from-docker-build>`
   - `./bin/release.sh`
 - Deploy to production
-  - `./bin/deploy-production.sh`
+  - `./bin/deploy-production.sh <image-id-from-docker-build>`
 
 ## Daily Rotating Backup System
 
