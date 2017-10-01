@@ -62,3 +62,13 @@ server {
     alias /var/www/letsencrypt/.well-known/acme-challenge/;
   }
 }
+
+# For first-time initial bootstrap of TLS with acme only
+# server {
+#   listen 80;
+#   server_name {{MJ_DOMAIN}};
+#
+#   location /.well-known/acme-challenge/ {
+#     alias /var/www/letsencrypt/.well-known/acme-challenge/;
+#   }
+# }

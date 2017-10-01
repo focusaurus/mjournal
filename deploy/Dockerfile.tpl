@@ -1,5 +1,5 @@
 #https://hub.docker.com/r/mhart/alpine-node/
-FROM mhart/alpine-node:6.7.0
+FROM mhart/alpine-node:6.11.3
 # get the slow/big stuff done early so the cache is rarely invalidated
 
 # git is a bower dependency
@@ -11,7 +11,7 @@ ADD bin "${BASE}/bin"
 ADD browser "${BASE}/browser"
 ADD wwwroot "${BASE}/wwwroot"
 RUN chmod +x ./bin/*.*
-ADD package.json "${BASE}/"
+ADD package*.json "${BASE}/"
 RUN npm install
 
 # OK, all the slow stuff has been run and hopefully cached

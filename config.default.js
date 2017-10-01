@@ -16,7 +16,7 @@ const schema = joi.object().keys({
   MJ_APP_NAME: joi.string().token().default(appName),
   MJ_DEBUG_CSS: joi.boolean().default(false),
   MJ_DOCKER_HUB_USER: joi.string().default('focusaurus'),
-  MJ_DOCKER_REGISTRY: joi.string().uri().valid('').default(''), // https://dub.docker.com default
+  MJ_DOCKER_REGISTRY: joi.string().hostname().valid('').default('hub.docker.com'),
   MJ_DOMAIN: joi.string().hostname().default('stage-mj.peterlyons.com'),
   MJ_ENV: joi.string().token().default('stage'),
   MJ_EMAIL_CLIENT_ID: joi.string(),
