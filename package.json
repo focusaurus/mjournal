@@ -33,7 +33,7 @@
     "jstransformer-marked": "1.0.2",
     "knex": "0.7.6",
     "lodash": "4.17.4",
-    "marked": "0.3.6",
+    "marked": "0.3.9",
     "moment": "2.18.1",
     "mustache": "2.3.0",
     "nodemailer": "4.1.1",
