@@ -1,5 +1,5 @@
 #https://hub.docker.com/r/mhart/alpine-node/
-FROM mhart/alpine-node:6.11.3
+FROM mhart/alpine-node:9.3.0
 # get the slow/big stuff done early so the cache is rarely invalidated
 
 # git is a bower dependency
