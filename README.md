@@ -138,7 +138,7 @@ We integrate with the host OS (Ubuntu x64) on stage and production for the follo
   - `./bin/tag-production.sh <image-id-from-docker-build>`
   - `./bin/release.sh`
 - Deploy to production
-  - `./bin/deploy-production.sh <image-id-from-docker-build>`
+  - `./bin/deploy-production.sh`
 
 ## Daily Rotating Backup System
 

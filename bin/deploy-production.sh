@@ -6,12 +6,6 @@ source ./bin/lib/strict-mode.sh
 
 PATH="$(npm bin):${PATH}"
 
-readonly build="$1"
-
-if [[ -z "${build}" ]]; then
-  echo "Usage: $0 <build>" 1>&2
-  exit 1
-fi
 if [[ -z "${MJ_PG_ADMIN_PASSWORD}" || -z "${MJ_PG_PASSWORD}" ]]; then
   echo "Please set env vars MJ_PG_ADMIN_PASSWORD and MJ_PG_PASSWORD" 1>&2
   echo "These are necessary to render the docker-compose file properly" 1>&2
