@@ -79,6 +79,39 @@ function viewAction (options) {
     .end(printEntries)
 }
 
+function exportAction(options) {
+  const opOptions = _.pick(options, "before", "after");
+  process.stdout.write("[");
+  let first = true;
+
+  function fetch(options = {}) {
+    http("get", "/entries")
+      .query(options)
+      .end(end);
+  }
+
+  function end(error, response) {
+    exitIfError(error);
+    const entries = response.body;
+
+    entries.forEach(entry => {
+      if (!first) {
+        process.stdout.write(",\n");
+      }
+      first = false;
+      process.stdout.write(JSON.stringify(entry));
+    });
+    if (entries.length) {
+      setTimeout(() => fetch({ before: entries[0].id }), 10);
+    } else {
+      process.stdout.write("]");
+    }
+  }
+
+  fetch();
+}
+
+
 program.command('view')
   .description('view entries for a user')
   .option(
@@ -93,6 +126,21 @@ program.command('view')
   '-s, --search <query>',
   'search for entries mentioning or tagged with a keyword'
 ).action(viewAction)
+
+program.command('export')
+  .description('export entries to disk')
+  .option(
+    '-a, --after <entryId>',
+    'export entries created after the given entry',
+    parseInt
+).option(
+  '-b, --before <entryId>',
+  'export entries created before the given entry',
+  parseInt
+).option(
+  '-s, --search <query>',
+  'search for entries mentioning or tagged with a keyword'
+).action(exportAction)
 
 function postEntry (options) {
   const entry = _.pick(options, 'body', 'tags')
