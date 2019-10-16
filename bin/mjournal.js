@@ -80,7 +80,6 @@ function viewAction (options) {
 }
 
 function exportAction(options) {
-  const opOptions = _.pick(options, "before", "after");
   process.stdout.write("[");
   let first = true;
 

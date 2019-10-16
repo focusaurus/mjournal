@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+"use strict"
+/* eslint-disable no-sync */
 const fs = require("fs");
 const path = require("path");
 
