@@ -32,7 +32,7 @@
     "joi": "13.1.0",
     "jstransformer-marked": "1.0.3",
     "knex": "0.7.6",
-    "lodash": "4.17.4",
+    "lodash": "4.17.19",
     "marked": "0.3.9",
     "moment": "2.20.1",
     "mustache": "2.3.0",
