@@ -22,7 +22,7 @@
     "commander": "2.12.2",
     "compression": "1.7.1",
     "config3": "1.0.3",
-    "connect-pg-simple": "4.2.1",
+    "connect-pg-simple": "6.0.1",
     "cookie-parser": "1.4.3",
     "dev-null": "0.1.1",
     "elm": "0.18.0",
